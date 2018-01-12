@@ -1,25 +1,27 @@
 package org.jurassicraft.server.item;
 
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemFood;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.genetics.GeneticsHelper;
 import org.jurassicraft.server.tab.TabHandler;
 import org.jurassicraft.server.util.LangHelper;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemFood;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class DinosaurMeatItem extends ItemFood {
     public DinosaurMeatItem() {
@@ -48,7 +50,7 @@ public class DinosaurMeatItem extends ItemFood {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> subtypes) {
+    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subtypes) {
         List<Dinosaur> dinosaurs = new LinkedList<>(EntityHandler.getDinosaurs().values());
 
         Collections.sort(dinosaurs);

@@ -25,7 +25,7 @@ public class PeckGroundAnimationAI extends EntityAIBase {
     }
 
     @Override
-    public boolean continueExecuting() {
+    public boolean shouldContinueExecuting() {
         return false;
     }
 }

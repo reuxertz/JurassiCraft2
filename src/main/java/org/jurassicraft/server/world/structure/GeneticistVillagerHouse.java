@@ -112,6 +112,8 @@ public class GeneticistVillagerHouse extends StructureVillagePieces.Village {
                 case EAST:
                     this.boundingBox.offset(invert ? 0 : -OFFSET_Z, 0, OFFSET_X);
                     break;
+			default:
+				break;
             }
         }
         BlockPos lowerCorner = new BlockPos(this.boundingBox.minX, this.boundingBox.minY, this.boundingBox.minZ);
@@ -183,10 +185,10 @@ public class GeneticistVillagerHouse extends StructureVillagePieces.Village {
             String type = block.getValue();
             switch (type) {
                 case "Door":
-                    world.setBlockState(pos, this.func_189925_i().getDefaultState().withRotation(this.rotation));
+                    world.setBlockState(pos, this.biomeDoor().getDefaultState().withRotation(this.rotation));
                     break;
                 case "DoorTop":
-                    world.setBlockState(pos, this.func_189925_i().getDefaultState().withProperty(BlockDoor.HALF, BlockDoor.EnumDoorHalf.UPPER).withRotation(this.rotation));
+                    world.setBlockState(pos, this.biomeDoor().getDefaultState().withProperty(BlockDoor.HALF, BlockDoor.EnumDoorHalf.UPPER).withRotation(this.rotation));
                     break;
                 case "Torch":
                     world.setBlockState(pos, Blocks.TORCH.getDefaultState());
@@ -206,8 +208,8 @@ public class GeneticistVillagerHouse extends StructureVillagePieces.Village {
     }
 
     @Override
-    protected void readStructureFromNBT(NBTTagCompound tagCompound) {
-        super.readStructureFromNBT(tagCompound);
+    protected void readStructureFromNBT(NBTTagCompound tagCompound, TemplateManager template) {
+        super.readStructureFromNBT(tagCompound, template);
         this.count = tagCompound.getInteger("count");
     }
 

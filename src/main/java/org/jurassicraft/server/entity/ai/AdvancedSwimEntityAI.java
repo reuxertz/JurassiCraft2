@@ -40,7 +40,7 @@ public class AdvancedSwimEntityAI extends EntityAIBase {
     }
 
     @Override
-    public boolean continueExecuting() {
+    public boolean shouldContinueExecuting() {
         Path currentPath = this.entity.getNavigator().getPath();
         return this.shore != null && this.path != null && (currentPath == null || !currentPath.isFinished());
     }

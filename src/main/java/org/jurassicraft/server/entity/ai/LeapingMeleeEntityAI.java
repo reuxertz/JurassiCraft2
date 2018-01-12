@@ -17,8 +17,8 @@ public class LeapingMeleeEntityAI extends DinosaurAttackMeleeEntityAI {
     }
 
     @Override
-    public boolean continueExecuting() {
-        return this.shouldExecute() && super.continueExecuting();
+    public boolean shouldContinueExecuting() {
+        return this.shouldExecute() && super.shouldContinueExecuting();
     }
 
     private boolean isInRange(EntityLivingBase target) {

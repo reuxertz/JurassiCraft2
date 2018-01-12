@@ -38,7 +38,7 @@ public class DinosaurWalkNodeProcessor extends WalkNodeProcessor {
     public int findPathOptions(PathPoint[] pathOptions, PathPoint currentPoint, PathPoint targetPoint, float maxDistance) {
         int optionIndex = 0;
         int stepHeight = 0;
-        PathNodeType type = this.getPathNodeType(this.entity, currentPoint.xCoord, currentPoint.yCoord + 1, currentPoint.zCoord);
+        PathNodeType type = this.getPathNodeType(this.entity, currentPoint.x, currentPoint.y + 1, currentPoint.z);
 
         if (this.entity.getPathPriority(type) >= 0.0F) {
             stepHeight = MathHelper.floor(Math.max(1.0F, this.entity.stepHeight));
@@ -49,12 +49,12 @@ public class DinosaurWalkNodeProcessor extends WalkNodeProcessor {
             stepHeight = jumpHeight + 1;
         }
 
-        BlockPos ground = (new BlockPos(currentPoint.xCoord, currentPoint.yCoord, currentPoint.zCoord)).down();
-        double groundY = currentPoint.yCoord - (1.0D - this.blockaccess.getBlockState(ground).getBoundingBox(this.blockaccess, ground).maxY);
-        PathPoint south = this.getSafePoint(currentPoint.xCoord, currentPoint.yCoord, currentPoint.zCoord + 1, stepHeight, groundY, EnumFacing.SOUTH);
-        PathPoint west = this.getSafePoint(currentPoint.xCoord - 1, currentPoint.yCoord, currentPoint.zCoord, stepHeight, groundY, EnumFacing.WEST);
-        PathPoint east = this.getSafePoint(currentPoint.xCoord + 1, currentPoint.yCoord, currentPoint.zCoord, stepHeight, groundY, EnumFacing.EAST);
-        PathPoint north = this.getSafePoint(currentPoint.xCoord, currentPoint.yCoord, currentPoint.zCoord - 1, stepHeight, groundY, EnumFacing.NORTH);
+        BlockPos ground = (new BlockPos(currentPoint.x, currentPoint.y, currentPoint.z)).down();
+        double groundY = currentPoint.y - (1.0D - this.blockaccess.getBlockState(ground).getBoundingBox(this.blockaccess, ground).maxY);
+        PathPoint south = this.getSafePoint(currentPoint.x, currentPoint.y, currentPoint.z + 1, stepHeight, groundY, EnumFacing.SOUTH);
+        PathPoint west = this.getSafePoint(currentPoint.x - 1, currentPoint.y, currentPoint.z, stepHeight, groundY, EnumFacing.WEST);
+        PathPoint east = this.getSafePoint(currentPoint.x + 1, currentPoint.y, currentPoint.z, stepHeight, groundY, EnumFacing.EAST);
+        PathPoint north = this.getSafePoint(currentPoint.x, currentPoint.y, currentPoint.z - 1, stepHeight, groundY, EnumFacing.NORTH);
 
         if (south != null && !south.visited && south.distanceTo(targetPoint) < maxDistance) {
             pathOptions[optionIndex++] = south;
@@ -78,7 +78,7 @@ public class DinosaurWalkNodeProcessor extends WalkNodeProcessor {
         boolean canMoveWest = west == null || west.nodeType == PathNodeType.OPEN || west.costMalus != 0.0F;
 
         if (canMoveNorth && canMoveWest) {
-            PathPoint northWest = this.getSafePoint(currentPoint.xCoord - 1, currentPoint.yCoord, currentPoint.zCoord - 1, stepHeight, groundY, EnumFacing.NORTH);
+            PathPoint northWest = this.getSafePoint(currentPoint.x - 1, currentPoint.y, currentPoint.z - 1, stepHeight, groundY, EnumFacing.NORTH);
 
             if (northWest != null && !northWest.visited && northWest.distanceTo(targetPoint) < maxDistance) {
                 pathOptions[optionIndex++] = northWest;
@@ -86,7 +86,7 @@ public class DinosaurWalkNodeProcessor extends WalkNodeProcessor {
         }
 
         if (canMoveNorth && canMoveEast) {
-            PathPoint northEast = this.getSafePoint(currentPoint.xCoord + 1, currentPoint.yCoord, currentPoint.zCoord - 1, stepHeight, groundY, EnumFacing.NORTH);
+            PathPoint northEast = this.getSafePoint(currentPoint.x + 1, currentPoint.y, currentPoint.z - 1, stepHeight, groundY, EnumFacing.NORTH);
 
             if (northEast != null && !northEast.visited && northEast.distanceTo(targetPoint) < maxDistance) {
                 pathOptions[optionIndex++] = northEast;
@@ -94,7 +94,7 @@ public class DinosaurWalkNodeProcessor extends WalkNodeProcessor {
         }
 
         if (canMoveSouth && canMoveWest) {
-            PathPoint southWest = this.getSafePoint(currentPoint.xCoord - 1, currentPoint.yCoord, currentPoint.zCoord + 1, stepHeight, groundY, EnumFacing.SOUTH);
+            PathPoint southWest = this.getSafePoint(currentPoint.x - 1, currentPoint.y, currentPoint.z + 1, stepHeight, groundY, EnumFacing.SOUTH);
 
             if (southWest != null && !southWest.visited && southWest.distanceTo(targetPoint) < maxDistance) {
                 pathOptions[optionIndex++] = southWest;
@@ -102,7 +102,7 @@ public class DinosaurWalkNodeProcessor extends WalkNodeProcessor {
         }
 
         if (canMoveSouth && canMoveEast) {
-            PathPoint southEast = this.getSafePoint(currentPoint.xCoord + 1, currentPoint.yCoord, currentPoint.zCoord + 1, stepHeight, groundY, EnumFacing.SOUTH);
+            PathPoint southEast = this.getSafePoint(currentPoint.x + 1, currentPoint.y, currentPoint.z + 1, stepHeight, groundY, EnumFacing.SOUTH);
 
             if (southEast != null && !southEast.visited && southEast.distanceTo(targetPoint) < maxDistance) {
                 pathOptions[optionIndex++] = southEast;
@@ -143,7 +143,7 @@ public class DinosaurWalkNodeProcessor extends WalkNodeProcessor {
                         double pointZ = (z - facing.getFrontOffsetZ()) + 0.5;
                         AxisAlignedBB boundsAtPoint = new AxisAlignedBB(pointX - halfWidth, y + 0.001, pointZ - halfWidth, pointX + halfWidth, (y + this.entity.height), pointZ + halfWidth);
                         AxisAlignedBB pointBlockBounds = this.blockaccess.getBlockState(pos).getBoundingBox(this.blockaccess, pos);
-                        AxisAlignedBB boundsAtGroundPoint = boundsAtPoint.addCoord(0.0, pointBlockBounds.maxY - 0.002, 0.0);
+                        AxisAlignedBB boundsAtGroundPoint = boundsAtPoint.expand(0.0, pointBlockBounds.maxY - 0.002, 0.0);
 
                         if (this.entity.world.collidesWithAnyBlock(boundsAtGroundPoint)) {
                             point = null;

@@ -1,6 +1,7 @@
 package org.jurassicraft.server.entity;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityMoveHelper;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -26,13 +27,13 @@ public abstract class FlyingDinosaurEntity extends DinosaurEntity {
     public void moveEntityWithHeading(float strafe, float forward) {
         if (this.inWater()) {
             this.moveRelative(strafe, forward, 0.02F);
-            this.move(this.motionX, this.motionY, this.motionZ);
+            this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
             this.motionX *= 0.800000011920929D;
             this.motionY *= 0.800000011920929D;
             this.motionZ *= 0.800000011920929D;
         } else if (this.inLava()) {
             this.moveRelative(strafe, forward, 0.02F);
-            this.move(this.motionX, this.motionY, this.motionZ);
+            this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
             this.motionX *= 0.5D;
             this.motionY *= 0.5D;
             this.motionZ *= 0.5D;
@@ -51,7 +52,7 @@ public abstract class FlyingDinosaurEntity extends DinosaurEntity {
                 friction = this.world.getBlockState(new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.getEntityBoundingBox().minY) - 1, MathHelper.floor(this.posZ))).getBlock().slipperiness * 0.91F;
             }
 
-            this.move(this.motionX, this.motionY, this.motionZ);
+            this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
             this.motionX *= (double) friction;
             this.motionY *= (double) friction;
             this.motionZ *= (double) friction;
@@ -96,9 +97,9 @@ public abstract class FlyingDinosaurEntity extends DinosaurEntity {
                 return distance < 1.0D || distance > 3600.0D;
             }
         }
-
+        
         @Override
-        public boolean continueExecuting() {
+        public boolean shouldContinueExecuting() {
             return false;
         }
 

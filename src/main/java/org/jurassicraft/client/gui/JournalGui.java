@@ -68,7 +68,7 @@ public class JournalGui extends GuiScreen {
                 }
                 StringBuilder currentLine = new StringBuilder();
                 for (String word : line.split("\\s")) {
-                    if (this.fontRendererObj.getStringWidth(currentLine.toString() + word) * scale > 94) {
+                    if (this.fontRenderer.getStringWidth(currentLine.toString() + word) * scale > 94) {
                         lines.add(JournalFormatting.format(currentLine.toString(), format));
                         currentLine = new StringBuilder();
                     }
@@ -83,7 +83,7 @@ public class JournalGui extends GuiScreen {
         List<String> currentPage = new ArrayList<>();
 
         int lineOffsetY = 0;
-        int lineHeight = (int) (this.fontRendererObj.FONT_HEIGHT * FONT_SCALE + 2);
+        int lineHeight = (int) (this.fontRenderer.FONT_HEIGHT * FONT_SCALE + 2);
 
         for (String line : lines) {
             boolean nextPage = line.endsWith("\n");
@@ -131,7 +131,7 @@ public class JournalGui extends GuiScreen {
     private void drawPage(int pageIndex, int originX, int originY) {
         if (pageIndex >= 0 && pageIndex < this.pages.length) {
             int lineOffsetY = 0;
-            int lineHeight = (int) (this.fontRendererObj.FONT_HEIGHT * FONT_SCALE + 2);
+            int lineHeight = (int) (this.fontRenderer.FONT_HEIGHT * FONT_SCALE + 2);
             String[] page = this.pages[pageIndex];
             for (String line : page) {
                 this.drawScaledString(line, originX, originY + lineOffsetY, FONT_SCALE, 0);
@@ -143,14 +143,14 @@ public class JournalGui extends GuiScreen {
     private void drawScaledString(String text, float x, float y, float scale, int color) {
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 1.0F);
-        this.fontRendererObj.drawString(text, x / scale, y / scale, color, false);
+        this.fontRenderer.drawString(text, x / scale, y / scale, color, false);
         GlStateManager.popMatrix();
     }
 
     private void drawCenteredScaledString(String text, float x, float y, float scale, int color) {
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 1.0F);
-        this.fontRendererObj.drawString(text, (x - this.fontRendererObj.getStringWidth(text) / 2) / scale, y / scale, color, false);
+        this.fontRenderer.drawString(text, (x - this.fontRenderer.getStringWidth(text) / 2) / scale, y / scale, color, false);
         GlStateManager.popMatrix();
     }
 
@@ -242,7 +242,7 @@ public class JournalGui extends GuiScreen {
         @Override
         public void drawButton(Minecraft mc, int mouseX, int mouseY) {
             if (this.visible) {
-                boolean selected = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+                boolean selected = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                 mc.getTextureManager().bindTexture(WIDGETS_TEXTURE);
                 int u = 0;
@@ -253,7 +253,7 @@ public class JournalGui extends GuiScreen {
                 if (!this.isForward) {
                     v += 13;
                 }
-                this.drawTexturedModalRect(this.xPosition, this.yPosition, u, v, 23, 13);
+                this.drawTexturedModalRect(this.x, this.y, u, v, 23, 13);
             }
         }
     }

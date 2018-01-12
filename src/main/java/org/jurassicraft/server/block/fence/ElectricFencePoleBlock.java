@@ -44,7 +44,7 @@ public class ElectricFencePoleBlock extends BlockContainer {
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState state, World world, BlockPos pos) {
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
         return this.getBoundingBox(state, world, pos);
     }
 
@@ -148,7 +148,7 @@ public class ElectricFencePoleBlock extends BlockContainer {
     }
 
     @Override
-    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
+    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
         if (!world.isRemote) {
             this.updateConnectedWires(world, pos);
         }

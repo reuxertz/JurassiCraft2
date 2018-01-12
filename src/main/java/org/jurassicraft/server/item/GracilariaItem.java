@@ -24,15 +24,9 @@ public class GracilariaItem extends Item implements IPlantable {
         this.seaweedBlock = crops;
         this.setUnlocalizedName("gracilaria");
     }
-
-    //  ___ _
-    // |_ _| |_ ___ _ __ ___
-    //  | || __/ _ \ '_ ` _ \
-    //  | || ||  __/ | | | | |
-    // |___|\__\___|_| |_| |_|
-
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+    	ItemStack stack = player.getHeldItem(hand);
         // NOTE:  Pos is the block we are placing ON
 
         // Based on ItemSeeds.
@@ -40,7 +34,7 @@ public class GracilariaItem extends Item implements IPlantable {
             return EnumActionResult.PASS;
         } else if (this.seaweedBlock.canPlaceBlockAt(world, pos.up())) {
             world.setBlockState(pos.up(), this.seaweedBlock.getDefaultState());
-            --stack.stackSize;
+            stack.shrink(1);
             return EnumActionResult.SUCCESS;
         }
 

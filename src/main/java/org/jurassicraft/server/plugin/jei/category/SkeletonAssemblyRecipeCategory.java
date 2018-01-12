@@ -1,5 +1,9 @@
 package org.jurassicraft.server.plugin.jei.category;
 
+import java.util.List;
+
+import org.jurassicraft.JurassiCraft;
+
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IGuiItemStackGroup;
@@ -10,9 +14,6 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
-import org.jurassicraft.JurassiCraft;
-
-import java.util.List;
 
 public class SkeletonAssemblyRecipeCategory extends BlankRecipeCategory<IRecipeWrapper> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JurassiCraft.MODID, "textures/gui/skeleton_assembler.png");
@@ -56,4 +57,9 @@ public class SkeletonAssemblyRecipeCategory extends BlankRecipeCategory<IRecipeW
         stackGroup.init(24, false, 124, 36);
         stackGroup.set(24, ingredients.getOutputs(ItemStack.class).get(0));
     }
+
+	@Override
+	public String getModName() {
+	    return JurassiCraft.NAME;
+	}
 }

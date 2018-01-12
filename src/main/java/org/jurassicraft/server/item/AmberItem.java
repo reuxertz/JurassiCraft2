@@ -1,14 +1,14 @@
 package org.jurassicraft.server.item;
 
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.server.tab.TabHandler;
 import org.jurassicraft.server.util.LangHelper;
 
-import java.util.List;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class AmberItem extends Item {
     public AmberItem() {
@@ -24,7 +24,7 @@ public class AmberItem extends Item {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> subItems) {
+    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
         subItems.add(new ItemStack(item, 1, 0));
         subItems.add(new ItemStack(item, 1, 1));
     }

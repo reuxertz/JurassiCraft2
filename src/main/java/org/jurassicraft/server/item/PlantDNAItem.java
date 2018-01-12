@@ -1,24 +1,26 @@
 package org.jurassicraft.server.item;
 
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jurassicraft.server.plant.Plant;
-import org.jurassicraft.server.plant.PlantHandler;
-import org.jurassicraft.server.tab.TabHandler;
-import org.jurassicraft.server.util.LangHelper;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import org.jurassicraft.server.plant.Plant;
+import org.jurassicraft.server.plant.PlantHandler;
+import org.jurassicraft.server.tab.TabHandler;
+import org.jurassicraft.server.util.LangHelper;
+
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PlantDNAItem extends Item {
     public PlantDNAItem() {
@@ -46,7 +48,7 @@ public class PlantDNAItem extends Item {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> subtypes) {
+    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subtypes) {
         List<Plant> plants = new LinkedList<>(PlantHandler.getPrehistoricPlantsAndTrees());
 
         Map<Plant, Integer> ids = new HashMap<>();

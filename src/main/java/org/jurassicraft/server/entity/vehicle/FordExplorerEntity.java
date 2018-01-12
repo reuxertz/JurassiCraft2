@@ -110,9 +110,9 @@ public class FordExplorerEntity extends CarEntity implements IEntityAdditionalSp
 
     private void setBodyToPos() {
         Vec3d v = this.getVectorForRotation(this.rotationPitch, this.rotationYaw);
-        double dx = v.xCoord * (FordExplorerEntity.LENGTH / 2);
-        double dy = v.yCoord * (FordExplorerEntity.LENGTH / 2);
-        double dz = v.zCoord * (FordExplorerEntity.LENGTH / 2);
+        double dx = v.x * (FordExplorerEntity.LENGTH / 2);
+        double dy = v.y * (FordExplorerEntity.LENGTH / 2);
+        double dz = v.z * (FordExplorerEntity.LENGTH / 2);
         this.setHead(this.posX + dx, this.posY + dy, this.posZ + dz);
         this.tailX = this.posX - dx;
         this.tailY = this.posY - dy;
@@ -407,9 +407,9 @@ public class FordExplorerEntity extends CarEntity implements IEntityAdditionalSp
             this.entity.noClip = true;
             Vec3d point = this.rail.pointAt(this.direction, this.position);
             this.position += this.entity.speed;
-            double x = this.pos.getX() + point.xCoord;
-            double y = this.pos.getY() + point.yCoord;
-            double z = this.pos.getZ() + point.zCoord;
+            double x = this.pos.getX() + point.x;
+            double y = this.pos.getY() + point.y;
+            double z = this.pos.getZ() + point.z;
             this.entity.setHead(x, y + FordExplorerEntity.RAIL_HEIGHT, z);
             this.entity.pull();
         }
@@ -607,7 +607,7 @@ public class FordExplorerEntity extends CarEntity implements IEntityAdditionalSp
         }
 
         public final Vec3d apply(Vec3d vec) {
-            return new Vec3d(this.getX(vec.xCoord, vec.zCoord), vec.yCoord, this.getZ(vec.xCoord, vec.zCoord));
+            return new Vec3d(this.getX(vec.x, vec.z), vec.y, this.getZ(vec.x, vec.z));
         }
 
         public final EnumFacing apply(EnumFacing facing) {

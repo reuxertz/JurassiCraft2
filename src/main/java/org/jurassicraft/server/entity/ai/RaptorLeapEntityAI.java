@@ -81,7 +81,7 @@ public class RaptorLeapEntityAI extends EntityAIBase {
         } else if (this.animation == EntityAnimation.LEAP_LAND && (this.entity.onGround || this.entity.isSwimming())) {
             this.animation = EntityAnimation.IDLE;
 
-            if (this.entity.getEntityBoundingBox() != null && this.target.getEntityBoundingBox() != null && this.entity.getEntityBoundingBox().intersectsWith(this.target.getEntityBoundingBox().expand(2.0, 2.0, 2.0))) {
+            if (this.entity.getEntityBoundingBox() != null && this.target.getEntityBoundingBox() != null && this.entity.getEntityBoundingBox().intersects(this.target.getEntityBoundingBox().expand(2.0, 2.0, 2.0))) {
                 this.entity.attackEntityAsMob(this.target);
             }
         }
@@ -104,7 +104,7 @@ public class RaptorLeapEntityAI extends EntityAIBase {
     }
 
     @Override
-    public boolean continueExecuting() {
+    public boolean shouldContinueExecuting() {
         return !this.target.isDead && !(this.target instanceof DinosaurEntity && ((DinosaurEntity) this.target).isCarcass()) && this.animation != EntityAnimation.IDLE;
     }
 }

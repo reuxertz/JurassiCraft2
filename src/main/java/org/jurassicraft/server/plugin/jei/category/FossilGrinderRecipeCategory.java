@@ -1,5 +1,9 @@
 package org.jurassicraft.server.plugin.jei.category;
 
+import java.util.List;
+
+import org.jurassicraft.JurassiCraft;
+
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableAnimated;
@@ -13,9 +17,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
-import org.jurassicraft.JurassiCraft;
-
-import java.util.List;
 
 public class FossilGrinderRecipeCategory extends BlankRecipeCategory<IRecipeWrapper> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JurassiCraft.MODID, "textures/gui/fossil_grinder.png");
@@ -57,7 +58,7 @@ public class FossilGrinderRecipeCategory extends BlankRecipeCategory<IRecipeWrap
     public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper, IIngredients ingredients) {
         IGuiItemStackGroup stackGroup = recipeLayout.getItemStacks();
         List<List<ItemStack>> inputs = ingredients.getInputs(ItemStack.class);
-        List<ItemStack> outputs = ingredients.getOutputs(ItemStack.class);
+        List<List<ItemStack>> outputs = ingredients.getOutputs(ItemStack.class);
         for (int row = 0; row < 2; row++) {
             for (int column = 0; column < 3; column++) {
                 int index = column + row * 2;
@@ -73,4 +74,9 @@ public class FossilGrinderRecipeCategory extends BlankRecipeCategory<IRecipeWrap
             }
         }
     }
+
+	@Override
+	public String getModName() {
+	    return JurassiCraft.NAME;
+	}
 }

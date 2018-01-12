@@ -1,55 +1,14 @@
 package org.jurassicraft.server.entity;
 
-import com.google.common.collect.Lists;
-import io.netty.buffer.ByteBuf;
-import net.ilexiconn.llibrary.client.model.tools.ChainBuffer;
-import net.ilexiconn.llibrary.server.animation.Animation;
-import net.ilexiconn.llibrary.server.animation.AnimationHandler;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityBodyHelper;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IEntityLivingData;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAITasks;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.ai.EntityLookHelper;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.init.MobEffects;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.pathfinding.Path;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
+import java.util.Set;
+import java.util.UUID;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jurassicraft.JurassiCraft;
@@ -101,14 +60,58 @@ import org.jurassicraft.server.message.SetOrderMessage;
 import org.jurassicraft.server.util.GameRuleHandler;
 import org.jurassicraft.server.util.LangHelper;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
-import java.util.Set;
-import java.util.UUID;
+import com.google.common.collect.Lists;
+
+import io.netty.buffer.ByteBuf;
+import net.ilexiconn.llibrary.client.model.tools.ChainBuffer;
+import net.ilexiconn.llibrary.server.animation.Animation;
+import net.ilexiconn.llibrary.server.animation.AnimationHandler;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityBodyHelper;
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.entity.MoverType;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAITasks;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.ai.EntityLookHelper;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.pathfinding.Path;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class DinosaurEntity extends EntityCreature implements IEntityAdditionalSpawnData, Animatable {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -206,7 +209,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
 
         this.setUseInertialTweens(true);
 
-        this.animationTasks = new EntityAITasks(world.theProfiler);
+        this.animationTasks = new EntityAITasks(world.profiler);
 
         if (!this.dinosaur.isMarineCreature()) {
             this.tasks.addTask(0, new AdvancedSwimEntityAI(this));
@@ -309,7 +312,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
                 }
             }
 
-            if (this.getLastAttacker() == predator || predator.getAttackTarget() == this || hasDinosaurPredator) {
+            if (this.getLastAttackedEntity() == predator || predator.getAttackTarget() == this || hasDinosaurPredator) {
                 return true;
             }
         }
@@ -394,7 +397,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     public boolean attackEntityFrom(DamageSource damageSource, float amount) {
         boolean canHarmInCreative = damageSource.canHarmInCreative();
 
-        Entity attacker = damageSource.getEntity();
+        Entity attacker = damageSource.getTrueSource();
 
         if (!this.isCarcass()) {
             if (this.getHealth() - amount <= 0.0F) {
@@ -435,7 +438,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
                 this.hurtTime = this.maxHurtTime = 10;
             }
 
-            if (damageSource != DamageSource.drown) {
+            if (damageSource != DamageSource.DROWN) {
                 if (!this.dead && this.carcassHealth >= 0 && this.world.getGameRules().getBoolean("doMobLoot")) {
                     this.dropMeat(attacker);
                 }
@@ -495,7 +498,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
 
     @Override
     public EntityItem entityDropItem(ItemStack stack, float offsetY) {
-        if (stack.stackSize != 0 && stack.getItem() != null) {
+        if (stack.getCount() != 0 && stack.getItem() != null) {
             Random rand = new Random();
 
             EntityItem item = new EntityItem(this.world, this.posX + ((rand.nextFloat() * this.width) - this.width / 2), this.posY + (double) offsetY, this.posZ + ((rand.nextFloat() * this.width) - this.width / 2), stack);
@@ -547,8 +550,8 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
             }
         }
 
-        if (cause.getSourceOfDamage() instanceof EntityLivingBase) {
-            this.respondToAttack((EntityLivingBase) cause.getSourceOfDamage());
+        if (cause.getTrueSource() instanceof EntityLivingBase) {
+            this.respondToAttack((EntityLivingBase) cause.getTrueSource());
         }
     }
 
@@ -697,7 +700,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
                 this.getNavigator().tryMoveToEntityLiving(this.breeding, 1.0);
             }
             boolean dead = this.breeding.isDead || this.breeding.isCarcass();
-            if (dead || this.getEntityBoundingBox().intersectsWith(this.breeding.getEntityBoundingBox().expandXyz(3))) {
+            if (dead || this.getEntityBoundingBox().intersects(this.breeding.getEntityBoundingBox().expand(3, 3, 3))) {
                 if (!dead) {
                     this.breedCooldown = this.dinosaur.getBreedCooldown();
                     if (!this.isMale()) {
@@ -757,12 +760,12 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
                 if (this.metabolism.isHungry()) {
                     List<EntityItem> entitiesWithinAABB = this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(1.0, 1.0, 1.0));
                     for (EntityItem itemEntity : entitiesWithinAABB) {
-                        Item item = itemEntity.getEntityItem().getItem();
+                        Item item = itemEntity.getItem().getItem();
                         if (FoodHelper.isEdible(this, this.dinosaur.getDiet(), item)) {
                             this.setAnimation(EntityAnimation.EATING.get());
 
-                            if (itemEntity.getEntityItem().stackSize > 1) {
-                                itemEntity.getEntityItem().stackSize--;
+                            if (itemEntity.getItem().getCount() > 1) {
+                                itemEntity.getItem().shrink(1);
                             } else {
                                 itemEntity.setDead();
                             }
@@ -790,9 +793,9 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
                     if (this.isSwimming()) {
                         Path path = this.getNavigator().getPath();
                         if (path != null) {
-                            AxisAlignedBB detectionBox = this.getEntityBoundingBox().expandXyz(0.5);
+                            AxisAlignedBB detectionBox = this.getEntityBoundingBox().expand(0.5, 0.5, 0.5);
                             if (this.world.collidesWithAnyBlock(detectionBox)) {
-                                List<AxisAlignedBB> colliding = this.world.getCollisionBoxes(detectionBox);
+                                List<AxisAlignedBB> colliding = this.world.getCollisionBoxes(this.getAttackingEntity(), detectionBox);
                                 boolean swimUp = false;
                                 for (AxisAlignedBB bound : colliding) {
                                     if (bound.maxY > this.getEntityBoundingBox().minY) {
@@ -1001,7 +1004,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
                 }
 
                 if (this.ticksExisted % 1000 == 0) {
-                    this.attackEntityFrom(DamageSource.generic, 1.0F);
+                    this.attackEntityFrom(DamageSource.GENERIC, 1.0F);
                 }
             } else {
                 if (this.isSleeping) {
@@ -1144,7 +1147,8 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack stack) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+    	ItemStack stack = player.getHeldItem(hand);
         if (player.isSneaking() && hand == EnumHand.MAIN_HAND) {
             if (this.isOwner(player)) {
                 if (this.getAgePercentage() > 75) {
@@ -1182,7 +1186,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
                     }
                     if (fed) {
                         if (!player.capabilities.isCreativeMode) {
-                            stack.stackSize--;
+                            stack.shrink(1);
                             if (item == Items.POTIONITEM) {
                                 player.inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
                             }
@@ -1544,7 +1548,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
                 ", prevAge=" + this.prevAge +
                 ", maxAge" + this.dinosaur.getMaximumAge() +
                 ", ticksExisted=" + this.ticksExisted +
-                ", entityAge=" + this.entityAge +
+                ", entityAge=" + this.idleTime +
                 ", isMale=" + this.isMale +
                 ", growthSpeedOffset=" + this.growthSpeedOffset +
                 "\n    " +
@@ -1632,7 +1636,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
                 if (!this.world.collidesWithAnyBlock(newBounds)) {
                     this.setEntityBoundingBox(newBounds);
                     if (this.width > prevWidth && !this.firstUpdate && !this.world.isRemote) {
-                        this.move(prevWidth - this.width, 0.0F, prevWidth - this.width);
+                        this.move(MoverType.SELF, prevWidth - this.width, 0.0F, prevWidth - this.width);
                     }
                 }
             } else {

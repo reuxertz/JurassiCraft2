@@ -1,5 +1,16 @@
 package org.jurassicraft.server.block;
 
+import java.util.Map;
+import java.util.Random;
+
+import org.jurassicraft.server.api.CleanableItem;
+import org.jurassicraft.server.api.SubBlocksBlock;
+import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.item.ItemHandler;
+import org.jurassicraft.server.item.block.EncasedFossilItemBlock;
+import org.jurassicraft.server.tab.TabHandler;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -12,20 +23,10 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.Explosion;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jurassicraft.server.api.CleanableItem;
-import org.jurassicraft.server.api.SubBlocksBlock;
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.EntityHandler;
-import org.jurassicraft.server.item.ItemHandler;
-import org.jurassicraft.server.item.block.EncasedFossilItemBlock;
-import org.jurassicraft.server.tab.TabHandler;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
 
 public class EncasedFossilBlock extends Block implements SubBlocksBlock, CleanableItem {
     public static final PropertyInteger VARIANT = PropertyInteger.create("variant", 0, 15);
@@ -71,7 +72,7 @@ public class EncasedFossilBlock extends Block implements SubBlocksBlock, Cleanab
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list) {
+    public void getSubBlocks(Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
         Map<Integer, Dinosaur> dinosaurs = EntityHandler.getDinosaurs();
 
         for (int i = 0; i < 16; i++) {

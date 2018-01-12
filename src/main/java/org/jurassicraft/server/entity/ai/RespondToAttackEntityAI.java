@@ -16,7 +16,7 @@ public class RespondToAttackEntityAI extends EntityAIBase {
 
     @Override
     public boolean shouldExecute() {
-        this.attacker = this.dinosaur.getAITarget();
+        this.attacker = this.dinosaur.getAttackTarget();
 
         return this.attacker != null && !this.attacker.isDead && !(this.attacker instanceof DinosaurEntity && ((DinosaurEntity) this.attacker).isCarcass()) && !(this.attacker instanceof EntityPlayer && ((EntityPlayer) this.attacker).capabilities.isCreativeMode);
     }
@@ -27,7 +27,7 @@ public class RespondToAttackEntityAI extends EntityAIBase {
     }
 
     @Override
-    public boolean continueExecuting() {
+    public boolean shouldContinueExecuting() {
         return false;
     }
 }

@@ -38,7 +38,7 @@ public class OrderDinosaurGui extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
-        this.drawCenteredString(this.mc.fontRendererObj, new LangHelper("gui.select_order.name").build(), this.width / 2, this.height / 16, 0xFFFFFF);
+        this.drawCenteredString(this.mc.fontRenderer, new LangHelper("gui.select_order.name").build(), this.width / 2, this.height / 16, 0xFFFFFF);
     }
 
     @Override

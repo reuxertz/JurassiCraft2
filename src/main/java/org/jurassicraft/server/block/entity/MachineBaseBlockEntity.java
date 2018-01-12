@@ -35,11 +35,12 @@ public abstract class MachineBaseBlockEntity extends TileEntityLockable implemen
 
         for (int i = 0; i < itemList.tagCount(); ++i) {
             NBTTagCompound item = itemList.getCompoundTagAt(i);
+            ItemStack stack = new ItemStack(item);
 
             byte slot = item.getByte("Slot");
 
             if (slot >= 0 && slot < slots.length) {
-                slots[slot] = ItemStack.loadItemStackFromNBT(item);
+                slots[slot] = stack;
             }
         }
 
@@ -113,8 +114,8 @@ public abstract class MachineBaseBlockEntity extends TileEntityLockable implemen
         boolean stacksEqual = stack != null && stack.isItemEqual(slots[index]) && ItemStack.areItemStackTagsEqual(stack, slots[index]);
         slots[index] = stack;
 
-        if (stack != null && stack.stackSize > this.getInventoryStackLimit()) {
-            stack.stackSize = this.getInventoryStackLimit();
+        if (stack != null && stack.getCount() > this.getInventoryStackLimit()) {
+            stack.setCount(this.getInventoryStackLimit());
         }
 
         if (!stacksEqual) {
@@ -289,7 +290,7 @@ public abstract class MachineBaseBlockEntity extends TileEntityLockable implemen
         int[] outputs = this.getOutputs();
         for (int slot : outputs) {
             ItemStack stack = slots[slot];
-            if (stack == null || ((ItemStack.areItemStackTagsEqual(stack, output) && stack.stackSize + output.stackSize <= stack.getMaxStackSize()) && stack.getItem() == output.getItem() && stack.getItemDamage() == output.getItemDamage())) {
+            if (stack == null || ((ItemStack.areItemStackTagsEqual(stack, output) && stack.getCount() + output.getCount() <= stack.getMaxStackSize()) && stack.getItem() == output.getItem() && stack.getItemDamage() == output.getItemDamage())) {
                 return slot;
             }
         }
@@ -346,16 +347,17 @@ public abstract class MachineBaseBlockEntity extends TileEntityLockable implemen
         if (previous == null) {
             slots[slot] = stack;
         } else if (ItemStack.areItemsEqual(previous, stack) && ItemStack.areItemStackTagsEqual(previous, stack)) {
-            previous.stackSize += stack.stackSize;
+        	int sizePrevious = previous.getCount();
+        	sizePrevious += stack.getCount();
         }
     }
 
     protected void decreaseStackSize(int slot) {
         ItemStack[] slots = this.getSlots();
 
-        slots[slot].stackSize--;
+        slots[slot].shrink(1);
 
-        if (slots[slot].stackSize <= 0) {
+        if (slots[slot].getCount() <= 0) {
             slots[slot] = null;
         }
     }

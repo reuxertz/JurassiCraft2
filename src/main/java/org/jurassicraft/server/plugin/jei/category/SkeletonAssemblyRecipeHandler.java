@@ -1,8 +1,9 @@
 package org.jurassicraft.server.plugin.jei.category;
 
+import org.jurassicraft.server.plugin.jei.category.ingredient.SkeletonInput;
+
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
-import org.jurassicraft.server.plugin.jei.category.ingredient.SkeletonInput;
 
 public class SkeletonAssemblyRecipeHandler implements IRecipeHandler<SkeletonInput> {
     @Override
@@ -11,13 +12,8 @@ public class SkeletonAssemblyRecipeHandler implements IRecipeHandler<SkeletonInp
     }
 
     @Override
-    public String getRecipeCategoryUid() {
-        return "jurassicraft.skeleton_assembly";
-    }
-
-    @Override
     public String getRecipeCategoryUid(SkeletonInput recipe) {
-        return this.getRecipeCategoryUid();
+    	return "jurassicraft.skeleton_assembly";
     }
 
     @Override

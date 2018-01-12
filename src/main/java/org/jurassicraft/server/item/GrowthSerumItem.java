@@ -22,7 +22,7 @@ public class GrowthSerumItem extends Item {
             if (!dinosaur.isCarcass()) {
                 dinosaur.increaseGrowthSpeed();
 
-                stack.stackSize--;
+                stack.shrink(1);
 
                 if (!player.capabilities.isCreativeMode) {
                     player.inventory.addItemStackToInventory(new ItemStack(ItemHandler.EMPTY_SYRINGE));

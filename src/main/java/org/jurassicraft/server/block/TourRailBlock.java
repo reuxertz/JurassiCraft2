@@ -36,8 +36,8 @@ public final class TourRailBlock extends BlockRail {
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         super.breakBlock(world, pos, state);
         if (!world.isRemote) {
-            world.notifyNeighborsOfStateChange(pos, this);
-            world.notifyNeighborsOfStateChange(pos.down(), this);
+            world.notifyNeighborsOfStateChange(pos, this, true);
+            world.notifyNeighborsOfStateChange(pos.down(), this, true);
         }
     }
 
@@ -45,7 +45,7 @@ public final class TourRailBlock extends BlockRail {
     public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
         super.onBlockAdded(world, pos, state);
         if (!world.isRemote) {
-            state.neighborChanged(world, pos, this);
+            state.neighborChanged(world, pos, this, pos);
         }
     }
 
@@ -107,9 +107,9 @@ public final class TourRailBlock extends BlockRail {
             EnumRailDirection shape = state.getValue(SHAPE);
             state = (currentlyPowered ? BlockHandler.TOUR_RAIL_POWERED : BlockHandler.TOUR_RAIL).getDefaultState();
             world.setBlockState(pos, state.withProperty(SHAPE, shape), 3);
-            world.notifyNeighborsOfStateChange(pos.down(), this);
+            world.notifyNeighborsOfStateChange(pos.down(), this, true);
             if (state.getValue(SHAPE).isAscending()) {
-                world.notifyNeighborsOfStateChange(pos.up(), this);
+                world.notifyNeighborsOfStateChange(pos.up(), this, true);
             }
         }
     }
@@ -141,6 +141,8 @@ public final class TourRailBlock extends BlockRail {
                         return state.withProperty(SHAPE, SOUTH_EAST);
                     case NORTH_EAST:
                         return state.withProperty(SHAPE, SOUTH_WEST);
+				default:
+					break;
                 }
             case COUNTERCLOCKWISE_90:
                 switch (shape) {
@@ -233,6 +235,8 @@ public final class TourRailBlock extends BlockRail {
                     case NORTH_EAST:
                         return state.withProperty(SHAPE, NORTH_WEST);
                 }
+		default:
+			break;
         }
 
         return super.withMirror(state, mirrorIn);

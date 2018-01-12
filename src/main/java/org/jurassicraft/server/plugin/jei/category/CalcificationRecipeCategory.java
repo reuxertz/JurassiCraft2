@@ -58,7 +58,7 @@ public class CalcificationRecipeCategory extends BlankRecipeCategory<IRecipeWrap
     public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper, IIngredients ingredients) {
         IGuiItemStackGroup stackGroup = recipeLayout.getItemStacks();
         List<List<ItemStack>> inputs = ingredients.getInputs(ItemStack.class);
-        List<ItemStack> outputs = ingredients.getOutputs(ItemStack.class);
+        List<List<ItemStack>> outputs = ingredients.getOutputs(ItemStack.class);
         stackGroup.init(0, true, 0, 36);
         stackGroup.set(0, new ItemStack(Items.EGG));
         stackGroup.init(1, true, 0, 0);
@@ -67,4 +67,10 @@ public class CalcificationRecipeCategory extends BlankRecipeCategory<IRecipeWrap
         stackGroup.init(2, false, 63, 18);
         stackGroup.set(2, outputs.get(0));
     }
+
+	@Override
+	public String getModName() {
+		return JurassiCraft.NAME;
+		
+	}
 }

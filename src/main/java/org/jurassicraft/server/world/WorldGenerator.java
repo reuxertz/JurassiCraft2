@@ -89,7 +89,8 @@ public enum WorldGenerator implements IWorldGenerator {
         if (JurassiCraft.CONFIG.nestFossilGeneration) {
             int nestChance = 100;
 
-            if (BiomeDictionary.isBiomeOfType(biome, BiomeDictionary.Type.MOUNTAIN) || BiomeDictionary.isBiomeOfType(biome, BiomeDictionary.Type.HILLS) || BiomeDictionary.isBiomeOfType(biome, BiomeDictionary.Type.MESA) || BiomeDictionary.isBiomeOfType(biome, BiomeDictionary.Type.SANDY)) {
+            //TODO BiomeDictionary.isBiomeOfType, maybe hasType?
+            if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.MOUNTAIN) || BiomeDictionary.hasType(biome, BiomeDictionary.Type.HILLS) || BiomeDictionary.hasType(biome, BiomeDictionary.Type.MESA) || BiomeDictionary.hasType(biome, BiomeDictionary.Type.SANDY)) {
                 nestChance = 30;
             }
 

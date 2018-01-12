@@ -1,5 +1,16 @@
 package org.jurassicraft.server.item;
 
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+
+import org.jurassicraft.server.block.plant.DoublePlantBlock;
+import org.jurassicraft.server.block.plant.JCBlockCropsBase;
+import org.jurassicraft.server.plant.Plant;
+import org.jurassicraft.server.plant.PlantHandler;
+import org.jurassicraft.server.util.LangHelper;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.creativetab.CreativeTabs;
@@ -10,18 +21,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jurassicraft.server.block.plant.DoublePlantBlock;
-import org.jurassicraft.server.block.plant.JCBlockCropsBase;
-import org.jurassicraft.server.plant.Plant;
-import org.jurassicraft.server.plant.PlantHandler;
-import org.jurassicraft.server.util.LangHelper;
-
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
 
 public class PlantCallusItem extends Item {
     public PlantCallusItem() {
@@ -36,7 +38,8 @@ public class PlantCallusItem extends Item {
     }
 
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+    	ItemStack stack = player.getHeldItem(hand);
         if (side == EnumFacing.UP && player.canPlayerEdit(pos.offset(side), side, stack)) {
             if (world.isAirBlock(pos.offset(side)) && world.getBlockState(pos).getBlock() == Blocks.FARMLAND) {
                 Plant plant = PlantHandler.getPlantById(stack.getItemDamage());
@@ -54,8 +57,7 @@ public class PlantCallusItem extends Item {
                     } else {
                         world.setBlockState(pos.up(), block.getDefaultState());
                     }
-
-                    --stack.stackSize;
+                    stack.shrink(1);
                     return EnumActionResult.SUCCESS;
                 }
             }
@@ -65,7 +67,7 @@ public class PlantCallusItem extends Item {
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> subItems) {
+    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
         List<Plant> plants = new LinkedList<>(PlantHandler.getPrehistoricPlantsAndTrees());
         Collections.sort(plants);
 

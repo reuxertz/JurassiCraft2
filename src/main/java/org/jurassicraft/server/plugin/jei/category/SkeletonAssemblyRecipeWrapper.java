@@ -1,20 +1,20 @@
 package org.jurassicraft.server.plugin.jei.category;
 
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeWrapper;
-import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.item.DisplayBlockItem;
 import org.jurassicraft.server.item.FossilItem;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.plugin.jei.category.ingredient.SkeletonInput;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IRecipeWrapper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.item.ItemStack;
 
 public class SkeletonAssemblyRecipeWrapper implements IRecipeWrapper {
     private final SkeletonInput input;
@@ -47,31 +47,7 @@ public class SkeletonAssemblyRecipeWrapper implements IRecipeWrapper {
     }
 
     @Override
-    public List getInputs() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List getOutputs() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<FluidStack> getFluidInputs() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<FluidStack> getFluidOutputs() {
-        return Collections.emptyList();
-    }
-
-    @Override
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-    }
-
-    @Override
-    public void drawAnimations(Minecraft minecraft, int recipeWidth, int recipeHeight) {
     }
 
     @Override

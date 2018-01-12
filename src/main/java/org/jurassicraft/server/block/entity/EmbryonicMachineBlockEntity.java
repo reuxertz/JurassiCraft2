@@ -129,4 +129,9 @@ public class EmbryonicMachineBlockEntity extends MachineBaseBlockEntity {
         super.onSlotUpdate();
         this.world.markBlockRangeForRenderUpdate(this.pos, this.pos);
     }
+
+	@Override
+	public boolean isEmpty() {
+		return false;
+	}
 }

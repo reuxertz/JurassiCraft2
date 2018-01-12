@@ -77,7 +77,7 @@ public class ElectricFenceWireBlock extends BlockContainer {
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState state, World world, BlockPos pos) {
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
         for (int i = 4; i < stackTrace.length; i++) {
             StackTraceElement element = stackTrace[i];
@@ -141,6 +141,8 @@ public class ElectricFenceWireBlock extends BlockContainer {
                     case EAST:
                         east = true;
                         break;
+				default:
+					break;
                 }
             }
         }
@@ -220,7 +222,7 @@ public class ElectricFenceWireBlock extends BlockContainer {
     }
 
     @Override
-    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
+    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
         if (!world.isRemote) {
             TileEntity tile = world.getTileEntity(pos);
             if (tile instanceof ElectricFenceWireBlockEntity) {

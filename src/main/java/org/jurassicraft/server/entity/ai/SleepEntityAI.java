@@ -88,7 +88,7 @@ public class SleepEntityAI extends EntityAIBase {
             PathPoint finalPathPoint = this.path.getFinalPathPoint();
 
             if (currentPath == null || !currentPath.getFinalPathPoint().equals(finalPathPoint)) {
-                Path path = this.dinosaur.getNavigator().getPathToXYZ(finalPathPoint.xCoord, finalPathPoint.yCoord, finalPathPoint.zCoord);
+                Path path = this.dinosaur.getNavigator().getPathToXYZ(finalPathPoint.x, finalPathPoint.y, finalPathPoint.z);
                 this.dinosaur.getNavigator().setPath(path, 1.0);
                 this.path = path;
             }
@@ -102,7 +102,7 @@ public class SleepEntityAI extends EntityAIBase {
     }
 
     @Override
-    public boolean continueExecuting() {
+    public boolean shouldContinueExecuting() {
         return this.dinosaur != null && !this.dinosaur.isCarcass() && !this.dinosaur.isSleeping() && this.dinosaur.shouldSleep();
     }
 

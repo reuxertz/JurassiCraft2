@@ -96,8 +96,8 @@ public class CultivateProcessGui extends GuiScreen {
         String progress = progressLang + ": " + this.getScaled(this.cultivator.getField(0), this.cultivator.getField(1), 100) + "%";
         String cultivating = cultivatingLang + ": " + name;
 
-        this.fontRendererObj.drawString(cultivating, this.guiLeft + (this.xSize - this.fontRendererObj.getStringWidth(cultivating)) / 2, this.guiTop + 10, 4210752);
-        this.fontRendererObj.drawString(progress, this.guiLeft + (this.xSize - this.fontRendererObj.getStringWidth(progress)) / 2, this.guiTop + 40, 4210752);
+        this.fontRenderer.drawString(cultivating, this.guiLeft + (this.xSize - this.fontRenderer.getStringWidth(cultivating)) / 2, this.guiTop + 10, 4210752);
+        this.fontRenderer.drawString(progress, this.guiLeft + (this.xSize - this.fontRenderer.getStringWidth(progress)) / 2, this.guiTop + 40, 4210752);
 
         super.drawScreen(x, y, f);
     }

@@ -26,7 +26,7 @@ public class AssistOwnerEntityAI extends EntityAIBase {
                 this.owner = this.entity.world.getPlayerEntityByUUID(ownerId);
 
                 if (this.owner != null) {
-                    this.target = this.owner.getLastAttacker();
+                    this.target = this.owner.getLastAttackedEntity();
                     return this.target != null && this.target != this.entity && this.entity.getOrder() == DinosaurEntity.Order.FOLLOW;
                 }
             }
@@ -36,7 +36,7 @@ public class AssistOwnerEntityAI extends EntityAIBase {
     }
 
     @Override
-    public boolean continueExecuting() {
+    public boolean shouldContinueExecuting() {
         return !this.isDead(this.target) && this.entity.getOrder() == DinosaurEntity.Order.FOLLOW;
     }
 

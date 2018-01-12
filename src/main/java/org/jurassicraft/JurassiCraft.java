@@ -1,18 +1,5 @@
 package org.jurassicraft;
 
-import net.ilexiconn.llibrary.server.config.Config;
-import net.ilexiconn.llibrary.server.network.NetworkWrapper;
-import net.ilexiconn.llibrary.server.update.UpdateHandler;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import org.apache.logging.log4j.Logger;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.command.ForceAnimationCommand;
@@ -30,6 +17,20 @@ import org.jurassicraft.server.message.SwitchHybridizerCombinatorMode;
 import org.jurassicraft.server.message.UpdateFordExplorerStateMessage;
 import org.jurassicraft.server.message.UpdateVehicleControlMessage;
 import org.jurassicraft.server.proxy.ServerProxy;
+
+import net.ilexiconn.llibrary.server.config.Config;
+import net.ilexiconn.llibrary.server.network.NetworkWrapper;
+import net.ilexiconn.llibrary.server.update.UpdateHandler;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
 @Mod(modid = JurassiCraft.MODID, name = JurassiCraft.NAME, version = JurassiCraft.VERSION, guiFactory = "org.jurassicraft.client.gui.JurassiCraftGUIFactory", dependencies = "required-after:llibrary@[" + JurassiCraft.LLIBRARY_VERSION + ",)")
 public class JurassiCraft {

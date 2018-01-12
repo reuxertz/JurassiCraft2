@@ -1,6 +1,8 @@
 package org.jurassicraft.server.dinosaur;
 
 import net.minecraftforge.common.BiomeDictionary;
+
+import org.jurassicraft.server.conf.JurassiCraftConfig;
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.entity.dinosaur.TriceratopsEntity;
 import org.jurassicraft.server.period.TimePeriod;

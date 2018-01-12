@@ -44,7 +44,7 @@ public class MateEntityAI extends EntityAIBase {
 
     @Override
     public void updateTask() {
-        if (this.dinosaur.getEntityBoundingBox().intersectsWith(this.mate.getEntityBoundingBox().expand(0.5D, 0.5D, 0.5D))) {
+        if (this.dinosaur.getEntityBoundingBox().intersects(this.mate.getEntityBoundingBox().expand(0.5D, 0.5D, 0.5D))) {
             this.dinosaur.setAnimation(EntityAnimation.MATING.get());
 
             this.dinosaur.getMetabolism().decreaseEnergy(1000);
@@ -55,7 +55,7 @@ public class MateEntityAI extends EntityAIBase {
      * Returns whether an in-progress EntityAIBase should continue executing
      */
     @Override
-    public boolean continueExecuting() {
+    public boolean shouldContinueExecuting() {
         return this.dinosaur != null && !this.dinosaur.getNavigator().noPath() && this.mate != null && !this.mate.isDead;
     }
 }

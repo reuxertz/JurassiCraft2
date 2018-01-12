@@ -26,7 +26,8 @@ public class SwarmItem extends Item {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+    	ItemStack stack = player.getHeldItem(hand);
         RayTraceResult result = this.rayTrace(world, player, true);
         if (result != null && result.typeOfHit == RayTraceResult.Type.BLOCK) {
             BlockPos pos = result.getBlockPos();
@@ -34,7 +35,7 @@ public class SwarmItem extends Item {
             if (state.getMaterial() == Material.WATER) {
                 if (player.canPlayerEdit(pos, EnumFacing.UP, stack)) {
                     world.setBlockState(pos.up(), this.block.get());
-                    stack.stackSize--;
+                    stack.shrink(1);
                     return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
                 }
             }

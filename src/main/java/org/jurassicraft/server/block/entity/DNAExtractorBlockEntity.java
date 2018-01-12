@@ -166,4 +166,9 @@ public class DNAExtractorBlockEntity extends MachineBaseBlockEntity {
     public String getName() {
         return this.hasCustomName() ? this.customName : "container.dna_extractor";
     }
+
+	@Override
+	public boolean isEmpty() {
+		return false;
+	}
 }

@@ -68,8 +68,8 @@ public class SwarmBlock extends Block {
     }
 
     @Override
-    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
-        super.neighborChanged(state, world, pos, block);
+    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos) {
+        super.neighborChanged(state, world, pos, block, fromPos);
         this.checkForDrop(world, pos, state);
     }
 
@@ -85,10 +85,6 @@ public class SwarmBlock extends Block {
 
     private boolean canBlockStay(World world, BlockPos pos) {
         return world.getBlockState(pos.down()).getMaterial() == Material.WATER;
-    }
-
-    @Override
-    public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entity) {
     }
 
     @Override

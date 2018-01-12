@@ -72,14 +72,14 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
         if (this.slots[index] != null) {
             ItemStack stack;
 
-            if (this.slots[index].stackSize <= count) {
+            if (this.slots[index].getCount() <= count) {
                 stack = this.slots[index];
                 this.slots[index] = null;
                 return stack;
             } else {
                 stack = this.slots[index].splitStack(count);
 
-                if (this.slots[index].stackSize == 0) {
+                if (this.slots[index].getCount() == 0) {
                     this.slots[index] = null;
                 }
 
@@ -105,8 +105,8 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
     public void setInventorySlotContents(int index, ItemStack stack) {
         this.slots[index] = stack;
 
-        if (stack != null && stack.stackSize > this.getInventoryStackLimit()) {
-            stack.stackSize = this.getInventoryStackLimit();
+        if (stack != null && stack.getCount() > this.getInventoryStackLimit()) {
+            stack.setCount(this.getInventoryStackLimit());
         }
     }
 
@@ -191,11 +191,13 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
 
         for (int i = 0; i < itemList.tagCount(); ++i) {
             NBTTagCompound item = itemList.getCompoundTagAt(i);
+            ItemStack stack = new ItemStack(item);
 
             byte slot = item.getByte("Slot");
 
             if (slot >= 0 && slot < slots.length) {
-                slots[slot] = ItemStack.loadItemStackFromNBT(item);
+                slots[slot] = stack;
+                
             }
         }
 
@@ -349,7 +351,7 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
     private int getFoodForDinosaur(DinosaurEntity dinosaur) {
         int i = 0;
         for (ItemStack stack : this.slots) {
-            if (stack != null && stack.stackSize > 0 && FoodHelper.isEdible(dinosaur, dinosaur.getDinosaur().getDiet(), stack.getItem())) {
+            if (stack != null && stack.getCount() > 0 && FoodHelper.isEdible(dinosaur, dinosaur.getDinosaur().getDiet(), stack.getItem())) {
                 return i;
             }
             i++;
@@ -369,4 +371,10 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
             this.feedingExpire = 0;
         }
     }
+
+	@Override
+	public boolean isEmpty() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

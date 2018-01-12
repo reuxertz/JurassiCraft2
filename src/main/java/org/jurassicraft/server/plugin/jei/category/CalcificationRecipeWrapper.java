@@ -1,21 +1,21 @@
 package org.jurassicraft.server.plugin.jei.category;
 
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeWrapper;
-import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.FluidStack;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
 import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.genetics.DinoDNA;
 import org.jurassicraft.server.genetics.GeneticsHelper;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.plugin.jei.category.ingredient.CalcificationInput;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IRecipeWrapper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class CalcificationRecipeWrapper implements IRecipeWrapper {
     private final CalcificationInput input;
@@ -44,32 +44,9 @@ public class CalcificationRecipeWrapper implements IRecipeWrapper {
         ingredients.setOutput(ItemStack.class, outputStack);
     }
 
-    @Override
-    public List getInputs() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List getOutputs() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<FluidStack> getFluidInputs() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<FluidStack> getFluidOutputs() {
-        return Collections.emptyList();
-    }
 
     @Override
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-    }
-
-    @Override
-    public void drawAnimations(Minecraft minecraft, int recipeWidth, int recipeHeight) {
     }
 
     @Override

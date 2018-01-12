@@ -33,7 +33,7 @@ public class EscapeBlockEntityAI extends EntityAIBase {
     }
 
     @Override
-    public boolean continueExecuting() {
+    public boolean shouldContinueExecuting() {
         return (!this._entity.getNavigator().noPath());
     }
 }

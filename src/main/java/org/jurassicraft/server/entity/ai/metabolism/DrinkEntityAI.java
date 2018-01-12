@@ -72,7 +72,7 @@ public class DrinkEntityAI extends EntityAIBase {
         if (this.path != null) {
             this.dinosaur.getNavigator().setPath(this.path, 1.0);
             Vec3d center = new Vec3d(this.pos.getX() + 0.5, this.pos.getY() + 0.5, this.pos.getZ() + 0.5);
-            if (this.path.isFinished() || (this.dinosaur.getEntityBoundingBox().expandXyz(2).isVecInside(center) && this.giveUpTime < 10)) {
+            if (this.path.isFinished() || (this.dinosaur.getEntityBoundingBox().expand(2, 2, 2).intersectsWithXY(center) && this.giveUpTime < 10)) {
                 this.dinosaur.getLookHelper().setLookPosition(this.pos.getX() + 0.5, this.pos.getY() + 0.5, this.pos.getZ() + 0.5, 10.0F, 10.0F);
                 this.dinosaur.setAnimation(EntityAnimation.DRINKING.get());
                 MetabolismContainer metabolism = this.dinosaur.getMetabolism();
@@ -89,7 +89,7 @@ public class DrinkEntityAI extends EntityAIBase {
     }
 
     @Override
-    public boolean continueExecuting() {
+    public boolean shouldContinueExecuting() {
         return this.giveUpTime > 0 && this.dinosaur != null && this.dinosaur.isAlive() && this.path != null && this.dinosaur.getMetabolism().getWater() < this.dinosaur.getMetabolism().getMaxWater() * 0.9;
     }
 

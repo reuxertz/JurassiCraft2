@@ -1,8 +1,9 @@
 package org.jurassicraft.server.plugin.jei.category;
 
+import org.jurassicraft.server.plugin.jei.category.ingredient.CalcificationInput;
+
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
-import org.jurassicraft.server.plugin.jei.category.ingredient.CalcificationInput;
 
 public class CalcificationRecipeHandler implements IRecipeHandler<CalcificationInput> {
     @Override
@@ -11,13 +12,8 @@ public class CalcificationRecipeHandler implements IRecipeHandler<CalcificationI
     }
 
     @Override
-    public String getRecipeCategoryUid() {
-        return "jurassicraft.embryo_calcification_machine";
-    }
-
-    @Override
     public String getRecipeCategoryUid(CalcificationInput recipe) {
-        return this.getRecipeCategoryUid();
+        return "jurassicraft.embryo_calcification_machine";
     }
 
     @Override

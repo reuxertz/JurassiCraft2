@@ -25,15 +25,15 @@ public class MoveUnderwaterEntityAI extends EntityAIBase {
         if (target == null) {
             return false;
         } else {
-            this.xPosition = target.xCoord;
-            this.yPosition = target.yCoord;
-            this.zPosition = target.zCoord;
+            this.xPosition = target.x;
+            this.yPosition = target.y;
+            this.zPosition = target.z;
             return true;
         }
     }
 
     @Override
-    public boolean continueExecuting() {
+    public boolean shouldContinueExecuting() {
         return !this.swimmingEntity.getNavigator().noPath();
     }
 

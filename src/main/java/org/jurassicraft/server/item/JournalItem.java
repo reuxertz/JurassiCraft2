@@ -1,6 +1,15 @@
 package org.jurassicraft.server.item;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.List;
+
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.tab.TabHandler;
+
 import com.google.gson.Gson;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,18 +18,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.tab.TabHandler;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.List;
 
 public class JournalItem extends Item {
     public JournalItem() {
@@ -30,8 +33,10 @@ public class JournalItem extends Item {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+    	ItemStack stack = player.getHeldItem(hand);
         if (world.isRemote) {
+        	
             JurassiCraft.PROXY.openJournal(JournalType.get(stack.getMetadata()));
         }
         return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
@@ -46,7 +51,7 @@ public class JournalItem extends Item {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> subItems) {
+    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
         for (JournalType type : JournalType.values()) {
             subItems.add(new ItemStack(item, 1, type.getMetadata()));
         }

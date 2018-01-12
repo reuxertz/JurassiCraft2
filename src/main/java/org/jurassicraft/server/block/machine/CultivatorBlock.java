@@ -1,5 +1,10 @@
 package org.jurassicraft.server.block.machine;
 
+import org.jurassicraft.server.api.SubBlocksBlock;
+import org.jurassicraft.server.block.BlockHandler;
+import org.jurassicraft.server.block.entity.CultivatorBlockEntity;
+import org.jurassicraft.server.item.block.CultivateItemBlock;
+
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -15,16 +20,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jurassicraft.server.api.SubBlocksBlock;
-import org.jurassicraft.server.block.BlockHandler;
-import org.jurassicraft.server.block.entity.CultivatorBlockEntity;
-import org.jurassicraft.server.item.block.CultivateItemBlock;
-
-import java.util.List;
 
 public class CultivatorBlock extends BlockContainer implements SubBlocksBlock {
     public static final PropertyEnum<EnumDyeColor> COLOR = PropertyEnum.create("color", EnumDyeColor.class);
@@ -54,10 +54,10 @@ public class CultivatorBlock extends BlockContainer implements SubBlocksBlock {
             InventoryHelper.dropInventoryItems(world, pos, (CultivatorBlockEntity) tile);
         }
     }
-
+    
     @SideOnly(Side.CLIENT)
     @Override
-    public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> subtypes) {
+    public void getSubBlocks(Item item, CreativeTabs tab, NonNullList<ItemStack> subtypes) {
         EnumDyeColor[] colors = EnumDyeColor.values();
 
         for (EnumDyeColor color : colors) {

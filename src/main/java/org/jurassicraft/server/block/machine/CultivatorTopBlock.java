@@ -32,11 +32,11 @@ public class CultivatorTopBlock extends CultivatorBlock {
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack stack, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         BlockPos add = pos.add(0, -1, 0);
         IBlockState blockState = world.getBlockState(add);
 
-        return blockState.getBlock().onBlockActivated(world, add, blockState, player, hand, stack, side, hitX, hitY, hitZ);
+        return blockState.getBlock().onBlockActivated(world, add, blockState, player, hand, side, hitX, hitY, hitZ);
     }
 
     @Override

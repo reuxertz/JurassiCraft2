@@ -27,7 +27,7 @@ public class RoarAnimationAI extends EntityAIBase {
     }
 
     @Override
-    public boolean continueExecuting() {
+    public boolean shouldContinueExecuting() {
         return false;
     }
 }

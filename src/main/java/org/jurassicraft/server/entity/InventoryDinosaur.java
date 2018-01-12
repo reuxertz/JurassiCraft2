@@ -42,10 +42,11 @@ public class InventoryDinosaur implements IInventory {
 
         for (int i = 0; i < nbttaglist.tagCount(); ++i) {
             NBTTagCompound slotTag = nbttaglist.getCompoundTagAt(i);
+            ItemStack stack = new ItemStack(slotTag);
             int j = slotTag.getByte("Slot") & 255;
 
             if (j >= 0 && j < this.inventory.length) {
-                this.setInventorySlotContents(j, ItemStack.loadItemStackFromNBT(slotTag));
+                this.setInventorySlotContents(j, stack);
             }
         }
     }
@@ -65,14 +66,14 @@ public class InventoryDinosaur implements IInventory {
         if (this.inventory[index] != null) {
             ItemStack itemstack;
 
-            if (this.inventory[index].stackSize <= count) {
+            if (this.inventory[index].getCount() <= count) {
                 itemstack = this.inventory[index];
                 this.setInventorySlotContents(index, null);
                 return itemstack;
             } else {
                 itemstack = this.inventory[index].splitStack(count);
 
-                if (this.inventory[index].stackSize == 0) {
+                if (this.inventory[index].getCount() == 0) {
                     this.setInventorySlotContents(index, null);
                 }
 
@@ -98,8 +99,8 @@ public class InventoryDinosaur implements IInventory {
     public void setInventorySlotContents(int index, ItemStack stack) {
         this.inventory[index] = stack;
 
-        if (stack != null && stack.stackSize > this.getInventoryStackLimit()) {
-            stack.stackSize = this.getInventoryStackLimit();
+        if (stack != null && stack.getCount() > this.getInventoryStackLimit()) {
+            stack.setCount(this.getInventoryStackLimit());
         }
     }
 
@@ -176,14 +177,14 @@ public class InventoryDinosaur implements IInventory {
                 float offsetY = rand.nextFloat() * 0.8F + 0.1F;
                 float offsetZ = rand.nextFloat() * 0.8F + 0.1F;
 
-                while (itemstack.stackSize > 0) {
+                while (itemstack.getCount() > 0) {
                     int j = rand.nextInt(21) + 10;
 
-                    if (j > itemstack.stackSize) {
-                        j = itemstack.stackSize;
+                    if (j > itemstack.getCount()) {
+                        j = itemstack.getCount();
                     }
 
-                    itemstack.stackSize -= j;
+                    j -= itemstack.getCount();
                     EntityItem itemEntity = new EntityItem(world, this.entity.posX + offsetX, this.entity.posY + offsetY, this.entity.posZ + offsetZ, new ItemStack(itemstack.getItem(), j, itemstack.getItemDamage()));
                     float multiplier = 0.05F;
                     itemEntity.motionX = (float) rand.nextGaussian() * multiplier;
@@ -194,4 +195,10 @@ public class InventoryDinosaur implements IInventory {
             }
         }
     }
+
+	@Override
+	public boolean isEmpty() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

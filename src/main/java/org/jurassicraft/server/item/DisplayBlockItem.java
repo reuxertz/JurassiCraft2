@@ -1,5 +1,19 @@
 package org.jurassicraft.server.item;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+
+import org.jurassicraft.client.render.RenderingHandler;
+import org.jurassicraft.server.block.BlockHandler;
+import org.jurassicraft.server.block.entity.DisplayBlockEntity;
+import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.tab.TabHandler;
+import org.jurassicraft.server.util.LangHelper;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
@@ -11,25 +25,13 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jurassicraft.client.render.RenderingHandler;
-import org.jurassicraft.server.block.BlockHandler;
-import org.jurassicraft.server.block.entity.DisplayBlockEntity;
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.EntityHandler;
-import org.jurassicraft.server.tab.TabHandler;
-import org.jurassicraft.server.util.LangHelper;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
 
 public class DisplayBlockItem extends Item {
     public DisplayBlockItem() {
@@ -52,9 +54,9 @@ public class DisplayBlockItem extends Item {
     }
 
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         pos = pos.offset(side);
-
+        ItemStack stack = player.getHeldItem(hand);
         if (!player.world.isRemote && player.canPlayerEdit(pos, side, stack)) {
             Block block = BlockHandler.DISPLAY_BLOCK;
 
@@ -73,7 +75,7 @@ public class DisplayBlockItem extends Item {
                     world.notifyBlockUpdate(pos, state, state, 0);
                     tile.markDirty();
                     if (!player.capabilities.isCreativeMode) {
-                        stack.stackSize--;
+                        stack.shrink(1);
                     }
                 }
             }
@@ -97,7 +99,7 @@ public class DisplayBlockItem extends Item {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> subtypes) {
+    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subtypes) {
         List<Dinosaur> dinosaurs = new LinkedList<>(EntityHandler.getDinosaurs().values());
 
         Collections.sort(dinosaurs);
@@ -150,7 +152,8 @@ public class DisplayBlockItem extends Item {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+    	ItemStack stack = player.getHeldItem(hand);
         if (!this.isSkeleton(stack)) {
             int mode = this.changeMode(stack);
             if (world.isRemote) {

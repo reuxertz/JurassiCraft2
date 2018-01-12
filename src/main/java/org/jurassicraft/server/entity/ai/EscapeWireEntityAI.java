@@ -43,7 +43,7 @@ public class EscapeWireEntityAI extends EntityAIBase {
     }
 
     @Override
-    public boolean continueExecuting() {
+    public boolean shouldContinueExecuting() {
         return !this.entity.getNavigator().noPath();
     }
 }

@@ -1,5 +1,9 @@
 package org.jurassicraft.server.block.machine;
 
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.proxy.ServerProxy;
+import org.jurassicraft.server.tab.TabHandler;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -23,11 +27,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.proxy.ServerProxy;
-import org.jurassicraft.server.tab.TabHandler;
-
-import javax.annotation.Nullable;
 
 public class SkeletonAssemblyBlock extends Block {
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
@@ -44,7 +43,7 @@ public class SkeletonAssemblyBlock extends Block {
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (state.getValue(HALF) == BlockHalf.DUMMY) {
             pos = this.getOpposite(pos, state);
         }

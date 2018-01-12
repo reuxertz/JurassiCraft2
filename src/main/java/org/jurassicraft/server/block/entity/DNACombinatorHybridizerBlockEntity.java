@@ -260,4 +260,9 @@ public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntity {
     public ITextComponent getDisplayName() {
         return this.hasCustomName() ? new TextComponentString(this.getName()) : new TextComponentTranslation(this.hybridizerMode ? "container.dna_hybridizer" : "container.dna_combinator");
     }
+
+	@Override
+	public boolean isEmpty() {
+		return false;
+	}
 }

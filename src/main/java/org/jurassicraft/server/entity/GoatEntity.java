@@ -267,10 +267,12 @@ public class GoatEntity extends EntityAnimal implements Animatable, IEntityAddit
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack stack) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
+    	ItemStack stack =  player.getHeldItem(hand);
         if (stack != null && stack.getItem() == Items.BUCKET && !player.capabilities.isCreativeMode && !this.isChild() && !this.milked && !this.billy) {
             player.playSound(SoundEvents.ENTITY_COW_MILK, 1.0F, 1.0F);
-            if (--stack.stackSize == 0) {
+            stack.shrink(1);
+            if (stack.getCount() == 0) {
                 player.setHeldItem(hand, new ItemStack(Items.MILK_BUCKET));
             } else if (!player.inventory.addItemStackToInventory(new ItemStack(Items.MILK_BUCKET))) {
                 player.dropItem(new ItemStack(Items.MILK_BUCKET), false);
@@ -278,7 +280,7 @@ public class GoatEntity extends EntityAnimal implements Animatable, IEntityAddit
             this.milked = true;
             return true;
         } else {
-            return super.processInteract(player, hand, stack);
+            return super.processInteract(player, hand);
         }
     }
 

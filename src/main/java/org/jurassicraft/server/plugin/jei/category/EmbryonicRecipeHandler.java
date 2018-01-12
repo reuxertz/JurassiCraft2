@@ -1,8 +1,9 @@
 package org.jurassicraft.server.plugin.jei.category;
 
+import org.jurassicraft.server.plugin.jei.category.ingredient.EmbryoInput;
+
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
-import org.jurassicraft.server.plugin.jei.category.ingredient.EmbryoInput;
 
 public class EmbryonicRecipeHandler implements IRecipeHandler<EmbryoInput> {
     @Override
@@ -11,13 +12,8 @@ public class EmbryonicRecipeHandler implements IRecipeHandler<EmbryoInput> {
     }
 
     @Override
-    public String getRecipeCategoryUid() {
-        return "jurassicraft.embryonic_machine";
-    }
-
-    @Override
     public String getRecipeCategoryUid(EmbryoInput recipe) {
-        return this.getRecipeCategoryUid();
+    	return "jurassicraft.embryonic_machine";
     }
 
     @Override

@@ -16,7 +16,7 @@ import java.util.List;
 public class GeneticistCareer extends VillagerRegistry.VillagerCareer {
     public GeneticistCareer(VillagerRegistry.VillagerProfession parent) {
         super(parent, JurassiCraft.MODID + ":geneticist");
-        this.addTrade(1, (EntityVillager.ITradeList) (recipeList, random) -> {
+        this.addTrade(1, (EntityVillager.ITradeList) (IMerchant, recipeList, random) -> {
             List<MerchantRecipe> possible = new ArrayList<>();
             possible.add(new MerchantRecipe(new ItemStack(Items.EMERALD, random.nextInt(2) + 1), new ItemStack(ItemHandler.PETRI_DISH, random.nextInt(5) + 8)));
             possible.add(new MerchantRecipe(new ItemStack(Items.EMERALD), new ItemStack(ItemHandler.LIQUID_AGAR, random.nextInt(5) + 10)));
@@ -35,7 +35,7 @@ public class GeneticistCareer extends VillagerRegistry.VillagerCareer {
                 recipeList.add(possible.get(random.nextInt(possible.size())));
             }
         });
-        this.addTrade(2, (EntityVillager.ITradeList) (recipeList, random) -> {
+        this.addTrade(2, (EntityVillager.ITradeList) (IMerchant, recipeList, random) -> {
             List<MerchantRecipe> possible = new ArrayList<>();
             possible.add(new MerchantRecipe(new ItemStack(Items.EMERALD, random.nextInt(2) + 6), new ItemStack(BlockHandler.DNA_EXTRACTOR)));
             possible.add(new MerchantRecipe(new ItemStack(Items.EMERALD, random.nextInt(2) + 5), new ItemStack(BlockHandler.DNA_SEQUENCER)));

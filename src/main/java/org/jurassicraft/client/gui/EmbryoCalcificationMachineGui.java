@@ -26,8 +26,8 @@ public class EmbryoCalcificationMachineGui extends GuiContainer {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         String displayName = this.inventory.getDisplayName().getUnformattedText();
-        this.fontRendererObj.drawString(displayName, this.xSize / 2 - this.fontRendererObj.getStringWidth(displayName) / 2, 4, 4210752);
-        this.fontRendererObj.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, 4210752);
+        this.fontRenderer.drawString(displayName, this.xSize / 2 - this.fontRenderer.getStringWidth(displayName) / 2, 4, 4210752);
+        this.fontRenderer.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, 4210752);
     }
 
     @Override

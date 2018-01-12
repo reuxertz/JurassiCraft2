@@ -342,20 +342,20 @@ public class HelicopterBaseEntity extends EntityLivingBase implements IEntityAdd
     }
 
     @Override
-    public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, ItemStack stack, EnumHand hand) {
+    public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, EnumHand hand) {
         // Transforms the vector in local coordinates (cancels possible rotations to simplify 'seat detection')
         Vec3d localVec = vec.rotateYaw((float) Math.toRadians(this.rotationYaw));
 
-        if (!this.attachModule(player, localVec, stack)) {
+        if (!this.attachModule(player, localVec, activeItemStack)) {
             System.out.println(localVec);
 
-            if (localVec.zCoord > 0.6) {
+            if (localVec.z > 0.6) {
                 player.startRiding(this.seats[0]);
                 return EnumActionResult.SUCCESS;
-            } else if (localVec.zCoord < 0.6 && localVec.xCoord > 0) {
+            } else if (localVec.z < 0.6 && localVec.x > 0) {
                 player.startRiding(this.seats[1]);
                 return EnumActionResult.SUCCESS;
-            } else if (localVec.zCoord < 0.6 && localVec.xCoord < 0) {
+            } else if (localVec.z < 0.6 && localVec.x < 0) {
                 player.startRiding(this.seats[2]);
                 return EnumActionResult.SUCCESS;
             }
@@ -381,7 +381,7 @@ public class HelicopterBaseEntity extends EntityLivingBase implements IEntityAdd
                         if (spot != null && spot.isClicked(localVec)) {
                             if (spot.addModule(module)) {
                                 if (!player.capabilities.isCreativeMode) {
-                                    stack.stackSize--;
+                                    stack.shrink(1);
                                 }
                                 return true;
                             }

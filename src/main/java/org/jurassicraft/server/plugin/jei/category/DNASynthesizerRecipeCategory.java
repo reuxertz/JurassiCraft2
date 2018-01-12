@@ -58,7 +58,7 @@ public class DNASynthesizerRecipeCategory extends BlankRecipeCategory<IRecipeWra
     public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper, IIngredients ingredients) {
         IGuiItemStackGroup stackGroup = recipeLayout.getItemStacks();
         List<List<ItemStack>> inputs = ingredients.getInputs(ItemStack.class);
-        List<ItemStack> outputs = ingredients.getOutputs(ItemStack.class);
+        List<List<ItemStack>> outputs = ingredients.getOutputs(ItemStack.class);
         stackGroup.init(0, true, 15, 0);
         stackGroup.set(0, inputs.get(0));
         stackGroup.init(1, true, 1, 27);
@@ -68,4 +68,9 @@ public class DNASynthesizerRecipeCategory extends BlankRecipeCategory<IRecipeWra
         stackGroup.init(3, false, 96, 4);
         stackGroup.set(3, outputs.get(0));
     }
+
+	@Override
+	public String getModName() {
+		return JurassiCraft.NAME;
+	}
 }

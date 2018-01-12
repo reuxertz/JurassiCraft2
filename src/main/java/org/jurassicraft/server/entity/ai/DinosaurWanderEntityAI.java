@@ -37,9 +37,9 @@ public class DinosaurWanderEntityAI extends EntityAIBase {
             Vec3d wanderPosition = RandomPositionGenerator.findRandomTarget(this.entity, 10, 10);
 
             if (wanderPosition != null) {
-                this.xPosition = wanderPosition.xCoord;
-                this.yPosition = wanderPosition.yCoord;
-                this.zPosition = wanderPosition.zCoord;
+                this.xPosition = wanderPosition.x;
+                this.yPosition = wanderPosition.y;
+                this.zPosition = wanderPosition.z;
                 this.mustUpdate = false;
 
                 return true;
@@ -50,7 +50,7 @@ public class DinosaurWanderEntityAI extends EntityAIBase {
     }
 
     @Override
-    public boolean continueExecuting() {
+    public boolean shouldContinueExecuting() {
         return !this.entity.getNavigator().noPath();
     }
 

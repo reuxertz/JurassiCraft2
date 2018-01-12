@@ -124,4 +124,9 @@ public class FossilGrinderBlockEntity extends MachineBaseBlockEntity {
     public String getName() {
         return this.hasCustomName() ? this.customName : "container.fossil_grinder";
     }
+
+	@Override
+	public boolean isEmpty() {
+		return false;
+	}
 }

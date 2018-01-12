@@ -43,7 +43,7 @@ public class GrazeEntityAI extends EntityAIBase {
 
             // This gets called once to initiate.  Here's where we find the plant and start movement
             Vec3d headPos = this.dinosaur.getHeadPos();
-            BlockPos head = new BlockPos(headPos.xCoord, headPos.yCoord, headPos.zCoord);
+            BlockPos head = new BlockPos(headPos.x, headPos.y, headPos.z);
 
             //world the animal currently inhabits
             this.world = this.dinosaur.world;
@@ -89,7 +89,7 @@ public class GrazeEntityAI extends EntityAIBase {
     }
 
     @Override
-    public boolean continueExecuting() {
+    public boolean shouldContinueExecuting() {
         if (this.target != null && this.world.isAirBlock(this.target) && !this.dinosaur.getNavigator().noPath()) {
             this.terminateTask();
             return false;
@@ -102,7 +102,7 @@ public class GrazeEntityAI extends EntityAIBase {
     public void updateTask() {
         if (this.target != null) {
             Vec3d headPos = this.dinosaur.getHeadPos();
-            Vec3d headVec = new Vec3d(headPos.xCoord, this.target.getY(), headPos.zCoord);
+            Vec3d headVec = new Vec3d(headPos.x, this.target.getY(), headPos.z);
 
             if (headVec.squareDistanceTo(this.targetVec) < EAT_RADIUS) {
                 this.dinosaur.getNavigator().clearPathEntity();

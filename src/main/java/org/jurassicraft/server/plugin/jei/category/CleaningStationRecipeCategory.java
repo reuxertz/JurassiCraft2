@@ -1,5 +1,9 @@
 package org.jurassicraft.server.plugin.jei.category;
 
+import java.util.List;
+
+import org.jurassicraft.JurassiCraft;
+
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableAnimated;
@@ -15,9 +19,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
-import org.jurassicraft.JurassiCraft;
-
-import java.util.List;
 
 public class CleaningStationRecipeCategory extends BlankRecipeCategory<IRecipeWrapper> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JurassiCraft.MODID, "textures/gui/cleaning_station.png");
@@ -65,7 +66,7 @@ public class CleaningStationRecipeCategory extends BlankRecipeCategory<IRecipeWr
     public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper, IIngredients ingredients) {
         IGuiItemStackGroup stackGroup = recipeLayout.getItemStacks();
         List<List<ItemStack>> inputs = ingredients.getInputs(ItemStack.class);
-        List<ItemStack> outputs = ingredients.getOutputs(ItemStack.class);
+        List<List<ItemStack>> outputs = ingredients.getOutputs(ItemStack.class);
         stackGroup.init(0, true, 9, 36);
         stackGroup.set(0, new ItemStack(Items.WATER_BUCKET));
         stackGroup.init(1, true, 9, 0);
@@ -80,4 +81,9 @@ public class CleaningStationRecipeCategory extends BlankRecipeCategory<IRecipeWr
             }
         }
     }
+
+	@Override
+	public String getModName() {
+		return JurassiCraft.NAME;
+	}
 }

@@ -70,8 +70,8 @@ public class DisplayBlock extends BlockContainer {
     }
 
     @Override
-    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
-        super.neighborChanged(state, world, pos, block);
+    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos) {
+        super.neighborChanged(state, world, pos, block, fromPos);
         this.checkAndDropBlock(world, pos, world.getBlockState(pos));
     }
 

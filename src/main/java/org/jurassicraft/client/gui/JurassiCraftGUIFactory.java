@@ -28,4 +28,14 @@ public class JurassiCraftGUIFactory implements IModGuiFactory {
     public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) {
         return null;
     }
+
+	@Override
+	public boolean hasConfigGui() {
+		return false;
+	}
+
+	@Override
+	public GuiScreen createConfigGui(GuiScreen parentScreen) {
+		return null;
+	}
 }

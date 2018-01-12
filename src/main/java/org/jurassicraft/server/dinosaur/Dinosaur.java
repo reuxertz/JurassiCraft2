@@ -71,7 +71,7 @@ public abstract class Dinosaur implements Comparable<Dinosaur> {
     private TabulaModelContainer modelAdolescent;
     private TabulaModelContainer modelSkeleton;
 
-    private PoseHandler poseHandler;
+    private PoseHandler<?> poseHandler;
 
     private boolean defendOwner;
 
@@ -641,7 +641,7 @@ public abstract class Dinosaur implements Comparable<Dinosaur> {
         return this.offsetZ;
     }
 
-    public PoseHandler getPoseHandler() {
+    public PoseHandler<?> getPoseHandler() {
         return this.poseHandler;
     }
 

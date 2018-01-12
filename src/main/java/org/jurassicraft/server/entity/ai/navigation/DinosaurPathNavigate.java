@@ -17,7 +17,7 @@ public class DinosaurPathNavigate extends PathNavigateGround {
 
     @Override
     protected PathFinder getPathFinder() {
-        this.nodeProcessor = new DinosaurWalkNodeProcessor(((DinosaurEntity) this.theEntity).getDinosaur());
+        this.nodeProcessor = new DinosaurWalkNodeProcessor(((DinosaurEntity) this.entity).getDinosaur());
         this.nodeProcessor.setCanEnterDoors(true);
         return new PathFinder(this.nodeProcessor);
     }
@@ -28,7 +28,7 @@ public class DinosaurPathNavigate extends PathNavigateGround {
         int length = this.currentPath.getCurrentPathLength();
 
         for (int i = this.currentPath.getCurrentPathIndex(); i < this.currentPath.getCurrentPathLength(); ++i) {
-            if (this.currentPath.getPathPointFromIndex(i).yCoord != Math.floor(position.yCoord)) {
+            if (this.currentPath.getPathPointFromIndex(i).y != Math.floor(position.y)) {
                 length = i;
                 break;
             }
@@ -36,21 +36,21 @@ public class DinosaurPathNavigate extends PathNavigateGround {
 
         Vec3d target = this.currentPath.getCurrentPos();
 
-        float deltaX = MathHelper.abs((float) (this.theEntity.posX - (target.xCoord + 0.5)));
-        float deltaZ = MathHelper.abs((float) (this.theEntity.posZ - (target.zCoord + 0.5)));
-        float deltaY = MathHelper.abs((float) (this.theEntity.posY - target.yCoord));
+        float deltaX = MathHelper.abs((float) (this.entity.posX - (target.x + 0.5)));
+        float deltaZ = MathHelper.abs((float) (this.entity.posZ - (target.x + 0.5)));
+        float deltaY = MathHelper.abs((float) (this.entity.posY - target.y));
 
-        int width = MathHelper.ceil(this.theEntity.width);
-        int height = MathHelper.ceil(this.theEntity.height);
+        int width = MathHelper.ceil(this.entity.width);
+        int height = MathHelper.ceil(this.entity.height);
 
-        float maxDistance = this.theEntity.width > 0.75F ? width : 0.75F - this.theEntity.width / 2.0F;
+        float maxDistance = this.entity.width > 0.75F ? width : 0.75F - this.entity.width / 2.0F;
 
         if (deltaX < maxDistance && deltaZ < maxDistance && deltaY < 1.0) {
             this.currentPath.incrementPathIndex();
         }
 
         for (int i = length - 1; i >= this.currentPath.getCurrentPathIndex(); --i) {
-            if (this.isDirectPathBetweenPoints(position, this.currentPath.getVectorFromIndex(this.theEntity, i), width, height, width)) {
+            if (this.isDirectPathBetweenPoints(position, this.currentPath.getVectorFromIndex(this.entity, i), width, height, width)) {
                 this.currentPath.setCurrentPathIndex(i);
                 break;
             }

@@ -1,11 +1,10 @@
 package org.jurassicraft.server.container.slot;
 
-import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
 
 public class SkeletonCraftingSlot extends SlotCrafting {
     private final InventoryCrafting craftMatrix;
@@ -20,10 +19,10 @@ public class SkeletonCraftingSlot extends SlotCrafting {
     }
     
     @Override
-    public void onPickupFromSlot(EntityPlayer playerIn, ItemStack stack)
-    {
+    public ItemStack onTake(EntityPlayer thePlayer, ItemStack stack) {
         for(int x = 0;x<craftMatrix.getSizeInventory();x++){
             craftMatrix.setInventorySlotContents(x,null);
         }
+        return super.onTake(thePlayer, stack);
     }
 }

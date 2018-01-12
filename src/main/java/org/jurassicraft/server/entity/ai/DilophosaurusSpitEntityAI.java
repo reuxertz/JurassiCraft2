@@ -51,7 +51,7 @@ public class DilophosaurusSpitEntityAI extends EntityAIBase {
     }
 
     @Override
-    public boolean continueExecuting() {
+    public boolean shouldContinueExecuting() {
         return this.shouldExecute() || !this.dilophosaurus.getNavigator().noPath();
     }
 

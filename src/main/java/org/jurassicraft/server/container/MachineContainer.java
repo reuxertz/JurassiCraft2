@@ -27,7 +27,7 @@ public abstract class MachineContainer extends Container {
                 int field = this.inventory.getField(fieldIndex);
 
                 if (field != this.fields[fieldIndex]) {
-                    listener.sendProgressBarUpdate(this, fieldIndex, field);
+                    listener.sendWindowProperty(this, fieldIndex, field);
                 }
             }
         }
@@ -62,7 +62,7 @@ public abstract class MachineContainer extends Container {
                 return null;
             }
 
-            if (current.stackSize == 0) {
+            if (current.getCount() == 0) {
                 slot.putStack(null);
             } else {
                 slot.onSlotChanged();

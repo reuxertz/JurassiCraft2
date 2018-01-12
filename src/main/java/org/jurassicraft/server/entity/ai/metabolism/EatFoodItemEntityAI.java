@@ -32,7 +32,7 @@ public class EatFoodItemEntityAI extends EntityAIBase {
                 World world = this.dinosaur.world;
                 List<EntityItem> items = world.getEntitiesWithinAABB(EntityItem.class, this.dinosaur.getEntityBoundingBox().expand(16, 16, 16));
                 for (EntityItem entity : items) {
-                    ItemStack stack = entity.getEntityItem();
+                    ItemStack stack = entity.getItem();
                     Item item = stack.getItem();
                     if (FoodHelper.isEdible(this.dinosaur, this.dinosaur.getDinosaur().getDiet(), item)) {
                         double distance = this.dinosaur.getDistanceSqToEntity(entity);
@@ -55,7 +55,7 @@ public class EatFoodItemEntityAI extends EntityAIBase {
     }
 
     @Override
-    public boolean continueExecuting() {
+    public boolean shouldContinueExecuting() {
         return this.dinosaur != null && !this.dinosaur.getNavigator().noPath() && this.item != null && !this.item.isDead;
     }
 

@@ -160,7 +160,7 @@ public class FieldGuideGui extends GuiScreen {
                 int renderY = statusY + y + (SIZE_Y - 40);
 
                 if (mouseX >= renderX && mouseY >= renderY && mouseX <= renderX + size && mouseY <= renderY + size) {
-                    this.drawCreativeTabHoveringText(new LangHelper("status." + status.name().toLowerCase(Locale.ENGLISH) + ".name").build(), mouseX, mouseY);
+                    this.drawHoveringText(new LangHelper("status." + status.name().toLowerCase(Locale.ENGLISH) + ".name").build(), mouseX, mouseY);
                 }
 
                 statusX += 18;
@@ -180,13 +180,13 @@ public class FieldGuideGui extends GuiScreen {
             StringBuilder wrapLine = new StringBuilder();
 
             for (String word : text.split(" ")) {
-                if (wrapX + (this.fontRendererObj.getStringWidth(word)) > 90) {
+                if (wrapX + (this.fontRenderer.getStringWidth(word)) > 90) {
                     lines.add(wrapLine.toString());
                     wrapLine = new StringBuilder();
                 }
 
                 wrapLine.append(word).append(" ");
-                wrapX = this.fontRendererObj.getStringWidth(wrapLine.toString().trim());
+                wrapX = this.fontRenderer.getStringWidth(wrapLine.toString().trim());
             }
 
             lines.add(wrapLine.toString());
@@ -217,14 +217,14 @@ public class FieldGuideGui extends GuiScreen {
     private void drawScaledString(String text, float x, float y, float scale, int color) {
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 1.0F);
-        this.fontRendererObj.drawString(text, x / scale, y / scale, color, false);
+        this.fontRenderer.drawString(text, x / scale, y / scale, color, false);
         GlStateManager.popMatrix();
     }
 
     private void drawCenteredScaledString(String text, float x, float y, float scale, int color) {
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 1.0F);
-        this.fontRendererObj.drawString(text, (x - this.fontRendererObj.getStringWidth(text) / 2) / scale, y / scale, color, false);
+        this.fontRenderer.drawString(text, (x - this.fontRenderer.getStringWidth(text) / 2) / scale, y / scale, color, false);
         GlStateManager.popMatrix();
     }
 
@@ -300,7 +300,7 @@ public class FieldGuideGui extends GuiScreen {
         @Override
         public void drawButton(Minecraft mc, int mouseX, int mouseY) {
             if (this.visible) {
-                boolean selected = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+                boolean selected = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                 mc.getTextureManager().bindTexture(WIDGETS_TEXTURE);
 
@@ -315,7 +315,7 @@ public class FieldGuideGui extends GuiScreen {
                     v += 13;
                 }
 
-                this.drawTexturedModalRect(this.xPosition, this.yPosition, u, v, 23, 13);
+                this.drawTexturedModalRect(this.x, this.y, u, v, 23, 13);
             }
         }
     }

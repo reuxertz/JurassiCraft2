@@ -83,7 +83,7 @@ public class Herd implements Iterable<DinosaurEntity> {
                     float angle = 0.0F;
 
                     for (EntityLivingBase attacker : this.enemies) {
-                        angle += MathHelper.atan2(this.center.zCoord - attacker.posZ, this.center.xCoord - attacker.posX);
+                        angle += MathHelper.atan2(this.center.z - attacker.posZ, this.center.x - attacker.posX);
                     }
 
                     angle /= this.enemies.size();
@@ -102,7 +102,7 @@ public class Herd implements Iterable<DinosaurEntity> {
             List<DinosaurEntity> remove = new LinkedList<>();
 
             for (DinosaurEntity entity : this) {
-                if (entity.getDistanceSq(this.center.xCoord, this.center.yCoord, this.center.zCoord) > 2048) {
+                if (entity.getDistanceSq(this.center.x, this.center.y, this.center.z) > 2048) {
                     remove.add(entity);
                 }
             }
@@ -128,15 +128,15 @@ public class Herd implements Iterable<DinosaurEntity> {
                         float entityMoveX = this.moveX * 8.0F;
                         float entityMoveZ = this.moveZ * 8.0F;
 
-                        float centerDistance = (float) Math.abs(entity.getDistance(this.center.xCoord, entity.posY, this.center.zCoord));
+                        float centerDistance = (float) Math.abs(entity.getDistance(this.center.x, entity.posY, this.center.z));
 
                         if (this.fleeing) {
                             centerDistance *= 4.0F;
                         }
 
                         if (centerDistance > 0) {
-                            entityMoveX += (this.center.xCoord - entity.posX) / centerDistance;
-                            entityMoveZ += (this.center.zCoord - entity.posZ) / centerDistance;
+                            entityMoveX += (this.center.x - entity.posX) / centerDistance;
+                            entityMoveZ += (this.center.z - entity.posZ) / centerDistance;
                         }
 
                         for (DinosaurEntity other : this) {
@@ -169,7 +169,7 @@ public class Herd implements Iterable<DinosaurEntity> {
                             BlockPos navigatePos = entity.world.getHeight(new BlockPos(navigateX, 0, navigateZ)).up();
                             if (entity.getNavigator().getPath() != null && !entity.getNavigator().getPath().isFinished()) {
                                 PathPoint finalPoint = entity.getNavigator().getPath().getFinalPathPoint();
-                                if (navigatePos.getDistance(finalPoint.xCoord, finalPoint.yCoord, finalPoint.zCoord) < 25) {
+                                if (navigatePos.getDistance(finalPoint.x, finalPoint.y, finalPoint.z) < 25) {
                                     continue;
                                 }
                             }
@@ -208,7 +208,7 @@ public class Herd implements Iterable<DinosaurEntity> {
             List<EntityLivingBase> invalidEnemies = new LinkedList<>();
 
             for (EntityLivingBase enemy : this.enemies) {
-                if (enemy.isDead || (enemy instanceof DinosaurEntity && ((DinosaurEntity) enemy).isCarcass()) || (enemy instanceof EntityPlayer && ((EntityPlayer) enemy).capabilities.isCreativeMode) || enemy.getDistanceSq(this.center.xCoord, this.center.yCoord, this.center.zCoord) > 1024 || this.members.contains(enemy)) {
+                if (enemy.isDead || (enemy instanceof DinosaurEntity && ((DinosaurEntity) enemy).isCarcass()) || (enemy instanceof EntityPlayer && ((EntityPlayer) enemy).capabilities.isCreativeMode) || enemy.getDistanceSq(this.center.x, this.center.y, this.center.z) > 1024 || this.members.contains(enemy)) {
                     invalidEnemies.add(enemy);
                 }
             }
@@ -263,7 +263,7 @@ public class Herd implements Iterable<DinosaurEntity> {
         if (this.leader.ticksExisted > this.nextMemberCheck) {
             this.nextMemberCheck = this.leader.ticksExisted + 20 + this.random.nextInt(20);
 
-            AxisAlignedBB searchBounds = new AxisAlignedBB(this.center.xCoord - 16, this.center.yCoord - 5, this.center.zCoord - 16, this.center.xCoord + 16, this.center.yCoord + 5, this.center.zCoord + 16);
+            AxisAlignedBB searchBounds = new AxisAlignedBB(this.center.x - 16, this.center.y - 5, this.center.z - 16, this.center.x + 16, this.center.y + 5, this.center.z + 16);
 
             List<Herd> otherHerds = new LinkedList<>();
 

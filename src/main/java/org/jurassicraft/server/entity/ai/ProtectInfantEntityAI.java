@@ -26,7 +26,7 @@ public class ProtectInfantEntityAI<T extends DinosaurEntity> extends EntityAIBas
             List<T> dinosaurs = this.dinosaur.world.getEntitiesWithinAABB(this.dinosaurClazz, this.dinosaur.getEntityBoundingBox().expand(8, 3, 8));
 
             for (T entity : dinosaurs) {
-                if (entity.getAITarget() != null && entity.getAgePercentage() <= 50) {
+                if (entity.getAttackTarget() != null && entity.getAgePercentage() <= 50) {
                     this.infant = entity;
                     break;
                 }
@@ -42,7 +42,7 @@ public class ProtectInfantEntityAI<T extends DinosaurEntity> extends EntityAIBas
 
     @Override
     public void startExecuting() {
-        EntityLivingBase attacker = this.infant.getAITarget();
+        EntityLivingBase attacker = this.infant.getAttackTarget();
 
         if (attacker != null && !(attacker instanceof EntityPlayer && ((EntityPlayer) attacker).capabilities.isCreativeMode)) {
             this.dinosaur.setAttackTarget(attacker);
@@ -50,7 +50,7 @@ public class ProtectInfantEntityAI<T extends DinosaurEntity> extends EntityAIBas
     }
 
     @Override
-    public boolean continueExecuting() {
+    public boolean shouldContinueExecuting() {
         return false;
     }
 }

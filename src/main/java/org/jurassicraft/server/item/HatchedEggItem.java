@@ -62,8 +62,9 @@ public class HatchedEggItem extends DNAContainerItem {
     }
 
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         pos = pos.offset(side);
+        ItemStack stack = player.getHeldItem(hand);
 
         if (side == EnumFacing.EAST || side == EnumFacing.WEST) {
             hitX = 1.0F - hitX;
@@ -91,7 +92,7 @@ public class HatchedEggItem extends DNAContainerItem {
                     world.spawnEntity(entity);
 
                     if (!player.capabilities.isCreativeMode) {
-                        stack.stackSize--;
+                        stack.shrink(1);
                     }
                 } catch (ReflectiveOperationException e) {
                     JurassiCraft.INSTANCE.getLogger().warn("Failed to spawn dinosaur from hatched egg", e);

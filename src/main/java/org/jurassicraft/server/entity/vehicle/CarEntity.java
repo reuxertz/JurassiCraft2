@@ -1,10 +1,16 @@
 package org.jurassicraft.server.entity.vehicle;
 
+import java.util.List;
+
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.client.proxy.ClientProxy;
+import org.jurassicraft.server.message.UpdateVehicleControlMessage;
+
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -18,14 +24,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
-import javax.annotation.Nullable;
-
-import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.client.proxy.ClientProxy;
-import org.jurassicraft.client.sound.CarSound;
-import org.jurassicraft.server.message.UpdateVehicleControlMessage;
 
 public abstract class CarEntity extends Entity {
     public static final DataParameter<Byte> WATCHER_STATE = EntityDataManager.createKey(CarEntity.class, DataSerializers.BYTE);
@@ -192,7 +190,7 @@ public abstract class CarEntity extends Entity {
             if (this.world.isRemote) {
                 this.handleControl();
             }
-            this.move(this.motionX, this.motionY, this.motionZ);
+            this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
         } else {
             this.motionX = this.motionY = this.motionZ = 0;
         }
@@ -278,7 +276,7 @@ public abstract class CarEntity extends Entity {
     }
 
     @Override
-    public boolean processInitialInteract(EntityPlayer player, @Nullable ItemStack stack, EnumHand hand) {
+    public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
         if (!this.world.isRemote && !player.isSneaking()) {
             player.startRiding(this);
         }
@@ -324,7 +322,7 @@ public abstract class CarEntity extends Entity {
             return false;
         }
         if (!this.world.isRemote) {
-            if (source.getEntity() instanceof EntityPlayer) {
+            if (source.getTrueSource() instanceof EntityPlayer) {
                 amount *= 10;
                 this.healAmount += amount;
                 this.healCooldown = 40;
@@ -356,7 +354,7 @@ public abstract class CarEntity extends Entity {
             } else {
                 pos = seat.getPos();
             }
-            passenger.setPosition(pos.xCoord, pos.yCoord, pos.zCoord);
+            passenger.setPosition(pos.x, pos.y, pos.z);
             passenger.rotationYaw += this.rotationDelta;
             passenger.setRotationYawHead(passenger.getRotationYawHead() + this.rotationDelta);
             if (passenger instanceof EntityLivingBase) {
@@ -429,9 +427,9 @@ public abstract class CarEntity extends Entity {
 
         public AxisAlignedBB getBounds() {
             Vec3d pos = this.getPos();
-            double x = pos.xCoord;
-            double y = pos.yCoord;
-            double z = pos.zCoord;
+            double x = pos.x;
+            double y = pos.y;
+            double z = pos.z;
             return new AxisAlignedBB(x - this.radius, y, z - this.radius, x + this.radius, y + this.offsetY + this.height, z + this.radius);
         }
     }

@@ -1,13 +1,25 @@
 package org.jurassicraft.server.entity;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.fml.common.ProgressManager;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.api.Hybrid;
-import org.jurassicraft.server.dinosaur.*;
+import org.jurassicraft.server.dinosaur.BrachiosaurusDinosaur;
+import org.jurassicraft.server.dinosaur.CoelacanthDinosaur;
+import org.jurassicraft.server.dinosaur.DilophosaurusDinosaur;
+import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.dinosaur.GallimimusDinosaur;
+import org.jurassicraft.server.dinosaur.MicroraptorDinosaur;
+import org.jurassicraft.server.dinosaur.MussaurusDinosaur;
+import org.jurassicraft.server.dinosaur.ParasaurolophusDinosaur;
+import org.jurassicraft.server.dinosaur.TriceratopsDinosaur;
+import org.jurassicraft.server.dinosaur.TyrannosaurusDinosaur;
+import org.jurassicraft.server.dinosaur.VelociraptorDinosaur;
 import org.jurassicraft.server.entity.item.AttractionSignEntity;
 import org.jurassicraft.server.entity.item.DinosaurEggEntity;
 import org.jurassicraft.server.entity.item.MuralEntity;
@@ -16,12 +28,12 @@ import org.jurassicraft.server.entity.vehicle.FordExplorerEntity;
 import org.jurassicraft.server.entity.vehicle.JeepWranglerEntity;
 import org.jurassicraft.server.period.TimePeriod;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.fml.common.ProgressManager;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 public class EntityHandler {
     public static final Dinosaur BRACHIOSAURUS = new BrachiosaurusDinosaur();
@@ -122,15 +134,19 @@ public class EntityHandler {
             }
         }
     }
-
+    
+    //TODO May not work
     private static void registerEntity(Class<? extends Entity> entity, String name) {
         String formattedName = name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
-        EntityRegistry.registerModEntity(entity, formattedName, entityId++, JurassiCraft.INSTANCE, 1024, 1, true);
+        ResourceLocation registryName = new ResourceLocation(formattedName);
+        EntityRegistry.registerModEntity(registryName, entity, formattedName, entityId++, JurassiCraft.INSTANCE, 1024, 1, true);
     }
 
+    //TODO May not work
     private static void registerEntity(Class<? extends Entity> entity, String name, int primary, int secondary) {
         String formattedName = name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
-        EntityRegistry.registerModEntity(entity, formattedName, entityId++, JurassiCraft.INSTANCE, 1024, 1, true, primary, secondary);
+        ResourceLocation registryName = new ResourceLocation(formattedName);
+        EntityRegistry.registerModEntity(registryName, entity, formattedName, entityId++, JurassiCraft.INSTANCE, 1024, 1, true, primary, secondary);
     }
 
     public static void registerDinosaur(int id, Dinosaur dinosaur) {

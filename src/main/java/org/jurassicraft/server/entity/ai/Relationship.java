@@ -32,15 +32,15 @@ public class Relationship {
                 owner.setAttackTarget(entity);
             }
         } else if (this.score > 0) {
-            if ((dinosaurType == Dinosaur.DinosaurType.AGGRESSIVE || dinosaurType == Dinosaur.DinosaurType.NEUTRAL) && entity.getAITarget() != null && owner.getRNG().nextDouble() * scaleScore > 0.3) {
-                owner.setAttackTarget(entity.getAITarget());
+            if ((dinosaurType == Dinosaur.DinosaurType.AGGRESSIVE || dinosaurType == Dinosaur.DinosaurType.NEUTRAL) && entity.getAttackTarget() != null && owner.getRNG().nextDouble() * scaleScore > 0.3) {
+                owner.setAttackTarget(entity.getAttackTarget());
             } else if (owner.family == null && !isPreoccupied && owner.getRNG().nextDouble() * scaleScore > 0.6) {
                 owner.getNavigator().tryMoveToEntityLiving(entity, 0.8);
             }
         }
-        EntityLivingBase lastAttacker = owner.getAITarget();
+        EntityLivingBase lastAttacker = owner.getAttackTarget();
         if (lastAttacker != null && (lastAttacker.isDead || (lastAttacker instanceof DinosaurEntity && ((DinosaurEntity) lastAttacker).isCarcass()))) {
-            EntityLivingBase lastAttackerKiller = lastAttacker.getAITarget();
+            EntityLivingBase lastAttackerKiller = lastAttacker.getRevengeTarget();
             if (lastAttackerKiller != null && lastAttackerKiller.getUniqueID().equals(this.entity)) {
                 this.score += 100;
             }

@@ -17,6 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -48,12 +49,14 @@ public class ElectricFenceBaseBlock extends BlockContainer {
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING_BIAS, EnumFacing.NORTH).withProperty(NORTH, false).withProperty(SOUTH, false).withProperty(WEST, false).withProperty(EAST, false));
     }
 
+    
     @Override
-    public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entity) {
-        if (entity instanceof DinosaurEntity && !world.isAirBlock(pos.up())) {
+    public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox,
+    		List<AxisAlignedBB> collidingBoxes, Entity entityIn, boolean p_185477_7_) {
+        if (entityIn instanceof DinosaurEntity && !world.isAirBlock(pos.up())) {
             addCollisionBoxToList(pos, entityBox, collidingBoxes, EXTENDED_BOUNDS);
         } else {
-            super.addCollisionBoxToList(state, world, pos, entityBox, collidingBoxes, entity);
+            super.addCollisionBoxToList(state, world, pos, entityBox, collidingBoxes, entityIn, p_185477_7_);
         }
     }
 
@@ -97,7 +100,8 @@ public class ElectricFenceBaseBlock extends BlockContainer {
     }
 
     @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack stack) {
+    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY,
+    		float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
         return this.getDefaultState().withProperty(FACING_BIAS, placer.getHorizontalFacing().rotateY());
     }
 
@@ -170,7 +174,7 @@ public class ElectricFenceBaseBlock extends BlockContainer {
     }
 
     @Override
-    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
+    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
         if (!world.isRemote) {
             IBlockState poleState = world.getBlockState(pos.up());
             if (poleState.getBlock() instanceof ElectricFencePoleBlock) {

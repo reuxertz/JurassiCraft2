@@ -3,6 +3,7 @@ package org.jurassicraft.server.entity.item;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -58,7 +59,7 @@ public class DinosaurEggEntity extends Entity implements IEntityAdditionalSpawnD
             this.motionY *= 0.85;
             this.motionZ *= 0.85;
 
-            this.move(this.motionX, this.motionY, this.motionZ);
+            this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
         }
     }
 
@@ -77,7 +78,7 @@ public class DinosaurEggEntity extends Entity implements IEntityAdditionalSpawnD
     }
 
     @Override
-    public boolean processInitialInteract(EntityPlayer player, ItemStack stack, EnumHand hand) {
+    public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
         if (this.entity != null && !this.world.isRemote) {
             ItemStack eggStack = new ItemStack(ItemHandler.EGG, 1, EntityHandler.getDinosaurId(this.entity.getDinosaur()));
             NBTTagCompound nbt = new NBTTagCompound();

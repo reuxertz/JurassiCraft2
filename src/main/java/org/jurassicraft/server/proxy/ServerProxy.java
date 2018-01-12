@@ -111,7 +111,7 @@ public class ServerProxy implements IGuiHandler {
     }
 
     public EntityPlayer getPlayerEntityFromContext(MessageContext ctx) {
-        return ctx.getServerHandler().playerEntity;
+        return ctx.getServerHandler().player;
     }
 
     @Override

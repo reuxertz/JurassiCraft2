@@ -194,17 +194,17 @@ public class SkeletonAssemblyContainer extends Container {
                 return null;
             }
 
-            if (itemstack1.stackSize == 0) {
+            if (itemstack1.getCount() == 0) {
                 slot.putStack(null);
             } else {
                 slot.onSlotChanged();
             }
 
-            if (itemstack1.stackSize == stack.stackSize) {
+            if (itemstack1.getCount() == stack.getCount()) {
                 return null;
             }
 
-            slot.onPickupFromSlot(playerIn, itemstack1);
+            slot.onTake(playerIn, itemstack1);
         }
 
         return stack;

@@ -26,7 +26,7 @@ public class HeadCockAnimationAI extends EntityAIBase {
     }
 
     @Override
-    public boolean continueExecuting() {
+    public boolean shouldContinueExecuting() {
         return false;
     }
 }

@@ -1,5 +1,13 @@
 package org.jurassicraft.server.block;
 
+import java.util.Map;
+
+import org.jurassicraft.server.api.SubBlocksBlock;
+import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.item.block.FossilItemBlock;
+import org.jurassicraft.server.tab.TabHandler;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -11,19 +19,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jurassicraft.server.api.SubBlocksBlock;
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.EntityHandler;
-import org.jurassicraft.server.item.block.FossilItemBlock;
-import org.jurassicraft.server.tab.TabHandler;
-
-import java.util.List;
-import java.util.Map;
 
 public class FossilBlock extends Block implements SubBlocksBlock {
     public static final PropertyInteger VARIANT = PropertyInteger.create("variant", 0, 15);
@@ -69,7 +70,7 @@ public class FossilBlock extends Block implements SubBlocksBlock {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list) {
+    public void getSubBlocks(Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
         Map<Integer, Dinosaur> dinosaurs = EntityHandler.getDinosaurs();
 
         for (int i = 0; i < 16; i++) {

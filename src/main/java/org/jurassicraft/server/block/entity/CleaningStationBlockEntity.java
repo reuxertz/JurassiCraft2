@@ -19,6 +19,9 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
+
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.api.CleanableItem;
 import org.jurassicraft.server.container.CleaningStationContainer;
@@ -73,8 +76,8 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
         boolean flag = stack != null && stack.isItemEqual(this.slots[index]) && ItemStack.areItemStackTagsEqual(stack, this.slots[index]);
         this.slots[index] = stack;
 
-        if (stack != null && stack.stackSize > this.getInventoryStackLimit()) {
-            stack.stackSize = this.getInventoryStackLimit();
+        if (stack != null && stack.getCount() > this.getInventoryStackLimit()) {
+            stack.setCount(this.getInventoryStackLimit());
         }
 
         if (index == 0 && !flag) {
@@ -107,11 +110,12 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
 
         for (int i = 0; i < itemList.tagCount(); ++i) {
             NBTTagCompound item = itemList.getCompoundTagAt(i);
+            ItemStack stack = new ItemStack(item);
 
             byte slot = item.getByte("Slot");
 
             if (slot >= 0 && slot < this.slots.length) {
-                this.slots[slot] = ItemStack.loadItemStackFromNBT(item);
+                this.slots[slot] = stack;
             }
         }
 
@@ -183,9 +187,9 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
                         dirty = true;
 
                         if (this.slots[1] != null) {
-                            --this.slots[1].stackSize;
+                            this.slots[1].setCount(-1);
 
-                            if (this.slots[1].stackSize == 0) {
+                            if (this.slots[1].getCount() == 0) {
                                 this.slots[1] = this.slots[1].getItem().getContainerItem(this.slots[1]);
                             }
                         }
@@ -264,12 +268,13 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
                 if (this.slots[emptySlot] == null) {
                     this.slots[emptySlot] = output;
                 } else if (this.slots[emptySlot].getItem() == output.getItem() && ItemStack.areItemStackTagsEqual(this.slots[emptySlot], output)) {
-                    this.slots[emptySlot].stackSize += output.stackSize;
+                	int stack = this.slots[emptySlot].getCount();
+                    stack += output.getCount();
                 }
 
-                this.slots[0].stackSize--;
+                this.slots[0].setCount(-1);
 
-                if (this.slots[0].stackSize <= 0) {
+                if (this.slots[0].getCount() <= 0) {
                     this.slots[0] = null;
                 }
 
@@ -385,4 +390,9 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
     public boolean isUsableByPlayer(EntityPlayer player) {
         return this.world.getTileEntity(this.pos) == this && player.getDistanceSq((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D) <= 64.0D;
     }
+
+	@Override
+	public boolean isEmpty() {
+		return false;
+	}
 }

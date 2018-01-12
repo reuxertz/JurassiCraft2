@@ -51,7 +51,7 @@ public class MicroraptorEntity extends DinosaurEntity {
 
     @Override
     public boolean attackEntityFrom(DamageSource damageSource, float amount) {
-        return damageSource != DamageSource.flyIntoWall && super.attackEntityFrom(damageSource, amount);
+        return damageSource != DamageSource.FLY_INTO_WALL && super.attackEntityFrom(damageSource, amount);
     }
 
     @Override
@@ -121,13 +121,13 @@ public class MicroraptorEntity extends DinosaurEntity {
     }
 
     @Override
-    public boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack stack) {
+    public boolean processInteract(EntityPlayer player, EnumHand hand) {
         if (player.isSneaking() && hand == EnumHand.MAIN_HAND) {
             if (this.isOwner(player) && this.order == Order.SIT && player.getPassengers() != null && player.getPassengers().size() < 2) {
                 return this.startRiding(player, true);
             }
         }
-        return super.processInteract(player, hand, stack);
+        return super.processInteract(player, hand);
     }
 
     @Override
@@ -168,6 +168,8 @@ public class MicroraptorEntity extends DinosaurEntity {
                 return SoundHandler.MICRORAPTOR_ATTACK;
             case CALLING:
                 return SoundHandler.MICRORAPTOR_LIVING;
+		default:
+			break;
         }
 
         return null;

@@ -17,7 +17,8 @@ public class JeepWranglerItem extends Item {
     }
 
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+    	ItemStack stack = player.getHeldItem(hand);
         if (!world.isRemote) {
             pos = pos.offset(side);
 
@@ -25,7 +26,7 @@ public class JeepWranglerItem extends Item {
             entity.setPositionAndRotation(pos.getX() + 0.5F, pos.getY(), pos.getZ() + 0.5F, player.rotationYaw, 0.0F);
             world.spawnEntity(entity);
 
-            stack.stackSize--;
+            stack.shrink(1);
         }
 
         return EnumActionResult.SUCCESS;

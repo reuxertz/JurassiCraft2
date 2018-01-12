@@ -6,9 +6,9 @@ import net.minecraft.util.math.Vec3d;
 import java.util.Objects;
 
 public enum ModulePosition {
-    FRONT(vec -> vec.zCoord > 0.6),
-    LEFT_SIDE(vec -> vec.zCoord < 0.6 && vec.xCoord > 0),
-    RIGHT_SIDE(vec -> vec.zCoord < 0.6 && vec.xCoord < 0);
+    FRONT(vec -> vec.z > 0.6),
+    LEFT_SIDE(vec -> vec.z < 0.6 && vec.x > 0),
+    RIGHT_SIDE(vec -> vec.z < 0.6 && vec.x < 0);
 
     private final Function<Vec3d, Boolean> func;
 

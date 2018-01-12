@@ -92,7 +92,7 @@ public class DisplayBlockEntity extends TileEntity {
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox() {
         if (this.isSkeleton && this.entity != null) {
-            return this.entity.getRenderBoundingBox().expandXyz(3.0).offset(this.pos);
+            return this.entity.getRenderBoundingBox().expand(3.0, 3.0, 3.0).offset(this.pos);
         }
         return super.getRenderBoundingBox();
     }

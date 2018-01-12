@@ -144,8 +144,8 @@ public class BugCrateBlockEntity extends MachineBaseBlockEntity {
         ItemStack[] slots = this.getSlots();
         boolean stacksEqual = stack != null && stack.isItemEqual(slots[index]) && ItemStack.areItemStackTagsEqual(stack, slots[index]);
         slots[index] = stack;
-        if (stack != null && stack.stackSize > this.getInventoryStackLimit()) {
-            stack.stackSize = this.getInventoryStackLimit();
+        if (stack != null && stack.getCount() > this.getInventoryStackLimit()) {
+            stack.setCount(this.getInventoryStackLimit());
         }
         if (!stacksEqual) {
             int process = this.getProcess(index);
@@ -166,4 +166,9 @@ public class BugCrateBlockEntity extends MachineBaseBlockEntity {
             }
         }
     }
+
+	@Override
+	public boolean isEmpty() {
+		return false;
+	}
 }

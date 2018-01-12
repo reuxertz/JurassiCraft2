@@ -15,14 +15,14 @@ apply plugin: "net.minecraftforge.gradle.forge"
 def mod_file = getModFile()
 version = getVersion("VERSION", mod_file)
 def llibrary_version = getVersion("LLIBRARY_VERSION", mod_file)
-group = "org.jurassicraft"
-archivesBaseName = "JurassiCraft"
+group = "${MOD_GROUP}"
+archivesBaseName = "${MOD_NAME}"
 sourceCompatibility = targetCompatibility = "1.8"
 
 minecraft {
-    version = "1.10.2-12.18.3.2316"
-    runDir = "minecraft"
-    mappings = "stable_29"
+    version = "${version_minecraft}-${version_forge}"
+    runDir = "run"
+    mappings = "${version_mcp}"
 }
 
 repositories {
@@ -36,9 +36,9 @@ repositories {
 }
 
 dependencies {
-    compile "net.ilexiconn:llibrary:$llibrary_version-1.10.2:dev"
-    deobfCompile "mezz.jei:jei_1.10.2:3.14.7.417:api"
-    runtime "mezz.jei:jei_1.10.2:3.14.7.417"
+    compile "net.ilexiconn:llibrary:$llibrary_version-1.11.2:dev"
+    deobfCompile "mezz.jei:jei_1.11.2:4.5.1.296:api"
+    runtime "mezz.jei:jei_1.11.2:4.5.1.296"
     testCompile "junit:junit:4.12"
 }
 

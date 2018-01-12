@@ -1,9 +1,10 @@
 package org.jurassicraft.server.dinosaur;
 
-import net.minecraftforge.common.BiomeDictionary;
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.entity.dinosaur.TyrannosaurusEntity;
 import org.jurassicraft.server.period.TimePeriod;
+
+import net.minecraftforge.common.BiomeDictionary;
 
 public class TyrannosaurusDinosaur extends Dinosaur {
     public TyrannosaurusDinosaur() {

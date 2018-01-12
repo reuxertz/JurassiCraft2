@@ -114,10 +114,10 @@ public class MossBlock extends Block {
         IBlockState below = world.getBlockState(pos.down());
         return super.canPlaceBlockAt(world, pos) && this.canBlockStay(world, pos) && (below.isFullCube());
     }
-
+    
     @Override
-    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
-        super.neighborChanged(state, world, pos, block);
+    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos) {
+        super.neighborChanged(state, world, pos, block, fromPos);
         this.checkForDrop(world, pos, state);
     }
 

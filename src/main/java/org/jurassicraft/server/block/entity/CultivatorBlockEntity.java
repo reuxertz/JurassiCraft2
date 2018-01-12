@@ -84,10 +84,10 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
 
         if (!this.world.isRemote) {
             if (this.waterLevel < 3 && this.slots[2] != null && this.slots[2].getItem() == Items.WATER_BUCKET) {
-                if (this.slots[3] == null || this.slots[3].stackSize < 16) {
-                    this.slots[2].stackSize--;
+                if (this.slots[3] == null || this.slots[3].getCount() < 16) {
+                    this.slots[2].shrink(1);
 
-                    if (this.slots[2].stackSize <= 0) {
+                    if (this.slots[2].getCount() <= 0) {
                         this.slots[2] = null;
                     }
 
@@ -96,7 +96,7 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
                     if (this.slots[3] == null) {
                         this.slots[3] = new ItemStack(Items.BUCKET);
                     } else if (this.slots[3].getItem() == Items.BUCKET) {
-                        this.slots[3].stackSize++;
+                        this.slots[3].grow(1);
                     }
 
                     sync = true;
@@ -124,8 +124,8 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
             if (foodStack.getItem() instanceof ItemBucketMilk) {
                 this.slots[1] = new ItemStack(Items.BUCKET);
             } else {
-                foodStack.stackSize--;
-                if (foodStack.stackSize <= 0) {
+                foodStack.shrink(1);
+                if (foodStack.getCount() <= 0) {
                     this.slots[1] = null;
                 }
             }
@@ -356,4 +356,10 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
     public int getTemperatureCount() {
         return 1;
     }
+
+	@Override
+	public boolean isEmpty() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

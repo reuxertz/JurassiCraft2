@@ -42,9 +42,12 @@ public class AncientSlabItemBlock extends ItemBlock {
         return this.singleSlab.getUnlocalizedName(stack.getMetadata());
     }
 
+    
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (stack.stackSize != 0 && player.canPlayerEdit(pos.offset(facing), facing, stack)) {
+    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand,
+    		EnumFacing facing, float hitX, float hitY, float hitZ) {
+    	ItemStack stack = player.getHeldItem(hand);
+        if (stack.getCount() != 0 && player.canPlayerEdit(pos.offset(facing), facing, stack)) {
             IBlockState state = world.getBlockState(pos);
             if (state.getBlock() == this.singleSlab) {
                 AncientSlabBlock.EnumBlockHalf half = state.getValue(BlockSlab.HALF);
@@ -56,14 +59,14 @@ public class AncientSlabItemBlock extends ItemBlock {
                     if (collisionBox != Block.NULL_AABB && world.checkNoEntityCollision(collisionBox.offset(pos)) && world.setBlockState(pos, doubleSlabState, 11)) {
                         SoundType sound = this.doubleSlab.getSoundType();
                         world.playSound(player, pos, sound.getPlaceSound(), SoundCategory.BLOCKS, (sound.getVolume() + 1.0F) / 2.0F, sound.getPitch() * 0.8F);
-                        --stack.stackSize;
+                        stack.shrink(1);
                     }
 
                     return EnumActionResult.SUCCESS;
                 }
             }
 
-            return this.tryPlace(player, stack, world, pos.offset(facing)) ? EnumActionResult.SUCCESS : super.onItemUse(stack, player, world, pos, hand, facing, hitX, hitY, hitZ);
+            return this.tryPlace(player, stack, world, pos.offset(facing)) ? EnumActionResult.SUCCESS : super.onItemUse(player, world, pos, hand, facing, hitX, hitY, hitZ);
         } else {
             return EnumActionResult.FAIL;
         }
@@ -97,7 +100,7 @@ public class AncientSlabItemBlock extends ItemBlock {
             if (collisionBounds != Block.NULL_AABB && world.checkNoEntityCollision(collisionBounds.offset(pos)) && world.setBlockState(pos, state, 11)) {
                 SoundType soundtype = this.doubleSlab.getSoundType();
                 world.playSound(player, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-                --stack.stackSize;
+                stack.shrink(1);;
             }
 
             return true;

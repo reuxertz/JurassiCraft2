@@ -1,18 +1,5 @@
 package org.jurassicraft.server.item;
 
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jurassicraft.server.api.SequencableItem;
-import org.jurassicraft.server.genetics.PlantDNA;
-import org.jurassicraft.server.plant.Plant;
-import org.jurassicraft.server.plant.PlantHandler;
-import org.jurassicraft.server.tab.TabHandler;
-import org.jurassicraft.server.util.LangHelper;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -20,6 +7,21 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+
+import org.jurassicraft.server.api.SequencableItem;
+import org.jurassicraft.server.genetics.PlantDNA;
+import org.jurassicraft.server.plant.Plant;
+import org.jurassicraft.server.plant.PlantHandler;
+import org.jurassicraft.server.tab.TabHandler;
+import org.jurassicraft.server.util.LangHelper;
+
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PlantSoftTissueItem extends Item implements SequencableItem {
     public PlantSoftTissueItem() {
@@ -47,7 +49,7 @@ public class PlantSoftTissueItem extends Item implements SequencableItem {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> subtypes) {
+    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subtypes) {
         List<Plant> plants = new LinkedList<>(PlantHandler.getPrehistoricPlantsAndTrees());
 
         Map<Plant, Integer> ids = new HashMap<>();

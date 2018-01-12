@@ -109,4 +109,9 @@ public class DNASynthesizerBlockEntity extends MachineBaseBlockEntity {
     public String getName() {
         return this.hasCustomName() ? this.customName : "container.dna_synthesizer";
     }
+
+	@Override
+	public boolean isEmpty() {
+		return false;
+	}
 }

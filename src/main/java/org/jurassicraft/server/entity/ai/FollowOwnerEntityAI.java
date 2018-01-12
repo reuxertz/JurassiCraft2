@@ -32,8 +32,8 @@ public class FollowOwnerEntityAI extends EntityAIBase {
     }
 
     @Override
-    public boolean continueExecuting() {
-        return !(this.entity.getEntityBoundingBox() != null && this.owner.getEntityBoundingBox() != null && this.entity.getEntityBoundingBox().expand(2, 2, 2).intersectsWith(this.owner.getEntityBoundingBox())) && !this.entity.getNavigator().noPath() && this.owner.isEntityAlive() && this.entity.getOrder() == DinosaurEntity.Order.FOLLOW;
+    public boolean shouldContinueExecuting() {
+        return !(this.entity.getEntityBoundingBox() != null && this.owner.getEntityBoundingBox() != null && this.entity.getEntityBoundingBox().expand(2, 2, 2).intersects(this.owner.getEntityBoundingBox())) && !this.entity.getNavigator().noPath() && this.owner.isEntityAlive() && this.entity.getOrder() == DinosaurEntity.Order.FOLLOW;
     }
 
     @Override

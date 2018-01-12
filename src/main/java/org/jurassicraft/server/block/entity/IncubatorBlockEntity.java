@@ -63,7 +63,7 @@ public class IncubatorBlockEntity extends MachineBaseBlockEntity implements Temp
             }
         }
 
-        return hasEnvironment && this.slots[process] != null && this.slots[process].stackSize > 0 && this.slots[process].getItem() instanceof DinosaurEggItem;
+        return hasEnvironment && this.slots[process] != null && this.slots[process].getCount() > 0 && this.slots[process].getItem() instanceof DinosaurEggItem;
     }
 
     @Override
@@ -186,4 +186,9 @@ public class IncubatorBlockEntity extends MachineBaseBlockEntity implements Temp
     public int getTemperatureCount() {
         return this.temperature.length;
     }
+
+	@Override
+	public boolean isEmpty() {
+		return false;
+	}
 }

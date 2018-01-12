@@ -1,18 +1,19 @@
 package org.jurassicraft.server.plugin.jei.category;
 
-import com.google.common.collect.Lists;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeWrapper;
-import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import java.util.Collections;
+import java.util.List;
+
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.item.ItemHandler;
 
-import java.util.Collections;
-import java.util.List;
+import com.google.common.collect.Lists;
+
+import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IRecipeWrapper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.item.ItemStack;
 
 public class CleaningStationRecipeWrapper implements IRecipeWrapper {
     private final Dinosaur dinosaur;
@@ -32,31 +33,7 @@ public class CleaningStationRecipeWrapper implements IRecipeWrapper {
     }
 
     @Override
-    public List getInputs() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List getOutputs() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<FluidStack> getFluidInputs() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public List<FluidStack> getFluidOutputs() {
-        return Collections.emptyList();
-    }
-
-    @Override
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-    }
-
-    @Override
-    public void drawAnimations(Minecraft minecraft, int recipeWidth, int recipeHeight) {
     }
 
     @Override
