@@ -73,8 +73,8 @@ public class SkeletonAssemblyContainer extends Container {
                         ItemStack stack = this.craftMatrix.getStackInSlot(x + bounds.minX + (y + bounds.minY) * WIDTH);
                         String targetBone = recipe[y][x];
                         if (!targetBone.equals(this.identify(stack))) {
-                            this.craftResult.setInventorySlotContents(0, null);
-                            return null;
+                            this.craftResult.setInventorySlotContents(0, ItemStack.EMPTY);
+                            return ItemStack.EMPTY;
                         }
                     }
                 }
@@ -82,11 +82,11 @@ public class SkeletonAssemblyContainer extends Container {
             }
         }
 
-        return null;
+        return ItemStack.EMPTY;
     }
 
     private String identify(ItemStack stack) {
-        if (stack != null && stack.getItem() instanceof FossilItem) {
+        if (stack != ItemStack.EMPTY && stack.getItem() instanceof FossilItem) {
             return ((FossilItem) stack.getItem()).getBoneType();
         }
         return "";
@@ -111,7 +111,7 @@ public class SkeletonAssemblyContainer extends Container {
     }
 
     private AssemblyData getAssemblyData(ItemStack stack) {
-        if (stack != null && stack.getItem() instanceof FossilItem) {
+        if (stack != ItemStack.EMPTY && stack.getItem() instanceof FossilItem) {
             FossilItem item = (FossilItem) stack.getItem();
             return new AssemblyData(item.getDinosaur(stack), item.isFresh());
         }
@@ -153,7 +153,7 @@ public class SkeletonAssemblyContainer extends Container {
             for (int i = 0; i < 25; ++i) {
                 ItemStack stack = this.craftMatrix.removeStackFromSlot(i);
 
-                if (stack != null) {
+                if (stack != ItemStack.EMPTY) {
                     player.dropItem(stack, false);
                 }
             }
@@ -169,7 +169,7 @@ public class SkeletonAssemblyContainer extends Container {
     @Override
     @Nullable
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-        ItemStack stack = null;
+        ItemStack stack = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
 
         if (slot != null && slot.getHasStack()) {
@@ -178,30 +178,30 @@ public class SkeletonAssemblyContainer extends Container {
 
             if (index == 0) {
                 if (!this.mergeItemStack(itemstack1, 26, 62, true)) {
-                    return null;
+                    return ItemStack.EMPTY;
                 }
 
                 slot.onSlotChange(itemstack1, stack);
             } else if (index >= 26 && index < 53) {
                 if (!this.mergeItemStack(itemstack1, 53, 62, false)) {
-                    return null;
+                    return ItemStack.EMPTY;
                 }
             } else if (index >= 53 && index < 62) {
                 if (!this.mergeItemStack(itemstack1, 26, 53, false)) {
-                    return null;
+                    return ItemStack.EMPTY;
                 }
             } else if (!this.mergeItemStack(itemstack1, 26, 53, false)) {
-                return null;
+                return ItemStack.EMPTY;
             }
 
             if (itemstack1.getCount() == 0) {
-                slot.putStack(null);
+                slot.putStack(ItemStack.EMPTY);
             } else {
                 slot.onSlotChanged();
             }
 
             if (itemstack1.getCount() == stack.getCount()) {
-                return null;
+                return ItemStack.EMPTY;
             }
 
             slot.onTake(playerIn, itemstack1);

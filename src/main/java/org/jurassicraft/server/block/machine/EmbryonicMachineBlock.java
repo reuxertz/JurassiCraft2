@@ -66,9 +66,9 @@ public class EmbryonicMachineBlock extends OrientedBlock {
             return true;
         } else if (!player.isSneaking()) {
             TileEntity tileEntity = world.getTileEntity(pos);
-
-            if (tileEntity instanceof EmbryonicMachineBlockEntity) {
-                EmbryonicMachineBlockEntity embryonicMachine = (EmbryonicMachineBlockEntity) tileEntity;
+            
+            	if (tileEntity instanceof EmbryonicMachineBlockEntity) {
+            		EmbryonicMachineBlockEntity embryonicMachine = (EmbryonicMachineBlockEntity) tileEntity;
 
                 if (embryonicMachine.isUsableByPlayer(player)) {
                     player.openGui(JurassiCraft.INSTANCE, ServerProxy.GUI_EMBRYONIC_MACHINE_ID, world, pos.getX(), pos.getY(), pos.getZ());
@@ -118,8 +118,8 @@ public class EmbryonicMachineBlock extends OrientedBlock {
         TileEntity tile = access.getTileEntity(pos);
         if (tile instanceof EmbryonicMachineBlockEntity) {
             EmbryonicMachineBlockEntity machine = (EmbryonicMachineBlockEntity) tile;
-            tubes = machine.getStackInSlot(1) != null;
-            dish = machine.getStackInSlot(0) != null;
+            tubes = machine.getStackInSlot(1) != ItemStack.EMPTY;
+            dish = machine.getStackInSlot(0) != ItemStack.EMPTY;
         }
         return state.withProperty(PETRI_DISH, dish).withProperty(TEST_TUBES, tubes);
     }
