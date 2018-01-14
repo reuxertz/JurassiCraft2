@@ -114,6 +114,8 @@ public class OnionTraverser implements Iterable<BlockPos> {
                         this.nextLayer();
                     }
                     break;
+			default:
+				break;
             }
         }
 
@@ -140,6 +142,8 @@ public class OnionTraverser implements Iterable<BlockPos> {
                         --this._x;
                     }
                     break;
+			default:
+				break;
             }
 
             if (this._z > this._maxZ) {

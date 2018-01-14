@@ -1,5 +1,11 @@
 package org.jurassicraft.client.render.entity;
 
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.client.model.ResetControlTabulaModel;
+import org.jurassicraft.server.entity.vehicle.CarEntity;
+import org.jurassicraft.server.entity.vehicle.FordExplorerEntity;
+import org.jurassicraft.server.tabula.TabulaModelHelper;
+
 import net.ilexiconn.llibrary.client.model.tabula.TabulaModel;
 import net.ilexiconn.llibrary.client.model.tabula.container.TabulaModelContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -9,12 +15,6 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.client.model.ResetControlTabulaModel;
-import org.jurassicraft.client.model.animation.entity.vehicle.FordExplorerAnimator;
-import org.jurassicraft.server.entity.vehicle.CarEntity;
-import org.jurassicraft.server.entity.vehicle.FordExplorerEntity;
-import org.jurassicraft.server.tabula.TabulaModelHelper;
 
 @SideOnly(Side.CLIENT)
 public class FordExplorerRenderer extends Render<FordExplorerEntity> {
@@ -27,11 +27,9 @@ public class FordExplorerRenderer extends Render<FordExplorerEntity> {
         super(manager);
 
         try {
-            FordExplorerAnimator animator = new FordExplorerAnimator();
-
             TabulaModelContainer container = TabulaModelHelper.loadTabulaModel("/assets/jurassicraft/models/entities/ford_explorer/ford_explorer.tbl");
 
-            this.baseModel = new ResetControlTabulaModel(container, animator);
+            this.baseModel = new ResetControlTabulaModel(container);
         } catch (Exception e) {
             JurassiCraft.INSTANCE.getLogger().fatal("Failed to load the models for the Ford Explorer", e);
         }

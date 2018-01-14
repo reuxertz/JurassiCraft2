@@ -1,6 +1,10 @@
 package org.jurassicraft.server.dinosaur;
 
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
+
+import java.util.ArrayList;
+
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.entity.SleepTime;
 import org.jurassicraft.server.entity.dinosaur.VelociraptorEntity;
@@ -35,7 +39,6 @@ public class VelociraptorDinosaur extends Dinosaur {
         this.setMaxHerdSize(8);
         this.setAttackBias(800.0);
         this.setCanClimb(true);
-        this.setSpawn(10, BiomeDictionary.getBiomesForType(BiomeDictionary.Type.JUNGLE), BiomeDictionary.getBiomesForType(BiomeDictionary.Type.FOREST), BiomeDictionary.getBiomesForType(BiomeDictionary.Type.DENSE));
         this.setBreeding(false,1, 7, 28, false, true);
         this.setJumpHeight(3);
         String[][] recipe = {
@@ -44,5 +47,11 @@ public class VelociraptorDinosaur extends Dinosaur {
                 {"leg_bones", "leg_bones", "arm_bones", "claw"},
                 {"foot_bones", "foot_bones", "", ""}};
         this.setRecipe(recipe);
+        
+        ArrayList<Biome> biomeList = new ArrayList<Biome>();
+        biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.JUNGLE));
+        biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.FOREST));
+        biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.DENSE));
+        this.setSpawn(10, biomeList.toArray(new Biome[biomeList.size()]));
     }
 }

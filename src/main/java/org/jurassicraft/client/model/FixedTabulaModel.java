@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class FixedTabulaModel extends TabulaModel {
-    public FixedTabulaModel(TabulaModelContainer container, ITabulaModelAnimator tabulaAnimator) {
+    public FixedTabulaModel(TabulaModelContainer container, ITabulaModelAnimator<?> tabulaAnimator) {
         super(container, tabulaAnimator);
         this.cubes.clear();
         this.identifierMap.clear();

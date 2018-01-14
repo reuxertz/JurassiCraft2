@@ -1,8 +1,8 @@
 package org.jurassicraft.server.plant;
 
-import net.minecraft.block.Block;
 import org.jurassicraft.server.block.BlockHandler;
-import org.jurassicraft.server.block.plant.DoublePlantBlock;
+
+import net.minecraft.block.Block;
 
 /**
  * Created by Codyr on 29/10/2016.

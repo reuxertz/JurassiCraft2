@@ -1,9 +1,13 @@
 package org.jurassicraft.server.dinosaur;
 
-import net.minecraftforge.common.BiomeDictionary;
+import java.util.ArrayList;
+
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.entity.dinosaur.StegosaurusEntity;
 import org.jurassicraft.server.period.TimePeriod;
+
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.BiomeDictionary;
 
 public class StegosaurusDinosaur extends Dinosaur{
     public StegosaurusDinosaur() {
@@ -33,8 +37,13 @@ public class StegosaurusDinosaur extends Dinosaur{
         this.setDefendOwner(true);
         this.setMaxHerdSize(15);
         this.setAttackBias(400.0);
-        this.setSpawn(10, BiomeDictionary.getBiomesForType(BiomeDictionary.Type.PLAINS), BiomeDictionary.getBiomesForType(BiomeDictionary.Type.SPARSE), BiomeDictionary.getBiomesForType(BiomeDictionary.Type.FOREST));
         this.setBreeding(false, 2, 6, 48, false, true);
+        
+        ArrayList<Biome> biomeList = new ArrayList<Biome>();
+        biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.PLAINS));
+        biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.SPARSE));
+        biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.FOREST));
+        this.setSpawn(5, biomeList.toArray(new Biome[biomeList.size()]));
     }
 }
 

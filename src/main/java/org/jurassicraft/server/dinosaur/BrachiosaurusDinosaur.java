@@ -1,9 +1,13 @@
 package org.jurassicraft.server.dinosaur;
 
-import net.minecraftforge.common.BiomeDictionary;
+import java.util.ArrayList;
+
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.entity.dinosaur.BrachiosaurusEntity;
 import org.jurassicraft.server.period.TimePeriod;
+
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.BiomeDictionary;
 
 public class BrachiosaurusDinosaur extends Dinosaur {
     public BrachiosaurusDinosaur() {
@@ -30,12 +34,17 @@ public class BrachiosaurusDinosaur extends Dinosaur {
         this.setOffset(0.0F, 0.0F, 1.0F);
         this.setAttackBias(1200.0);
         this.setMaxHerdSize(4);
-        this.setSpawn(5, BiomeDictionary.getBiomesForType(BiomeDictionary.Type.FOREST));
+        //TODO Verify L48-L50 works
+        //this.setSpawn(5, BiomeDictionary.getBiomesForType(BiomeDictionary.Type.FOREST));
         this.setBreeding(false, 4, 8, 72, true, false);
         String[][] recipe =     {{"", "", "", "", "skull"},
                                  {"", "", "", "neck_vertebrae","tooth"},
                                  {"tail_vertebrae","pelvis","ribcage","shoulder",""},
                                  {"","hind_leg_bones","hind_leg_bones","front_leg_bones","front_leg_bones"}};
         this.setRecipe(recipe);
+        
+        ArrayList<Biome> biomeList = new ArrayList<Biome>();
+        biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.FOREST));
+        this.setSpawn(5, biomeList.toArray(new Biome[biomeList.size()]));
     }
 }

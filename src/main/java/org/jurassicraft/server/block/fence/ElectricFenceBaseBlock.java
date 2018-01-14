@@ -1,5 +1,12 @@
 package org.jurassicraft.server.block.fence;
 
+import java.util.List;
+
+import org.jurassicraft.server.block.entity.ElectricFenceBaseBlockEntity;
+import org.jurassicraft.server.block.entity.ElectricFenceWireBlockEntity;
+import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.tab.TabHandler;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockHorizontal;
@@ -12,7 +19,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
@@ -22,13 +28,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import org.jurassicraft.server.block.entity.ElectricFenceBaseBlockEntity;
-import org.jurassicraft.server.block.entity.ElectricFenceWireBlockEntity;
-import org.jurassicraft.server.entity.DinosaurEntity;
-import org.jurassicraft.server.tab.TabHandler;
-
-import javax.annotation.Nullable;
-import java.util.List;
 
 public class ElectricFenceBaseBlock extends BlockContainer {
     public static final PropertyDirection FACING_BIAS = BlockHorizontal.FACING;
@@ -140,6 +139,8 @@ public class ElectricFenceBaseBlock extends BlockContainer {
                 case WEST:
                     west = true;
                     break;
+			default:
+				break;
             }
         }
         return state.withProperty(NORTH, north).withProperty(SOUTH, south).withProperty(WEST, west).withProperty(EAST, east).withProperty(POLE, pole).withProperty(CONNECTIONS, connections);

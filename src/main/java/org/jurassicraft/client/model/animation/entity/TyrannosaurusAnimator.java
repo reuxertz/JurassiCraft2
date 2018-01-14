@@ -1,13 +1,13 @@
 package org.jurassicraft.client.model.animation.entity;
 
+import org.jurassicraft.client.model.AnimatableModel;
+import org.jurassicraft.client.model.animation.EntityAnimator;
+import org.jurassicraft.server.entity.dinosaur.TyrannosaurusEntity;
+
 import net.ilexiconn.llibrary.client.model.tools.AdvancedModelRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jurassicraft.client.model.AnimatableModel;
-import org.jurassicraft.client.model.animation.EntityAnimator;
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.dinosaur.TyrannosaurusEntity;
 
 @SideOnly(Side.CLIENT)
 public class TyrannosaurusAnimator extends EntityAnimator<TyrannosaurusEntity> {

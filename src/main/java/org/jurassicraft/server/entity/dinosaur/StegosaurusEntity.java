@@ -32,6 +32,8 @@ public class StegosaurusEntity extends DinosaurEntity {
                 return SoundHandler.TRICERATOPS_DEATH;
             case INJURED:
                 return SoundHandler.TRICERATOPS_HURT;
+		default:
+			break;
         }
 
         return null;

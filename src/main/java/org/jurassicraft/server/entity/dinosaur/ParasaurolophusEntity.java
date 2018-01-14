@@ -32,6 +32,8 @@ public class ParasaurolophusEntity extends DinosaurEntity {
                 return SoundHandler.PARASAUROLOPHUS_DEATH;
             case INJURED:
                 return SoundHandler.PARASAUROLOPHUS_HURT;
+		default:
+			break;
         }
 
         return null;

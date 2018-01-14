@@ -6,14 +6,14 @@ import net.ilexiconn.llibrary.client.model.tabula.container.TabulaModelContainer
 import net.minecraft.entity.Entity;
 
 public class ResetControlTabulaModel extends TabulaModel {
-    private final ITabulaModelAnimator animator;
+    private final ITabulaModelAnimator<Entity> animator;
     private boolean resetAllowed;
 
     public ResetControlTabulaModel(TabulaModelContainer model) {
         this(model, null);
     }
 
-    public ResetControlTabulaModel(TabulaModelContainer model, ITabulaModelAnimator animator) {
+    public ResetControlTabulaModel(TabulaModelContainer model, ITabulaModelAnimator<Entity> animator) {
         super(model, animator);
         this.animator = animator;
     }

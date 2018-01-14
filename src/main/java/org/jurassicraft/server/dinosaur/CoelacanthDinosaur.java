@@ -1,14 +1,18 @@
 package org.jurassicraft.server.dinosaur;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
-import net.minecraft.potion.PotionEffect;
-import net.minecraftforge.common.BiomeDictionary;
+import java.util.ArrayList;
+
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.entity.SleepTime;
 import org.jurassicraft.server.entity.dinosaur.CoelacanthEntity;
 import org.jurassicraft.server.food.FoodType;
 import org.jurassicraft.server.period.TimePeriod;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.BiomeDictionary;
 
 public class CoelacanthDinosaur extends Dinosaur {
     public CoelacanthDinosaur() {
@@ -38,13 +42,16 @@ public class CoelacanthDinosaur extends Dinosaur {
         this.setOffset(0.0F, 1.1F, -0.2F);
         this.setAttackBias(100.0);
         this.setMarineAnimal(true);
-        this.setSpawn(10, BiomeDictionary.getBiomesForType(BiomeDictionary.Type.OCEAN));
         this.setBreeding(true, 1, 3, 15, true, false);
         this.setRandomFlock(false);
         String[][] recipe =     {{"", "second_dorsal_fin", "first_dorsal_fin", ""},
                 {"caudal_fin", "spine", "pectoral_fin_bones","skull"},
                 {"anal_fin","","pelvic_fin_bones","teeth"}};
         this.setRecipe(recipe);
+        
+        ArrayList<Biome> biomeList = new ArrayList<Biome>();
+        biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.OCEAN));
+        this.setSpawn(5, biomeList.toArray(new Biome[biomeList.size()]));
     }
 
     @Override

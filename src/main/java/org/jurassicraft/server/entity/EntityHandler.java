@@ -31,6 +31,7 @@ import org.jurassicraft.server.period.TimePeriod;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fml.common.ProgressManager;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
@@ -96,9 +97,16 @@ public class EntityHandler {
 
         registerEntity(GoatEntity.class, "Goat", 0xEFEDE7, 0x7B3E20);
 
-        EntityRegistry.addSpawn(GoatEntity.class, 10, 1, 3, EnumCreatureType.CREATURE, BiomeDictionary.getBiomesForType(BiomeDictionary.Type.HILLS));
-        EntityRegistry.addSpawn(GoatEntity.class, 15, 1, 3, EnumCreatureType.CREATURE, BiomeDictionary.getBiomesForType(BiomeDictionary.Type.PLAINS));
-        EntityRegistry.addSpawn(GoatEntity.class, 15, 1, 3, EnumCreatureType.CREATURE, BiomeDictionary.getBiomesForType(BiomeDictionary.Type.FOREST));
+        ArrayList<Biome> biomeHills = new ArrayList<Biome>();
+        	biomeHills.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.HILLS));
+        ArrayList<Biome> biomePlains = new ArrayList<Biome>();
+        	biomePlains.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.PLAINS));
+        ArrayList<Biome> biomeForest = new ArrayList<Biome>();
+        	biomeForest.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.FOREST));
+        
+        EntityRegistry.addSpawn(GoatEntity.class, 10, 1, 3, EnumCreatureType.CREATURE, biomeHills.toArray(new Biome[biomeHills.size()]));
+        EntityRegistry.addSpawn(GoatEntity.class, 15, 1, 3, EnumCreatureType.CREATURE, biomeHills.toArray(new Biome[biomePlains.size()]));
+        EntityRegistry.addSpawn(GoatEntity.class, 15, 1, 3, EnumCreatureType.CREATURE, biomeHills.toArray(new Biome[biomeForest.size()]));
 
         registerEntity(DinosaurEggEntity.class, "Dinosaur Egg");
 //        registerEntity(HelicopterBaseEntity.class, "Helicopter base");

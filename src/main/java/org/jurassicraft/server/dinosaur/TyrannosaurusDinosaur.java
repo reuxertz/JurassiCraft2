@@ -1,9 +1,12 @@
 package org.jurassicraft.server.dinosaur;
 
+import java.util.ArrayList;
+
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.entity.dinosaur.TyrannosaurusEntity;
 import org.jurassicraft.server.period.TimePeriod;
 
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 
 public class TyrannosaurusDinosaur extends Dinosaur {
@@ -31,7 +34,6 @@ public class TyrannosaurusDinosaur extends Dinosaur {
         this.setScale(2.4F, 0.35F);
         this.setMaxHerdSize(2);
         this.setAttackBias(1000.0);
-        this.setSpawn(5, BiomeDictionary.getBiomesForType(BiomeDictionary.Type.PLAINS), BiomeDictionary.getBiomesForType(BiomeDictionary.Type.FOREST));
         this.setBreeding(false, 2, 4, 60, false, true);
 
         String[][] recipe = {
@@ -40,5 +42,10 @@ public class TyrannosaurusDinosaur extends Dinosaur {
                 {"", "leg_bones", "leg_bones", "arm_bones", ""},
                 {"", "foot_bones", "foot_bones", "", ""}};
         this.setRecipe(recipe);
+        
+        ArrayList<Biome> biomeList = new ArrayList<Biome>();
+        biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.PLAINS));
+        biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.FOREST));
+        this.setSpawn(5, biomeList.toArray(new Biome[biomeList.size()]));
     }
 }

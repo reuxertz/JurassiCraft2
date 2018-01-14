@@ -41,7 +41,7 @@ public class JeepWranglerRenderer extends Render<JeepWranglerEntity> {
         try {
             JeepWranglerAnimator animator = new JeepWranglerAnimator();
             TabulaModelContainer container = TabulaModelHelper.loadTabulaModel("/assets/jurassicraft/models/entities/jeep_wrangler/jeep_wrangler.tbl");
-            this.baseModel = new ResetControlTabulaModel(container, animator);
+            this.baseModel = new ResetControlTabulaModel(container);
             this.baseModel.getCube(WINDSCREEN).showModel = false;
             this.windscreen = new TabulaModel(container);
             for (Entry<String, AdvancedModelRenderer> entry : this.windscreen.getCubes().entrySet()) {

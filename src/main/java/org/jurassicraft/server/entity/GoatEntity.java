@@ -223,7 +223,7 @@ public class GoatEntity extends EntityAnimal implements Animatable, IEntityAddit
     }
 
     @Override
-    public PoseHandler<GoatEntity> getPoseHandler() {
+    public PoseHandler getPoseHandler() {
         return this.isChild() ? KID_POSE_HANDLER : this.billy ? BILLY_POSE_HANDLER : NANNY_POSE_HANDLER;
     }
 

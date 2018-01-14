@@ -1,6 +1,10 @@
 package org.jurassicraft.server.dinosaur;
 
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
+
+import java.util.ArrayList;
+
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.entity.dinosaur.ParasaurolophusEntity;
 import org.jurassicraft.server.period.TimePeriod;
@@ -31,7 +35,6 @@ public class ParasaurolophusDinosaur extends Dinosaur {
         this.setImprintable(true);
         this.setFlockSpeed(1.5F);
         this.setAttackBias(-100.0);
-        this.setSpawn(15, BiomeDictionary.getBiomesForType(BiomeDictionary.Type.PLAINS), BiomeDictionary.getBiomesForType(BiomeDictionary.Type.FOREST));
         this.setBreeding(false, 4, 6, 40, false, true);
 
         String[][] recipe = {
@@ -39,5 +42,10 @@ public class ParasaurolophusDinosaur extends Dinosaur {
                 {"hind_leg_bones", "hind_leg_bones", "", "shoulder_bone", "teeth"},
                 {"", "", "", "front_leg_bones", "front_leg_bones"}};
         this.setRecipe(recipe);
+        
+        ArrayList<Biome> biomeList = new ArrayList<Biome>();
+        biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.PLAINS));
+        biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.FOREST));
+        this.setSpawn(15, biomeList.toArray(new Biome[biomeList.size()]));
     }
 }

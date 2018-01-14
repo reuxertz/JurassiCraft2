@@ -1,10 +1,14 @@
 package org.jurassicraft.server.dinosaur;
 
-import net.minecraftforge.common.BiomeDictionary;
+import java.util.ArrayList;
+
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.entity.dinosaur.GallimimusEntity;
 import org.jurassicraft.server.food.FoodType;
 import org.jurassicraft.server.period.TimePeriod;
+
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.BiomeDictionary;
 
 public class GallimimusDinosaur extends Dinosaur {
     public GallimimusDinosaur() {
@@ -31,7 +35,6 @@ public class GallimimusDinosaur extends Dinosaur {
         this.setImprintable(true);
         this.setFlee(true);
         this.setFlockSpeed(1.4F);
-        this.setSpawn(25, BiomeDictionary.getBiomesForType(BiomeDictionary.Type.PLAINS), BiomeDictionary.getBiomesForType(BiomeDictionary.Type.DRY));
         this.setBreeding(false, 2, 6, 20, false, true);
         this.setJumpHeight(3);
         String[][] recipe =
@@ -40,5 +43,11 @@ public class GallimimusDinosaur extends Dinosaur {
                 {"", "leg_bones", "leg_bones", "arm_bones", ""},
                 {"", "foot_bones", "foot_bones", "", ""}};
         this.setRecipe(recipe);
+        
+        ArrayList<Biome> biomeList = new ArrayList<Biome>();
+        biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.PLAINS));
+        biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.DRY));
+        
+        this.setSpawn(25, biomeList.toArray(new Biome[biomeList.size()]));
     }
 }

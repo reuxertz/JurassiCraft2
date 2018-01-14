@@ -1,10 +1,14 @@
 package org.jurassicraft.server.dinosaur;
 
-import net.minecraftforge.common.BiomeDictionary;
+import java.util.ArrayList;
+
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.entity.SleepTime;
 import org.jurassicraft.server.entity.dinosaur.DilophosaurusEntity;
 import org.jurassicraft.server.period.TimePeriod;
+
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.BiomeDictionary;
 
 public class DilophosaurusDinosaur extends Dinosaur {
     public DilophosaurusDinosaur() {
@@ -33,11 +37,14 @@ public class DilophosaurusDinosaur extends Dinosaur {
         this.setDefendOwner(true);
         this.setMaxHerdSize(10);
         this.setAttackBias(1200.0);
-        this.setSpawn(10, BiomeDictionary.getBiomesForType(BiomeDictionary.Type.FOREST));
         this.setBreeding(false, 2, 4, 24, false, true);
         String[][] recipe =     {{"", "", "", "neck", "skull"},
                                 {"tail_vertebrae", "pelvis", "ribcage","shoulder","tooth"},
                                  {"leg_bones", "leg_bones", "", "", "arm_bones"}};
         this.setRecipe(recipe);
+        
+        ArrayList<Biome> biomeList = new ArrayList<Biome>();
+        biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.FOREST));
+        this.setSpawn(10, biomeList.toArray(new Biome[biomeList.size()]));
     }
 }

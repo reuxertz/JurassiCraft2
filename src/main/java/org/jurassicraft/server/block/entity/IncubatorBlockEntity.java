@@ -191,4 +191,14 @@ public class IncubatorBlockEntity extends MachineBaseBlockEntity implements Temp
 	public boolean isEmpty() {
 		return false;
 	}
+
+	@Override
+	public ItemStack decrStackSize(int index, int count) {
+		return decrStackSize(index, count);
+	}
+
+	@Override
+	public ItemStack removeStackFromSlot(int index) {
+		return removeStackFromSlot(index);
+	}
 }

@@ -1,13 +1,13 @@
 package org.jurassicraft.client.model.animation.entity;
 
+import org.jurassicraft.client.model.AnimatableModel;
+import org.jurassicraft.client.model.animation.EntityAnimator;
+import org.jurassicraft.server.entity.dinosaur.StegosaurusEntity;
+
 import net.ilexiconn.llibrary.client.model.tools.AdvancedModelRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jurassicraft.client.model.AnimatableModel;
-import org.jurassicraft.client.model.animation.EntityAnimator;
-import org.jurassicraft.server.entity.dinosaur.StegosaurusEntity;
-import org.jurassicraft.server.entity.dinosaur.TriceratopsEntity;
 
 /**
  * Created by Codyr on 08/07/2017.

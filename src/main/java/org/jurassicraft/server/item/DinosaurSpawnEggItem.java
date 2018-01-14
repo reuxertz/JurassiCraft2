@@ -144,7 +144,7 @@ public class DinosaurSpawnEggItem extends Item {
 
                 if (tile instanceof TileEntityMobSpawner) {
                     MobSpawnerBaseLogic spawnerLogic = ((TileEntityMobSpawner) tile).getSpawnerBaseLogic();
-                    spawnerLogic.setEntityName(EntityList.CLASS_TO_NAME.get(this.getDinosaur(stack).getDinosaurClass()));
+                    spawnerLogic.setEntityId(EntityList.getKey(this.getDinosaur(stack).getDinosaurClass()));
                     tile.markDirty();
 
                     if (!player.capabilities.isCreativeMode) {

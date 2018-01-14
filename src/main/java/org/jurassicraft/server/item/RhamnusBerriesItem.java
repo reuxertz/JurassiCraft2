@@ -1,15 +1,11 @@
 package org.jurassicraft.server.item;
 
-import net.minecraft.item.ItemFood;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
-import org.jurassicraft.JurassiCraft;
 
 /**
  * Created by Codyr on 01/10/2017.

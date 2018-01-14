@@ -1,9 +1,8 @@
 package org.jurassicraft.server.plant;
 
-import net.minecraft.block.Block;
-import net.minecraft.init.PotionTypes;
 import org.jurassicraft.server.block.BlockHandler;
-import org.jurassicraft.server.food.FoodHelper;
+
+import net.minecraft.block.Block;
 
 /**
  * Created by Codyr on 22/01/2017.

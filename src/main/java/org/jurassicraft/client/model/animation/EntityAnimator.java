@@ -29,7 +29,7 @@ public abstract class EntityAnimator<ENTITY extends EntityLivingBase & Animatabl
         JabelarAnimationHandler<ENTITY> render = growthToRender.get(entity);
 
         if (render == null) {
-            render = entity.<ENTITY>getPoseHandler().<ENTITY>createAnimationHandler(entity, model, growth, useInertialTweens);
+            render = entity.<ENTITY>getPoseHandler().createAnimationHandler(entity, model, growth, useInertialTweens);
             growthToRender.put(entity, render);
         }
 

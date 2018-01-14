@@ -1,5 +1,7 @@
 package org.jurassicraft.server.block.plant;
 
+import java.util.Random;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
@@ -16,10 +18,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import java.util.Random;
-
 public class DoublePlantBlock extends AncientPlantBlock {
-    public static final PropertyEnum HALF = PropertyEnum.create("half", BlockHalf.class);
+    public static final PropertyEnum<BlockHalf> HALF = PropertyEnum.create("half", BlockHalf.class);
 
     private static final AxisAlignedBB BOUNDS = new AxisAlignedBB(0.1F, 0.0F, 0.1F, 0.9F, 1.0F, 0.9F);
 

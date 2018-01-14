@@ -29,6 +29,8 @@ public class MussaurusEntity extends DinosaurEntity {
                 return SoundHandler.MUSSAURUS_ATTACK;
             case CALLING:
                 return SoundHandler.MUSSAURUS_LIVING;
+		default:
+			break;
         }
 
         return null;
