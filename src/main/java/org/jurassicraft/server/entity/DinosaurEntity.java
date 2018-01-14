@@ -1793,7 +1793,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
 
     @Override
     public <ENTITY extends EntityLivingBase & Animatable> PoseHandler<ENTITY> getPoseHandler() {
-        return this.dinosaur.getPoseHandler();
+        return (PoseHandler<ENTITY>) this.dinosaur.getPoseHandler();
     }
 
     @Override

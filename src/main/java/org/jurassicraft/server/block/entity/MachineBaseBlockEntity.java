@@ -95,16 +95,12 @@ public abstract class MachineBaseBlockEntity extends TileEntityLockable implemen
 
     @Override
     public ItemStack decrStackSize(int index, int count) {
-        ItemStack split = ItemStackHelper.getAndSplit(this.getSlots(), index, count);
-        this.onSlotUpdate();
-        return split;
+        return decrStackSize(index, count);
     }
 
     @Override
     public ItemStack removeStackFromSlot(int index) {
-        ItemStack removed = ItemStackHelper.getAndRemove(this.getSlots(), index);
-        this.onSlotUpdate();
-        return removed;
+        return removeStackFromSlot(index);
     }
 
     @Override

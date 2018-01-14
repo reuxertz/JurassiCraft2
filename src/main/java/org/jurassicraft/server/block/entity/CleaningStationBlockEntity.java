@@ -1,12 +1,15 @@
 package org.jurassicraft.server.block.entity;
 
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.api.CleanableItem;
+import org.jurassicraft.server.container.CleaningStationContainer;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,12 +22,6 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
-
-import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.api.CleanableItem;
-import org.jurassicraft.server.container.CleaningStationContainer;
 
 public class CleaningStationBlockEntity extends TileEntityLockable implements ITickable, ISidedInventory {
     private static final int[] SLOTS_TOP = new int[] { 0 };
@@ -63,12 +60,12 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
 
     @Override
     public ItemStack decrStackSize(int index, int count) {
-        return ItemStackHelper.getAndSplit(this.slots, index, count);
+        return decrStackSize(index, count);
     }
 
     @Override
     public ItemStack removeStackFromSlot(int index) {
-        return ItemStackHelper.getAndRemove(this.slots, index);
+        return removeStackFromSlot(index);
     }
 
     @Override
