@@ -1,5 +1,10 @@
 package org.jurassicraft.server.block.machine;
 
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.block.entity.FeederBlockEntity;
+import org.jurassicraft.server.proxy.ServerProxy;
+import org.jurassicraft.server.tab.TabHandler;
+
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -20,10 +25,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.block.entity.FeederBlockEntity;
-import org.jurassicraft.server.proxy.ServerProxy;
-import org.jurassicraft.server.tab.TabHandler;
 
 public class FeederBlock extends BlockContainer {
     public static final PropertyDirection FACING = PropertyDirection.create("facing");

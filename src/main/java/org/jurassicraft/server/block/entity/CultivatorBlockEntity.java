@@ -7,6 +7,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemBucketMilk;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
+
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.container.CultivateContainer;
 import org.jurassicraft.server.dinosaur.Dinosaur;
@@ -20,7 +22,7 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
     private static final int[] INPUTS = new int[] { 0, 1, 2, 3 };
     private static final int[] OUTPUTS = new int[] { 4 };
     private static final int MAX_NUTRIENTS = 3000;
-    private ItemStack[] slots = new ItemStack[5];
+    private NonNullList<ItemStack> slots = NonNullList.<ItemStack>withSize(5, ItemStack.EMPTY);
     private int waterLevel;
     private int lipids;
     private int proximates;
@@ -36,8 +38,9 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
 
     @Override
     protected boolean canProcess(int process) {
-        if (this.slots[0] != null && this.slots[0].getItem() == ItemHandler.SYRINGE && this.waterLevel == 3) {
-            Dinosaur dino = EntityHandler.getDinosaurById(this.slots[0].getItemDamage());
+    	ItemStack itemstack = this.slots.get(0);
+        if (itemstack.getItem() == ItemHandler.SYRINGE && this.waterLevel == 3) {
+            Dinosaur dino = EntityHandler.getDinosaurById(itemstack.getItemDamage());
             if (dino != null && (dino.isMammal() || dino.isMarineCreature())) {
                 return this.lipids >= dino.getLipids() && this.minerals >= dino.getMinerals() && this.proximates >= dino.getProximates() && this.vitamins >= dino.getVitamins();
             }
@@ -48,7 +51,7 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
 
     @Override
     protected void processItem(int process) {
-        ItemStack syringe = this.slots[0];
+        ItemStack syringe = this.slots.get(0);
         Dinosaur dinosaur = EntityHandler.getDinosaurById(syringe.getItemDamage());
 
         this.waterLevel = 0;
@@ -72,7 +75,7 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
 
             hatchedEgg.setTagCompound(compound);
 
-            this.slots[0] = hatchedEgg;
+            hatchedEgg = this.slots.get(0);
         }
     }
 
@@ -83,27 +86,25 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
         boolean sync = false;
 
         if (!this.world.isRemote) {
-            if (this.waterLevel < 3 && this.slots[2] != null && this.slots[2].getItem() == Items.WATER_BUCKET) {
-                if (this.slots[3] == null || this.slots[3].getCount() < 16) {
-                    this.slots[2].shrink(1);
-
-                    if (this.slots[2].getCount() <= 0) {
-                        this.slots[2] = null;
-                    }
+            if (this.waterLevel < 3 && this.slots.get(2).getItem() == Items.WATER_BUCKET) {
+                if (this.slots.get(3).getCount() < 16) {
+                    this.slots.get(2).shrink(1);
 
                     this.waterLevel++;
 
-                    if (this.slots[3] == null) {
-                        this.slots[3] = new ItemStack(Items.BUCKET);
-                    } else if (this.slots[3].getItem() == Items.BUCKET) {
-                        this.slots[3].grow(1);
+                    ItemStack stack = (ItemStack)this.slots.get(3);
+                    if (!stack.isEmpty()) {
+                    	stack = new ItemStack(Items.BUCKET);
+                    } else if (stack.getItem() == Items.BUCKET) {
+                    	stack.grow(1);
                     }
 
                     sync = true;
                 }
             }
 
-            if (this.slots[1] != null) {
+            ItemStack stack = (ItemStack)this.slots.get(1);
+            if (!stack.isEmpty()) {
                 if ((this.proximates < MAX_NUTRIENTS) || (this.minerals < MAX_NUTRIENTS) || (this.vitamins < MAX_NUTRIENTS) || (this.lipids < MAX_NUTRIENTS)) {
                     this.consumeNutrients();
                     sync = true;
@@ -117,16 +118,16 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
     }
 
     private void consumeNutrients() {
-        ItemStack foodStack = this.slots[1];
+        ItemStack foodStack = this.slots.get(1);
         FoodNutrients nutrients = FoodNutrients.get(foodStack.getItem());
 
         if (nutrients != null) {
             if (foodStack.getItem() instanceof ItemBucketMilk) {
-                this.slots[1] = new ItemStack(Items.BUCKET);
+            	foodStack = new ItemStack(Items.BUCKET);
             } else {
                 foodStack.shrink(1);
                 if (foodStack.getCount() <= 0) {
-                    this.slots[1] = null;
+                    foodStack.isEmpty();
                 }
             }
 
@@ -216,16 +217,6 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
     @Override
     protected int[] getOutputs() {
         return OUTPUTS;
-    }
-
-    @Override
-    protected ItemStack[] getSlots() {
-        return this.slots;
-    }
-
-    @Override
-    protected void setSlots(ItemStack[] slots) {
-        this.slots = slots;
     }
 
     @Override
@@ -335,8 +326,9 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
     }
 
     public Dinosaur getDinosaur() {
-        if (this.slots[0] != null) {
-            return EntityHandler.getDinosaurById(this.slots[0].getItemDamage());
+    	ItemStack stack = (ItemStack)this.slots.get(0);
+        if (stack.isEmpty()) {
+            return EntityHandler.getDinosaurById(stack.getItemDamage());
         }
 
         return null;
@@ -359,7 +351,19 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
 
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	protected ItemStack[] getSlots() {
+		ItemStack[] slots = new ItemStack[5];
+		return slots;
+	}
+
+	@Override
+	protected void setSlots(ItemStack[] slot) {
+		ItemStack stack = (ItemStack)this.slots.get(1);
+		stack.grow(slot.length);
+		
 	}
 }

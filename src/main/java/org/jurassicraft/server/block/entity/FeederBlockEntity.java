@@ -5,12 +5,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntityLockable;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.sound.SoundHandler;
@@ -26,7 +28,7 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
     public int prevOpenAnimation;
     public int openAnimation;
     protected String customName;
-    private ItemStack[] slots = new ItemStack[18];
+    private NonNullList<ItemStack> slots = NonNullList.<ItemStack>withSize(18, ItemStack.EMPTY);
     private int stayOpen;
     private boolean open;
     private DinosaurEntity feeding;
@@ -59,53 +61,28 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
 
     @Override
     public int getSizeInventory() {
-        return this.slots.length;
+        return this.slots.size();
     }
 
     @Override
     public ItemStack getStackInSlot(int index) {
-        return this.slots[index];
+        return (ItemStack)this.slots.get(index);
     }
 
     @Override
     public ItemStack decrStackSize(int index, int count) {
-        if (this.slots[index] != null) {
-            ItemStack stack;
-
-            if (this.slots[index].getCount() <= count) {
-                stack = this.slots[index];
-                this.slots[index] = null;
-                return stack;
-            } else {
-                stack = this.slots[index].splitStack(count);
-
-                if (this.slots[index].getCount() == 0) {
-                    this.slots[index] = null;
-                }
-
-                return stack;
-            }
-        } else {
-            return null;
-        }
+        return ItemStackHelper.getAndSplit(this.slots, index, count);
     }
 
     @Override
     public ItemStack removeStackFromSlot(int index) {
-        if (this.slots[index] != null) {
-            ItemStack itemstack = this.slots[index];
-            this.slots[index] = null;
-            return itemstack;
-        } else {
-            return null;
-        }
+        	return ItemStackHelper.getAndRemove(this.slots, index);
     }
 
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
-        this.slots[index] = stack;
-
-        if (stack != null && stack.getCount() > this.getInventoryStackLimit()) {
+        this.slots.set(index, stack);
+        if (stack != ItemStack.EMPTY && stack.getCount() > this.getInventoryStackLimit()) {
             stack.setCount(this.getInventoryStackLimit());
         }
     }
@@ -163,8 +140,8 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
 
     @Override
     public void clear() {
-        for (int i = 0; i < this.slots.length; ++i) {
-            this.slots[i] = null;
+        for (int i = 0; i < this.slots.size(); ++i) {
+            this.slots.clear();
         }
     }
 
@@ -187,7 +164,7 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
         super.readFromNBT(compound);
 
         NBTTagList itemList = compound.getTagList("Items", 10);
-        ItemStack[] slots = new ItemStack[this.slots.length];
+        ItemStack[] slots = new ItemStack[this.slots.size()];
 
         for (int i = 0; i < itemList.tagCount(); ++i) {
             NBTTagCompound item = itemList.getCompoundTagAt(i);
@@ -197,15 +174,14 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
 
             if (slot >= 0 && slot < slots.length) {
                 slots[slot] = stack;
-                
             }
         }
 
         if (compound.hasKey("CustomName", 8)) {
             this.customName = compound.getString("CustomName");
         }
-
-        this.slots = slots;
+        
+        this.slots = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
     }
 
     @Override
@@ -215,21 +191,18 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
         NBTTagList itemList = new NBTTagList();
 
         for (int slot = 0; slot < this.getSizeInventory(); ++slot) {
-            if (this.slots[slot] != null) {
+            if (!this.slots.isEmpty()) {
                 NBTTagCompound itemTag = new NBTTagCompound();
                 itemTag.setByte("Slot", (byte) slot);
-
-                this.slots[slot].writeToNBT(itemTag);
+                super.writeToNBT(compound);
                 itemList.appendTag(itemTag);
             }
         }
-
         compound.setTag("Items", itemList);
-
+        
         if (this.hasCustomName()) {
             compound.setString("CustomName", this.customName);
         }
-
         return compound;
     }
 
@@ -242,15 +215,12 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
         } else if (!this.open && this.openAnimation > 0) {
             this.openAnimation--;
         }
-
         if (this.open && this.openAnimation == 19) {
             this.stayOpen = 20;
         }
-
         if (this.feeding != null && (this.feeding.isCarcass() || this.feeding.isDead)) {
             this.feeding = null;
         }
-
         if (this.feeding != null) {
             if (this.feedingExpire > 0) {
                 this.feedingExpire--;
@@ -258,21 +228,19 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
                 this.feeding = null;
             }
         }
-
+        
         if (this.open && this.openAnimation == 20) {
             if (this.stayOpen > 0) {
                 this.stayOpen--;
 
                 if (this.stayOpen == 10 && this.feeding != null) {
                     int feedSlot = this.getFoodForDinosaur(this.feeding);
-
                     if (feedSlot >= 0) {
                         Random random = new Random();
 
                         float offsetX = 0.5F;
                         float offsetY = 0.5F;
                         float offsetZ = 0.5F;
-
                         float motionX = 0.0F;
                         float motionY = 0.0F;
                         float motionZ = 0.0F;
@@ -308,10 +276,10 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
                                 motionX = 0.5F;
                                 break;
                         }
+                        
+                        ItemStack stack = (ItemStack)this.slots.get(feedSlot);
 
-                        ItemStack stack = this.slots[feedSlot];
-
-                        if (stack != null) {
+                        if (stack != ItemStack.EMPTY) {
                             EntityItem itemEntity = new EntityItem(this.world, this.pos.getX() + offsetX, this.pos.getY() + offsetY, this.pos.getZ() + offsetZ, new ItemStack(stack.getItem(), 1, stack.getItemDamage()));
                             itemEntity.setDefaultPickupDelay();
                             itemEntity.motionX = motionX * 0.3F;
@@ -351,7 +319,7 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
     private int getFoodForDinosaur(DinosaurEntity dinosaur) {
         int i = 0;
         for (ItemStack stack : this.slots) {
-            if (stack != null && stack.getCount() > 0 && FoodHelper.isEdible(dinosaur, dinosaur.getDinosaur().getDiet(), stack.getItem())) {
+            if (stack != ItemStack.EMPTY && stack.getCount() > 0 && FoodHelper.isEdible(dinosaur, dinosaur.getDinosaur().getDiet(), stack.getItem())) {
                 return i;
             }
             i++;
@@ -374,7 +342,6 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
 
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 }
