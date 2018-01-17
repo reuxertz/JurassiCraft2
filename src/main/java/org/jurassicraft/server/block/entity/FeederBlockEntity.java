@@ -187,6 +187,7 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         compound = super.writeToNBT(compound);
+        
 
         NBTTagList itemList = new NBTTagList();
 
@@ -203,6 +204,7 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
         if (this.hasCustomName()) {
             compound.setString("CustomName", this.customName);
         }
+        
         return compound;
     }
 

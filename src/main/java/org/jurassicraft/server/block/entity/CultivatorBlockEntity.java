@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemBucketMilk;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -185,7 +186,7 @@ public abstract class CultivatorBlockEntity extends MachineBaseBlockEntity imple
         compound.setInteger("Vitamins", this.vitamins);
         compound.setInteger("Proximates", this.proximates);
         compound.setInteger("Temperature", this.temperature);
-
+        ItemStackHelper.saveAllItems(compound, this.slots);
         return compound;
     }
 

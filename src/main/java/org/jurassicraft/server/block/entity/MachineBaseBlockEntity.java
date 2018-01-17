@@ -3,6 +3,7 @@ package org.jurassicraft.server.block.entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -35,7 +36,7 @@ public abstract class MachineBaseBlockEntity extends TileEntityLockable implemen
 
         for (int i = 0; i < itemList.tagCount(); ++i) {
             NBTTagCompound item = itemList.getCompoundTagAt(i);
-            NonNullList stack = NonNullList.create();
+            NonNullList<?> stack = NonNullList.create();
 
             byte slot = item.getByte("Slot");
 
@@ -84,7 +85,6 @@ public abstract class MachineBaseBlockEntity extends TileEntityLockable implemen
         if (this.hasCustomName()) {
             compound.setString("CustomName", this.customName);
         }
-
         return compound;
     }
 
@@ -95,7 +95,8 @@ public abstract class MachineBaseBlockEntity extends TileEntityLockable implemen
 
     @Override
     public ItemStack decrStackSize(int index, int count) {
-        return decrStackSize(index, count);
+        NonNullList<ItemStack> slots = this.getSlots();
+        return ItemStackHelper.getAndSplit(slots, index, count);
     }
 
     @Override
@@ -354,7 +355,7 @@ public abstract class MachineBaseBlockEntity extends TileEntityLockable implemen
         slots.get(slot).shrink(1);
 
         if (slots.get(slot).getCount() <= 0) {
-            slots.set(slot, null);
+            slots.set(slot, ItemStack.EMPTY);
         }
     }
 
