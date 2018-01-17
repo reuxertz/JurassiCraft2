@@ -11,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -92,6 +93,11 @@ public class DNASequencerBlock extends OrientedBlock {
 
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
-        return new DNASequencerBlockEntity();
+        return new DNASequencerBlockEntity() {
+            @Override
+            protected void setSlots(NonNullList[] slots) {
+
+            }
+        };
     }
 }

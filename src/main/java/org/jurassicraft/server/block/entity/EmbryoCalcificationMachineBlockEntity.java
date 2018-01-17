@@ -5,6 +5,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.container.EmbryoCalcificationMachineContainer;
 import org.jurassicraft.server.dinosaur.Dinosaur;
@@ -12,11 +13,11 @@ import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.item.SyringeItem;
 
-public class EmbryoCalcificationMachineBlockEntity extends MachineBaseBlockEntity {
+public abstract class EmbryoCalcificationMachineBlockEntity extends MachineBaseBlockEntity {
     private static final int[] INPUTS = new int[] { 0, 1 };
     private static final int[] OUTPUTS = new int[] { 2 };
 
-    private ItemStack[] slots = new ItemStack[3];
+    private NonNullList<ItemStack> slots = NonNullList.<ItemStack>withSize(3, ItemStack.EMPTY);
 
     @Override
     protected int getProcess(int slot) {
@@ -25,8 +26,8 @@ public class EmbryoCalcificationMachineBlockEntity extends MachineBaseBlockEntit
 
     @Override
     protected boolean canProcess(int process) {
-        ItemStack input = this.slots[0];
-        ItemStack egg = this.slots[1];
+        ItemStack input = this.slots.get(0);
+        ItemStack egg = this.slots.get(1);
 
         if (input != null && input.getItem() instanceof SyringeItem && egg != null && egg.getItem() == Items.EGG) {
             Dinosaur dino = EntityHandler.getDinosaurById(input.getItemDamage());
@@ -45,8 +46,8 @@ public class EmbryoCalcificationMachineBlockEntity extends MachineBaseBlockEntit
     @Override
     protected void processItem(int process) {
         if (this.canProcess(process)) {
-            ItemStack output = new ItemStack(ItemHandler.EGG, 1, this.slots[0].getItemDamage());
-            output.setTagCompound(this.slots[0].getTagCompound());
+            ItemStack output = new ItemStack(ItemHandler.EGG, 1, this.slots.get(0).getItemDamage());
+            output.setTagCompound(this.slots.get(0).getTagCompound());
 
             this.mergeStack(2, output);
             this.decreaseStackSize(0);
@@ -85,12 +86,12 @@ public class EmbryoCalcificationMachineBlockEntity extends MachineBaseBlockEntit
     }
 
     @Override
-    protected ItemStack[] getSlots() {
+    protected NonNullList<ItemStack> getSlots() {
         return this.slots;
     }
 
     @Override
-    protected void setSlots(ItemStack[] slots) {
+    protected void setSlots(NonNullList<ItemStack> slots) {
         this.slots = slots;
     }
 

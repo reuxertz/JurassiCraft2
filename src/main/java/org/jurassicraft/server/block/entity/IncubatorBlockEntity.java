@@ -7,19 +7,20 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.api.IncubatorEnvironmentItem;
 import org.jurassicraft.server.container.IncubatorContainer;
 import org.jurassicraft.server.item.DinosaurEggItem;
 import org.jurassicraft.server.item.ItemHandler;
 
-public class IncubatorBlockEntity extends MachineBaseBlockEntity implements TemperatureControl {
+public abstract class IncubatorBlockEntity extends MachineBaseBlockEntity implements TemperatureControl {
     private static final int[] INPUTS = new int[] { 0, 1, 2, 3, 4 };
     private static final int[] ENVIRONMENT = new int[] { 5 };
 
     private int[] temperature = new int[5];
 
-    private ItemStack[] slots = new ItemStack[6];
+    private NonNullList<ItemStack> slots = NonNullList.<ItemStack>withSize(6, ItemStack.EMPTY);
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
@@ -52,7 +53,7 @@ public class IncubatorBlockEntity extends MachineBaseBlockEntity implements Temp
 
     @Override
     protected boolean canProcess(int process) {
-        ItemStack environment = this.slots[5];
+        ItemStack environment = this.slots.get(5);
         boolean hasEnvironment = false;
 
         if (environment != null) {
@@ -63,13 +64,13 @@ public class IncubatorBlockEntity extends MachineBaseBlockEntity implements Temp
             }
         }
 
-        return hasEnvironment && this.slots[process] != null && this.slots[process].getCount() > 0 && this.slots[process].getItem() instanceof DinosaurEggItem;
+        return hasEnvironment && this.slots.get(process) != null && this.slots.get(process).getCount() > 0 && this.slots.get(process).getItem() instanceof DinosaurEggItem;
     }
 
     @Override
     protected void processItem(int process) {
         if (this.canProcess(process) && !this.world.isRemote) {
-            ItemStack egg = this.slots[process];
+            ItemStack egg = this.slots.get(process);
 
             ItemStack incubatedEgg = new ItemStack(ItemHandler.HATCHED_EGG, 1, egg.getItemDamage());
             NBTTagCompound compound = new NBTTagCompound();
@@ -84,7 +85,7 @@ public class IncubatorBlockEntity extends MachineBaseBlockEntity implements Temp
 
             this.decreaseStackSize(5);
 
-            this.slots[process] = incubatedEgg;
+            this.slots.set(process, incubatedEgg);
         }
     }
 
@@ -119,12 +120,12 @@ public class IncubatorBlockEntity extends MachineBaseBlockEntity implements Temp
     }
 
     @Override
-    protected ItemStack[] getSlots() {
+    protected NonNullList<ItemStack> getSlots() {
         return this.slots;
     }
 
     @Override
-    protected void setSlots(ItemStack[] slots) {
+    protected void setSlots(NonNullList<ItemStack> slots) {
         this.slots = slots;
     }
 

@@ -18,7 +18,7 @@ import org.jurassicraft.server.item.ItemHandler;
 
 import java.util.Random;
 
-public class CultivatorBlockEntity extends MachineBaseBlockEntity implements TemperatureControl {
+public abstract class CultivatorBlockEntity extends MachineBaseBlockEntity implements TemperatureControl {
     private static final int[] INPUTS = new int[] { 0, 1, 2, 3 };
     private static final int[] OUTPUTS = new int[] { 4 };
     private static final int MAX_NUTRIENTS = 3000;
@@ -355,15 +355,15 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
 	}
 
 	@Override
-	protected ItemStack[] getSlots() {
-		ItemStack[] slots = new ItemStack[5];
+	protected NonNullList<ItemStack> getSlots() {
+        NonNullList<ItemStack> slots = NonNullList.<ItemStack>withSize(5, ItemStack.EMPTY);
 		return slots;
 	}
 
 	@Override
-	protected void setSlots(ItemStack[] slot) {
+	protected void setSlots(NonNullList<ItemStack> slot) {
 		ItemStack stack = (ItemStack)this.slots.get(1);
-		stack.grow(slot.length);
+		stack.grow(slot.size());
 		
 	}
 }

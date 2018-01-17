@@ -4,17 +4,18 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.container.EmbryonicMachineContainer;
 import org.jurassicraft.server.item.DNAItem;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.item.PlantDNAItem;
 
-public class EmbryonicMachineBlockEntity extends MachineBaseBlockEntity {
+public abstract class EmbryonicMachineBlockEntity extends MachineBaseBlockEntity {
     private static final int[] INPUTS = new int[] { 0, 1, 2 };
     private static final int[] OUTPUTS = new int[] { 3, 4, 5, 6 };
 
-    private ItemStack[] slots = new ItemStack[7];
+    private NonNullList<ItemStack> slots = NonNullList.<ItemStack>withSize(7, ItemStack.EMPTY);
 
     @Override
     protected int getProcess(int slot) {
@@ -23,9 +24,9 @@ public class EmbryonicMachineBlockEntity extends MachineBaseBlockEntity {
 
     @Override
     protected boolean canProcess(int process) {
-        ItemStack dna = this.slots[0];
-        ItemStack petridish = this.slots[1];
-        ItemStack syringe = this.slots[2];
+        ItemStack dna = this.slots.get(0);
+        ItemStack petridish = this.slots.get(1);
+        ItemStack syringe = this.slots.get(2);
 
         if (dna != null && petridish != null && syringe != null && syringe.getItem() == ItemHandler.EMPTY_SYRINGE) {
             ItemStack output = null;
@@ -49,13 +50,13 @@ public class EmbryonicMachineBlockEntity extends MachineBaseBlockEntity {
         if (this.canProcess(process)) {
             ItemStack output = null;
 
-            if (this.slots[0].getItem() instanceof DNAItem && this.slots[1].getItem() == ItemHandler.PETRI_DISH) {
-                output = new ItemStack(ItemHandler.SYRINGE, 1, this.slots[0].getItemDamage());
-            } else if (this.slots[0].getItem() instanceof PlantDNAItem && this.slots[1].getItem() == ItemHandler.PLANT_CELLS_PETRI_DISH) {
-                output = new ItemStack(ItemHandler.PLANT_CALLUS, 1, this.slots[0].getItemDamage());
+            if (this.slots.get(0).getItem() instanceof DNAItem && this.slots.get(1).getItem() == ItemHandler.PETRI_DISH) {
+                output = new ItemStack(ItemHandler.SYRINGE, 1, this.slots.get(0).getItemDamage());
+            } else if (this.slots.get(0).getItem() instanceof PlantDNAItem && this.slots.get(1).getItem() == ItemHandler.PLANT_CELLS_PETRI_DISH) {
+                output = new ItemStack(ItemHandler.PLANT_CALLUS, 1, this.slots.get(0).getItemDamage());
             }
 
-            output.setTagCompound(this.slots[0].getTagCompound());
+            output.setTagCompound(this.slots.get(0).getTagCompound());
 
             int emptySlot = this.getOutputSlot(output);
 
@@ -100,12 +101,12 @@ public class EmbryonicMachineBlockEntity extends MachineBaseBlockEntity {
     }
 
     @Override
-    protected ItemStack[] getSlots() {
+    protected NonNullList<ItemStack> getSlots() {
         return this.slots;
     }
 
     @Override
-    protected void setSlots(ItemStack[] slots) {
+    protected void setSlots(NonNullList<ItemStack> slots) {
         this.slots = slots;
     }
 

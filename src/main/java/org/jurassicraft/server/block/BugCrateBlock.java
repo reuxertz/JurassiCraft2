@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jurassicraft.JurassiCraft;
@@ -64,6 +65,11 @@ public class BugCrateBlock extends OrientedBlock {
 
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
-        return new BugCrateBlockEntity();
+        return new BugCrateBlockEntity() {
+            @Override
+            protected void setSlots(NonNullList[] slots) {
+
+            }
+        };
     }
 }

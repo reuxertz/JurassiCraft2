@@ -4,17 +4,18 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.api.GrindableItem;
 import org.jurassicraft.server.container.FossilGrinderContainer;
 
 import java.util.Random;
 
-public class FossilGrinderBlockEntity extends MachineBaseBlockEntity {
+public abstract class FossilGrinderBlockEntity extends MachineBaseBlockEntity {
     private static final int[] INPUTS = new int[] { 0, 1, 2, 3, 4, 5 };
     private static final int[] OUTPUTS = new int[] { 6, 7, 8, 9, 10, 11 };
 
-    private ItemStack[] slots = new ItemStack[12];
+    private NonNullList<ItemStack> slots = NonNullList.<ItemStack>withSize(12, ItemStack.EMPTY);
 
     @Override
     protected int getProcess(int slot) {
@@ -24,13 +25,13 @@ public class FossilGrinderBlockEntity extends MachineBaseBlockEntity {
     @Override
     protected boolean canProcess(int process) {
         for (int inputIndex = 0; inputIndex < 6; inputIndex++) {
-            ItemStack input = this.slots[inputIndex];
+            ItemStack input = this.slots.get(inputIndex);
 
             GrindableItem grindableItem = GrindableItem.getGrindableItem(input);
 
             if (grindableItem != null && grindableItem.isGrindable(input)) {
                 for (int outputIndex = 6; outputIndex < 12; outputIndex++) {
-                    if (this.slots[outputIndex] == null) {
+                    if (this.slots.get(outputIndex) == null) {
                         return true;
                     }
                 }
@@ -48,7 +49,7 @@ public class FossilGrinderBlockEntity extends MachineBaseBlockEntity {
         int index = 0;
 
         for (int inputIndex = 0; inputIndex < 6; inputIndex++) {
-            input = this.slots[inputIndex];
+            input = this.slots.get(inputIndex);
 
             if (input != null) {
                 index = inputIndex;
@@ -101,12 +102,12 @@ public class FossilGrinderBlockEntity extends MachineBaseBlockEntity {
     }
 
     @Override
-    protected ItemStack[] getSlots() {
+    protected NonNullList<ItemStack> getSlots() {
         return this.slots;
     }
 
     @Override
-    protected void setSlots(ItemStack[] slots) {
+    protected void setSlots(NonNullList<ItemStack> slots) {
         this.slots = slots;
     }
 

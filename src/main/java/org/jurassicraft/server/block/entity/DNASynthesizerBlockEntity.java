@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.api.SynthesizableItem;
 import org.jurassicraft.server.container.DNASynthesizerContainer;
@@ -11,11 +12,11 @@ import org.jurassicraft.server.item.ItemHandler;
 
 import java.util.Random;
 
-public class DNASynthesizerBlockEntity extends MachineBaseBlockEntity {
+public abstract class DNASynthesizerBlockEntity extends MachineBaseBlockEntity {
     private static final int[] INPUTS = new int[] { 0, 1, 2 };
     private static final int[] OUTPUTS = new int[] { 3, 4, 5, 6 };
 
-    private ItemStack[] slots = new ItemStack[7];
+    private NonNullList<ItemStack> slots = NonNullList.<ItemStack>withSize(7, ItemStack.EMPTY);
 
     @Override
     protected int getProcess(int slot) {
@@ -24,9 +25,9 @@ public class DNASynthesizerBlockEntity extends MachineBaseBlockEntity {
 
     @Override
     protected boolean canProcess(int process) {
-        ItemStack storage = this.slots[0];
-        ItemStack testTube = this.slots[1];
-        ItemStack baseMaterial = this.slots[2];
+        ItemStack storage = this.slots.get(0);
+        ItemStack testTube = this.slots.get(1);
+        ItemStack baseMaterial = this.slots.get(2);
 
         SynthesizableItem synthesizableItem = SynthesizableItem.getSynthesizableItem(storage);
 
@@ -41,7 +42,7 @@ public class DNASynthesizerBlockEntity extends MachineBaseBlockEntity {
 
     @Override
     protected void processItem(int process) {
-        ItemStack storageDisc = this.slots[0];
+        ItemStack storageDisc = this.slots.get(0);
 
         ItemStack output = SynthesizableItem.getSynthesizableItem(storageDisc).getSynthesizedItem(storageDisc, new Random());
 
@@ -86,12 +87,12 @@ public class DNASynthesizerBlockEntity extends MachineBaseBlockEntity {
     }
 
     @Override
-    protected ItemStack[] getSlots() {
+    protected NonNullList<ItemStack> getSlots() {
         return this.slots;
     }
 
     @Override
-    protected void setSlots(ItemStack[] slots) {
+    protected void setSlots(NonNullList<ItemStack> slots) {
         this.slots = slots;
     }
 

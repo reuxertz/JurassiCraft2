@@ -72,7 +72,12 @@ public class CultivatorBlock extends BlockContainer implements SubBlocksBlock {
 
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new CultivatorBlockEntity();
+        return new CultivatorBlockEntity() {
+            @Override
+            protected void setSlots(NonNullList[] slots) {
+
+            }
+        };
     }
 
     @Override
