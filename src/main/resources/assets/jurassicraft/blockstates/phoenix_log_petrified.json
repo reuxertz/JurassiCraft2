@@ -4,11 +4,12 @@
       "model": "jurassicraft:phoenix_log_petrified"
     },
     "axis=z": {
-      "model": "jurassicraft:phoenix_log_petrified_side"
+      "model": "jurassicraft:phoenix_log_petrified",
+	   "x": 90
     },
     "axis=x": {
-      "model": "jurassicraft:phoenix_log_petrified_side",
-      "y": 90
+      "model": "jurassicraft:phoenix_log_petrified",
+      "x": 90, "y": 90
     },
     "axis=none": {
       "model": "jurassicraft:phoenix_petrified_bark"

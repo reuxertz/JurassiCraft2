@@ -4,11 +4,12 @@
       "model": "jurassicraft:ginkgo_log"
     },
     "axis=z": {
-      "model": "jurassicraft:ginkgo_log_side"
+      "model": "jurassicraft:ginkgo_log",
+	  "x": 90
     },
     "axis=x": {
-      "model": "jurassicraft:ginkgo_log_side",
-      "y": 90
+      "model": "jurassicraft:ginkgo_log",
+      "x": 90, "y": 90
     },
     "axis=none": {
       "model": "jurassicraft:ginkgo_bark"

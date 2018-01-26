@@ -4,11 +4,12 @@
       "model": "jurassicraft:psaronius_log"
     },
     "axis=z": {
-      "model": "jurassicraft:psaronius_log_side"
+      "model": "jurassicraft:psaronius_log",
+	   "x": 90
     },
     "axis=x": {
-      "model": "jurassicraft:psaronius_log_side",
-      "y": 90
+      "model": "jurassicraft:psaronius_log",
+      "x": 90, "y": 90
     },
     "axis=none": {
       "model": "jurassicraft:psaronius_bark"

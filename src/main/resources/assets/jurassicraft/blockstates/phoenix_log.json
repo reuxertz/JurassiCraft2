@@ -4,11 +4,12 @@
       "model": "jurassicraft:phoenix_log"
     },
     "axis=z": {
-      "model": "jurassicraft:phoenix_log_side"
+      "model": "jurassicraft:phoenix_log",
+	  "x": 90
     },
     "axis=x": {
-      "model": "jurassicraft:phoenix_log_side",
-      "y": 90
+      "model": "jurassicraft:phoenix_log",
+      "x": 90, "y": 90
     },
     "axis=none": {
       "model": "jurassicraft:phoenix_bark"
