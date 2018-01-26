@@ -58,12 +58,7 @@ public class IncubatorBlock extends OrientedBlock {
 
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new IncubatorBlockEntity() {
-            @Override
-            protected void setSlots(NonNullList[] slots) {
-
-            }
-        };
+        return new IncubatorBlockEntity();
     }
 
     @Override

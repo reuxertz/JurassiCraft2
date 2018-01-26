@@ -12,7 +12,7 @@ import org.jurassicraft.server.item.ItemHandler;
 
 import java.util.Random;
 
-public abstract class DNASequencerBlockEntity extends MachineBaseBlockEntity {
+public class DNASequencerBlockEntity extends MachineBaseBlockEntity {
     private static final int[] INPUTS = new int[] { 0, 1, 2, 3, 4, 5 };
     private static final int[] INPUTS_PROCESS_1 = new int[] { 0, 1 };
     private static final int[] INPUTS_PROCESS_2 = new int[] { 2, 3 };
@@ -125,5 +125,9 @@ public abstract class DNASequencerBlockEntity extends MachineBaseBlockEntity {
 	@Override
 	public boolean isEmpty() {
 		return false;
+	}
+
+	@Override
+	protected void setSlots(NonNullList[] slots) {
 	}
 }

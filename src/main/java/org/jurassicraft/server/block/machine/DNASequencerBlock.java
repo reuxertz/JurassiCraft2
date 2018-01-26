@@ -93,11 +93,6 @@ public class DNASequencerBlock extends OrientedBlock {
 
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
-        return new DNASequencerBlockEntity() {
-            @Override
-            protected void setSlots(NonNullList[] slots) {
-
-            }
-        };
+        return new DNASequencerBlockEntity();
     }
 }

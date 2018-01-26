@@ -11,7 +11,7 @@ import org.jurassicraft.server.item.DNAItem;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.item.PlantDNAItem;
 
-public abstract class EmbryonicMachineBlockEntity extends MachineBaseBlockEntity {
+public class EmbryonicMachineBlockEntity extends MachineBaseBlockEntity {
     private static final int[] INPUTS = new int[] { 0, 1, 2 };
     private static final int[] OUTPUTS = new int[] { 3, 4, 5, 6 };
 

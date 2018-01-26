@@ -21,7 +21,7 @@ import org.jurassicraft.server.plant.PlantHandler;
 import java.util.List;
 import java.util.Random;
 
-public abstract class DNAExtractorBlockEntity extends MachineBaseBlockEntity {
+public class DNAExtractorBlockEntity extends MachineBaseBlockEntity {
     private static final int[] INPUTS = new int[] { 0, 1 };
     private static final int[] OUTPUTS = new int[] { 2, 3, 4, 5 };
 
@@ -171,5 +171,9 @@ public abstract class DNAExtractorBlockEntity extends MachineBaseBlockEntity {
 	@Override
 	public boolean isEmpty() {
 		return false;
+	}
+
+	@Override
+	protected void setSlots(NonNullList[] slots) {
 	}
 }

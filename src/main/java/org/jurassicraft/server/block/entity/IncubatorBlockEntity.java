@@ -1,5 +1,11 @@
 package org.jurassicraft.server.block.entity;
 
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.api.IncubatorEnvironmentItem;
+import org.jurassicraft.server.container.IncubatorContainer;
+import org.jurassicraft.server.item.DinosaurEggItem;
+import org.jurassicraft.server.item.ItemHandler;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -8,13 +14,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
-import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.api.IncubatorEnvironmentItem;
-import org.jurassicraft.server.container.IncubatorContainer;
-import org.jurassicraft.server.item.DinosaurEggItem;
-import org.jurassicraft.server.item.ItemHandler;
 
-public abstract class IncubatorBlockEntity extends MachineBaseBlockEntity implements TemperatureControl {
+public class IncubatorBlockEntity extends MachineBaseBlockEntity implements TemperatureControl {
     private static final int[] INPUTS = new int[] { 0, 1, 2, 3, 4 };
     private static final int[] ENVIRONMENT = new int[] { 5 };
 
@@ -191,5 +192,9 @@ public abstract class IncubatorBlockEntity extends MachineBaseBlockEntity implem
 	@Override
 	public boolean isEmpty() {
 		return false;
+	}
+
+	@Override
+	protected void setSlots(NonNullList[] slots) {
 	}
 }

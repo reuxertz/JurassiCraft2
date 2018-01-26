@@ -1,6 +1,8 @@
 package org.jurassicraft.server.block.entity;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -16,7 +18,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public abstract class MachineBaseBlockEntity extends TileEntityLockable implements ITickable, ISidedInventory {
+public class MachineBaseBlockEntity extends TileEntityLockable implements ITickable, ISidedInventory {
     protected String customName;
 
     protected int[] processTime = new int[this.getProcessCount()];
@@ -256,27 +258,46 @@ public abstract class MachineBaseBlockEntity extends TileEntityLockable implemen
         return this.isItemValidForSlot(index, stack);
     }
 
-    protected abstract int getProcess(int slot);
+    protected int getProcess(int slot) {
+		return slot;
+	}
 
-    protected abstract boolean canProcess(int process);
+    protected boolean canProcess(int process) {
+		return true;
+	}
 
-    protected abstract void processItem(int process);
+    protected void processItem(int process) {
+	}
 
-    protected abstract int getMainOutput(int process);
+    protected int getMainOutput(int process) {
+		return 0;
+	}
 
-    protected abstract int getStackProcessTime(ItemStack stack);
+    protected int getStackProcessTime(ItemStack stack) {
+		return 0;
+	}
 
-    protected abstract int getProcessCount();
+    protected int getProcessCount() {
+		return 0;
+	}
 
-    protected abstract int[] getInputs();
+    protected int[] getInputs() {
+		return null;
+	}
 
-    protected abstract int[] getInputs(int process);
+    protected int[] getInputs(int process) {
+		return null;
+	}
 
-    protected abstract int[] getOutputs();
+    protected int[] getOutputs() {
+		return null;
+	}
 
-    protected abstract NonNullList<ItemStack> getSlots();
+    protected NonNullList<ItemStack> getSlots() {
+		return null;
+	}
 
-    protected abstract void setSlots(NonNullList[] slots);
+    protected void setSlots(NonNullList[] slots) {}
 
     public boolean hasOutputSlot(ItemStack output) {
         return this.getOutputSlot(output) != -1;
@@ -383,8 +404,27 @@ public abstract class MachineBaseBlockEntity extends TileEntityLockable implemen
         return true;
     }
 
-    protected abstract void setSlots(NonNullList<ItemStack> slots);
+    protected void setSlots(NonNullList<ItemStack> slots) {}
 
-    protected void onSlotUpdate() {
-    }
+    protected void onSlotUpdate() {}
+
+	@Override
+	public boolean isEmpty() {
+		return false;
+	}
+
+	@Override
+	public String getName() {
+		return "jurassicraft:machine_base_block";
+	}
+
+	@Override
+	public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn) {
+		return null;
+	}
+
+	@Override
+	public String getGuiID() {
+		return null;
+	}
 }

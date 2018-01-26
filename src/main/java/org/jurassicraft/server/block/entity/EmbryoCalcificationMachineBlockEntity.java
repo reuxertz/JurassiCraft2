@@ -1,11 +1,5 @@
 package org.jurassicraft.server.block.entity;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.container.EmbryoCalcificationMachineContainer;
 import org.jurassicraft.server.dinosaur.Dinosaur;
@@ -13,7 +7,14 @@ import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.item.SyringeItem;
 
-public abstract class EmbryoCalcificationMachineBlockEntity extends MachineBaseBlockEntity {
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+
+public class EmbryoCalcificationMachineBlockEntity extends MachineBaseBlockEntity {
     private static final int[] INPUTS = new int[] { 0, 1 };
     private static final int[] OUTPUTS = new int[] { 2 };
 
@@ -119,5 +120,9 @@ public abstract class EmbryoCalcificationMachineBlockEntity extends MachineBaseB
 	@Override
 	public boolean isEmpty() {
 		return false;
+	}
+
+	@Override
+	protected void setSlots(NonNullList[] slots) {
 	}
 }

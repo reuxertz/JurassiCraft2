@@ -146,14 +146,16 @@ public class EntityHandler {
     //TODO May not work
     private static void registerEntity(Class<? extends Entity> entity, String name) {
         String formattedName = name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
-        ResourceLocation registryName = new ResourceLocation(formattedName);
+        ResourceLocation registryName = new ResourceLocation("jurassicraft:entities." + formattedName);
         EntityRegistry.registerModEntity(registryName, entity, formattedName, entityId++, JurassiCraft.INSTANCE, 1024, 1, true);
     }
+    
+    
 
     //TODO May not work
     private static void registerEntity(Class<? extends Entity> entity, String name, int primary, int secondary) {
         String formattedName = name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
-        ResourceLocation registryName = new ResourceLocation(formattedName);
+        ResourceLocation registryName = new ResourceLocation("jurassicraft:entities." + formattedName);
         EntityRegistry.registerModEntity(registryName, entity, formattedName, entityId++, JurassiCraft.INSTANCE, 1024, 1, true, primary, secondary);
     }
 
