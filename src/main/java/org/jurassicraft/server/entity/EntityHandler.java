@@ -143,7 +143,6 @@ public class EntityHandler {
         }
     }
     
-    //TODO May not work
     private static void registerEntity(Class<? extends Entity> entity, String name) {
         String formattedName = name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
         ResourceLocation registryName = new ResourceLocation("jurassicraft:entities." + formattedName);
@@ -152,7 +151,6 @@ public class EntityHandler {
     
     
 
-    //TODO May not work
     private static void registerEntity(Class<? extends Entity> entity, String name, int primary, int secondary) {
         String formattedName = name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
         ResourceLocation registryName = new ResourceLocation("jurassicraft:entities." + formattedName);
