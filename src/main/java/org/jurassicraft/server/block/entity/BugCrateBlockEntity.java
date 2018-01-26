@@ -1,5 +1,9 @@
 package org.jurassicraft.server.block.entity;
 
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.api.BreedableBug;
+import org.jurassicraft.server.container.BugCrateContainer;
+
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -7,11 +11,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.api.BreedableBug;
-import org.jurassicraft.server.container.BugCrateContainer;
 
-public abstract class BugCrateBlockEntity extends MachineBaseBlockEntity {
+public class BugCrateBlockEntity extends MachineBaseBlockEntity {
     private static final int[] INPUTS = new int[] { 0, 1, 2, 3, 4, 5 };
     private static final int[] OUTPUTS = new int[] { 6, 7, 8 };
 
@@ -171,5 +172,9 @@ public abstract class BugCrateBlockEntity extends MachineBaseBlockEntity {
 	@Override
 	public boolean isEmpty() {
 		return false;
+	}
+
+	@Override
+	protected void setSlots(NonNullList[] slots) {
 	}
 }

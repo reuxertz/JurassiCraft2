@@ -1,5 +1,10 @@
 package org.jurassicraft.server.block;
 
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.block.entity.BugCrateBlockEntity;
+import org.jurassicraft.server.proxy.ServerProxy;
+import org.jurassicraft.server.tab.TabHandler;
+
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -10,13 +15,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.block.entity.BugCrateBlockEntity;
-import org.jurassicraft.server.proxy.ServerProxy;
-import org.jurassicraft.server.tab.TabHandler;
 
 public class BugCrateBlock extends OrientedBlock {
     public BugCrateBlock() {
@@ -65,11 +65,6 @@ public class BugCrateBlock extends OrientedBlock {
 
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
-        return new BugCrateBlockEntity() {
-            @Override
-            protected void setSlots(NonNullList[] slots) {
-
-            }
-        };
+        return new BugCrateBlockEntity();
     }
 }

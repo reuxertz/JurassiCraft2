@@ -21,7 +21,7 @@ import org.jurassicraft.server.item.ItemHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntity {
+public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntity {
     private static final int[] HYBRIDIZER_INPUTS = new int[] { 0, 1, 2, 3, 4, 5, 6, 7 };
     private static final int[] COMBINATOR_INPUTS = new int[] { 8, 9 };
     private static final int[] HYBRIDIZER_OUTPUTS = new int[] { 10 };
@@ -265,5 +265,9 @@ public abstract class DNACombinatorHybridizerBlockEntity extends MachineBaseBloc
 	@Override
 	public boolean isEmpty() {
 		return false;
+	}
+
+	@Override
+	protected void setSlots(NonNullList[] slots) {
 	}
 }

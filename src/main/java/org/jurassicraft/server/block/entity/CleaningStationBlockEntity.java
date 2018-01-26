@@ -1,6 +1,5 @@
-package org.jurassicraft.server.block.entity;
+	package org.jurassicraft.server.block.entity;
 
-import net.minecraft.util.NonNullList;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.api.CleanableItem;
 import org.jurassicraft.server.container.CleaningStationContainer;
@@ -20,6 +19,7 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntityLockable;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

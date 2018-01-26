@@ -45,7 +45,8 @@ public class CultivatorBlock extends BlockContainer implements SubBlocksBlock {
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         if (world.getBlockState(pos).getBlock() == BlockHandler.CULTIVATOR_TOP) {
-            pos.add(0, -1, 0);
+        	//TODO Verify Working
+        	pos = pos.down();
         }
 
         TileEntity tile = world.getTileEntity(pos);
@@ -72,12 +73,7 @@ public class CultivatorBlock extends BlockContainer implements SubBlocksBlock {
 
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new CultivatorBlockEntity() {
-            @Override
-            protected void setSlots(NonNullList[] slots) {
-
-            }
-        };
+        return new CultivatorBlockEntity();
     }
 
     @Override

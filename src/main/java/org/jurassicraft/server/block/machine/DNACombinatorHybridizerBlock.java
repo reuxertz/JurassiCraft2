@@ -62,12 +62,7 @@ public class DNACombinatorHybridizerBlock extends OrientedBlock {
 
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new DNACombinatorHybridizerBlockEntity() {
-            @Override
-            protected void setSlots(NonNullList[] slots) {
-
-            }
-        };
+        return new DNACombinatorHybridizerBlockEntity(); 
     }
 
     @Override
