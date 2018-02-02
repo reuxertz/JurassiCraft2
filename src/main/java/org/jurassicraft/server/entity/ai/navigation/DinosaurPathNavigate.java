@@ -37,7 +37,7 @@ public class DinosaurPathNavigate extends PathNavigateGround {
         Vec3d target = this.currentPath.getCurrentPos();
 
         float deltaX = MathHelper.abs((float) (this.entity.posX - (target.x + 0.5)));
-        float deltaZ = MathHelper.abs((float) (this.entity.posZ - (target.x + 0.5)));
+        float deltaZ = MathHelper.abs((float) (this.entity.posZ - (target.z + 0.5)));
         float deltaY = MathHelper.abs((float) (this.entity.posY - target.y));
 
         int width = MathHelper.ceil(this.entity.width);
