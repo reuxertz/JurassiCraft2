@@ -55,6 +55,25 @@ public class MicroraptorEntity extends DinosaurEntity {
     }
 
     @Override
+    public void onUpdate() {
+        super.onUpdate();
+        Animation curAni = this.getAnimation();
+        boolean climbing = curAni == EntityAnimation.CLIMBING.get() || curAni == EntityAnimation.START_CLIMBING.get();
+
+        if (climbing) {
+            BlockPos trunk = new BlockPos(this.posX, this.getEntityBoundingBox().minY, this.posZ);
+            for (EnumFacing facing : EnumFacing.HORIZONTALS) {
+                if (!world.isAirBlock(trunk.offset(facing)) && this.world.isBlockFullCube(trunk.offset(facing))) {
+                    this.rotationYawHead = this.prevRotationYawHead = this.rotationYaw = this.prevRotationYaw = facing.getHorizontalAngle();
+                    this.renderYawOffset = this.prevRenderYawOffset = this.rotationYaw;
+                    this.newPosRotationIncrements = 0;
+                    break;
+                }
+            }
+        }
+    }
+
+    @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
         if (this.world.isRemote) {
@@ -86,18 +105,6 @@ public class MicroraptorEntity extends DinosaurEntity {
                 }
                 if (gliding) {
                     this.setFlag(7, true);
-                }
-            }
-        }
-
-        if (this.world.isRemote && climbing) {
-            BlockPos trunk = new BlockPos(this.posX, this.getEntityBoundingBox().minY, this.posZ);
-            for (EnumFacing facing : EnumFacing.HORIZONTALS) {
-                if (!world.isAirBlock(trunk.offset(facing))) {
-                    this.rotationYaw = facing.getHorizontalAngle();
-                    this.rotationYawHead = facing.getHorizontalAngle();
-                    this.newPosRotationIncrements = 0;
-                    break;
                 }
             }
         }
