@@ -129,7 +129,7 @@ public class RaptorClimbTreeAI extends EntityAIBase {
                 this.entity.getMoveHelper().setMoveTo(this.targetX, this.entity.getEntityBoundingBox().minY, this.targetZ, this.movementSpeed);
                 this.entity.setAnimation(EntityAnimation.CLIMBING.get());
                 if (this.entity.isCollidedHorizontally || this.world.isSideSolid(currentTrunk, this.approachSide)) {
-                    this.entity.motionY = 0.3;
+                    this.entity.motionY = 0.2;
                     this.entity.setPosition(this.targetX, this.entity.posY, this.targetZ);
                     if (this.entity.getDistanceSqToCenter(currentTrunk) > 2.0) {
                         this.active = false;
@@ -137,12 +137,11 @@ public class RaptorClimbTreeAI extends EntityAIBase {
                 }
                 if (this.entity.isCollidedVertically && !this.gliding) {
                     BlockPos top = new BlockPos(this.entity.posX, this.entity.getEntityBoundingBox().maxY + 0.1, this.entity.posZ);
-                    IBlockState state = this.world.getBlockState(top);
-                    if (state.getBlock().isLeaves(state, this.world, top)) {
+                    if (this.isBlockLeaves(top)) {
                         if (this.world.isAirBlock(top.up())) {
                             this.entity.setPosition(this.targetX, MathHelper.ceil(this.entity.posY + 1) + 0.2, this.targetZ);
                         } else {
-                            this.entity.setPosition(this.targetX, this.entity.posY + 0.14, this.targetZ);
+                            this.entity.setPosition(this.targetX, this.entity.posY + 0.2, this.targetZ);
                         }
                     }
                 }
@@ -161,9 +160,14 @@ public class RaptorClimbTreeAI extends EntityAIBase {
         }
     }
 
+    private boolean isBlockLeaves(BlockPos pos) {
+        IBlockState state = this.world.getBlockState(pos);
+        return state.getBlock().isLeaves(state, this.world, pos);
+    }
+
     @Override
     public boolean shouldContinueExecuting() {
-        if (this.path == null || this.world.collidesWithAnyBlock(this.entity.getEntityBoundingBox())) {
+        if (this.path == null || (this.world.collidesWithAnyBlock(this.entity.getEntityBoundingBox()) && !this.isBlockLeaves(this.entity.getPosition()))) {
             return false;
         }
         if (!this.reachedTarget) {

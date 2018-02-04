@@ -55,6 +55,25 @@ public class MicroraptorEntity extends DinosaurEntity {
     }
 
     @Override
+    public void onUpdate() {
+        super.onUpdate();
+        Animation curAni = this.getAnimation();
+        boolean climbing = curAni == EntityAnimation.CLIMBING.get() || curAni == EntityAnimation.START_CLIMBING.get();
+
+        if (climbing) {
+            BlockPos trunk = new BlockPos(this.posX, this.getEntityBoundingBox().minY, this.posZ);
+            for (EnumFacing facing : EnumFacing.HORIZONTALS) {
+                if (!world.isAirBlock(trunk.offset(facing)) && this.world.isBlockFullCube(trunk.offset(facing))) {
+                    this.rotationYawHead = this.prevRotationYawHead = this.rotationYaw = this.prevRotationYaw = facing.getHorizontalAngle();
+                    this.renderYawOffset = this.prevRenderYawOffset = this.rotationYaw;
+                    this.newPosRotationIncrements = 0;
+                    break;
+                }
+            }
+        }
+    }
+
+    @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
         if (this.world.isRemote) {
@@ -63,6 +82,7 @@ public class MicroraptorEntity extends DinosaurEntity {
         Animation curAni = this.getAnimation();
         boolean landing = curAni == EntityAnimation.LEAP_LAND.get();
         boolean gliding = curAni == EntityAnimation.GLIDING.get();
+        boolean climbing = curAni == EntityAnimation.CLIMBING.get() || curAni == EntityAnimation.START_CLIMBING.get();
         boolean leaping = curAni == EntityAnimation.LEAP.get();
 
         if (this.onGround || this.inWater() || this.inLava() || this.isSwimming()) {
@@ -76,7 +96,9 @@ public class MicroraptorEntity extends DinosaurEntity {
             if (this.flyTime > 4 && !leaping) {
                 if (!landing) {
                     if (!gliding) {
-                        this.setAnimation(EntityAnimation.GLIDING.get());
+                        if (!climbing) {
+                            this.setAnimation(EntityAnimation.GLIDING.get());
+                        }
                     } else if (!this.world.isAirBlock(this.getPosition().down())) {
                         this.setAnimation(EntityAnimation.LEAP_LAND.get());
                     }
