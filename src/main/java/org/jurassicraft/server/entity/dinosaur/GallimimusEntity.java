@@ -1,5 +1,6 @@
 package org.jurassicraft.server.entity.dinosaur;
 
+import net.minecraft.entity.ai.EntityAIBase;
 import org.jurassicraft.client.model.animation.EntityAnimation;
 import org.jurassicraft.client.sound.SoundHandler;
 import org.jurassicraft.server.entity.DinosaurEntity;
@@ -18,6 +19,18 @@ public class GallimimusEntity extends DinosaurEntity {
         super(world);
         this.animationTasks.addTask(3, new PeckGroundAnimationAI(this));
         this.tasks.addTask(1, new RaptorLeapEntityAI(this));
+    }
+
+    @Override
+    public EntityAIBase getAttackAI() {
+        return new RaptorLeapEntityAI(this);
+    }
+
+    @Override
+    public void fall(float distance, float damageMultiplier) {
+        if (this.getAnimation() != EntityAnimation.LEAP_LAND.get()) {
+            super.fall(distance, damageMultiplier);
+        }
     }
 
     @Override
