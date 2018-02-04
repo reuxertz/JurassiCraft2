@@ -15,6 +15,7 @@ public class MussaurusDinosaur extends Dinosaur {
         this.setName("Mussaurus");
         this.setDinosaurClass(MussaurusEntity.class);
         this.setDinosaurType(DinosaurType.SCARED);
+        this.setFlee(true);
         this.setTimePeriod(TimePeriod.TRIASSIC);
         this.setEggColorMale(0x6F9845, 0x211F16);
         this.setEggColorFemale(0x526024, 0x222611);

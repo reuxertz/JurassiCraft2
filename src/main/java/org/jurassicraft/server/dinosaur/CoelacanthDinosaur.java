@@ -25,6 +25,7 @@ public class CoelacanthDinosaur extends Dinosaur {
         this.setEggColorMale(0x707B94, 0x3B4963);
         this.setEggColorFemale(0x7C775E, 0x4D4A3B);
         this.setHealth(3, 10);
+        this.setFlee(true);
         this.setSpeed(0.2, 0.40);
         this.setAttackSpeed(1.5);
         this.setStrength(0.5, 3);
