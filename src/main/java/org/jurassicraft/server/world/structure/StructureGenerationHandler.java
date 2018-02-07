@@ -22,7 +22,7 @@ public class StructureGenerationHandler implements IWorldGenerator {
     @Override
     public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
         if (world.provider.getDimension() == 0) {
-            if (random.nextInt(5) == 0) {
+            if (random.nextInt(80) == 0) {
                 int blockX = (chunkX << 4) + random.nextInt(16);
                 int blockZ = (chunkZ << 4) + random.nextInt(16);
                 BlockPos pos = new BlockPos(blockX, 0, blockZ);
