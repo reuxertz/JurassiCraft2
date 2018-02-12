@@ -44,4 +44,10 @@ public class JurassiCraftConfig {
 
     @ConfigEntry(category = "Plant Generation", name = "Gracilaria Generation")
     public boolean gracilariaGeneration = true;
+
+    @ConfigEntry(category = "Structure Generation", name = "Visitor Generation")
+    public boolean visitorcentergeneration = true;
+
+    @ConfigEntry(category = "Structure Generation", name = "Raptor Generation")
+    public boolean raptorgeneration = true;
 }

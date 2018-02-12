@@ -37,23 +37,26 @@ public class VisitorCentreGenerator extends StructureGenerator {
         super(rand, 85, 35, 105);
     }
 
+
     @Override
     protected void generateStructure(World world, Random random, BlockPos position) {
-        MinecraftServer server = world.getMinecraftServer();
-        TemplateManager templateManager = world.getSaveHandler().getStructureTemplateManager();
-        PlacementSettings settings = new PlacementSettings();
-        Template template = templateManager.getTemplate(server, STRUCTURE);
-        template.addBlocksToWorldChunk(world, position, settings);
-        Map<BlockPos, String> dataBlocks = template.getDataBlocks(position, settings);
-        for (Map.Entry<BlockPos, String> entry : dataBlocks.entrySet()) {
-            String type = entry.getValue();
-            BlockPos dataPos = entry.getKey();
-            ResourceLocation lootTable = LOOT_TABLES.get(type);
-            if (lootTable != null) {
-                world.setBlockToAir(dataPos);
-                TileEntity tile = world.getTileEntity(dataPos.down());
-                if (tile instanceof TileEntityChest) {
-                    ((TileEntityChest) tile).setLootTable(lootTable, random.nextLong());
+        if(JurassiCraft.CONFIG.visitorcentergeneration) {
+            MinecraftServer server = world.getMinecraftServer();
+            TemplateManager templateManager = world.getSaveHandler().getStructureTemplateManager();
+            PlacementSettings settings = new PlacementSettings();
+            Template template = templateManager.getTemplate(server, STRUCTURE);
+            template.addBlocksToWorldChunk(world, position, settings);
+            Map<BlockPos, String> dataBlocks = template.getDataBlocks(position, settings);
+            for (Map.Entry<BlockPos, String> entry : dataBlocks.entrySet()) {
+                String type = entry.getValue();
+                BlockPos dataPos = entry.getKey();
+                ResourceLocation lootTable = LOOT_TABLES.get(type);
+                if (lootTable != null) {
+                    world.setBlockToAir(dataPos);
+                    TileEntity tile = world.getTileEntity(dataPos.down());
+                    if (tile instanceof TileEntityChest) {
+                        ((TileEntityChest) tile).setLootTable(lootTable, random.nextLong());
+                    }
                 }
             }
         }

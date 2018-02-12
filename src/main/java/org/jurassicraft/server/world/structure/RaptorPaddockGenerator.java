@@ -25,20 +25,22 @@ public class RaptorPaddockGenerator extends StructureGenerator {
 
     @Override
     protected void generateStructure(World world, Random random, BlockPos position) {
-        MinecraftServer server = world.getMinecraftServer();
-        TemplateManager templateManager = world.getSaveHandler().getStructureTemplateManager();
-        PlacementSettings settings = new PlacementSettings().setRotation(this.rotation).setMirror(this.mirror);
-        Template template = templateManager.getTemplate(server, STRUCTURE);
-        Map<BlockPos, String> dataBlocks = template.getDataBlocks(position, settings);
-        template.addBlocksToWorldChunk(world, position, settings);
-        for (Map.Entry<BlockPos, String> entry : dataBlocks.entrySet()) {
-            String type = entry.getValue();
-            BlockPos dataPos = entry.getKey();
-            if (type.equals("Chest")) {
-                world.setBlockState(dataPos, Blocks.AIR.getDefaultState(), 3);
-                TileEntity tile = world.getTileEntity(dataPos.down());
-                if (tile instanceof TileEntityChest) {
-                    ((TileEntityChest) tile).setLootTable(LootTableList.CHESTS_VILLAGE_BLACKSMITH, random.nextLong()); //TODO Proper loottable
+        if(JurassiCraft.CONFIG.raptorgeneration) {
+            MinecraftServer server = world.getMinecraftServer();
+            TemplateManager templateManager = world.getSaveHandler().getStructureTemplateManager();
+            PlacementSettings settings = new PlacementSettings().setRotation(this.rotation).setMirror(this.mirror);
+            Template template = templateManager.getTemplate(server, STRUCTURE);
+            Map<BlockPos, String> dataBlocks = template.getDataBlocks(position, settings);
+            template.addBlocksToWorldChunk(world, position, settings);
+            for (Map.Entry<BlockPos, String> entry : dataBlocks.entrySet()) {
+                String type = entry.getValue();
+                BlockPos dataPos = entry.getKey();
+                if (type.equals("Chest")) {
+                    world.setBlockState(dataPos, Blocks.AIR.getDefaultState(), 3);
+                    TileEntity tile = world.getTileEntity(dataPos.down());
+                    if (tile instanceof TileEntityChest) {
+                        ((TileEntityChest) tile).setLootTable(LootTableList.CHESTS_VILLAGE_BLACKSMITH, random.nextLong()); //TODO Proper loottable
+                    }
                 }
             }
         }
@@ -46,6 +48,6 @@ public class RaptorPaddockGenerator extends StructureGenerator {
 
     @Override
     public int getOffsetY() {
-        return -1;
+        return 1;
     }
 }
