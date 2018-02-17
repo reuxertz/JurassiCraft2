@@ -1612,6 +1612,11 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     }
 
     @Override
+    protected float getWaterSlowDown() {
+        return 0.9F;
+    }
+
+    @Override
     public void collideWithEntity(Entity entity) {
         super.collideWithEntity(entity);
 
