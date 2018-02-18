@@ -1,5 +1,6 @@
 package org.jurassicraft.server.food;
 
+import com.google.common.collect.Sets;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -7,6 +8,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
+import org.apache.logging.log4j.Level;
+import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.tree.TreeType;
 import org.jurassicraft.server.entity.Diet;
@@ -16,16 +19,20 @@ import org.jurassicraft.server.plant.Plant;
 import org.jurassicraft.server.plant.PlantHandler;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class FoodHelper {
-    private static final Map<FoodType, List<Item>> FOOD_TYPES = new HashMap<>();
-    private static final List<Item> FOODS = new LinkedList<>();
-    private static final Map<Item, Integer> HEAL_AMOUNTS = new HashMap<>();
-    private static final Map<Item, FoodEffect[]> FOOD_EFFECTS = new HashMap<>();
+    private static final Map<FoodType, List<FoodKey>> FOOD_TYPES = new EnumMap<>(FoodType.class);
+    private static final List<FoodKey> FOODS = new LinkedList<>();
+    private static final Map<FoodKey, Integer> HEAL_AMOUNTS = new HashMap<>();
+    private static final Map<FoodKey, FoodEffect[]> FOOD_EFFECTS = new HashMap<>();
 
     public static void init() {
         registerFood(Blocks.LEAVES, FoodType.PLANT, 2000);
@@ -91,12 +98,21 @@ public class FoodHelper {
     }
 
     public static void registerFoodAuto(ItemFood food, FoodType foodType, FoodEffect... effects) {
-        registerFood(food, foodType, food.getHealAmount(new ItemStack(food)) * 650, effects);
+        registerFood(new FoodKey(food), foodType, food.getHealAmount(new ItemStack(food)) * 650, effects);
     }
 
     public static void registerFood(Item food, FoodType foodType, int healAmount, FoodEffect... effects) {
+        registerFood(new FoodKey(food), foodType, healAmount, effects);
+    }
+
+    private static void registerFood(FoodKey food, FoodType foodType, int healAmount, FoodEffect... effects) {
         if (!FOODS.contains(food)) {
-            List<Item> foodsForType = FOOD_TYPES.get(foodType);
+            if( food == null || food.hashCode() == 0 ) {
+                JurassiCraft.INSTANCE.getLogger().log(Level.ERROR, "Something tried to register an invalid food!");
+                return;
+            }
+
+            List<FoodKey> foodsForType = FOOD_TYPES.get(foodType);
 
             if (foodsForType == null) {
                 foodsForType = new ArrayList<>();
@@ -112,16 +128,35 @@ public class FoodHelper {
     }
 
     public static void registerFood(Block food, FoodType foodType, int foodAmount, FoodEffect... effects) {
-        registerFood(Item.getItemFromBlock(food), foodType, foodAmount, effects);
+        registerFood(new FoodKey(food), foodType, foodAmount, effects);
     }
 
-    public static List<Item> getFoodType(FoodType type) {
+    public static List<FoodKey> getFoodType(FoodType type) {
         return FOOD_TYPES.get(type);
     }
 
-    public static FoodType getFoodType(Item item) {
+    public static List<Item> getFoodItems(FoodType type) {
+        return getValidItemList(FOOD_TYPES.get(type));
+    }
+
+    private static List<Item> getValidItemList(List<FoodKey> keys) {
+        return keys.stream().map(key -> {
+            if( key.item != null ) {
+                return key.item;
+            } else if( key.block != null ) {
+                Item itm = Item.getItemFromBlock(key.block);
+                if( itm != Items.AIR ) {
+                    return itm;
+                }
+            }
+
+            return null;
+        } ).filter(Objects::nonNull).collect(Collectors.toList());
+    }
+
+    private static FoodType getFoodType(FoodKey key) {
         for (FoodType foodType : FoodType.values()) {
-            if (getFoodType(foodType).contains(item)) {
+            if (getFoodType(foodType).contains(key)) {
                 return foodType;
             }
         }
@@ -129,38 +164,46 @@ public class FoodHelper {
         return null;
     }
 
+    public static FoodType getFoodType(Item item) {
+        return getFoodType(new FoodKey(item));
+    }
+
     public static FoodType getFoodType(Block block) {
-        return getFoodType(Item.getItemFromBlock(block));
+        return getFoodType(new FoodKey(block));
     }
 
     public static boolean isFoodType(Item item, FoodType foodType) {
-        return FoodHelper.getFoodType(foodType).contains(item);
+        return getFoodType(foodType).contains(new FoodKey(item));
     }
 
     public static boolean isEdible(DinosaurEntity entity, Diet diet, Item item) {
-        return item != null && getEdibleFoods(entity, diet).contains(item);
+        return item != null && getEdibleFoods(entity, diet).contains(new FoodKey(item));
     }
 
     public static boolean isEdible(DinosaurEntity entity, Diet diet, Block block) {
-        return isEdible(entity, diet, Item.getItemFromBlock(block));
+        return block != null && getEdibleFoods(entity, diet).contains(new FoodKey(block));
     }
 
-    public static List<Item> getEdibleFoods(DinosaurEntity entity, Diet diet) {
-        List<Item> possibleItems = new ArrayList<>();
+    public static HashSet<Item> getEdibleFoodItems(DinosaurEntity entity, Diet diet) {
+        return Sets.newHashSet(getValidItemList(getEdibleFoods(entity, diet)));
+    }
+
+    public static List<FoodKey> getEdibleFoods(DinosaurEntity entity, Diet diet) {
+        List<FoodKey> possibleItems = new ArrayList<>();
         for (Diet.DietModule module : diet.getModules()) {
             if (module.applies(entity)) {
-                possibleItems.addAll(FoodHelper.getFoodType(module.getFoodType()));
+                possibleItems.addAll(getFoodType(module.getFoodType()));
             }
         }
         return possibleItems;
     }
 
     public static int getHealAmount(Item item) {
-        return HEAL_AMOUNTS.get(item);
+        return HEAL_AMOUNTS.get(new FoodKey(item));
     }
 
     public static void applyEatEffects(DinosaurEntity entity, Item item) {
-        FoodEffect[] effects = FOOD_EFFECTS.get(item);
+        FoodEffect[] effects = FOOD_EFFECTS.get(new FoodKey(item));
 
         if (effects != null) {
             for (FoodEffect effect : effects) {
@@ -172,7 +215,7 @@ public class FoodHelper {
     }
 
     public static boolean isFood(Item item) {
-        return FOODS.contains(item);
+        return FOODS.contains(new FoodKey(item));
     }
 
     public static class FoodEffect {
@@ -182,6 +225,32 @@ public class FoodHelper {
         public FoodEffect(PotionEffect effect, int chance) {
             this.effect = effect;
             this.chance = chance;
+        }
+    }
+
+    static class FoodKey {
+        final Item item;
+        final Block block;
+
+        FoodKey(Item item) {
+            this.item = item;
+            this.block = null;
+        }
+
+        FoodKey(Block block) {
+            Item blkItm = Item.getItemFromBlock(block);
+            this.item = blkItm != Items.AIR ? blkItm : null;
+            this.block = blkItm == Items.AIR ? block : null;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return this.hashCode() == obj.hashCode();
+        }
+
+        @Override
+        public int hashCode() {
+            return this.item != null && this.item != Items.AIR ? this.item.hashCode() : this.block != null && this.block != Blocks.AIR ? this.block.hashCode() : 0;
         }
     }
 }
