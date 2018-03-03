@@ -1,5 +1,6 @@
 package org.jurassicraft.server.entity.ai;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -59,6 +60,11 @@ public class SelectTargetEntityAI extends EntityAIBase {
         }
 
         if (!this.entity.getMetabolism().isHungry() && JurassiCraft.CONFIG.huntWhenHungry) {
+            return false;
+        }
+
+        Entity target = this.entity.getAttackTarget();
+        if (target != null && !target.isDead && this.entity.getEntitySenses().canSee(target) ) {
             return false;
         }
 
