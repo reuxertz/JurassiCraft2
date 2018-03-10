@@ -8,12 +8,12 @@ Cody Rex
 Alpha_Hyperion  
 
 ### Developers
-Cody Rex  
-Gegy  
+Cody Rex    
 Alexthe666  
-Paul Fulham  
 Twoninefour  
 SanAndreasP
+Goldgamer
+Cazsius 
 
 ### Modelers / Texturers
 Cody Rex  
@@ -26,8 +26,10 @@ RaptorWhisper
 ### Special Mentions
 Kashmoney  
 jabelar  
+Gegy
 WorldSEnder  
 TheDurpiDaedric  
+Paul Fulham  
 Cuchololthespanishman  
 Raptorek20  
 jglrxavpok  
@@ -35,10 +37,8 @@ CarrotJet
 amellinger  
 iLexiconn  
 JTGhawk137  
-BasiliskBoy  
-Cazsius  
-AlphaMaverick  
-Goldgamer  
+BasiliskBoy   
+AlphaMaverick    
 
 # Contributing
 Feel free to speed up development and create pull requests. Here's a guide on how to setup your workspace.
