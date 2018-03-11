@@ -5,6 +5,8 @@ import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.util.math.Vec3d;
 import org.jurassicraft.server.entity.DinosaurEntity;
 
+import javax.annotation.Nullable;
+
 public class DinosaurWanderEntityAI extends EntityAIBase {
     private DinosaurEntity entity;
     private double xPosition;
@@ -14,9 +16,6 @@ public class DinosaurWanderEntityAI extends EntityAIBase {
     private int executionChance;
     private boolean mustUpdate;
 
-    public DinosaurWanderEntityAI(DinosaurEntity creatureIn, double speedIn) {
-        this(creatureIn, speedIn, 120);
-    }
 
     public DinosaurWanderEntityAI(DinosaurEntity creatureIn, double speedIn, int chance) {
         this.entity = creatureIn;
@@ -34,7 +33,7 @@ public class DinosaurWanderEntityAI extends EntityAIBase {
         }
 
         if (this.entity.getNavigator().noPath() && this.entity.getAttackTarget() == null) {
-            Vec3d wanderPosition = RandomPositionGenerator.findRandomTarget(this.entity, 10, 10);
+            Vec3d wanderPosition = RandomPositionGenerator.getLandPos(this.entity, 10, 10);
 
             if (wanderPosition != null) {
                 this.xPosition = wanderPosition.x;
@@ -51,7 +50,7 @@ public class DinosaurWanderEntityAI extends EntityAIBase {
 
     @Override
     public boolean shouldContinueExecuting() {
-        return !this.entity.getNavigator().noPath();
+        return !this.entity.getNavigator().noPath() & !this.entity.isInWater();
     }
 
     @Override

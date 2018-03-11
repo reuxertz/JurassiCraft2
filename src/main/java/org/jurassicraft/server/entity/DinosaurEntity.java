@@ -241,7 +241,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
 
         this.tasks.addTask(2, new ProtectInfantEntityAI<>(this));
 
-        this.tasks.addTask(3, new DinosaurWanderEntityAI(this, 0.8F, 20));
+        this.tasks.addTask(3, new DinosaurWanderEntityAI(this, 0.8F, 10));
         this.tasks.addTask(3, new FollowOwnerEntityAI(this));
 
         this.tasks.addTask(3, this.getAttackAI());
