@@ -16,7 +16,7 @@ public class FossilGrinderBlockEntity extends MachineBaseBlockEntity {
     private static final int[] INPUTS = new int[] { 0, 1, 2, 3, 4, 5 };
     private static final int[] OUTPUTS = new int[] { 6, 7, 8, 9, 10, 11 };
 
-    private NonNullList<ItemStack> slots = NonNullList.<ItemStack>withSize(12, ItemStack.EMPTY);
+    private NonNullList<ItemStack> slots = NonNullList.withSize(12, ItemStack.EMPTY);
 
     @Override
     protected int getProcess(int slot) {
@@ -32,7 +32,7 @@ public class FossilGrinderBlockEntity extends MachineBaseBlockEntity {
 
             if (grindableItem != null && grindableItem.isGrindable(input)) {
                 for (int outputIndex = 6; outputIndex < 12; outputIndex++) {
-                    if (this.slots.get(outputIndex) == null) {
+                    if( this.slots.get(outputIndex).isEmpty() ) {
                         return true;
                     }
                 }
@@ -52,13 +52,13 @@ public class FossilGrinderBlockEntity extends MachineBaseBlockEntity {
         for (int inputIndex = 0; inputIndex < 6; inputIndex++) {
             input = this.slots.get(inputIndex);
 
-            if (input != null) {
+            if (!input.isEmpty()) {
                 index = inputIndex;
                 break;
             }
         }
 
-        if (input != null) {
+        if (!input.isEmpty()) {
             GrindableItem grindableItem = GrindableItem.getGrindableItem(input);
 
             ItemStack output = grindableItem.getGroundItem(input, rand);

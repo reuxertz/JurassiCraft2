@@ -73,7 +73,7 @@ public class MachineBaseBlockEntity extends TileEntityLockable implements ITicka
         NBTTagList itemList = new NBTTagList();
 
         for (int slot = 0; slot < this.getSizeInventory(); ++slot) {
-            if (slots.get(slot) != null) {
+            if (!slots.get(slot).isEmpty()) {
                 NBTTagCompound itemTag = new NBTTagCompound();
                 itemTag.setByte("Slot", (byte) slot);
 
@@ -103,17 +103,27 @@ public class MachineBaseBlockEntity extends TileEntityLockable implements ITicka
 
     @Override
     public ItemStack removeStackFromSlot(int index) {
-        return removeStackFromSlot(index);
+        ItemStack itemstack = this.getSlots().get(index);
+
+        if (itemstack.isEmpty())
+        {
+            return ItemStack.EMPTY;
+        }
+        else
+        {
+            this.getSlots().set(index, ItemStack.EMPTY);
+            return itemstack;
+        }
     }
 
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
         NonNullList<ItemStack> slots = this.getSlots();
 
-        boolean stacksEqual = stack != null && stack.isItemEqual(slots.get(index)) && ItemStack.areItemStackTagsEqual(stack, slots.get(index));
+        boolean stacksEqual = !stack.isEmpty() && stack.isItemEqual(slots.get(index)) && ItemStack.areItemStackTagsEqual(stack, slots.get(index));
         slots.set(index, stack);
 
-        if (stack != null && stack.getCount() > this.getInventoryStackLimit()) {
+        if (!stack.isEmpty() && stack.getCount() > this.getInventoryStackLimit()) {
             stack.setCount(this.getInventoryStackLimit());
         }
 
@@ -184,7 +194,7 @@ public class MachineBaseBlockEntity extends TileEntityLockable implements ITicka
                 boolean hasInput = false;
 
                 for (int input : this.getInputs(process)) {
-                    if (slots.get(input) != null) {
+                    if (!slots.get(input).isEmpty()) {
                         hasInput = true;
                         break;
                     }
@@ -198,7 +208,7 @@ public class MachineBaseBlockEntity extends TileEntityLockable implements ITicka
                         int total = 0;
                         for (int input : this.getInputs()) {
                             ItemStack stack = slots.get(input);
-                            if (stack != null) {
+                            if (!stack.isEmpty()) {
                                 total = this.getStackProcessTime(stack);
                                 break;
                             }
@@ -225,6 +235,7 @@ public class MachineBaseBlockEntity extends TileEntityLockable implements ITicka
 
                 if (dirty) {
                     this.markDirty();
+                    this.world.notifyBlockUpdate(this.pos, this.world.getBlockState(this.pos), this.world.getBlockState(this.pos), 3);
                 }
             }
         }
@@ -232,7 +243,7 @@ public class MachineBaseBlockEntity extends TileEntityLockable implements ITicka
 
     @Override
     public boolean isUsableByPlayer(EntityPlayer player) {
-        return this.world.getTileEntity(this.pos) == this && player.getDistanceSq((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D) <= 64.0D;
+        return this.world.getTileEntity(this.pos) == this && player.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64.0D;
     }
 
     @Override
@@ -308,7 +319,7 @@ public class MachineBaseBlockEntity extends TileEntityLockable implements ITicka
         int[] outputs = this.getOutputs();
         for (int slot : outputs) {
             ItemStack stack = slots.get(slot);
-            if (stack == null || ((ItemStack.areItemStackTagsEqual(stack, output) && stack.getCount() + output.getCount() <= stack.getMaxStackSize()) && stack.getItem() == output.getItem() && stack.getItemDamage() == output.getItemDamage())) {
+            if (stack.isEmpty() || ((ItemStack.areItemStackTagsEqual(stack, output) && stack.getCount() + output.getCount() <= stack.getMaxStackSize()) && stack.getItem() == output.getItem() && stack.getItemDamage() == output.getItemDamage())) {
                 return slot;
             }
         }
@@ -349,7 +360,7 @@ public class MachineBaseBlockEntity extends TileEntityLockable implements ITicka
         NonNullList<ItemStack> slots = this.getSlots();
 
         for (int i = 0; i < slots.size(); ++i) {
-            slots.set(i, null);
+            slots.set(i, ItemStack.EMPTY);
         }
     }
 
@@ -358,15 +369,21 @@ public class MachineBaseBlockEntity extends TileEntityLockable implements ITicka
         return true;
     }
 
+    protected boolean isStackable(ItemStack slotStack, ItemStack insertingStack) {
+        return slotStack.isEmpty() || (ItemStack.areItemsEqual(slotStack, insertingStack)
+                                               && ItemStack.areItemStackTagsEqual(slotStack, insertingStack)
+                                               && slotStack.getItemDamage() == insertingStack.getItemDamage()
+                                               && slotStack.getMaxStackSize() - slotStack.getCount() >= insertingStack.getCount());
+    }
+
     protected void mergeStack(int slot, ItemStack stack) {
         NonNullList<ItemStack> slots = this.getSlots();
 
         ItemStack previous = slots.get(slot);
-        if (previous == null) {
+        if (previous.isEmpty()) {
             slots.set(slot, stack);
-        } else if (ItemStack.areItemsEqual(previous, stack) && ItemStack.areItemStackTagsEqual(previous, stack)) {
-        	int sizePrevious = previous.getCount();
-        	sizePrevious += stack.getCount();
+        } else if (isStackable(previous, stack)) {
+        	previous.grow(stack.getCount());
         }
     }
 
