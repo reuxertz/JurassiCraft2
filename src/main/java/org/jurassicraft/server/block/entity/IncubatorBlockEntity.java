@@ -21,7 +21,7 @@ public class IncubatorBlockEntity extends MachineBaseBlockEntity implements Temp
 
     private int[] temperature = new int[5];
 
-    private NonNullList<ItemStack> slots = NonNullList.<ItemStack>withSize(6, ItemStack.EMPTY);
+    private NonNullList<ItemStack> slots = NonNullList.withSize(6, ItemStack.EMPTY);
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
@@ -57,7 +57,7 @@ public class IncubatorBlockEntity extends MachineBaseBlockEntity implements Temp
         ItemStack environment = this.slots.get(5);
         boolean hasEnvironment = false;
 
-        if (environment != null) {
+        if (environment != ItemStack.EMPTY) {
             Item item = environment.getItem();
 
             if (item instanceof IncubatorEnvironmentItem || Block.getBlockFromItem(item) instanceof IncubatorEnvironmentItem) {
@@ -65,7 +65,7 @@ public class IncubatorBlockEntity extends MachineBaseBlockEntity implements Temp
             }
         }
 
-        return hasEnvironment && this.slots.get(process) != null && this.slots.get(process).getCount() > 0 && this.slots.get(process).getItem() instanceof DinosaurEggItem;
+        return hasEnvironment && this.slots.get(process) != ItemStack.EMPTY && this.slots.get(process).getCount() > 0 && this.slots.get(process).getItem() instanceof DinosaurEggItem;
     }
 
     @Override

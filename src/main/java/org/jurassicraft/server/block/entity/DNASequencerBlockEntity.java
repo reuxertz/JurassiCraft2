@@ -1,16 +1,17 @@
 package org.jurassicraft.server.block.entity;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import java.util.Random;
+
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.api.SequencableItem;
 import org.jurassicraft.server.container.DNASequencerContainer;
 import org.jurassicraft.server.item.ItemHandler;
 
-import java.util.Random;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 
 public class DNASequencerBlockEntity extends MachineBaseBlockEntity {
     private static final int[] INPUTS = new int[] { 0, 1, 2, 3, 4, 5 };
@@ -20,7 +21,7 @@ public class DNASequencerBlockEntity extends MachineBaseBlockEntity {
 
     private static final int[] OUTPUTS = new int[] { 6, 7, 8 };
 
-    private NonNullList<ItemStack> slots = NonNullList.<ItemStack>withSize(9, ItemStack.EMPTY);
+    private NonNullList<ItemStack> slots = NonNullList.withSize(9, ItemStack.EMPTY);
 
     @Override
     protected int getProcess(int slot) {
@@ -37,8 +38,8 @@ public class DNASequencerBlockEntity extends MachineBaseBlockEntity {
         SequencableItem sequencableItem = SequencableItem.getSequencableItem(input);
 
         if (sequencableItem != null && sequencableItem.isSequencable(input)) {
-            if (storage != null && storage.getItem() == ItemHandler.STORAGE_DISC) {
-                if (this.slots.get(process + 6) == null) {
+            if (storage != ItemStack.EMPTY && storage.getItem() == ItemHandler.STORAGE_DISC) {
+                if (this.slots.get(process + 6) == ItemStack.EMPTY) {
                     return true;
                 }
             }

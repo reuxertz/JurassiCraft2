@@ -27,7 +27,7 @@ public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntity {
     private static final int[] HYBRIDIZER_OUTPUTS = new int[] { 10 };
     private static final int[] COMBINATOR_OUTPUTS = new int[] { 11 };
 
-    private NonNullList<ItemStack> slots = NonNullList.<ItemStack>withSize(12, ItemStack.EMPTY);
+    private NonNullList<ItemStack> slots = NonNullList.withSize(12, ItemStack.EMPTY);
 
     private boolean hybridizerMode;
 
@@ -87,7 +87,7 @@ public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntity {
     }
 
     private Dinosaur getDino(ItemStack disc) {
-        if (disc != null) {
+        if (disc != ItemStack.EMPTY) {
             DinoDNA data = DinoDNA.readFromNBT(disc.getTagCompound());
 
             return data.getDNAQuality() == 100 ? data.getDinosaur() : null;
@@ -99,10 +99,10 @@ public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntity {
     @Override
     protected boolean canProcess(int process) {
         if (this.hybridizerMode) {
-            return this.slots.get(10) == null && this.getHybrid() != null;
+            return this.slots.get(10) == ItemStack.EMPTY && this.getHybrid() != null;
         } else {
-            if (this.slots.get(8) != null && this.slots.get(8).getItem() == ItemHandler.STORAGE_DISC && this.slots.get(9) != null && this.slots.get(9).getItem() == ItemHandler.STORAGE_DISC) {
-                if (this.slots.get(8).getTagCompound() != null && this.slots.get(9).getTagCompound() != null && this.slots.get(11) == null && this.slots.get(8).getItemDamage() == this.slots.get(9).getItemDamage() && this.slots.get(8).getTagCompound().getString("StorageId").equals(this.slots.get(9).getTagCompound().getString("StorageId"))) {
+            if (this.slots.get(8) != ItemStack.EMPTY && this.slots.get(8).getItem() == ItemHandler.STORAGE_DISC && this.slots.get(9) != ItemStack.EMPTY && this.slots.get(9).getItem() == ItemHandler.STORAGE_DISC) {
+                if (this.slots.get(8).getTagCompound() != null && this.slots.get(9).getTagCompound() != null && this.slots.get(11) == ItemStack.EMPTY && this.slots.get(8).getItemDamage() == this.slots.get(9).getItemDamage() && this.slots.get(8).getTagCompound().getString("StorageId").equals(this.slots.get(9).getTagCompound().getString("StorageId"))) {
                     return true;
                 }
             }

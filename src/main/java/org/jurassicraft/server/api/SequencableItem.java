@@ -9,7 +9,7 @@ import java.util.Random;
 
 public interface SequencableItem {
     static SequencableItem getSequencableItem(ItemStack stack) {
-        if (stack != null) {
+        if (stack != ItemStack.EMPTY) {
             Item item = stack.getItem();
 
             if (item instanceof ItemBlock) {
