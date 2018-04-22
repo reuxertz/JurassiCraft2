@@ -105,8 +105,8 @@ public class EntityHandler {
         	biomeForest.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.FOREST));
         
         EntityRegistry.addSpawn(GoatEntity.class, 10, 1, 3, EnumCreatureType.CREATURE, biomeHills.toArray(new Biome[biomeHills.size()]));
-        EntityRegistry.addSpawn(GoatEntity.class, 15, 1, 3, EnumCreatureType.CREATURE, biomeHills.toArray(new Biome[biomePlains.size()]));
-        EntityRegistry.addSpawn(GoatEntity.class, 15, 1, 3, EnumCreatureType.CREATURE, biomeHills.toArray(new Biome[biomeForest.size()]));
+        EntityRegistry.addSpawn(GoatEntity.class, 15, 1, 3, EnumCreatureType.CREATURE, biomePlains.toArray(new Biome[biomePlains.size()]));
+        EntityRegistry.addSpawn(GoatEntity.class, 15, 1, 3, EnumCreatureType.CREATURE, biomeForest.toArray(new Biome[biomeForest.size()]));
 
         registerEntity(DinosaurEggEntity.class, "Dinosaur Egg");
 //        registerEntity(HelicopterBaseEntity.class, "Helicopter base");
