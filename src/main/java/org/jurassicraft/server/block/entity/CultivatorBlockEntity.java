@@ -23,7 +23,7 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
     private static final int[] INPUTS = new int[] { 0, 1, 2, 3 };
     private static final int[] OUTPUTS = new int[] { 4 };
     private static final int MAX_NUTRIENTS = 3000;
-    private NonNullList<ItemStack> slots = NonNullList.<ItemStack>withSize(5, ItemStack.EMPTY);
+    private NonNullList<ItemStack> slots = NonNullList.withSize(5, ItemStack.EMPTY);
     private int waterLevel;
     private int lipids;
     private int proximates;
@@ -76,7 +76,7 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
 
             hatchedEgg.setTagCompound(compound);
 
-            hatchedEgg = this.slots.get(0);
+            slots.set(0, hatchedEgg);
         }
     }
 
@@ -93,9 +93,9 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
 
                     this.waterLevel++;
 
-                    ItemStack stack = (ItemStack)this.slots.get(3);
-                    if (!stack.isEmpty()) {
-                    	stack = new ItemStack(Items.BUCKET);
+                    ItemStack stack = this.slots.get(3);
+                    if (stack.isEmpty()) {
+                    	this.slots.set(3, new ItemStack(Items.BUCKET));
                     } else if (stack.getItem() == Items.BUCKET) {
                     	stack.grow(1);
                     }
@@ -104,7 +104,7 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
                 }
             }
 
-            ItemStack stack = (ItemStack)this.slots.get(1);
+            ItemStack stack = this.slots.get(1);
             if (!stack.isEmpty()) {
                 if ((this.proximates < MAX_NUTRIENTS) || (this.minerals < MAX_NUTRIENTS) || (this.vitamins < MAX_NUTRIENTS) || (this.lipids < MAX_NUTRIENTS)) {
                     this.consumeNutrients();
@@ -115,6 +115,7 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
 
         if (sync) {
             this.markDirty();
+            this.world.notifyBlockUpdate(this.pos, this.world.getBlockState(this.pos), this.world.getBlockState(this.pos), 3);
         }
     }
 
@@ -124,11 +125,11 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
 
         if (nutrients != null) {
             if (foodStack.getItem() instanceof ItemBucketMilk) {
-            	foodStack = new ItemStack(Items.BUCKET);
+                this.slots.set(1, new ItemStack(Items.BUCKET));
             } else {
                 foodStack.shrink(1);
                 if (foodStack.getCount() <= 0) {
-                    foodStack.isEmpty();
+                    this.slots.set(1, ItemStack.EMPTY);
                 }
             }
 
@@ -137,28 +138,28 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
             if (this.proximates < MAX_NUTRIENTS) {
                 this.proximates = (short) (this.proximates + (800 + random.nextInt(201)) * nutrients.getProximate());
                 if (this.proximates > MAX_NUTRIENTS) {
-                    this.proximates = (short) MAX_NUTRIENTS;
+                    this.proximates = MAX_NUTRIENTS;
                 }
             }
 
             if (this.minerals < MAX_NUTRIENTS) {
                 this.minerals = (short) (this.minerals + (900 + random.nextInt(101)) * nutrients.getMinerals());
                 if (this.minerals > MAX_NUTRIENTS) {
-                    this.minerals = (short) MAX_NUTRIENTS;
+                    this.minerals = MAX_NUTRIENTS;
                 }
             }
 
             if (this.vitamins < MAX_NUTRIENTS) {
                 this.vitamins = (short) (this.vitamins + (900 + random.nextInt(101)) * nutrients.getVitamins());
                 if (this.vitamins > MAX_NUTRIENTS) {
-                    this.vitamins = (short) MAX_NUTRIENTS;
+                    this.vitamins = MAX_NUTRIENTS;
                 }
             }
 
             if (this.lipids < MAX_NUTRIENTS) {
                 this.lipids = (short) (this.lipids + (980 + random.nextInt(101)) * nutrients.getLipids());
                 if (this.lipids > MAX_NUTRIENTS) {
-                    this.lipids = (short) MAX_NUTRIENTS;
+                    this.lipids = MAX_NUTRIENTS;
                 }
             }
         }
@@ -327,8 +328,8 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
     }
 
     public Dinosaur getDinosaur() {
-    	ItemStack stack = (ItemStack)this.slots.get(0);
-        if (stack.isEmpty()) {
+    	ItemStack stack = this.slots.get(0);
+        if (!stack.isEmpty()) {
             return EntityHandler.getDinosaurById(stack.getItemDamage());
         }
 
@@ -357,15 +358,15 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
 
 	@Override
 	protected NonNullList<ItemStack> getSlots() {
-        NonNullList<ItemStack> slots = NonNullList.<ItemStack>withSize(5, ItemStack.EMPTY);
-		return slots;
+//        NonNullList<ItemStack> slots = NonNullList.withSize(5, ItemStack.EMPTY);
+		return this.slots;
 	}
 
 	@Override
 	protected void setSlots(NonNullList<ItemStack> slot) {
-		ItemStack stack = (ItemStack)this.slots.get(1);
-		stack.grow(slot.size());
-		
+//		ItemStack stack = (ItemStack)this.slots.get(1);
+//		stack.grow(slot.size());
+		this.slots = slot;
 	}
 
 	@Override
