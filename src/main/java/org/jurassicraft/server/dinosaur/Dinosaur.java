@@ -1,6 +1,7 @@
 package org.jurassicraft.server.dinosaur;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,9 +29,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 
 public abstract class Dinosaur implements Comparable<Dinosaur> {
-    private final Map<GrowthStage, List<ResourceLocation>> overlays = new HashMap<>();
-    private final Map<GrowthStage, ResourceLocation> maleTextures = new HashMap<>();
-    private final Map<GrowthStage, ResourceLocation> femaleTextures = new HashMap<>();
+    private final Map<GrowthStage, List<ResourceLocation>> overlays = new EnumMap<>(GrowthStage.class);
+    private final Map<GrowthStage, ResourceLocation> maleTextures = new EnumMap<>(GrowthStage.class);
+    private final Map<GrowthStage, ResourceLocation> femaleTextures = new EnumMap<>(GrowthStage.class);
     private final Map<GrowthStageGenderContainer, ResourceLocation> eyelidTextures = new HashMap<>();
 
     private String name;
