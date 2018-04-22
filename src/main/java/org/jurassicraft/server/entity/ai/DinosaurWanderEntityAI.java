@@ -1,11 +1,10 @@
 package org.jurassicraft.server.entity.ai;
 
+import org.jurassicraft.server.entity.DinosaurEntity;
+
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.util.math.Vec3d;
-import org.jurassicraft.server.entity.DinosaurEntity;
-
-import javax.annotation.Nullable;
 
 public class DinosaurWanderEntityAI extends EntityAIBase {
     private DinosaurEntity entity;
