@@ -86,7 +86,7 @@ public class SkeletonAssemblyContainer extends Container {
     }
 
     private String identify(ItemStack stack) {
-        if (stack != ItemStack.EMPTY && stack.getItem() instanceof FossilItem) {
+        if (!stack.isEmpty() && stack.getItem() instanceof FossilItem) {
             return ((FossilItem) stack.getItem()).getBoneType();
         }
         return "";
@@ -111,7 +111,7 @@ public class SkeletonAssemblyContainer extends Container {
     }
 
     private AssemblyData getAssemblyData(ItemStack stack) {
-        if (stack != ItemStack.EMPTY && stack.getItem() instanceof FossilItem) {
+        if (!stack.isEmpty() && stack.getItem() instanceof FossilItem) {
             FossilItem item = (FossilItem) stack.getItem();
             return new AssemblyData(item.getDinosaur(stack), item.isFresh());
         }
@@ -153,7 +153,7 @@ public class SkeletonAssemblyContainer extends Container {
             for (int i = 0; i < 25; ++i) {
                 ItemStack stack = this.craftMatrix.removeStackFromSlot(i);
 
-                if (stack != ItemStack.EMPTY) {
+                if (!stack.isEmpty()) {
                     player.dropItem(stack, false);
                 }
             }

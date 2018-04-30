@@ -38,8 +38,8 @@ public class DNASequencerBlockEntity extends MachineBaseBlockEntity {
         SequencableItem sequencableItem = SequencableItem.getSequencableItem(input);
 
         if (sequencableItem != null && sequencableItem.isSequencable(input)) {
-            if (storage != ItemStack.EMPTY && storage.getItem() == ItemHandler.STORAGE_DISC) {
-                if (this.slots.get(process + 6) == ItemStack.EMPTY) {
+            if (!storage.isEmpty() && storage.getItem() == ItemHandler.STORAGE_DISC) {
+                if (this.slots.get(process + 6).isEmpty()) {
                     return true;
                 }
             }

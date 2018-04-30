@@ -37,9 +37,9 @@ public class DNAExtractorBlockEntity extends MachineBaseBlockEntity {
         ItemStack extraction = this.slots.get(0);
         ItemStack storage = this.slots.get(1);
 
-        if (storage != ItemStack.EMPTY && storage.getItem() == ItemHandler.STORAGE_DISC && extraction != ItemStack.EMPTY && (extraction.getItem() == ItemHandler.AMBER || extraction.getItem() == ItemHandler.SEA_LAMPREY || extraction.getItem() == ItemHandler.DINOSAUR_MEAT) && (storage.getTagCompound() == null || !storage.getTagCompound().hasKey("Genetics"))) {
+        if (!storage.isEmpty() && storage.getItem() == ItemHandler.STORAGE_DISC && !extraction.isEmpty() && (extraction.getItem() == ItemHandler.AMBER || extraction.getItem() == ItemHandler.SEA_LAMPREY || extraction.getItem() == ItemHandler.DINOSAUR_MEAT) && (storage.getTagCompound() == null || !storage.getTagCompound().hasKey("Genetics"))) {
             for (int i = 2; i < 6; i++) {
-                if (this.slots.get(i) == ItemStack.EMPTY) {
+                if (this.slots.get(i).isEmpty()) {
                     return true;
                 }
             }

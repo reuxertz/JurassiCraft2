@@ -119,8 +119,8 @@ public class EmbryonicMachineBlock extends OrientedBlock {
         TileEntity tile = access.getTileEntity(pos);
         if (tile instanceof EmbryonicMachineBlockEntity) {
             EmbryonicMachineBlockEntity machine = (EmbryonicMachineBlockEntity) tile;
-            tubes = machine.getStackInSlot(1) != ItemStack.EMPTY;
-            dish = machine.getStackInSlot(0) != ItemStack.EMPTY;
+            tubes = !machine.getStackInSlot(1).isEmpty();
+            dish = !machine.getStackInSlot(0).isEmpty();
         }
         return state.withProperty(PETRI_DISH, dish).withProperty(TEST_TUBES, tubes);
     }
