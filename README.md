@@ -38,7 +38,8 @@ amellinger
 iLexiconn  
 JTGhawk137  
 BasiliskBoy   
-AlphaMaverick    
+AlphaMaverick   
+SoggyMustache 
 
 # Contributing
 Feel free to speed up development and create pull requests. Here's a guide on how to setup your workspace.
