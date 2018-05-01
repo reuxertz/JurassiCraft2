@@ -32,16 +32,16 @@ public class FeederContainer extends MachineContainer {
 
         id = 0;
 
-        for (int x = 0; x < 3; x++) {
-            for (int y = 0; y < 3; y++) {
-                this.addSlotToContainer(new CustomSlot(tile, id, 26 + x * 18, 18 + y * 18, stack -> FoodHelper.isFoodType(stack.getItem(), FoodType.MEAT) || FoodHelper.isFoodType(stack.getItem(), FoodType.FISH)));
+        for (int x = 3; x > 0; x--) {
+            for (int y = 3; y > 0; y--) {
+                this.addSlotToContainer(new CustomSlot(tile, id, 8 + y * 18, x * 18, stack -> FoodHelper.isFoodType(stack.getItem(), FoodType.MEAT) || FoodHelper.isFoodType(stack.getItem(), FoodType.FISH)));
                 id++;
             }
         }
 
-        for (int x = 0; x < 3; x++) {
-            for (int y = 0; y < 3; y++) {
-                this.addSlotToContainer(new CustomSlot(tile, id, 98 + x * 18, 18 + y * 18, stack -> FoodHelper.isFoodType(stack.getItem(), FoodType.PLANT)));
+        for (int x = 3; x > 0; x--) {
+            for (int y = 3; y > 0; y--) {
+                this.addSlotToContainer(new CustomSlot(tile, id, 80 + y * 18, x * 18, stack -> FoodHelper.isFoodType(stack.getItem(), FoodType.PLANT)));
                 id++;
             }
         }
