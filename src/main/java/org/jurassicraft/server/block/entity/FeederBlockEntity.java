@@ -1,5 +1,13 @@
 package org.jurassicraft.server.block.entity;
 
+import java.util.Random;
+
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.client.sound.SoundHandler;
+import org.jurassicraft.server.block.machine.FeederBlock;
+import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.food.FoodHelper;
+
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -8,19 +16,11 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntityLockable;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
-import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.client.sound.SoundHandler;
-import org.jurassicraft.server.block.machine.FeederBlock;
-import org.jurassicraft.server.entity.DinosaurEntity;
-import org.jurassicraft.server.food.FoodHelper;
-
-import java.util.Random;
 
 public class FeederBlockEntity extends TileEntityLockable implements ITickable, ISidedInventory {
     private static final int[] CARNIVOROUS_SLOTS = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
@@ -163,43 +163,18 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
 
-        NBTTagList itemList = compound.getTagList("Items", 10);
-        ItemStack[] slots = new ItemStack[this.slots.size()];
-
-        for (int i = 0; i < itemList.tagCount(); ++i) {
-            NBTTagCompound item = itemList.getCompoundTagAt(i);
-            ItemStack stack = new ItemStack(item);
-
-            byte slot = item.getByte("Slot");
-
-            if (slot >= 0 && slot < slots.length) {
-                slots[slot] = stack;
-            }
-        }
-
         if (compound.hasKey("CustomName", 8)) {
             this.customName = compound.getString("CustomName");
         }
         
-        this.slots = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
+        ItemStackHelper.loadAllItems(compound, this.slots);
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         compound = super.writeToNBT(compound);
         
-
-        NBTTagList itemList = new NBTTagList();
-
-        for (int slot = 0; slot < this.getSizeInventory(); ++slot) {
-            if (!this.slots.isEmpty()) {
-                NBTTagCompound itemTag = new NBTTagCompound();
-                itemTag.setByte("Slot", (byte) slot);
-                super.writeToNBT(compound);
-                itemList.appendTag(itemTag);
-            }
-        }
-        compound.setTag("Items", itemList);
+        ItemStackHelper.saveAllItems(compound, this.slots);
         
         if (this.hasCustomName()) {
             compound.setString("CustomName", this.customName);

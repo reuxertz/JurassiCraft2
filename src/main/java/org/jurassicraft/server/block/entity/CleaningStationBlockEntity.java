@@ -47,6 +47,8 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
     public static boolean isCleaning(IInventory inventory) {
         return inventory.getField(0) > 0;
     }
+    
+    
 
     public static boolean isItemFuel(ItemStack stack) {
         return stack != null && stack.getItem() == Items.WATER_BUCKET;
@@ -121,20 +123,8 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
-//        NonNullList[] slots = new NonNullList[this.getSizeInventory()];
         super.readFromNBT(compound);
-        NBTTagList itemList = compound.getTagList("Items", 10);
-
-        for (int i = 0; i < itemList.tagCount(); ++i) {
-            NBTTagCompound item = itemList.getCompoundTagAt(i);
-            ItemStack stack = new ItemStack(item);
-
-            byte slot = item.getByte("Slot");
-
-            if (slot >= 0 && slot < this.slots.size()) {
-                this.slots.set(slot, stack);
-            }
-        }
+        ItemStackHelper.loadAllItems(compound, this.slots);
 
         this.cleaningStationWaterTime = compound.getShort("WaterTime");
         this.cleanTime = compound.getShort("CleanTime");
@@ -152,19 +142,8 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
         compound.setShort("WaterTime", (short) this.cleaningStationWaterTime);
         compound.setShort("CleanTime", (short) this.cleanTime);
         compound.setShort("CleanTimeTotal", (short) this.totalCleanTime);
-        NBTTagList itemList = new NBTTagList();
 
-        for (int slot = 0; slot < this.slots.size(); ++slot) {
-            if (!this.slots.get(slot).isEmpty()) {
-                NBTTagCompound itemTag = new NBTTagCompound();
-                itemTag.setByte("Slot", (byte) slot);
-
-                this.slots.get(slot).writeToNBT(itemTag);
-                itemList.appendTag(itemTag);
-            }
-        }
-
-        compound.setTag("Items", itemList);
+        ItemStackHelper.saveAllItems(compound, this.slots);
 
         if (this.hasCustomName()) {
             compound.setString("CustomName", this.customName);

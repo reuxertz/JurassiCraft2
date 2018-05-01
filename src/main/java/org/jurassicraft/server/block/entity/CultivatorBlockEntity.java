@@ -175,6 +175,8 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
         this.vitamins = compound.getInteger("Vitamins");
         this.proximates = compound.getInteger("Proximates");
         this.temperature = compound.getInteger("Temperature");
+        
+        ItemStackHelper.loadAllItems(compound, this.slots);
     }
 
     @Override

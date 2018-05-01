@@ -10,7 +10,9 @@ import org.jurassicraft.server.item.ItemHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 
 public class DNASequencerBlockEntity extends MachineBaseBlockEntity {
@@ -28,6 +30,22 @@ public class DNASequencerBlockEntity extends MachineBaseBlockEntity {
         return Math.min(5, (int) Math.floor(slot / 2));
     }
 
+    @Override
+    public void readFromNBT(NBTTagCompound compound) {
+        super.readFromNBT(compound);
+        
+        ItemStackHelper.loadAllItems(compound, this.slots);
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        compound = super.writeToNBT(compound);
+
+        ItemStackHelper.saveAllItems(compound, this.slots);
+        
+        return compound;
+    }
+    
     @Override
     protected boolean canProcess(int process) {
         int tissue = process * 2;

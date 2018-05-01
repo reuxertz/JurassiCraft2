@@ -9,7 +9,9 @@ import org.jurassicraft.server.container.FossilGrinderContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 
 public class FossilGrinderBlockEntity extends MachineBaseBlockEntity {
@@ -23,6 +25,22 @@ public class FossilGrinderBlockEntity extends MachineBaseBlockEntity {
         return 0;
     }
 
+    @Override
+    public void readFromNBT(NBTTagCompound compound) {
+        super.readFromNBT(compound);
+        
+        ItemStackHelper.loadAllItems(compound, this.slots);
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        compound = super.writeToNBT(compound);
+
+        ItemStackHelper.saveAllItems(compound, this.slots);
+        
+        return compound;
+    }
+    
     @Override
     protected boolean canProcess(int process) {
         for (int inputIndex = 0; inputIndex < 6; inputIndex++) {

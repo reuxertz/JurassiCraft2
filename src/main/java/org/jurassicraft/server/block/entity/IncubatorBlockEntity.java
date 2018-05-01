@@ -10,6 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -30,6 +31,8 @@ public class IncubatorBlockEntity extends MachineBaseBlockEntity implements Temp
         for (int i = 0; i < this.getProcessCount(); i++) {
             this.temperature[i] = compound.getShort("Temperature" + i);
         }
+        
+        ItemStackHelper.loadAllItems(compound, this.slots);
     }
 
     @Override
@@ -39,10 +42,12 @@ public class IncubatorBlockEntity extends MachineBaseBlockEntity implements Temp
         for (int i = 0; i < this.getProcessCount(); i++) {
             compound.setShort("Temperature" + i, (short) this.temperature[i]);
         }
-
+        
+        ItemStackHelper.saveAllItems(compound, this.slots);
+        
         return compound;
     }
-
+    
     @Override
     protected int getProcess(int slot) {
         if (slot == 5) {

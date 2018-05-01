@@ -11,7 +11,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 
 public class EmbryoCalcificationMachineBlockEntity extends MachineBaseBlockEntity {
@@ -25,6 +27,22 @@ public class EmbryoCalcificationMachineBlockEntity extends MachineBaseBlockEntit
         return 0;
     }
 
+    @Override
+    public void readFromNBT(NBTTagCompound compound) {
+        super.readFromNBT(compound);
+        
+        ItemStackHelper.loadAllItems(compound, this.slots);
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        compound = super.writeToNBT(compound);
+
+        ItemStackHelper.saveAllItems(compound, this.slots);
+        
+        return compound;
+    }
+    
     @Override
     protected boolean canProcess(int process) {
         ItemStack input = this.slots.get(0);
