@@ -12,10 +12,12 @@ import com.google.common.collect.Lists;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -55,6 +57,11 @@ public abstract class CarEntity extends Entity {
     private double interpTargetYaw;
     private double interpTargetPitch;
 
+    public double relBackWheel;
+    public double relFrontWheel;
+    public double relLeftWheel;
+    public double relRightWheel;
+    
     private float healAmount;
     private int healCooldown = 40;
 
@@ -175,6 +182,11 @@ public abstract class CarEntity extends Entity {
     @Override
     public void onEntityUpdate() {
         super.onEntityUpdate();
+        this.relBackWheel = MathHelper.clamp(getWheelHeight(2f, false), posY - 3, posY + 3);
+        this.relFrontWheel = MathHelper.clamp(getWheelHeight(-2.5f, false), posY - 3, posY + 3);
+        this.relLeftWheel = MathHelper.clamp(getWheelHeight(1.3f, true), posY - 3, posY + 3);
+        this.relRightWheel = MathHelper.clamp(getWheelHeight(-1.3f, true), posY - 3, posY + 3);
+
         if (!this.world.isRemote) {
             if (this.healCooldown > 0) {
                 this.healCooldown--;
@@ -268,17 +280,6 @@ public abstract class CarEntity extends Entity {
     }
 
     private void tickInterp() {
-//    	if(!world.isRemote) 
-    	{
-        	double backWheel = getWheelHeight(2f);
-        	double frontWheel = getWheelHeight(-2.5f);
-        	if(backWheel == frontWheel) {
-        		this.rotationPitch = 0f;
-        	}
-        	
-        	float localRotatinPitch = (float) MathUtils.cosineFromPoints(new Vec3d(frontWheel, 0, -2.5f), new Vec3d(backWheel, 0, -2.5f), new Vec3d(backWheel, 0, 2f));//No need for cosine as is a right angled triangle. I'm to lazy to work out the right maths. //TODO: SOHCAHTOA this
-        	this.rotationPitch = frontWheel < backWheel ? -localRotatinPitch : localRotatinPitch;
-    	}
         if (this.interpProgress > 0 && !this.canPassengerSteer()) {
             double interpolatedX = this.posX + (this.interpTargetX - this.posX) / (double) this.interpProgress;
             double interpolatedY = this.posY + (this.interpTargetY - this.posY) / (double) this.interpProgress;
@@ -294,17 +295,24 @@ public abstract class CarEntity extends Entity {
         }
     }
     
-    private double getWheelHeight(float relWheelOffset) { //TODO: get top height from full width, not just center
+    private double getWheelHeight(float relWheelOffset, boolean leftRight) { 
 		float localYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw);
-    	float xRot = (float) (Math.sin(Math.toRadians(localYaw)) * relWheelOffset); 
-    	float zRot = - (float) (Math.cos(Math.toRadians(localYaw)) * relWheelOffset);
+    	double xRot = Math.sin(Math.toRadians(localYaw)) * relWheelOffset; 
+    	double zRot = - Math.cos(Math.toRadians(localYaw)) * relWheelOffset;
+    	if(leftRight) {
+	   		 xRot = Math.cos(Math.toRadians(localYaw)) * relWheelOffset; 
+	       	 zRot = Math.sin(Math.toRadians(localYaw)) * relWheelOffset;
+    	}	
     	BlockPos pos = new BlockPos(posX + xRot, this.posY, posZ + zRot);
     	boolean found = false;
+		List<AxisAlignedBB> aabbList = Lists.newArrayList();;
     	while(!found) {
     		if(pos.getY() < 0) {
     			break;
     		}
-    		if(world.isAirBlock(pos)) {
+    		aabbList.clear();
+        	world.getBlockState(pos).addCollisionBoxToList(world, pos, new AxisAlignedBB(pos), aabbList, this, false);
+    		if(world.isAirBlock(pos) || aabbList.isEmpty()) {
     			pos = pos.down();
     		} else {
     			found = true;
@@ -313,9 +321,14 @@ public abstract class CarEntity extends Entity {
     	if(!found) {
     		return posY;
     	}
-    	IBlockState state = world.getBlockState(pos);
-    	List<AxisAlignedBB> aabbList = Lists.newArrayList();
-    	state.addCollisionBoxToList(world, pos, new AxisAlignedBB(pos), aabbList, this, false);
+    	if(found && !world.isAirBlock(pos.up()) && !world.isAirBlock(pos.up(2))) {
+    		List<AxisAlignedBB> list = Lists.newArrayList();
+    		world.getBlockState(pos.up()).addCollisionBoxToList(world, pos.up(), new AxisAlignedBB(pos.up()), list, this, false);
+    		world.getBlockState(pos.up(2)).addCollisionBoxToList(world, pos.up(2), new AxisAlignedBB(pos.up(2)), list, this, false);
+    		if(!list.isEmpty()) {
+    			return posY; //Means its on a wall. 
+    		}
+    	}
     	if(aabbList.isEmpty()) {
     		return pos.getY();
     	}
@@ -402,6 +415,9 @@ public abstract class CarEntity extends Entity {
                 pos = new Vec3d(this.posX, this.posY + this.height, this.posZ);
             } else {
                 pos = seat.getPos();
+//                if(this.relBackWheel < this.posY) {
+//                	pos = pos.addVector(0, this.relBackWheel - this.posY, 0);
+//                }
             }
             passenger.setPosition(pos.x, pos.y, pos.z);
             passenger.rotationYaw += this.rotationDelta;
