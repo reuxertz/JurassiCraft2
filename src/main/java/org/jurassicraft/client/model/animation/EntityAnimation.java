@@ -33,7 +33,7 @@ public enum EntityAnimation {
     GIVING_BIRTH,
     GLIDING(true, false, true),
     ON_LAND(false, true, false),
-    WALKING(false, false, false), RUNNING(false, false, false), SWIMMING(false, false, false), FLYING(false, false, false), CLIMBING(false, false, false),
+    WALKING(false, false, false), RUNNING(false, false, false), SWIMMING(false, false, false), FLYING(true, false, false), FLYING_TAKING_OFF(true, false, false), FLYING_LANDING(true, false, false), CLIMBING(false, false, false),
     PREPARE_LEAP(false, false), LEAP(true, false), LEAP_LAND(true, false, false),
     START_CLIMBING(false, false),
     DILOPHOSAURUS_SPIT(false, false);

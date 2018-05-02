@@ -1,12 +1,5 @@
 package org.jurassicraft.server.block.entity;
 
-import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.container.EmbryoCalcificationMachineContainer;
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.EntityHandler;
-import org.jurassicraft.server.item.ItemHandler;
-import org.jurassicraft.server.item.SyringeItem;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
@@ -15,6 +8,12 @@ import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.container.EmbryoCalcificationMachineContainer;
+import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.item.ItemHandler;
+import org.jurassicraft.server.item.SyringeItem;
 
 public class EmbryoCalcificationMachineBlockEntity extends MachineBaseBlockEntity {
     private static final int[] INPUTS = new int[] { 0, 1 };
@@ -30,7 +29,7 @@ public class EmbryoCalcificationMachineBlockEntity extends MachineBaseBlockEntit
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        
+
         ItemStackHelper.loadAllItems(compound, this.slots);
     }
 
@@ -39,10 +38,10 @@ public class EmbryoCalcificationMachineBlockEntity extends MachineBaseBlockEntit
         compound = super.writeToNBT(compound);
 
         ItemStackHelper.saveAllItems(compound, this.slots);
-        
+
         return compound;
     }
-    
+
     @Override
     protected boolean canProcess(int process) {
         ItemStack input = this.slots.get(0);
@@ -135,12 +134,12 @@ public class EmbryoCalcificationMachineBlockEntity extends MachineBaseBlockEntit
         this.world.markBlockRangeForRenderUpdate(this.pos, this.pos);
     }
 
-	@Override
-	public boolean isEmpty() {
-		return false;
-	}
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
 
-	@Override
-	protected void setSlots(NonNullList[] slots) {
-	}
+    @Override
+    protected void setSlots(NonNullList[] slots) {
+    }
 }

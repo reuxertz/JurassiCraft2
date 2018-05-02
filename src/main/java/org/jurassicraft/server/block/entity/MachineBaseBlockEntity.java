@@ -270,43 +270,43 @@ public class MachineBaseBlockEntity extends TileEntityLockable implements ITicka
     }
 
     protected int getProcess(int slot) {
-		return slot;
-	}
+        return slot;
+    }
 
     protected boolean canProcess(int process) {
-		return true;
-	}
+        return true;
+    }
 
     protected void processItem(int process) {
-	}
+    }
 
     protected int getMainOutput(int process) {
-		return 0;
-	}
+        return 0;
+    }
 
     protected int getStackProcessTime(ItemStack stack) {
-		return 0;
-	}
+        return 0;
+    }
 
     protected int getProcessCount() {
-		return 0;
-	}
+        return 0;
+    }
 
     protected int[] getInputs() {
-		return null;
-	}
+        return null;
+    }
 
     protected int[] getInputs(int process) {
-		return null;
-	}
+        return null;
+    }
 
     protected int[] getOutputs() {
-		return null;
-	}
+        return null;
+    }
 
     protected NonNullList<ItemStack> getSlots() {
-		return null;
-	}
+        return null;
+    }
 
     protected void setSlots(NonNullList[] slots) {}
 
@@ -371,9 +371,9 @@ public class MachineBaseBlockEntity extends TileEntityLockable implements ITicka
 
     protected boolean isStackable(ItemStack slotStack, ItemStack insertingStack) {
         return slotStack.isEmpty() || (ItemStack.areItemsEqual(slotStack, insertingStack)
-                                               && ItemStack.areItemStackTagsEqual(slotStack, insertingStack)
-                                               && slotStack.getItemDamage() == insertingStack.getItemDamage()
-                                               && slotStack.getMaxStackSize() - slotStack.getCount() >= insertingStack.getCount());
+                && ItemStack.areItemStackTagsEqual(slotStack, insertingStack)
+                && slotStack.getItemDamage() == insertingStack.getItemDamage()
+                && slotStack.getMaxStackSize() - slotStack.getCount() >= insertingStack.getCount());
     }
 
     protected void mergeStack(int slot, ItemStack stack) {
@@ -383,7 +383,7 @@ public class MachineBaseBlockEntity extends TileEntityLockable implements ITicka
         if (previous.isEmpty()) {
             slots.set(slot, stack);
         } else if (isStackable(previous, stack)) {
-        	previous.grow(stack.getCount());
+            previous.grow(stack.getCount());
         }
     }
 
@@ -425,23 +425,23 @@ public class MachineBaseBlockEntity extends TileEntityLockable implements ITicka
 
     protected void onSlotUpdate() {}
 
-	@Override
-	public boolean isEmpty() {
-		return false;
-	}
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
 
-	@Override
-	public String getName() {
-		return "jurassicraft:machine_base_block";
-	}
+    @Override
+    public String getName() {
+        return "jurassicraft:machine_base_block";
+    }
 
-	@Override
-	public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn) {
-		return null;
-	}
+    @Override
+    public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn) {
+        return null;
+    }
 
-	@Override
-	public String getGuiID() {
-		return null;
-	}
+    @Override
+    public String getGuiID() {
+        return null;
+    }
 }

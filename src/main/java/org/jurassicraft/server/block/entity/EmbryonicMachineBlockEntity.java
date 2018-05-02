@@ -23,11 +23,11 @@ public class EmbryonicMachineBlockEntity extends MachineBaseBlockEntity {
     protected int getProcess(int slot) {
         return 0;
     }
-    
+
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        
+
         ItemStackHelper.loadAllItems(compound, this.slots);
     }
 
@@ -36,7 +36,7 @@ public class EmbryonicMachineBlockEntity extends MachineBaseBlockEntity {
         compound = super.writeToNBT(compound);
 
         ItemStackHelper.saveAllItems(compound, this.slots);
-        
+
         return compound;
     }
 
@@ -149,8 +149,8 @@ public class EmbryonicMachineBlockEntity extends MachineBaseBlockEntity {
         this.world.markBlockRangeForRenderUpdate(this.pos, this.pos);
     }
 
-	@Override
-	public boolean isEmpty() {
-		return false;
-	}
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
 }

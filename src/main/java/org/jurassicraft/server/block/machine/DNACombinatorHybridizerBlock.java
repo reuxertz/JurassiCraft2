@@ -1,11 +1,5 @@
 package org.jurassicraft.server.block.machine;
 
-import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.block.OrientedBlock;
-import org.jurassicraft.server.block.entity.DNACombinatorHybridizerBlockEntity;
-import org.jurassicraft.server.proxy.ServerProxy;
-import org.jurassicraft.server.tab.TabHandler;
-
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
@@ -24,6 +18,11 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.block.OrientedBlock;
+import org.jurassicraft.server.block.entity.DNACombinatorHybridizerBlockEntity;
+import org.jurassicraft.server.proxy.ServerProxy;
+import org.jurassicraft.server.tab.TabHandler;
 
 public class DNACombinatorHybridizerBlock extends OrientedBlock {
     public static final PropertyBool HYBRIDIZER = PropertyBool.create("hybridizer");
@@ -62,7 +61,7 @@ public class DNACombinatorHybridizerBlock extends OrientedBlock {
 
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new DNACombinatorHybridizerBlockEntity(); 
+        return new DNACombinatorHybridizerBlockEntity();
     }
 
     @Override

@@ -2,15 +2,16 @@ package org.jurassicraft.server.dinosaur;
 
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
-
-import java.util.ArrayList;
-
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.entity.dinosaur.ParasaurolophusEntity;
 import org.jurassicraft.server.period.TimePeriod;
 
-public class ParasaurolophusDinosaur extends Dinosaur {
-    public ParasaurolophusDinosaur() {
+import java.util.ArrayList;
+
+public class ParasaurolophusDinosaur extends Dinosaur
+{
+    public ParasaurolophusDinosaur()
+    {
         super();
 
         this.setName("Parasaurolophus");
@@ -38,14 +39,20 @@ public class ParasaurolophusDinosaur extends Dinosaur {
         this.setBreeding(false, 4, 6, 40, false, true);
 
         String[][] recipe = {
-                {"tail_vertebrae", "pelvis", "ribcage","neck_vertebrae","skull"},
+                {"tail_vertebrae", "pelvis", "ribcage", "neck_vertebrae", "skull"},
                 {"hind_leg_bones", "hind_leg_bones", "", "shoulder_bone", "teeth"},
                 {"", "", "", "front_leg_bones", "front_leg_bones"}};
         this.setRecipe(recipe);
-        
+
         ArrayList<Biome> biomeList = new ArrayList<Biome>();
         biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.PLAINS));
         biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.FOREST));
         this.setSpawn(15, biomeList.toArray(new Biome[biomeList.size()]));
+    }
+
+    @Override
+    public String[] getOverlays()
+    {
+        return new String[]{OverlayType.EYE_LIDS.toString()};
     }
 }

@@ -1,13 +1,5 @@
 package org.jurassicraft.server.block.entity;
 
-import java.util.Random;
-
-import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.client.sound.SoundHandler;
-import org.jurassicraft.server.block.machine.FeederBlock;
-import org.jurassicraft.server.entity.DinosaurEntity;
-import org.jurassicraft.server.food.FoodHelper;
-
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -21,6 +13,13 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.client.sound.SoundHandler;
+import org.jurassicraft.server.block.machine.FeederBlock;
+import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.food.FoodHelper;
+
+import java.util.Random;
 
 public class FeederBlockEntity extends TileEntityLockable implements ITickable, ISidedInventory {
     private static final int[] CARNIVOROUS_SLOTS = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
@@ -76,7 +75,7 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
 
     @Override
     public ItemStack removeStackFromSlot(int index) {
-        	return ItemStackHelper.getAndRemove(this.slots, index);
+        return ItemStackHelper.getAndRemove(this.slots, index);
     }
 
     @Override
@@ -166,20 +165,20 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
         if (compound.hasKey("CustomName", 8)) {
             this.customName = compound.getString("CustomName");
         }
-        
+
         ItemStackHelper.loadAllItems(compound, this.slots);
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         compound = super.writeToNBT(compound);
-        
+
         ItemStackHelper.saveAllItems(compound, this.slots);
-        
+
         if (this.hasCustomName()) {
             compound.setString("CustomName", this.customName);
         }
-        
+
         return compound;
     }
 
@@ -205,7 +204,7 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
                 this.feeding = null;
             }
         }
-        
+
         if (this.open && this.openAnimation == 20) {
             if (this.stayOpen > 0) {
                 this.stayOpen--;
@@ -253,7 +252,7 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
                                 motionX = 0.5F;
                                 break;
                         }
-                        
+
                         ItemStack stack = (ItemStack)this.slots.get(feedSlot);
 
                         if (!stack.isEmpty()) {
@@ -317,8 +316,8 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
         }
     }
 
-	@Override
-	public boolean isEmpty() {
-		return false;
-	}
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
 }

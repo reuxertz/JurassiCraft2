@@ -1,9 +1,5 @@
 package org.jurassicraft.server.block.entity;
 
-import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.api.BreedableBug;
-import org.jurassicraft.server.container.BugCrateContainer;
-
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -13,6 +9,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.api.BreedableBug;
+import org.jurassicraft.server.container.BugCrateContainer;
 
 public class BugCrateBlockEntity extends MachineBaseBlockEntity {
     private static final int[] INPUTS = new int[] { 0, 1, 2, 3, 4, 5 };
@@ -28,7 +27,7 @@ public class BugCrateBlockEntity extends MachineBaseBlockEntity {
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        
+
         ItemStackHelper.loadAllItems(compound, this.slots);
     }
 
@@ -37,10 +36,10 @@ public class BugCrateBlockEntity extends MachineBaseBlockEntity {
         compound = super.writeToNBT(compound);
 
         ItemStackHelper.saveAllItems(compound, this.slots);
-        
+
         return compound;
     }
-    
+
     @Override
     protected boolean canProcess(int process) {
         for (int i = 0; i < 3; i++) {
@@ -187,12 +186,12 @@ public class BugCrateBlockEntity extends MachineBaseBlockEntity {
         }
     }
 
-	@Override
-	public boolean isEmpty() {
-		return false;
-	}
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
 
-	@Override
-	protected void setSlots(NonNullList[] slots) {
-	}
+    @Override
+    protected void setSlots(NonNullList[] slots) {
+    }
 }

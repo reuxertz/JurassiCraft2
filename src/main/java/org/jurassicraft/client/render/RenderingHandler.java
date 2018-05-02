@@ -22,16 +22,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.model.MultipartStateMap;
 import org.jurassicraft.client.model.animation.EntityAnimator;
-import org.jurassicraft.client.model.animation.entity.BrachiosaurusAnimator;
-import org.jurassicraft.client.model.animation.entity.CoelacanthAnimator;
-import org.jurassicraft.client.model.animation.entity.DilophosaurusAnimator;
-import org.jurassicraft.client.model.animation.entity.GallimimusAnimator;
-import org.jurassicraft.client.model.animation.entity.MicroraptorAnimator;
-import org.jurassicraft.client.model.animation.entity.MussaurusAnimator;
-import org.jurassicraft.client.model.animation.entity.ParasaurolophusAnimator;
-import org.jurassicraft.client.model.animation.entity.TriceratopsAnimator;
-import org.jurassicraft.client.model.animation.entity.TyrannosaurusAnimator;
-import org.jurassicraft.client.model.animation.entity.VelociraptorAnimator;
+import org.jurassicraft.client.model.animation.entity.*;
 import org.jurassicraft.client.render.block.CleaningStationRenderer;
 import org.jurassicraft.client.render.block.DNAExtractorRenderer;
 import org.jurassicraft.client.render.block.DNASequencerRenderer;
@@ -117,6 +108,12 @@ public enum RenderingHandler {
         ModelLoader.setCustomStateMapper(BlockHandler.LOW_SECURITY_FENCE_BASE, new MultipartStateMap());
         ModelLoader.setCustomStateMapper(BlockHandler.LOW_SECURITY_FENCE_POLE, new MultipartStateMap());
         ModelLoader.setCustomStateMapper(BlockHandler.LOW_SECURITY_FENCE_WIRE, new MultipartStateMap());
+        ModelLoader.setCustomStateMapper(BlockHandler.MED_SECURITY_FENCE_BASE, new MultipartStateMap());
+        ModelLoader.setCustomStateMapper(BlockHandler.MED_SECURITY_FENCE_POLE, new MultipartStateMap());
+        ModelLoader.setCustomStateMapper(BlockHandler.MED_SECURITY_FENCE_WIRE, new MultipartStateMap());
+        ModelLoader.setCustomStateMapper(BlockHandler.HIGH_SECURITY_FENCE_BASE, new MultipartStateMap());
+        ModelLoader.setCustomStateMapper(BlockHandler.HIGH_SECURITY_FENCE_POLE, new MultipartStateMap());
+        ModelLoader.setCustomStateMapper(BlockHandler.HIGH_SECURITY_FENCE_WIRE, new MultipartStateMap());
 
         ItemHandler.DISPLAY_BLOCK.initModels(EntityHandler.getDinosaurs().values(), this);
 
@@ -246,6 +243,12 @@ public enum RenderingHandler {
         this.registerBlockRenderer(BlockHandler.LOW_SECURITY_FENCE_POLE);
         this.registerBlockRenderer(BlockHandler.LOW_SECURITY_FENCE_BASE);
         this.registerBlockRenderer(BlockHandler.LOW_SECURITY_FENCE_WIRE);
+        this.registerBlockRenderer(BlockHandler.MED_SECURITY_FENCE_POLE);
+        this.registerBlockRenderer(BlockHandler.MED_SECURITY_FENCE_BASE);
+        this.registerBlockRenderer(BlockHandler.MED_SECURITY_FENCE_WIRE);
+        this.registerBlockRenderer(BlockHandler.HIGH_SECURITY_FENCE_POLE);
+        this.registerBlockRenderer(BlockHandler.HIGH_SECURITY_FENCE_BASE);
+        this.registerBlockRenderer(BlockHandler.HIGH_SECURITY_FENCE_WIRE);
 
         this.registerBlockRenderer(BlockHandler.WILD_POTATO_PLANT);
 
@@ -255,8 +258,8 @@ public enum RenderingHandler {
         this.registerBlockRenderer(BlockHandler.CINNAMON_FERN);
         this.registerBlockRenderer(BlockHandler.BRISTLE_FERN);
 
-//        this.registerBlockRenderer(BlockHandler.TOUR_RAIL);
-//        this.registerBlockRenderer(BlockHandler.TOUR_RAIL_POWERED);
+        this.registerBlockRenderer(BlockHandler.TOUR_RAIL);
+        this.registerBlockRenderer(BlockHandler.TOUR_RAIL_POWERED);
 
         this.registerItemRenderer(ItemHandler.TRACKER);
         this.registerItemRenderer(ItemHandler.PLANT_CELLS_PETRI_DISH);
@@ -339,7 +342,7 @@ public enum RenderingHandler {
         this.registerItemRenderer(ItemHandler.CAR_WINDSCREEN, "car_windscreen");
         this.registerItemRenderer(ItemHandler.UNFINISHED_CAR, "unfinished_car");
         this.registerItemRenderer(ItemHandler.JEEP_WRANGLER, "jeep_wrangler");
-//        this.registerItemRenderer(ItemHandler.FORD_EXPLORER, "ford_explorer");
+        this.registerItemRenderer(ItemHandler.FORD_EXPLORER, "ford_explorer");
 
         this.registerItemRenderer(ItemHandler.MURAL, "mural");
 
@@ -422,6 +425,7 @@ public enum RenderingHandler {
 
         this.registerRenderInfo(EntityHandler.BRACHIOSAURUS, new BrachiosaurusAnimator(), 1.5F);
         this.registerRenderInfo(EntityHandler.COELACANTH, new CoelacanthAnimator(), 0.0F);
+        this.registerRenderInfo(EntityHandler.ALLIGATORGAR, new AlligatorGarAnimator(), 0.0F);
         this.registerRenderInfo(EntityHandler.DILOPHOSAURUS, new DilophosaurusAnimator(), 0.65F);
         this.registerRenderInfo(EntityHandler.GALLIMIMUS, new GallimimusAnimator(), 0.65F);
         this.registerRenderInfo(EntityHandler.PARASAUROLOPHUS, new ParasaurolophusAnimator(), 0.65F);

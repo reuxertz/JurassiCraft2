@@ -2,51 +2,64 @@ package org.jurassicraft.server.entity.ai;
 
 import net.minecraft.entity.ai.EntityAIBase;
 import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.ai.core.Mutex;
 
 import java.util.List;
 
-public class TargetCarcassEntityAI extends EntityAIBase {
+public class TargetCarcassEntityAI extends EntityAIBase
+{
     private DinosaurEntity entity;
     private DinosaurEntity targetEntity;
 
-    public TargetCarcassEntityAI(DinosaurEntity entity) {
+    public TargetCarcassEntityAI(DinosaurEntity entity)
+    {
         this.entity = entity;
         this.setMutexBits(Mutex.MOVEMENT | Mutex.METABOLISM);
     }
 
     @Override
-    public void resetTask() {
+    public void resetTask()
+    {
         super.resetTask();
         this.entity.resetAttackCooldown();
     }
 
     @Override
-    public void startExecuting() {
+    public void startExecuting()
+    {
         this.entity.setAttackTarget(this.targetEntity);
     }
 
     @Override
-    public boolean shouldExecute() {
-        if (!this.entity.getMetabolism().isHungry()) {
+    public boolean shouldExecute()
+    {
+        if (!this.entity.getMetabolism().isHungry())
+        {
             return false;
         }
 
-        if (this.entity.getRNG().nextInt(10) != 0) {
+        if (this.entity.getRNG().nextInt(10) != 0)
+        {
             return false;
         }
 
-        if (!this.entity.isBusy()) {
+        if (!this.entity.isBusy())
+        {
             List<DinosaurEntity> entities = this.entity.world.getEntitiesWithinAABB(DinosaurEntity.class, this.entity.getEntityBoundingBox().expand(16, 16, 16));
 
-            if (entities.size() > 0) {
+            if (entities.size() > 0)
+            {
                 this.targetEntity = null;
                 int bestScore = Integer.MAX_VALUE;
 
-                for (DinosaurEntity entity : entities) {
-                    if (entity.isCarcass()) {
+                for (DinosaurEntity entity : entities)
+                {
+                    if (entity.isCarcass())
+                    {
                         int score = (int) this.entity.getDistanceSqToEntity(entity);
 
-                        if (score < bestScore) {
+                        if (score < bestScore)
+                        {
                             bestScore = score;
                             this.targetEntity = entity;
                         }

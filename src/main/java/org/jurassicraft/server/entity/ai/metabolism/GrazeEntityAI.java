@@ -10,12 +10,13 @@ import net.minecraft.world.World;
 import org.jurassicraft.client.model.animation.EntityAnimation;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.MetabolismContainer;
-import org.jurassicraft.server.entity.ai.Mutex;
+import org.jurassicraft.server.entity.ai.core.Mutex;
 import org.jurassicraft.server.entity.ai.util.OnionTraverser;
 import org.jurassicraft.server.food.FoodHelper;
 import org.jurassicraft.server.util.GameRuleHandler;
 
-public class GrazeEntityAI extends EntityAIBase {
+public class GrazeEntityAI extends EntityAIBase
+{
     public static final int EAT_RADIUS = 6;// was 25
     public static final int LOOK_RADIUS = 16;
     private static final int GIVE_UP_TIME = 400;// 14*20 counter = 14 seconds (ish?)
@@ -29,15 +30,19 @@ public class GrazeEntityAI extends EntityAIBase {
     private BlockPos previousTarget;
     private Vec3d targetVec;
 
-    public GrazeEntityAI(DinosaurEntity dinosaur) {
+    public GrazeEntityAI(DinosaurEntity dinosaur)
+    {
         this.dinosaur = dinosaur;
         this.setMutexBits(Mutex.METABOLISM);
     }
 
     @Override
-    public boolean shouldExecute() {
-        if (!(this.dinosaur.isDead || this.dinosaur.isCarcass() || !GameRuleHandler.DINO_METABOLISM.getBoolean(this.dinosaur.world)) && this.dinosaur.getMetabolism().isHungry()) {
-            if (!this.dinosaur.getMetabolism().isStarving() && this.dinosaur.getClosestFeeder() != null) {
+    public boolean shouldExecute()
+    {
+        if (!(this.dinosaur.isDead || this.dinosaur.isCarcass() || !GameRuleHandler.DINO_METABOLISM.getBoolean(this.dinosaur.world)) && this.dinosaur.getMetabolism().isHungry())
+        {
+            if (!this.dinosaur.getMetabolism().isStarving() && this.dinosaur.getClosestFeeder() != null)
+            {
                 return false;
             }
 
@@ -55,13 +60,17 @@ public class GrazeEntityAI extends EntityAIBase {
             this.target = null;
 
             //scans all blocks around the LOOK_RADIUS
-            for (BlockPos pos : traverser) {
+            for (BlockPos pos : traverser)
+            {
                 Block block = this.world.getBlockState(pos).getBlock();
-                if (FoodHelper.isEdible(this.dinosaur, this.dinosaur.getDinosaur().getDiet(), block) && pos != this.previousTarget) {
+                if (FoodHelper.isEdible(this.dinosaur, this.dinosaur.getDinosaur().getDiet(), block) && pos != this.previousTarget)
+                {
                     this.target = pos;
-                    for (int i = 0; i < 16; i++) {
+                    for (int i = 0; i < 16; i++)
+                    {
                         IBlockState state = this.world.getBlockState(pos);
-                        if (!state.getBlock().isLeaves(state, this.world, pos) && !state.getBlock().isAir(state, this.world, pos)) {
+                        if (!state.getBlock().isLeaves(state, this.world, pos) && !state.getBlock().isAir(state, this.world, pos))
+                        {
                             break;
                         }
                         pos = pos.down();
@@ -72,10 +81,13 @@ public class GrazeEntityAI extends EntityAIBase {
                 }
             }
 
-            if (this.moveTarget != null) {
-                if (metabolism.isStarving()) {
+            if (this.moveTarget != null)
+            {
+                if (metabolism.isStarving())
+                {
                     this.dinosaur.getNavigator().tryMoveToXYZ(this.moveTarget.getX(), this.moveTarget.getY(), this.moveTarget.getZ(), 1.2);
-                } else {
+                } else
+                {
                     this.dinosaur.getNavigator().tryMoveToXYZ(this.moveTarget.getX(), this.moveTarget.getY(), this.moveTarget.getZ(), 0.7);
                 }
                 return true;
@@ -85,12 +97,15 @@ public class GrazeEntityAI extends EntityAIBase {
     }
 
     @Override
-    public void startExecuting() {
+    public void startExecuting()
+    {
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
-        if (this.target != null && this.world.isAirBlock(this.target) && !this.dinosaur.getNavigator().noPath()) {
+    public boolean shouldContinueExecuting()
+    {
+        if (this.target != null && this.world.isAirBlock(this.target) && !this.dinosaur.getNavigator().noPath())
+        {
             this.terminateTask();
             return false;
         }
@@ -99,12 +114,15 @@ public class GrazeEntityAI extends EntityAIBase {
     }
 
     @Override
-    public void updateTask() {
-        if (this.target != null) {
+    public void updateTask()
+    {
+        if (this.target != null)
+        {
             Vec3d headPos = this.dinosaur.getHeadPos();
             Vec3d headVec = new Vec3d(headPos.x, this.target.getY(), headPos.z);
 
-            if (headVec.squareDistanceTo(this.targetVec) < EAT_RADIUS) {
+            if (headVec.squareDistanceTo(this.targetVec) < EAT_RADIUS)
+            {
                 this.dinosaur.getNavigator().clearPathEntity();
 
                 // TODO inadequate method for looking at block
@@ -122,10 +140,12 @@ public class GrazeEntityAI extends EntityAIBase {
 
                 this.previousTarget = null;
                 this.terminateTask();
-            } else {
+            } else
+            {
                 this.counter++;
 
-                if (this.counter >= GIVE_UP_TIME) {
+                if (this.counter >= GIVE_UP_TIME)
+                {
                     this.counter = 0;
                     this.previousTarget = this.target;
                     this.terminateTask();
@@ -134,7 +154,8 @@ public class GrazeEntityAI extends EntityAIBase {
         }
     }
 
-    private void terminateTask() {
+    private void terminateTask()
+    {
         this.dinosaur.getNavigator().clearPathEntity();
         this.target = null;
         this.dinosaur.setAnimation(EntityAnimation.IDLE.get());

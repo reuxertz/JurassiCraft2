@@ -1,9 +1,4 @@
-	package org.jurassicraft.server.block.entity;
-
-import net.minecraft.inventory.ItemStackHelper;
-import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.api.CleanableItem;
-import org.jurassicraft.server.container.CleaningStationContainer;
+package org.jurassicraft.server.block.entity;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -11,10 +6,10 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntityLockable;
@@ -24,6 +19,9 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.api.CleanableItem;
+import org.jurassicraft.server.container.CleaningStationContainer;
 
 public class CleaningStationBlockEntity extends TileEntityLockable implements ITickable, ISidedInventory {
     private static final int[] SLOTS_TOP = new int[] { 0 };
@@ -47,8 +45,8 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
     public static boolean isCleaning(IInventory inventory) {
         return inventory.getField(0) > 0;
     }
-    
-    
+
+
 
     public static boolean isItemFuel(ItemStack stack) {
         return stack != null && stack.getItem() == Items.WATER_BUCKET;
@@ -279,9 +277,9 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
 
     private static boolean isStackable(ItemStack slotStack, ItemStack insertingStack) {
         return slotStack.isEmpty() || (ItemStack.areItemsEqual(slotStack, insertingStack)
-                                               && ItemStack.areItemStackTagsEqual(slotStack, insertingStack)
-                                               && slotStack.getItemDamage() == insertingStack.getItemDamage()
-                                               && slotStack.getMaxStackSize() - slotStack.getCount() >= insertingStack.getCount());
+                && ItemStack.areItemStackTagsEqual(slotStack, insertingStack)
+                && slotStack.getItemDamage() == insertingStack.getItemDamage()
+                && slotStack.getMaxStackSize() - slotStack.getCount() >= insertingStack.getCount());
     }
 
     @Override
@@ -381,14 +379,14 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
     public void onDataPacket(NetworkManager networkManager, SPacketUpdateTileEntity packet) {
         this.readFromNBT(packet.getNbtCompound());
     }
-    
+
     @Override
     public boolean isUsableByPlayer(EntityPlayer player) {
         return this.world.getTileEntity(this.pos) == this && player.getDistanceSq((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D) <= 64.0D;
     }
 
-	@Override
-	public boolean isEmpty() {
-		return false;
-	}
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
 }

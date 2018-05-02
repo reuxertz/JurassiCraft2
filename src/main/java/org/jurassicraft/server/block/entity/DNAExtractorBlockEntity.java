@@ -36,7 +36,7 @@ public class DNAExtractorBlockEntity extends MachineBaseBlockEntity {
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        
+
         ItemStackHelper.loadAllItems(compound, this.slots);
     }
 
@@ -45,10 +45,10 @@ public class DNAExtractorBlockEntity extends MachineBaseBlockEntity {
         compound = super.writeToNBT(compound);
 
         ItemStackHelper.saveAllItems(compound, this.slots);
-        
+
         return compound;
     }
-    
+
     @Override
     protected boolean canProcess(int process) {
         ItemStack extraction = this.slots.get(0);
@@ -185,12 +185,12 @@ public class DNAExtractorBlockEntity extends MachineBaseBlockEntity {
         return this.hasCustomName() ? this.customName : "container.dna_extractor";
     }
 
-	@Override
-	public boolean isEmpty() {
-		return false;
-	}
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
 
-	@Override
-	protected void setSlots(NonNullList[] slots) {
-	}
+    @Override
+    protected void setSlots(NonNullList[] slots) {
+    }
 }

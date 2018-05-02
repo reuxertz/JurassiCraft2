@@ -6,29 +6,36 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import org.jurassicraft.server.block.entity.FeederBlockEntity;
 import org.jurassicraft.server.entity.DinosaurEntity;
-import org.jurassicraft.server.entity.ai.Mutex;
+import org.jurassicraft.server.entity.ai.core.Mutex;
 import org.jurassicraft.server.util.GameRuleHandler;
 
-public class FeederEntityAI extends EntityAIBase {
+public class FeederEntityAI extends EntityAIBase
+{
     protected DinosaurEntity dinosaur;
 
     protected Path path;
     protected BlockPos feederPosition;
 
-    public FeederEntityAI(DinosaurEntity dinosaur) {
+    public FeederEntityAI(DinosaurEntity dinosaur)
+    {
         this.dinosaur = dinosaur;
         this.setMutexBits(Mutex.METABOLISM);
     }
 
     @Override
-    public boolean shouldExecute() {
-        if (!this.dinosaur.isCarcass() && !this.dinosaur.isMovementBlocked() && GameRuleHandler.DINO_METABOLISM.getBoolean(this.dinosaur.world)) {
-            if (this.dinosaur.getMetabolism().isHungry()) {
+    public boolean shouldExecute()
+    {
+        if (!this.dinosaur.isCarcass() && !this.dinosaur.isMovementBlocked() && GameRuleHandler.DINO_METABOLISM.getBoolean(this.dinosaur.world))
+        {
+            if (this.dinosaur.getMetabolism().isHungry())
+            {
                 BlockPos feeder = this.dinosaur.getClosestFeeder();
-                if (feeder != null) {
+                if (feeder != null)
+                {
                     this.feederPosition = feeder;
                     this.path = this.dinosaur.getNavigator().getPathToPos(this.feederPosition);
-                    if (this.path != null) {
+                    if (this.path != null)
+                    {
                         return this.dinosaur.getNavigator().setPath(this.path, 1.0);
                     }
                 }
@@ -39,13 +46,17 @@ public class FeederEntityAI extends EntityAIBase {
     }
 
     @Override
-    public void updateTask() {
-        if (this.path != null) {
+    public void updateTask()
+    {
+        if (this.path != null)
+        {
             this.dinosaur.getNavigator().setPath(this.path, 1.0);
         }
-        if (!this.dinosaur.world.isRemote && (this.dinosaur.getDistance(this.feederPosition.getX(), this.feederPosition.getY(), this.feederPosition.getZ()) <= this.dinosaur.width * this.dinosaur.width || this.path.isFinished())) {
+        if (!this.dinosaur.world.isRemote && (this.dinosaur.getDistance(this.feederPosition.getX(), this.feederPosition.getY(), this.feederPosition.getZ()) <= this.dinosaur.width * this.dinosaur.width || this.path.isFinished()))
+        {
             TileEntity tile = this.dinosaur.world.getTileEntity(this.feederPosition);
-            if (tile instanceof FeederBlockEntity) {
+            if (tile instanceof FeederBlockEntity)
+            {
                 FeederBlockEntity feeder = (FeederBlockEntity) tile;
                 feeder.setOpen(true);
                 feeder.setFeeding(this.dinosaur);
@@ -55,13 +66,15 @@ public class FeederEntityAI extends EntityAIBase {
     }
 
     @Override
-    public void resetTask() {
+    public void resetTask()
+    {
         this.path = null;
         this.dinosaur.getNavigator().clearPathEntity();
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
+    public boolean shouldContinueExecuting()
+    {
         return this.dinosaur != null && this.path != null;
     }
 }

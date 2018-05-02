@@ -1,17 +1,18 @@
 package org.jurassicraft.server.dinosaur;
 
-import java.util.ArrayList;
-
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.BiomeDictionary;
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.entity.dinosaur.GallimimusEntity;
 import org.jurassicraft.server.food.FoodType;
 import org.jurassicraft.server.period.TimePeriod;
 
-import net.minecraft.world.biome.Biome;
-import net.minecraftforge.common.BiomeDictionary;
+import java.util.ArrayList;
 
-public class GallimimusDinosaur extends Dinosaur {
-    public GallimimusDinosaur() {
+public class GallimimusDinosaur extends Dinosaur
+{
+    public GallimimusDinosaur()
+    {
         super();
 
         this.setName("Gallimimus");
@@ -39,15 +40,21 @@ public class GallimimusDinosaur extends Dinosaur {
         this.setJumpHeight(3);
         String[][] recipe =
                 {{"", "", "", "neck_vertebrae", "skull"},
-                {"tail_vertebrae", "pelvis", "ribcage","shoulder",""},
-                {"", "leg_bones", "leg_bones", "arm_bones", ""},
-                {"", "foot_bones", "foot_bones", "", ""}};
+                        {"tail_vertebrae", "pelvis", "ribcage", "shoulder", ""},
+                        {"", "leg_bones", "leg_bones", "arm_bones", ""},
+                        {"", "foot_bones", "foot_bones", "", ""}};
         this.setRecipe(recipe);
-        
+
         ArrayList<Biome> biomeList = new ArrayList<Biome>();
         biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.PLAINS));
         biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.DRY));
-        
+
         this.setSpawn(25, biomeList.toArray(new Biome[biomeList.size()]));
+    }
+
+    @Override
+    public String[] getOverlays()
+    {
+        return new String[]{OverlayType.EYE_LIDS.toString()};
     }
 }

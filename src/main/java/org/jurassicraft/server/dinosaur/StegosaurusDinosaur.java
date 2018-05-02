@@ -1,16 +1,17 @@
 package org.jurassicraft.server.dinosaur;
 
-import java.util.ArrayList;
-
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.BiomeDictionary;
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.entity.dinosaur.StegosaurusEntity;
 import org.jurassicraft.server.period.TimePeriod;
 
-import net.minecraft.world.biome.Biome;
-import net.minecraftforge.common.BiomeDictionary;
+import java.util.ArrayList;
 
-public class StegosaurusDinosaur extends Dinosaur{
-    public StegosaurusDinosaur() {
+public class StegosaurusDinosaur extends Dinosaur
+{
+    public StegosaurusDinosaur()
+    {
         super();
 
         this.setName("Stegosaurus");
@@ -38,12 +39,18 @@ public class StegosaurusDinosaur extends Dinosaur{
         this.setMaxHerdSize(15);
         this.setAttackBias(400.0);
         this.setBreeding(false, 2, 6, 48, false, true);
-        
+
         ArrayList<Biome> biomeList = new ArrayList<Biome>();
         biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.PLAINS));
         biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.SPARSE));
         biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.FOREST));
         this.setSpawn(5, biomeList.toArray(new Biome[biomeList.size()]));
+    }
+
+    @Override
+    public String[] getOverlays()
+    {
+        return new String[]{OverlayType.EYE_LIDS.toString()};
     }
 }
 

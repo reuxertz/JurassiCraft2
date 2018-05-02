@@ -140,7 +140,7 @@ public class ItemHandler {
     public static final JournalItem INGEN_JOURNAL = new JournalItem();
 
     public static final JeepWranglerItem JEEP_WRANGLER = new JeepWranglerItem();
-//    public static final FordExplorerItem FORD_EXPLORER = new FordExplorerItem();
+    public static final FordExplorerItem FORD_EXPLORER = new FordExplorerItem();
 
     public static final MuralItem MURAL = new MuralItem();
 
@@ -273,7 +273,7 @@ public class ItemHandler {
         registerItem(IRON_ROD, "Iron Rod");
         registerItem(PLANT_CELLS, "Plant Cells");
         registerItem(PLANT_CALLUS, "Plant Callus");
-//        registerItem(TRACKER, "Tracker");
+        registerItem(TRACKER, "Tracker");
         registerItem(BASIC_CIRCUIT, "Basic Circuit");
         registerItem(ADVANCED_CIRCUIT, "Advanced Circuit");
         registerItemOreDict(IRON_NUGGET, "Iron Nugget", "nuggetIron");
@@ -287,7 +287,7 @@ public class ItemHandler {
         registerItem(PLANT_FOSSIL, "Plant Fossil");
         registerItem(TWIG_FOSSIL, "Twig Fossil");
 
-//        registerItem(HELICOPTER, "Helicopter Spawner");   
+//        registerItem(HELICOPTER, "Helicopter Spawner");
 //        registerItem(MINIGUN_MODULE, "Helicopter Minigun");
 
         registerItem(AMBER_CANE, "Amber Cane");
@@ -296,7 +296,7 @@ public class ItemHandler {
 
         registerItem(DISPLAY_BLOCK, "Display Block Item");
 
-//      registerItem(DINO_SCANNER, "Dino Scanner");
+       registerItem(DINO_SCANNER, "Dino Scanner");
 
         registerItem(GYPSUM_POWDER, "Gypsum Powder");
 
@@ -334,7 +334,7 @@ public class ItemHandler {
         registerItem(CAR_WINDSCREEN, "Car Windscreen");
         registerItem(UNFINISHED_CAR, "Unfinished Car");
         registerItem(JEEP_WRANGLER, "Jeep Wrangler");
-//        registerItem(FORD_EXPLORER, "Ford Explorer");
+        registerItem(FORD_EXPLORER, "Ford Explorer");
 
         registerItem(JURASSICRAFT_THEME_DISC, "Disc JurassiCraft Theme");
         registerItem(TROODONS_AND_RAPTORS_DISC, "Disc Troodons And Raptors");

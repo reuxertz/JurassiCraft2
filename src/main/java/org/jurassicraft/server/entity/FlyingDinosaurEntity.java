@@ -1,30 +1,65 @@
 package org.jurassicraft.server.entity;
 
+import java.util.Random;
+
+import org.jurassicraft.client.model.animation.EntityAnimation;
+import org.jurassicraft.server.entity.ai.DinosaurWanderEntityAI;
+import org.jurassicraft.server.entity.ai.util.MathUtils;
+
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.ai.EntityMoveHelper;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.Random;
-
 public abstract class FlyingDinosaurEntity extends DinosaurEntity {
+	
+	private int ticksOnFloor;
+	
     public FlyingDinosaurEntity(World world) {
         super(world);
         this.moveHelper = new FlyingDinosaurEntity.FlyingMoveHelper();
-        this.tasks.addTask(5, new FlyingDinosaurEntity.AIRandomFly());
-        this.tasks.addTask(7, new FlyingDinosaurEntity.AILookAround());
+        this.tasks.addTask(1, new FlyingDinosaurEntity.AIFlyLand()); 
+        this.tasks.addTask(2, new FlyingDinosaurEntity.AIRandomFly());
+    }
+    
+    @Override
+    public void onEntityUpdate() {
+    	setNoGravity(!isOnGround());
+    	if(isOnGround()) {
+    		ticksOnFloor++;
+    	} else {
+    		ticksOnFloor = 0;
+    	}
+    	super.onEntityUpdate();
+    }
+    
+    @Override
+    public EntityAIBase getWanderAI() {
+    	return new FlyingDinosaurEntity.AIWander();
     }
 
+    public boolean isOnGround() {
+    	return !this.world.getCollisionBoxes(this, this.getEntityBoundingBox().grow(0.3d)).isEmpty();
+    }
+    
     @Override
     public void fall(float distance, float damageMultiplier) {
     }
 
     @Override
     public void moveEntityWithHeading(float strafe, float forward) {
+    	if(isOnGround()) {
+    		super.moveEntityWithHeading(strafe, forward);
+    		return;
+    	}
         if (this.inWater()) {
             this.moveRelative(strafe, forward, 0.02F);
             this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
@@ -75,6 +110,26 @@ public abstract class FlyingDinosaurEntity extends DinosaurEntity {
     public boolean isOnLadder() {
         return false;
     }
+    
+    private boolean isCourseTraversable(Vec3d loc) {
+    	double distance = this.getPositionVector().distanceTo(loc);
+    	distance++;
+        double d4 = (loc.x - this.posX) / distance;
+        double d5 = (loc.y - this.posY) / distance;
+        double d6 = (loc.z - this.posZ) / distance;
+        AxisAlignedBB axisalignedbb = this.getCollisionBoundingBox();
+        if(axisalignedbb == null) {
+        	axisalignedbb = this.getEntityBoundingBox();
+        }
+        for(int i = 1; (double)i < distance; ++i) {
+           axisalignedbb.offset(d4, d5, d6);
+           if(!this.world.getCollisionBoxes(this, axisalignedbb).isEmpty()) {
+              return false;
+           }
+        }
+
+        return true;
+     }
 
     class AIRandomFly extends EntityAIBase {
         private FlyingDinosaurEntity dino = FlyingDinosaurEntity.this;
@@ -85,8 +140,10 @@ public abstract class FlyingDinosaurEntity extends DinosaurEntity {
 
         @Override
         public boolean shouldExecute() {
+        	if(dino.ticksOnFloor <= 150 && dino.isOnGround()) {
+        		return false;
+        	}
             EntityMoveHelper moveHelper = this.dino.getMoveHelper();
-
             if (!moveHelper.isUpdating()) {
                 return true;
             } else {
@@ -104,12 +161,74 @@ public abstract class FlyingDinosaurEntity extends DinosaurEntity {
         }
 
         @Override
+        public void startExecuting() {//TODO: Fix cosine issues. Not sure why they're happening. Maybe clash with diffrent ai or the task being run multiple times??
+    		Vec3d lookVec = new Vec3d(dino.getLookVec().x * 10D, dino.getLookVec().y * 10D, dino.getLookVec().z * 10D).add(new Vec3d(getPosition()));
+            Random random = this.dino.getRNG();
+            for(int i = 0; i < 100; i++) {
+            	double destinationX = this.dino.posX + (double) ((random.nextFloat() * 2.0F - 1.0F) * 16.0F);
+                double destinationY = this.dino.posY + (double) ((random.nextFloat() * 2.0F - 1.0F) * 4.0F);
+                double destinationZ = this.dino.posZ + (double) ((random.nextFloat() * 2.0F - 1.0F) * 16.0F);
+                destinationY = Math.max(destinationY, dino.world.getTopSolidOrLiquidBlock(new BlockPos(destinationX, 100, destinationZ)).getY() + 15); //Don't allow the entity to fly within 15 blocks of the worlds surface. This way the dinos wont get stuck truing to get to underground blocks. TODO: Make a better system for unsticking dinos
+                Vec3d vecPos = new Vec3d(destinationX, destinationY, destinationZ);
+                if(dino.isCourseTraversable(vecPos) && Math.abs(MathUtils.cosineFromPoints(vecPos, lookVec, new Vec3d(getPosition()))) < 45D) //TODO: make angle change depending on speed.
+                {
+                	if(dino.isOnGround()) {
+                    	this.dino.setAnimation(EntityAnimation.FLYING_TAKING_OFF.get());
+
+                	} else {
+                    	this.dino.setAnimation(EntityAnimation.FLYING.get());
+
+                	}
+                	this.dino.motionY += 0.2f;//TODO: defiantly don't leave in
+                	this.dino.getMoveHelper().setMoveTo(destinationX, destinationY, destinationZ, 2D);
+                	return;
+                }
+            }
+        }
+    }
+    
+    class AIFlyLand extends EntityAIBase {
+        private FlyingDinosaurEntity dino = FlyingDinosaurEntity.this;
+
+        public AIFlyLand() {
+            this.setMutexBits(1);
+        }
+
+        @Override
+        public boolean shouldExecute() {
+        	if(dino.ticksOnFloor <= 150 && dino.isOnGround()) {
+        		return false;
+        	}
+        	EntityMoveHelper moveHelper = this.dino.getMoveHelper();
+            if (!moveHelper.isUpdating() && dino.rand.nextFloat() < 0.1f) {
+                return true;
+            } else {
+                double moveX = moveHelper.getX() - this.dino.posX;
+                double moveY = moveHelper.getY() - this.dino.posY;
+                double moveZ = moveHelper.getZ() - this.dino.posZ;
+                double distance = moveX * moveX + moveY * moveY + moveZ * moveZ;
+                if(distance < 1.0D || distance > 3600.0D) {
+                	return this.dino.world.getBlockState(this.dino.getPosition().down()).getMaterial() == Material.AIR && this.dino.getRNG().nextFloat() < 0.01f;//TODO: change float value
+                }
+            }
+        	 return false;
+        }
+        
+        @Override
+        public boolean shouldContinueExecuting() {
+            return false;
+        }
+
+        @Override
         public void startExecuting() {
             Random random = this.dino.getRNG();
             double destinationX = this.dino.posX + (double) ((random.nextFloat() * 2.0F - 1.0F) * 16.0F);
-            double destinationY = this.dino.posY + (double) ((random.nextFloat() * 2.0F - 1.0F) * 16.0F);
             double destinationZ = this.dino.posZ + (double) ((random.nextFloat() * 2.0F - 1.0F) * 16.0F);
-            this.dino.getMoveHelper().setMoveTo(destinationX, destinationY, destinationZ, 1.0D);
+            double destinationY = this.dino.world.getTopSolidOrLiquidBlock(new BlockPos(destinationX, 100, destinationZ)).getY();
+            if(world.getBlockState(new BlockPos(destinationX, destinationY - 1, destinationZ)).getMaterial() != Material.AIR) {
+            	((FlyingMoveHelper)this.dino.getMoveHelper()).setMoveTo(destinationX, destinationY - 1.5D, destinationZ, 2.0D);
+            	this.dino.setAnimation(EntityAnimation.FLYING_LANDING.get());
+            }
         }
     }
 
@@ -121,8 +240,13 @@ public abstract class FlyingDinosaurEntity extends DinosaurEntity {
             super(FlyingDinosaurEntity.this);
         }
 
+
         @Override
         public void onUpdateMoveHelper() {
+        	if(parentEntity.isOnGround()) {
+        		super.onUpdateMoveHelper();
+        		return;
+        	}
             if (this.action == EntityMoveHelper.Action.MOVE_TO) {
                 double distanceX = this.posX - this.parentEntity.posX;
                 double distanceY = this.posY - this.parentEntity.posY;
@@ -133,10 +257,10 @@ public abstract class FlyingDinosaurEntity extends DinosaurEntity {
                     this.timer += this.parentEntity.getRNG().nextInt(5) + 2;
                     distance = (double) MathHelper.sqrt(distance);
 
-                    if (this.isNotColliding(this.posX, this.posY, this.posZ, distance)) {
-                        this.parentEntity.motionX += distanceX / distance * 0.1D;
-                        this.parentEntity.motionY += distanceY / distance * 0.1D;
-                        this.parentEntity.motionZ += distanceZ / distance * 0.1D;
+                    if (this.parentEntity.isCourseTraversable(new Vec3d(this.posX, this.posY, this.posZ))) {
+                        this.parentEntity.motionX += distanceX / distance * this.speed * 0.1D;
+                        this.parentEntity.motionY += distanceY / distance * this.speed * 0.1D;
+                        this.parentEntity.motionZ += distanceZ / distance * this.speed * 0.1D;
                     } else {
                         this.action = EntityMoveHelper.Action.WAIT;
                     }
@@ -189,5 +313,24 @@ public abstract class FlyingDinosaurEntity extends DinosaurEntity {
                 }
             }
         }
+    }
+    
+    class AIWander extends DinosaurWanderEntityAI {
+
+    	private FlyingDinosaurEntity dino = FlyingDinosaurEntity.this;
+    	
+		public AIWander() {
+			super(FlyingDinosaurEntity.this, 0.8D, 10);
+		}
+		
+		@Override
+		public boolean shouldExecute()
+	    {
+			if(!this.dino.isOnGround()) {
+				return false;
+			}
+	        return super.shouldExecute();
+	    }
+    	
     }
 }

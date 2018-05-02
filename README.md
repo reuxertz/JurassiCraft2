@@ -1,44 +1,48 @@
 # [![JurassiCraft2](http://i.imgur.com/3CXpCDv.png)](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2320045)
-JurassiCraft is a mod made to bring prehistoric creatures to the world of Minecraft. It is inspired by Jurassic Park, but is not limited to all JP canon: as many creatures and features as possible will be added! Creatures are made Jurassic Park style, by obtaining fossils or amber, using the fossils or amber to create DNA, inserting the DNA into eggs, and hatching the eggs. The mod recently merged with two other mods, entitled the Bygone Age Mod and the Fossil Hunting Mod, which will bring users a more complete modded-Minecraft experience.
+JurassiCraft is a mod made to bring prehistoric creatures to the world of Minecraft, inspired by Jurassic Park, but is not limited to all JP canon: as many creatures and features as possible will be added! Creatures are made Jurassic Park style, by obtaining fossils or amber, using the fossils or amber to create DNA, inserting the DNA into eggs, and hatching the eggs.
 
 # Contributors
-### Mod Leaders
-TheToteMaster  
-Cody Rex  
-Alpha_Hyperion  
+
+### Branch Leaders
+Reuxertz    
+CarrotJet   
+Kash    
 
 ### Developers
-Cody Rex    
-Alexthe666  
-Twoninefour  
-SanAndreasP
-Goldgamer
-Cazsius 
+JTGhawk137  
+Reuxertz    
+AnarchCassius   
+Collin  
+Wyn
 
 ### Modelers / Texturers
-Cody Rex  
-TheToteMaster  
-Alpha_Hyperion  
-TheJurassicAlien  
-FiskoToodles  
-RaptorWhisper  
+CarrotJet   
+RaptorWhisper   
+HarvNut     
+Bolcko  
 
-### Special Mentions
-Kashmoney  
-jabelar  
+### Special Mentions for all JurassiCraft projects
+
+Jabelar
+
 Gegy
-WorldSEnder  
-TheDurpiDaedric  
-Paul Fulham  
-Cuchololthespanishman  
-Raptorek20  
-jglrxavpok  
-CarrotJet  
-amellinger  
-iLexiconn  
-JTGhawk137  
-BasiliskBoy   
-AlphaMaverick   
+
+WorldSEnder
+
+Paul Fulham
+
+Cuchololthespanishman
+
+Raptorek20
+
+jglrxavpok 
+
+amellinger
+
+iLexiconn
+
+PapaWhale
+
 SoggyMustache 
 
 # Contributing

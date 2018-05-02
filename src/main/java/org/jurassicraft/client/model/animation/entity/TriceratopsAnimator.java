@@ -76,7 +76,6 @@ public class TriceratopsAnimator extends EntityAnimator<TriceratopsEntity> {
         model.chainWave(tail, 0.1F, -0.05F, 1, ticks, 0.25F);
 
         model.faceTarget(rotationYaw, rotationPitch, 1.0F, neck1, neck2, neck3, head);
-
         entity.tailBuffer.applyChainSwingBuffer(tail);
     }
 }

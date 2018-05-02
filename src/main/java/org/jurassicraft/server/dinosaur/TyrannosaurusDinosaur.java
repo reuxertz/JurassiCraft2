@@ -1,16 +1,17 @@
 package org.jurassicraft.server.dinosaur;
 
-import java.util.ArrayList;
-
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.BiomeDictionary;
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.entity.dinosaur.TyrannosaurusEntity;
 import org.jurassicraft.server.period.TimePeriod;
 
-import net.minecraft.world.biome.Biome;
-import net.minecraftforge.common.BiomeDictionary;
+import java.util.ArrayList;
 
-public class TyrannosaurusDinosaur extends Dinosaur {
-    public TyrannosaurusDinosaur() {
+public class TyrannosaurusDinosaur extends Dinosaur
+{
+    public TyrannosaurusDinosaur()
+    {
         super();
 
         this.setName("Tyrannosaurus");
@@ -32,20 +33,26 @@ public class TyrannosaurusDinosaur extends Dinosaur {
         this.setBones("arm_bones", "foot_bones", "leg_bones", "neck_vertebrae", "pelvis", "ribcage", "shoulder_bone", "skull", "tail_vertebrae", "tooth");
         this.setHeadCubeName("Head");
         this.setScale(2.4F, 0.35F);
-        this.setMaxHerdSize(2);
+        this.setMaxHerdSize(3);
         this.setAttackBias(1000.0);
         this.setBreeding(false, 2, 4, 60, false, true);
 
         String[][] recipe = {
-                {"", "", "","neck_vertebrae","skull"},
-                {"tail_vertebrae", "pelvis", "ribcage","shoulder_bone","tooth"},
+                {"", "", "", "neck_vertebrae", "skull"},
+                {"tail_vertebrae", "pelvis", "ribcage", "shoulder_bone", "tooth"},
                 {"", "leg_bones", "leg_bones", "arm_bones", ""},
                 {"", "foot_bones", "foot_bones", "", ""}};
         this.setRecipe(recipe);
-        
+
         ArrayList<Biome> biomeList = new ArrayList<Biome>();
         biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.PLAINS));
         biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.FOREST));
         this.setSpawn(5, biomeList.toArray(new Biome[biomeList.size()]));
+    }
+
+    @Override
+    public String[] getOverlays()
+    {
+        return new String[]{OverlayType.EYE_LIDS.toString(), OverlayType.STRIPES.toString(), OverlayType.MOUTH.toString(), OverlayType.NOSTRILS.toString(), OverlayType.STRIPES.toString(), OverlayType.EYES.toString(), OverlayType.TEETH.toString(), OverlayType.CLAWS.toString()};
     }
 }

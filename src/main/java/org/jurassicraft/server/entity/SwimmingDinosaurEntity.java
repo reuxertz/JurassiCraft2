@@ -7,7 +7,7 @@ import net.minecraft.pathfinding.PathNavigateSwimmer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import org.jurassicraft.server.entity.ai.MoveUnderwaterEntityAI;
+import org.jurassicraft.server.entity.ai.navigation.MoveUnderwaterEntityAI;
 
 public abstract class SwimmingDinosaurEntity extends DinosaurEntity {
     public SwimmingDinosaurEntity(World world) {
@@ -75,7 +75,7 @@ public abstract class SwimmingDinosaurEntity extends DinosaurEntity {
                 distance = (double) MathHelper.sqrt(distance);
                 distanceY /= distance;
                 float f = (float) (Math.atan2(distanceZ, distanceX) * 180.0D / Math.PI) - 90.0F;
-                this.swimmingEntity.rotationYaw = this.limitAngle(this.swimmingEntity.rotationYaw, f, 30.0F);
+                this.swimmingEntity.rotationYaw = this.limitAngle(this.swimmingEntity.rotationYaw, f, 15.0F);
                 this.swimmingEntity.setAIMoveSpeed((float) (this.swimmingEntity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getAttributeValue() * this.speed));
                 this.swimmingEntity.motionY += (double) this.swimmingEntity.getAIMoveSpeed() * distanceY * 0.05D;
             } else {

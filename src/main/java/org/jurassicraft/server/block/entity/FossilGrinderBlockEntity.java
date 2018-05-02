@@ -1,11 +1,5 @@
 package org.jurassicraft.server.block.entity;
 
-import java.util.Random;
-
-import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.api.GrindableItem;
-import org.jurassicraft.server.container.FossilGrinderContainer;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -13,6 +7,11 @@ import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.api.GrindableItem;
+import org.jurassicraft.server.container.FossilGrinderContainer;
+
+import java.util.Random;
 
 public class FossilGrinderBlockEntity extends MachineBaseBlockEntity {
     private static final int[] INPUTS = new int[] { 0, 1, 2, 3, 4, 5 };
@@ -28,7 +27,7 @@ public class FossilGrinderBlockEntity extends MachineBaseBlockEntity {
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        
+
         ItemStackHelper.loadAllItems(compound, this.slots);
     }
 
@@ -37,10 +36,10 @@ public class FossilGrinderBlockEntity extends MachineBaseBlockEntity {
         compound = super.writeToNBT(compound);
 
         ItemStackHelper.saveAllItems(compound, this.slots);
-        
+
         return compound;
     }
-    
+
     @Override
     protected boolean canProcess(int process) {
         for (int inputIndex = 0; inputIndex < 6; inputIndex++) {
@@ -145,12 +144,12 @@ public class FossilGrinderBlockEntity extends MachineBaseBlockEntity {
         return this.hasCustomName() ? this.customName : "container.fossil_grinder";
     }
 
-	@Override
-	public boolean isEmpty() {
-		return false;
-	}
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
 
-	@Override
-	protected void setSlots(NonNullList[] slots) {
-	}
+    @Override
+    protected void setSlots(NonNullList[] slots) {
+    }
 }

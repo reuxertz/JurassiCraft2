@@ -31,7 +31,6 @@ public class RecipeHandler {
             AncientPlanksBlock planks = BlockHandler.ANCIENT_PLANKS.get(type);
 
             GameRegistry.addShapelessRecipe(new ItemStack(planks, 4), BlockHandler.ANCIENT_LOGS.get(type));
-
             GameRegistry.addRecipe(new ItemStack(BlockHandler.ANCIENT_STAIRS.get(type), 4), "w  ", "ww ", "www", 'w', planks);
             GameRegistry.addRecipe(new ItemStack(BlockHandler.ANCIENT_STAIRS.get(type), 4), "  w", " ww", "www", 'w', planks);
             GameRegistry.addRecipe(new ItemStack(BlockHandler.ANCIENT_SLABS.get(type), 6), "www", 'w', planks);

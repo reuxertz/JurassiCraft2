@@ -40,12 +40,15 @@ public class ElectricFenceBaseBlock extends BlockContainer {
 
     private static final AxisAlignedBB EXTENDED_BOUNDS = new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 1.5, 1.0);
 
-    public ElectricFenceBaseBlock() {
+    private FenceType type;
+
+    public ElectricFenceBaseBlock(FenceType type) {
         super(Material.IRON);
         this.setHardness(3.5F);
         this.setCreativeTab(TabHandler.BLOCKS);
         this.setSoundType(SoundType.METAL);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING_BIAS, EnumFacing.NORTH).withProperty(NORTH, false).withProperty(SOUTH, false).withProperty(WEST, false).withProperty(EAST, false));
+        this.type = type;
     }
 
     
@@ -147,7 +150,7 @@ public class ElectricFenceBaseBlock extends BlockContainer {
     }
 
     protected boolean canConnect(IBlockState state) {
-        return state.getBlock() instanceof ElectricFenceBaseBlock;
+        return state.getBlock() instanceof ElectricFenceBaseBlock && ((ElectricFenceBaseBlock) state.getBlock()).getType().equals(type);
     }
 
     @Override
@@ -182,5 +185,10 @@ public class ElectricFenceBaseBlock extends BlockContainer {
                 ((ElectricFencePoleBlock) poleState.getBlock()).updateConnectedWires(world, pos.up());
             }
         }
+    }
+
+    public FenceType getType()
+    {
+        return type;
     }
 }

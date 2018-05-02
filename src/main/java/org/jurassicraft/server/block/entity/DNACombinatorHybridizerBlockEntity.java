@@ -245,9 +245,9 @@ public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntity {
         nbt = super.writeToNBT(nbt);
 
         nbt.setBoolean("HybridizerMode", this.hybridizerMode);
-        
+
         ItemStackHelper.saveAllItems(nbt, this.slots);
-        
+
         return nbt;
     }
 
@@ -266,12 +266,12 @@ public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntity {
         return this.hasCustomName() ? new TextComponentString(this.getName()) : new TextComponentTranslation(this.hybridizerMode ? "container.dna_hybridizer" : "container.dna_combinator");
     }
 
-	@Override
-	public boolean isEmpty() {
-		return false;
-	}
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
 
-	@Override
-	protected void setSlots(NonNullList[] slots) {
-	}
+    @Override
+    protected void setSlots(NonNullList[] slots) {
+    }
 }

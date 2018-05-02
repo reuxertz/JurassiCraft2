@@ -6,17 +6,18 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntitySenses;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -33,12 +34,14 @@ public class ElectricFenceWireBlock extends BlockContainer {
     public static final PropertyBool WEST = PropertyBool.create("west");
     public static final PropertyBool EAST = PropertyBool.create("east");
     public static final PropertyDirection UP_DIRECTION = PropertyDirection.create("up");
+    private FenceType type;
 
-    public ElectricFenceWireBlock() {
+    public ElectricFenceWireBlock(FenceType type) {
         super(Material.IRON);
         this.setHardness(2.0F);
         this.setCreativeTab(TabHandler.BLOCKS);
         this.setSoundType(SoundType.METAL);
+        this.type = type;
     }
 
     @Override
@@ -206,7 +209,7 @@ public class ElectricFenceWireBlock extends BlockContainer {
     }
 
     protected boolean canConnect(IBlockState state) {
-        return state.getBlock() instanceof ElectricFenceWireBlock || state.getBlock() instanceof ElectricFencePoleBlock;
+        return ((state.getBlock() instanceof ElectricFenceWireBlock && ((ElectricFenceWireBlock) state.getBlock()).getType().equals(type))) || state.getBlock() instanceof ElectricFencePoleBlock;
     }
 
     protected boolean canConnect(IBlockAccess world, BlockPos current, BlockPos pos, IBlockState state) {
@@ -236,8 +239,14 @@ public class ElectricFenceWireBlock extends BlockContainer {
         super.onEntityCollidedWithBlock(world, pos, state, entity);
         if (!world.isRemote && !entity.isDead && entity instanceof EntityLivingBase) {
             TileEntity tile = world.getTileEntity(pos);
+            ElectricFenceWireBlock block = (ElectricFenceWireBlock) state.getBlock();
             if (tile instanceof ElectricFenceWireBlockEntity && ((ElectricFenceWireBlockEntity) tile).isPowered()) {
+                if(block.getType().equals(FenceType.LOW))
                 entity.attackEntityFrom(DamageSources.SHOCK, 1.0F);
+                if(block.getType().equals(FenceType.MED))
+                    entity.attackEntityFrom(DamageSources.SHOCK, 2.0F);
+                if(block.getType().equals(FenceType.HIGH))
+                    entity.attackEntityFrom(DamageSources.SHOCK, 3.0F);
                 if (entity instanceof DinosaurEntity) {
                     DinosaurEntity dinosaur = (DinosaurEntity) entity;
                     if (dinosaur.wireTicks < 2) {
@@ -255,5 +264,10 @@ public class ElectricFenceWireBlock extends BlockContainer {
     @Override
     public int getMetaFromState(IBlockState state) {
         return 0;
+    }
+
+    public FenceType getType()
+    {
+        return type;
     }
 }

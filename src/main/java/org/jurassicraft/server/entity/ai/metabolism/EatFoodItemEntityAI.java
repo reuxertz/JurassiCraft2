@@ -6,44 +6,53 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import org.jurassicraft.server.entity.DinosaurEntity;
-import org.jurassicraft.server.entity.ai.Mutex;
+import org.jurassicraft.server.entity.ai.core.Mutex;
 import org.jurassicraft.server.food.FoodHelper;
 import org.jurassicraft.server.util.GameRuleHandler;
 
 import java.util.List;
 
-public class EatFoodItemEntityAI extends EntityAIBase {
+public class EatFoodItemEntityAI extends EntityAIBase
+{
     protected DinosaurEntity dinosaur;
 
     protected EntityItem item;
 
-    public EatFoodItemEntityAI(DinosaurEntity dinosaur) {
+    public EatFoodItemEntityAI(DinosaurEntity dinosaur)
+    {
         this.dinosaur = dinosaur;
         this.setMutexBits(Mutex.METABOLISM);
     }
 
     @Override
-    public boolean shouldExecute() {
-        if (!this.dinosaur.isCarcass() && GameRuleHandler.DINO_METABOLISM.getBoolean(this.dinosaur.world)) {
-            if (this.dinosaur.getMetabolism().isHungry()) {
+    public boolean shouldExecute()
+    {
+        if (!this.dinosaur.isCarcass() && GameRuleHandler.DINO_METABOLISM.getBoolean(this.dinosaur.world))
+        {
+            if (this.dinosaur.getMetabolism().isHungry())
+            {
                 double closestDistance = Integer.MAX_VALUE;
                 EntityItem closest = null;
                 boolean found = false;
                 World world = this.dinosaur.world;
                 List<EntityItem> items = world.getEntitiesWithinAABB(EntityItem.class, this.dinosaur.getEntityBoundingBox().expand(16, 16, 16));
-                for (EntityItem entity : items) {
+                for (EntityItem entity : items)
+                {
                     ItemStack stack = entity.getItem();
                     Item item = stack.getItem();
-                    if (FoodHelper.isEdible(this.dinosaur, this.dinosaur.getDinosaur().getDiet(), item)) {
+                    if (FoodHelper.isEdible(this.dinosaur, this.dinosaur.getDinosaur().getDiet(), item))
+                    {
                         double distance = this.dinosaur.getDistanceSqToEntity(entity);
-                        if (distance < closestDistance) {
+                        if (distance < closestDistance)
+                        {
                             closestDistance = distance;
                             closest = entity;
                             found = true;
                         }
                     }
                 }
-                if (found) {
+                if (found)
+                {
                     this.dinosaur.getNavigator().tryMoveToEntityLiving(closest, 1.0);
                     this.item = closest;
                     return true;
@@ -55,12 +64,14 @@ public class EatFoodItemEntityAI extends EntityAIBase {
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
+    public boolean shouldContinueExecuting()
+    {
         return this.dinosaur != null && !this.dinosaur.getNavigator().noPath() && this.item != null && !this.item.isDead;
     }
 
     @Override
-    public boolean isInterruptible() {
+    public boolean isInterruptible()
+    {
         return false;
     }
 }

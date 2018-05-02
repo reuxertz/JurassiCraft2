@@ -28,7 +28,7 @@ public class DNASynthesizerBlockEntity extends MachineBaseBlockEntity {
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        
+
         ItemStackHelper.loadAllItems(compound, this.slots);
     }
 
@@ -37,10 +37,10 @@ public class DNASynthesizerBlockEntity extends MachineBaseBlockEntity {
         compound = super.writeToNBT(compound);
 
         ItemStackHelper.saveAllItems(compound, this.slots);
-        
+
         return compound;
     }
-    
+
     @Override
     protected boolean canProcess(int process) {
         ItemStack storage = this.slots.get(0);
@@ -129,12 +129,12 @@ public class DNASynthesizerBlockEntity extends MachineBaseBlockEntity {
         return this.hasCustomName() ? this.customName : "container.dna_synthesizer";
     }
 
-	@Override
-	public boolean isEmpty() {
-		return false;
-	}
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
 
-	@Override
-	protected void setSlots(NonNullList[] slots) {
-	}
+    @Override
+    protected void setSlots(NonNullList[] slots) {
+    }
 }

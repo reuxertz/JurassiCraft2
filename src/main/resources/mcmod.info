@@ -4,9 +4,19 @@
         "name": "JurassiCraft",
         "version": "${version}",
 		"mcversion": "${mcversion}",
-        "authorList": ["JurassiCraft Team"],
+        "authorList": ["JurassiCraft-Experimental Team"],
         "url": "http://minecraft.curseforge.com/projects/jurassicraft-2-0",
         "dependencies": [],
         "description": "JurassiCraft is a mod based on Jurassic Park and Jurassic World franchises, but is not only limited to it. This mod allows you to create dinosaurs by extracting DNA from fossils and amber, and putting that through a process until you get a baby dinosaur! Not only does this mod add dinosaurs, it also adds many prehistoric plants, decorations, vehicles and much more!"
+    },
+    {
+        "modid": "genesis",
+        "name": "Genesis",
+        "version": "0.0.1",
+    	"mcversion": "${mcversion}",
+        "authorList": ["JurassiCraft-Experimental Team"],
+        "url": "http://minecraft.curseforge.com/projects/jurassicraft-2-0",
+        "dependencies": [],
+        "description": "Genesis is a side mod to JurassiCraft made for realistic genetics."
     }
 ]

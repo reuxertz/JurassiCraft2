@@ -1,25 +1,17 @@
 package org.jurassicraft.server.entity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.fml.common.ProgressManager;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.api.Hybrid;
-import org.jurassicraft.server.dinosaur.BrachiosaurusDinosaur;
-import org.jurassicraft.server.dinosaur.CoelacanthDinosaur;
-import org.jurassicraft.server.dinosaur.DilophosaurusDinosaur;
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.dinosaur.GallimimusDinosaur;
-import org.jurassicraft.server.dinosaur.MicroraptorDinosaur;
-import org.jurassicraft.server.dinosaur.MussaurusDinosaur;
-import org.jurassicraft.server.dinosaur.ParasaurolophusDinosaur;
-import org.jurassicraft.server.dinosaur.TriceratopsDinosaur;
-import org.jurassicraft.server.dinosaur.TyrannosaurusDinosaur;
-import org.jurassicraft.server.dinosaur.VelociraptorDinosaur;
+import org.jurassicraft.server.dinosaur.*;
+import org.jurassicraft.server.dinosaur.aquatic.AlligatorGarDinosaur;
+import org.jurassicraft.server.dinosaur.aquatic.CoelacanthDinosaur;
 import org.jurassicraft.server.entity.item.AttractionSignEntity;
 import org.jurassicraft.server.entity.item.DinosaurEggEntity;
 import org.jurassicraft.server.entity.item.MuralEntity;
@@ -28,13 +20,7 @@ import org.jurassicraft.server.entity.vehicle.FordExplorerEntity;
 import org.jurassicraft.server.entity.vehicle.JeepWranglerEntity;
 import org.jurassicraft.server.period.TimePeriod;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.Biome;
-import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.fml.common.ProgressManager;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
+import java.util.*;
 
 public class EntityHandler {
     public static final Dinosaur BRACHIOSAURUS = new BrachiosaurusDinosaur();
@@ -47,6 +33,7 @@ public class EntityHandler {
     public static final Dinosaur TRICERATOPS = new TriceratopsDinosaur();
     public static final Dinosaur TYRANNOSAURUS = new TyrannosaurusDinosaur();
     public static final Dinosaur VELOCIRAPTOR = new VelociraptorDinosaur();
+    public static final Dinosaur ALLIGATORGAR = new AlligatorGarDinosaur();
     //public static final Dinosaur STEGOSAURUS = new StegosaurusDinosaur();
 
     private static final Map<Integer, Dinosaur> DINOSAURS = new HashMap<>();
@@ -79,6 +66,7 @@ public class EntityHandler {
         registerDinosaur(13, PARASAUROLOPHUS);
         registerDinosaur(19, TRICERATOPS);
         registerDinosaur(20, TYRANNOSAURUS);
+        registerDinosaur(22, ALLIGATORGAR);
         //registerDinosaur(21, STEGOSAURUS);
 
         dinosaurProgress = ProgressManager.push("Loading dinosaurs", DINOSAURS.size());
@@ -96,7 +84,7 @@ public class EntityHandler {
         registerEntity(FordExplorerEntity.class, "Ford Explorer");
 
         registerEntity(GoatEntity.class, "Goat", 0xEFEDE7, 0x7B3E20);
-        
+
         EntityRegistry.addSpawn(GoatEntity.class, 10, 1, 3, EnumCreatureType.CREATURE, BiomeDictionary.getBiomes(BiomeDictionary.Type.HILLS).toArray(new Biome[0]));
         EntityRegistry.addSpawn(GoatEntity.class, 15, 1, 3, EnumCreatureType.CREATURE, BiomeDictionary.getBiomes(BiomeDictionary.Type.PLAINS).toArray(new Biome[0]));
         EntityRegistry.addSpawn(GoatEntity.class, 15, 1, 3, EnumCreatureType.CREATURE, BiomeDictionary.getBiomes(BiomeDictionary.Type.FOREST).toArray(new Biome[0]));

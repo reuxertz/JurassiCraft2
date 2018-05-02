@@ -44,7 +44,6 @@ import org.jurassicraft.server.container.SkeletonAssemblyContainer;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.DinosaurSerializers;
 import org.jurassicraft.server.entity.EntityHandler;
-import org.jurassicraft.server.entity.villager.VillagerHandler;
 import org.jurassicraft.server.event.ServerEventHandler;
 import org.jurassicraft.server.food.FoodHelper;
 import org.jurassicraft.server.food.FoodNutrients;
@@ -55,7 +54,6 @@ import org.jurassicraft.server.item.JournalItem;
 import org.jurassicraft.server.plant.PlantHandler;
 import org.jurassicraft.server.recipe.RecipeHandler;
 import org.jurassicraft.server.world.WorldGenerator;
-import org.jurassicraft.server.world.structure.StructureGenerationHandler;
 
 public class ServerProxy implements IGuiHandler {
     public static final int GUI_CLEANING_STATION_ID = 0;
@@ -84,11 +82,8 @@ public class ServerProxy implements IGuiHandler {
         RecipeHandler.init();
         AchievementHandler.init();
         StorageTypeRegistry.init();
-        VillagerHandler.init();
 
         FoodNutrients.register();
-
-        StructureGenerationHandler.register();
 
         GameRegistry.registerWorldGenerator(WorldGenerator.INSTANCE, 0);
 

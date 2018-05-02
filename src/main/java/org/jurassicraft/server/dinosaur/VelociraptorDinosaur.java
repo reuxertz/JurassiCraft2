@@ -2,16 +2,17 @@ package org.jurassicraft.server.dinosaur;
 
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
-
-import java.util.ArrayList;
-
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.entity.SleepTime;
 import org.jurassicraft.server.entity.dinosaur.VelociraptorEntity;
 import org.jurassicraft.server.period.TimePeriod;
 
-public class VelociraptorDinosaur extends Dinosaur {
-    public VelociraptorDinosaur() {
+import java.util.ArrayList;
+
+public class VelociraptorDinosaur extends Dinosaur
+{
+    public VelociraptorDinosaur()
+    {
         super();
 
         this.setName("Velociraptor");
@@ -30,28 +31,34 @@ public class VelociraptorDinosaur extends Dinosaur {
         this.setSizeY(0.5F, 1.8F);
         this.setStorage(27);
         this.setDiet(Diet.CARNIVORE.get());
-        this.setSleepTime(SleepTime.CREPUSCULAR);
-        this.setBones("claw", "tooth", "skull","foot_bones","leg_bones","neck_vertebrae","ribcage","shoulder_bone","tail_vertebrae","arm_bones");
+        this.setSleepTime(SleepTime.DIURNAL);
+        this.setBones("claw", "tooth", "skull", "foot_bones", "leg_bones", "neck_vertebrae", "ribcage", "shoulder_bone", "tail_vertebrae", "arm_bones");
         this.setHeadCubeName("Head");
         this.setScale(1.3F, 0.3F);
         this.setImprintable(true);
         this.setDefendOwner(true);
-        this.setMaxHerdSize(8);
+        this.setMaxHerdSize(18);
         this.setAttackBias(800.0);
         this.setCanClimb(true);
-        this.setBreeding(false,1, 7, 28, false, true);
+        this.setBreeding(false, 1, 7, 28, false, true);
         this.setJumpHeight(3);
         String[][] recipe = {
-                {"", "","neck_vertebrae","skull"},
-                {"tail_vertebrae", "ribcage","shoulder_bone","tooth"},
+                {"", "", "neck_vertebrae", "skull"},
+                {"tail_vertebrae", "ribcage", "shoulder_bone", "tooth"},
                 {"leg_bones", "leg_bones", "arm_bones", "claw"},
                 {"foot_bones", "foot_bones", "", ""}};
         this.setRecipe(recipe);
-        
+
         ArrayList<Biome> biomeList = new ArrayList<Biome>();
         biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.JUNGLE));
         biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.FOREST));
         biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.DENSE));
         this.setSpawn(10, biomeList.toArray(new Biome[biomeList.size()]));
+    }
+
+    @Override
+    public String[] getOverlays()
+    {
+        return new String[]{OverlayType.EYE_LIDS.toString()};
     }
 }

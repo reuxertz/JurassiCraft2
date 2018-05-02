@@ -9,7 +9,6 @@ import net.minecraft.item.ItemBucketMilk;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
-
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.container.CultivateContainer;
 import org.jurassicraft.server.dinosaur.Dinosaur;
@@ -39,7 +38,7 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
 
     @Override
     protected boolean canProcess(int process) {
-    	ItemStack itemstack = this.slots.get(0);
+        ItemStack itemstack = this.slots.get(0);
         if (itemstack.getItem() == ItemHandler.SYRINGE && this.waterLevel == 3) {
             Dinosaur dino = EntityHandler.getDinosaurById(itemstack.getItemDamage());
             if (dino != null && (dino.isMammal() || dino.isMarineCreature())) {
@@ -95,9 +94,9 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
 
                     ItemStack stack = this.slots.get(3);
                     if (stack.isEmpty()) {
-                    	this.slots.set(3, new ItemStack(Items.BUCKET));
+                        this.slots.set(3, new ItemStack(Items.BUCKET));
                     } else if (stack.getItem() == Items.BUCKET) {
-                    	stack.grow(1);
+                        stack.grow(1);
                     }
 
                     sync = true;
@@ -175,7 +174,7 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
         this.vitamins = compound.getInteger("Vitamins");
         this.proximates = compound.getInteger("Proximates");
         this.temperature = compound.getInteger("Temperature");
-        
+
         ItemStackHelper.loadAllItems(compound, this.slots);
     }
 
@@ -330,7 +329,7 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
     }
 
     public Dinosaur getDinosaur() {
-    	ItemStack stack = this.slots.get(0);
+        ItemStack stack = this.slots.get(0);
         if (!stack.isEmpty()) {
             return EntityHandler.getDinosaurById(stack.getItemDamage());
         }
@@ -353,27 +352,27 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
         return 1;
     }
 
-	@Override
-	public boolean isEmpty() {
-		return false;
-	}
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
 
-	@Override
-	protected NonNullList<ItemStack> getSlots() {
+    @Override
+    protected NonNullList<ItemStack> getSlots() {
 //        NonNullList<ItemStack> slots = NonNullList.withSize(5, ItemStack.EMPTY);
-		return this.slots;
-	}
+        return this.slots;
+    }
 
-	@Override
-	protected void setSlots(NonNullList<ItemStack> slot) {
+    @Override
+    protected void setSlots(NonNullList<ItemStack> slot) {
 //		ItemStack stack = (ItemStack)this.slots.get(1);
 //		stack.grow(slot.size());
-		this.slots = slot;
-	}
+        this.slots = slot;
+    }
 
-	@Override
-	protected void setSlots(NonNullList[] slots) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    protected void setSlots(NonNullList[] slots) {
+        // TODO Auto-generated method stub
+
+    }
 }

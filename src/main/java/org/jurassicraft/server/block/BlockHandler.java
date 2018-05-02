@@ -29,6 +29,7 @@ import org.jurassicraft.server.block.entity.IncubatorBlockEntity;
 import org.jurassicraft.server.block.fence.ElectricFenceBaseBlock;
 import org.jurassicraft.server.block.fence.ElectricFencePoleBlock;
 import org.jurassicraft.server.block.fence.ElectricFenceWireBlock;
+import org.jurassicraft.server.block.fence.FenceType;
 import org.jurassicraft.server.block.machine.CleaningStationBlock;
 import org.jurassicraft.server.block.machine.CultivatorBottomBlock;
 import org.jurassicraft.server.block.machine.CultivatorTopBlock;
@@ -190,9 +191,17 @@ public class BlockHandler {
     public static final SwarmBlock PLANKTON_SWARM = new SwarmBlock(() -> ItemHandler.PLANKTON);
     public static final SwarmBlock KRILL_SWARM = new SwarmBlock(() -> ItemHandler.KRILL);
 
-    public static final ElectricFencePoleBlock LOW_SECURITY_FENCE_POLE = new ElectricFencePoleBlock();
-    public static final ElectricFenceBaseBlock LOW_SECURITY_FENCE_BASE = new ElectricFenceBaseBlock();
-    public static final ElectricFenceWireBlock LOW_SECURITY_FENCE_WIRE = new ElectricFenceWireBlock();
+    public static ElectricFencePoleBlock LOW_SECURITY_FENCE_POLE;
+    public static ElectricFencePoleBlock MED_SECURITY_FENCE_POLE;
+    public static ElectricFencePoleBlock HIGH_SECURITY_FENCE_POLE;
+
+    public static ElectricFenceBaseBlock LOW_SECURITY_FENCE_BASE;
+    public static ElectricFenceBaseBlock MED_SECURITY_FENCE_BASE;
+    public static ElectricFenceBaseBlock HIGH_SECURITY_FENCE_BASE;
+
+    public static ElectricFenceWireBlock LOW_SECURITY_FENCE_WIRE;
+    public static ElectricFenceWireBlock MED_SECURITY_FENCE_WIRE;
+    public static ElectricFenceWireBlock HIGH_SECURITY_FENCE_WIRE;
 
     public static final JPMainGateBlock JP_MAIN_GATE_BLOCK = new JPMainGateBlock();
     public static final TourRailBlock TOUR_RAIL = new TourRailBlock(false);
@@ -284,8 +293,8 @@ public class BlockHandler {
 
         registerBlock(PLANKTON_SWARM, "Plankton Swarm");
         registerBlock(KRILL_SWARM, "Krill Swarm");
-//        registerBlock(TOUR_RAIL, "Tour Rail");
-//        registerBlock(TOUR_RAIL_POWERED, "Powered Tour Rail");
+        registerBlock(TOUR_RAIL, "Tour Rail");
+        registerBlock(TOUR_RAIL_POWERED, "Powered Tour Rail");
 
         registerBlock(SKELETON_ASSEMBLY, "Skeleton Assembly");
 //        registerBlock(JP_MAIN_GATE_BLOCK, "Jurassic Park Gate");
@@ -304,15 +313,39 @@ public class BlockHandler {
         registerBlock(DisplayBlockEntity.class, DISPLAY_BLOCK, "Display Block");
         registerBlock(FeederBlockEntity.class, FEEDER, "Feeder");
         registerBlock(BugCrateBlockEntity.class, BUG_CRATE, "Bug Crate");
-        registerBlock(ElectricFencePoleBlockEntity.class, LOW_SECURITY_FENCE_POLE, "Low Security Fence Pole");
-        registerBlock(ElectricFenceBaseBlockEntity.class, LOW_SECURITY_FENCE_BASE, "Low Security Fence Base");
-        registerBlock(ElectricFenceWireBlockEntity.class, LOW_SECURITY_FENCE_WIRE, "Low Security Fence Wire");
+        GameRegistry.registerTileEntity(ElectricFenceWireBlockEntity.class, "tileEntityElectricFence");
+        GameRegistry.registerTileEntity(ElectricFencePoleBlockEntity.class, "tileEntityElectricPole");
+        GameRegistry.registerTileEntity(ElectricFenceBaseBlockEntity.class, "tileEntityElectricBase");
 
         PALEO_BALE_CYCADEOIDEA = new PaleoBaleBlock(PaleoBaleBlock.Variant.CYCADEOIDEA);
         PALEO_BALE_CYCAD = new PaleoBaleBlock(PaleoBaleBlock.Variant.CYCAD);
         PALEO_BALE_FERN = new PaleoBaleBlock(PaleoBaleBlock.Variant.FERN);
         PALEO_BALE_LEAVES = new PaleoBaleBlock(PaleoBaleBlock.Variant.LEAVES);
         PALEO_BALE_OTHER = new PaleoBaleBlock(PaleoBaleBlock.Variant.OTHER);
+
+        LOW_SECURITY_FENCE_WIRE = new ElectricFenceWireBlock(FenceType.LOW);
+        MED_SECURITY_FENCE_WIRE = new ElectricFenceWireBlock(FenceType.MED);
+        HIGH_SECURITY_FENCE_WIRE = new ElectricFenceWireBlock(FenceType.HIGH);
+
+        LOW_SECURITY_FENCE_POLE = new ElectricFencePoleBlock(FenceType.LOW);
+        MED_SECURITY_FENCE_POLE = new ElectricFencePoleBlock(FenceType.MED);
+        HIGH_SECURITY_FENCE_POLE = new ElectricFencePoleBlock(FenceType.HIGH);
+
+        LOW_SECURITY_FENCE_BASE = new ElectricFenceBaseBlock(FenceType.LOW);
+        MED_SECURITY_FENCE_BASE = new ElectricFenceBaseBlock(FenceType.MED);
+        HIGH_SECURITY_FENCE_BASE = new ElectricFenceBaseBlock(FenceType.HIGH);
+
+        registerBlock(LOW_SECURITY_FENCE_WIRE, "Low Security Fence Wire");
+        registerBlock(MED_SECURITY_FENCE_WIRE, "Med Security Fence Wire");
+        registerBlock(HIGH_SECURITY_FENCE_WIRE, "High Security Fence Wire");
+
+        registerBlock(LOW_SECURITY_FENCE_POLE, "Low Security Fence Pole");
+        registerBlock(MED_SECURITY_FENCE_POLE, "Med Security Fence Pole");
+        registerBlock(HIGH_SECURITY_FENCE_POLE, "High Security Fence Pole");
+
+        registerBlock(LOW_SECURITY_FENCE_BASE, "Low Security Fence Base");
+        registerBlock(MED_SECURITY_FENCE_BASE, "Med Security Fence Base");
+        registerBlock(HIGH_SECURITY_FENCE_BASE, "High Security Fence Base");
 
         registerBlock(PALEO_BALE_OTHER, "Paleo Bale Other");
         registerBlock(PALEO_BALE_CYCADEOIDEA, "Paleo Bale Cycadeoidea");

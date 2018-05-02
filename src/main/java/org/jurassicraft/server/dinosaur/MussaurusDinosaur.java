@@ -2,15 +2,16 @@ package org.jurassicraft.server.dinosaur;
 
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
-
-import java.util.ArrayList;
-
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.entity.dinosaur.MussaurusEntity;
 import org.jurassicraft.server.period.TimePeriod;
 
-public class MussaurusDinosaur extends Dinosaur {
-    public MussaurusDinosaur() {
+import java.util.ArrayList;
+
+public class MussaurusDinosaur extends Dinosaur
+{
+    public MussaurusDinosaur()
+    {
         super();
         this.setName("Mussaurus");
         this.setDinosaurClass(MussaurusEntity.class);
@@ -24,7 +25,7 @@ public class MussaurusDinosaur extends Dinosaur {
         this.setStrength(1, 2);
         this.setMaximumAge(this.fromDays(30));
         this.setEyeHeight(0.25F, 1.2F);
-        this.setSizeX(0.25F, 1.25F);
+        this.setSizeX(0.25F, 1F);
         this.setSizeY(0.2F, 0.9F);
         this.setStorage(9);
         this.setDiet(Diet.HERBIVORE.get());
@@ -38,15 +39,21 @@ public class MussaurusDinosaur extends Dinosaur {
         this.setOffset(0.0F, 0.0F, 0.5F);
         this.setBreeding(false, 2, 8, 15, false, true);
         String[][] recipe = {
-                        {"", "pelvis", "","",""},
-                        {"tail_vertebrae", "ribcage", "shoulder", "neck_vertebrae", "skull"},
-                        {"leg_bones", "leg_bones", "arm_bones", "arm_bones", "teeth"}};
+                {"", "pelvis", "", "", ""},
+                {"tail_vertebrae", "ribcage", "shoulder", "neck_vertebrae", "skull"},
+                {"leg_bones", "leg_bones", "arm_bones", "arm_bones", "teeth"}};
         this.setRecipe(recipe);
-        
+
         ArrayList<Biome> biomeList = new ArrayList<Biome>();
         biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.PLAINS));
         biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.FOREST));
         this.setSpawn(15, biomeList.toArray(new Biome[biomeList.size()]));
-        
+
+    }
+
+    @Override
+    public String[] getOverlays()
+    {
+        return new String[]{OverlayType.EYE_LIDS.toString()};
     }
 }

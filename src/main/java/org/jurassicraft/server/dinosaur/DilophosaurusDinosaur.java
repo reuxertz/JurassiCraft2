@@ -1,17 +1,18 @@
 package org.jurassicraft.server.dinosaur;
 
-import java.util.ArrayList;
-
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.BiomeDictionary;
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.entity.SleepTime;
 import org.jurassicraft.server.entity.dinosaur.DilophosaurusEntity;
 import org.jurassicraft.server.period.TimePeriod;
 
-import net.minecraft.world.biome.Biome;
-import net.minecraftforge.common.BiomeDictionary;
+import java.util.ArrayList;
 
-public class DilophosaurusDinosaur extends Dinosaur {
-    public DilophosaurusDinosaur() {
+public class DilophosaurusDinosaur extends Dinosaur
+{
+    public DilophosaurusDinosaur()
+    {
         super();
 
         this.setName("Dilophosaurus");
@@ -38,13 +39,19 @@ public class DilophosaurusDinosaur extends Dinosaur {
         this.setMaxHerdSize(10);
         this.setAttackBias(1200.0);
         this.setBreeding(false, 2, 4, 24, false, true);
-        String[][] recipe =     {{"", "", "", "neck", "skull"},
-                                {"tail_vertebrae", "pelvis", "ribcage","shoulder","tooth"},
-                                 {"leg_bones", "leg_bones", "", "", "arm_bones"}};
+        String[][] recipe = {{"", "", "", "neck", "skull"},
+                {"tail_vertebrae", "pelvis", "ribcage", "shoulder", "tooth"},
+                {"leg_bones", "leg_bones", "", "", "arm_bones"}};
         this.setRecipe(recipe);
-        
+
         ArrayList<Biome> biomeList = new ArrayList<Biome>();
         biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.FOREST));
         this.setSpawn(10, biomeList.toArray(new Biome[biomeList.size()]));
+    }
+
+    @Override
+    public String[] getOverlays()
+    {
+        return new String[]{OverlayType.EYE_LIDS.toString()};
     }
 }

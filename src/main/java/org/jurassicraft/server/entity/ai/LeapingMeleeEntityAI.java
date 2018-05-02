@@ -2,26 +2,32 @@ package org.jurassicraft.server.entity.ai;
 
 import net.minecraft.entity.EntityLivingBase;
 import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.ai.core.Mutex;
 
-public class LeapingMeleeEntityAI extends DinosaurAttackMeleeEntityAI {
-    public LeapingMeleeEntityAI(DinosaurEntity entity, double speed) {
+public class LeapingMeleeEntityAI extends DinosaurAttackMeleeEntityAI
+{
+    public LeapingMeleeEntityAI(DinosaurEntity entity, double speed)
+    {
         super(entity, speed, false);
         this.setMutexBits(Mutex.ATTACK);
     }
 
     @Override
-    public boolean shouldExecute() {
+    public boolean shouldExecute()
+    {
         EntityLivingBase target = this.attacker.getAttackTarget();
 
         return super.shouldExecute() && target != null && this.isInRange(target);
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
+    public boolean shouldContinueExecuting()
+    {
         return this.shouldExecute() && super.shouldContinueExecuting();
     }
 
-    private boolean isInRange(EntityLivingBase target) {
+    private boolean isInRange(EntityLivingBase target)
+    {
         float distance = this.attacker.getDistanceToEntity(target);
         float range = this.attacker.width * 6.0F;
         return distance < range - 1.0F || distance > range;

@@ -375,6 +375,14 @@ tile.low_security_fence_pole.name=Low Security Fence Pole
 tile.low_security_fence_base.name=Low Security Fence Base
 tile.low_security_fence_wire.name=Low Security Fence Wire
 
+tile.med_security_fence_pole.name=Medium Security Fence Pole
+tile.med_security_fence_base.name=Medium Security Fence Base
+tile.med_security_fence_wire.name=Medium Security Fence Wire
+
+tile.high_security_fence_pole.name=High Security Fence Pole
+tile.high_security_fence_base.name=High Security Fence Base
+tile.high_security_fence_wire.name=High Security Fence Wire
+
 trackway.biped_medium.name=Biped
 trackway.biped_small.name=Small Biped
 trackway.raptor.name=Raptor
