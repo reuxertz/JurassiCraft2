@@ -18,7 +18,7 @@ public class DNASequencerRenderer extends TileEntitySpecialRenderer<DNASequencer
     private Minecraft mc = Minecraft.getMinecraft();
 
     @Override
-    public void renderTileEntityAt(DNASequencerBlockEntity tileEntity, double x, double y, double z, float p_180535_8_, int p_180535_9_) {
+    public void render(DNASequencerBlockEntity tileEntity, double x, double y, double z, float p_180535_8_, int p_180535_9_, float alpha) {
         World world = tileEntity.getWorld();
 
         IBlockState state = world.getBlockState(tileEntity.getPos());

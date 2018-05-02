@@ -1,5 +1,6 @@
 package org.jurassicraft.server.item.vehicles;
 
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -21,8 +22,8 @@ public class HelicopterItem extends Item {
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, playerIn, tooltip, advanced);
+    public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag tooltipFlag) {
+        super.addInformation(stack, world, tooltip, tooltipFlag);
         tooltip.add("Right click on a block to spawn the helicopter");
     }
 

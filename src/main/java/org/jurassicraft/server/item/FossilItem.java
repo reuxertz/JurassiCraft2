@@ -8,6 +8,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.world.World;
 import org.jurassicraft.server.api.GrindableItem;
 import org.jurassicraft.server.api.Hybrid;
 import org.jurassicraft.server.dinosaur.Dinosaur;
@@ -75,22 +77,22 @@ public class FossilItem extends Item implements GrindableItem {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subtypes) {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subtypes) {
         List<Dinosaur> dinosaurs = new ArrayList<>(EntityHandler.getRegisteredDinosaurs());
 
         Collections.sort(dinosaurs);
 
         List<Dinosaur> dinosaursForType = fossilDinosaurs.get(this.type);
-
+        if(this.getCreativeTab().equals(tab))
         for (Dinosaur dinosaur : dinosaurs) {
             if (dinosaursForType.contains(dinosaur) && !(!this.fresh && dinosaur instanceof Hybrid)) {
-                subtypes.add(new ItemStack(item, 1, EntityHandler.getDinosaurId(dinosaur)));
+                subtypes.add(new ItemStack(this, 1, EntityHandler.getDinosaurId(dinosaur)));
             }
         }
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> lore, boolean advanced) {
+    public void addInformation(ItemStack stack, World worldIn, List<String> lore, ITooltipFlag flagIn) {
         NBTTagCompound nbt = stack.getTagCompound();
 
         if (nbt != null && nbt.hasKey("Genetics") && nbt.hasKey("DNAQuality")) {

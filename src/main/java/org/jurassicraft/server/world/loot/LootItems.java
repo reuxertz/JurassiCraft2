@@ -12,7 +12,7 @@ public class LootItems {
             BlockHandler.LOW_SECURITY_FENCE_BASE, 0, 24,
             ItemHandler.PLANT_FOSSIL, 0, 48,
             ItemHandler.TWIG_FOSSIL, 0, 32,
-            ItemHandler.PLASTER_AND_BANDAGE, 0, 64,
+            //ItemHandler.PLASTER_AND_BANDAGE, 0, 64,
             ItemHandler.IRON_NUGGET, 0, 64,
             Items.IRON_INGOT, 0, 16,
             Items.GOLD_INGOT, 0, 4,

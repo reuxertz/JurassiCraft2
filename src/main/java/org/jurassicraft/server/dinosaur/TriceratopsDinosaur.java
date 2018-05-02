@@ -1,17 +1,16 @@
 package org.jurassicraft.server.dinosaur;
 
-import net.minecraft.world.biome.Biome;
-import net.minecraftforge.common.BiomeDictionary;
+import java.util.ArrayList;
+
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.entity.dinosaur.TriceratopsEntity;
 import org.jurassicraft.server.period.TimePeriod;
 
-import java.util.ArrayList;
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.BiomeDictionary;
 
-public class TriceratopsDinosaur extends Dinosaur
-{
-    public TriceratopsDinosaur()
-    {
+public class TriceratopsDinosaur extends Dinosaur {
+    public TriceratopsDinosaur() {
         super();
 
         this.setName("Triceratops");
@@ -39,22 +38,16 @@ public class TriceratopsDinosaur extends Dinosaur
         this.setAttackBias(400.0);
         this.setBreeding(false, 2, 6, 48, false, true);
         String[][] recipe = {
-                {"", "", "", "", "horn"},
-                {"tail_vertebrae", "pelvis", "ribcage", "neck_vertebrae", "skull"},
+                {"", "", "","","horn"},
+                {"tail_vertebrae", "pelvis", "ribcage","neck_vertebrae","skull"},
                 {"hind_leg_bones", "hind_leg_bones", "", "shoulder_bone", "tooth"},
                 {"", "", "", "front_leg_bones", "front_leg_bones"}};
         this.setRecipe(recipe);
-
+        
         ArrayList<Biome> biomeList = new ArrayList<Biome>();
         biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.PLAINS));
         biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.SPARSE));
         biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.FOREST));
         this.setSpawn(10, biomeList.toArray(new Biome[biomeList.size()]));
-    }
-
-    @Override
-    public String[] getOverlays()
-    {
-        return new String[]{OverlayType.EYE_LIDS.toString()};
     }
 }

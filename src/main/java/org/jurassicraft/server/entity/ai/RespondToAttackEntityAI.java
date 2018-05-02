@@ -5,34 +5,29 @@ import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
 import org.jurassicraft.server.entity.DinosaurEntity;
 
-public class RespondToAttackEntityAI extends EntityAIBase
-{
+public class RespondToAttackEntityAI extends EntityAIBase {
     private DinosaurEntity dinosaur;
     private EntityLivingBase attacker;
 
-    public RespondToAttackEntityAI(DinosaurEntity dinosaur)
-    {
+    public RespondToAttackEntityAI(DinosaurEntity dinosaur) {
         this.dinosaur = dinosaur;
         this.setMutexBits(0);
     }
 
     @Override
-    public boolean shouldExecute()
-    {
+    public boolean shouldExecute() {
         this.attacker = this.dinosaur.getAttackTarget();
 
         return this.attacker != null && !this.attacker.isDead && !(this.attacker instanceof DinosaurEntity && ((DinosaurEntity) this.attacker).isCarcass()) && !(this.attacker instanceof EntityPlayer && ((EntityPlayer) this.attacker).capabilities.isCreativeMode);
     }
 
     @Override
-    public void startExecuting()
-    {
+    public void startExecuting() {
         this.dinosaur.respondToAttack(this.attacker);
     }
 
     @Override
-    public boolean shouldContinueExecuting()
-    {
+    public boolean shouldContinueExecuting() {
         return false;
     }
 }

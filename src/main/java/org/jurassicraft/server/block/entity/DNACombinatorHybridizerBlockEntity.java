@@ -3,7 +3,6 @@ package org.jurassicraft.server.block.entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
@@ -28,7 +27,7 @@ public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntity {
     private static final int[] HYBRIDIZER_OUTPUTS = new int[] { 10 };
     private static final int[] COMBINATOR_OUTPUTS = new int[] { 11 };
 
-    private NonNullList<ItemStack> slots = NonNullList.withSize(12, ItemStack.EMPTY);
+    private NonNullList<ItemStack> slots = NonNullList.<ItemStack>withSize(12, ItemStack.EMPTY);
 
     private boolean hybridizerMode;
 
@@ -88,7 +87,7 @@ public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntity {
     }
 
     private Dinosaur getDino(ItemStack disc) {
-        if (!disc.isEmpty()) {
+        if (disc != null) {
             DinoDNA data = DinoDNA.readFromNBT(disc.getTagCompound());
 
             return data.getDNAQuality() == 100 ? data.getDinosaur() : null;
@@ -100,10 +99,10 @@ public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntity {
     @Override
     protected boolean canProcess(int process) {
         if (this.hybridizerMode) {
-            return this.slots.get(10).isEmpty() && this.getHybrid() != null;
+            return this.slots.get(10) == null && this.getHybrid() != null;
         } else {
-            if (!this.slots.get(8).isEmpty() && this.slots.get(8).getItem() == ItemHandler.STORAGE_DISC && !this.slots.get(9).isEmpty() && this.slots.get(9).getItem() == ItemHandler.STORAGE_DISC) {
-                if (this.slots.get(8).getTagCompound() != null && this.slots.get(9).getTagCompound() != null && this.slots.get(11).isEmpty() && this.slots.get(8).getItemDamage() == this.slots.get(9).getItemDamage() && this.slots.get(8).getTagCompound().getString("StorageId").equals(this.slots.get(9).getTagCompound().getString("StorageId"))) {
+            if (this.slots.get(8) != null && this.slots.get(8).getItem() == ItemHandler.STORAGE_DISC && this.slots.get(9) != null && this.slots.get(9).getItem() == ItemHandler.STORAGE_DISC) {
+                if (this.slots.get(8).getTagCompound() != null && this.slots.get(9).getTagCompound() != null && this.slots.get(11) == null && this.slots.get(8).getItemDamage() == this.slots.get(9).getItemDamage() && this.slots.get(8).getTagCompound().getString("StorageId").equals(this.slots.get(9).getTagCompound().getString("StorageId"))) {
                     return true;
                 }
             }
@@ -237,7 +236,6 @@ public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntity {
         super.readFromNBT(nbt);
 
         this.hybridizerMode = nbt.getBoolean("HybridizerMode");
-        ItemStackHelper.loadAllItems(nbt, this.slots);
     }
 
     @Override
@@ -245,8 +243,6 @@ public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntity {
         nbt = super.writeToNBT(nbt);
 
         nbt.setBoolean("HybridizerMode", this.hybridizerMode);
-
-        ItemStackHelper.saveAllItems(nbt, this.slots);
 
         return nbt;
     }
@@ -266,12 +262,12 @@ public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntity {
         return this.hasCustomName() ? new TextComponentString(this.getName()) : new TextComponentTranslation(this.hybridizerMode ? "container.dna_hybridizer" : "container.dna_combinator");
     }
 
-    @Override
-    public boolean isEmpty() {
-        return false;
-    }
+	@Override
+	public boolean isEmpty() {
+		return false;
+	}
 
-    @Override
-    protected void setSlots(NonNullList[] slots) {
-    }
+	@Override
+	protected void setSlots(NonNullList[] slots) {
+	}
 }

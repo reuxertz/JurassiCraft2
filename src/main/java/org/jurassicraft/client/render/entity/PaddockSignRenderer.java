@@ -1,10 +1,6 @@
 package org.jurassicraft.client.render.entity;
 
-import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -104,7 +100,7 @@ public class PaddockSignRenderer implements IRenderFactory<PaddockSignEntity> {
                     float maxTextureY = (textureHeight - y / pixelSize) / textureHeight;
                     float minTextureY = (textureHeight - (y + 1) / pixelSize) / textureHeight;
                     Tessellator tessellator = Tessellator.getInstance();
-                    VertexBuffer buffer = tessellator.getBuffer();
+                    BufferBuilder buffer = tessellator.getBuffer();
 
                     buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
                     buffer.pos(maxX, minY, 0.0F).tex(minTextureX, maxTextureY).normal(0.0F, 0.0F, -1.0F).endVertex();

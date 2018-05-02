@@ -9,30 +9,25 @@ import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.math.MathHelper;
 import org.jurassicraft.server.entity.DinosaurEntity;
 
-public class DinosaurMoveHelper extends EntityMoveHelper
-{
+public class DinosaurMoveHelper extends EntityMoveHelper {
     private DinosaurEntity dinosaur;
 
-    public DinosaurMoveHelper(DinosaurEntity entity)
-    {
+    public DinosaurMoveHelper(DinosaurEntity entity) {
         super(entity);
         this.dinosaur = entity;
     }
 
     @Override
-    public void onUpdateMoveHelper()
-    {
+    public void onUpdateMoveHelper() {
         float speedAttribute = (float) this.entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getAttributeValue();
 
-        if (this.action == EntityMoveHelper.Action.STRAFE)
-        {
+        if (this.action == EntityMoveHelper.Action.STRAFE) {
             float moveSpeed = (float) (this.speed * speedAttribute);
             float forward = this.moveForward;
             float strafe = this.moveStrafe;
             float moveDistance = MathHelper.sqrt(forward * forward + strafe * strafe);
 
-            if (moveDistance < 1.0F)
-            {
+            if (moveDistance < 1.0F) {
                 moveDistance = 0.8F;
             }
 
@@ -45,12 +40,10 @@ public class DinosaurMoveHelper extends EntityMoveHelper
             float moveZ = strafe * rotationZ + forward * rotationX;
             PathNavigate navigator = this.entity.getNavigator();
 
-            if (navigator != null)
-            {
+            if (navigator != null) {
                 NodeProcessor nodeProcessor = navigator.getNodeProcessor();
 
-                if (nodeProcessor != null && nodeProcessor.getPathNodeType(this.entity.world, MathHelper.floor(this.entity.posX + moveX), MathHelper.floor(this.entity.posY), MathHelper.floor(this.entity.posZ + moveZ)) != PathNodeType.WALKABLE)
-                {
+                if (nodeProcessor != null && nodeProcessor.getPathNodeType(this.entity.world, MathHelper.floor(this.entity.posX + moveX), MathHelper.floor(this.entity.posY), MathHelper.floor(this.entity.posZ + moveZ)) != PathNodeType.WALKABLE) {
                     this.moveForward = 0.9F;
                     this.moveStrafe = 0.0F;
                     moveSpeed = speedAttribute;
@@ -61,16 +54,14 @@ public class DinosaurMoveHelper extends EntityMoveHelper
             this.entity.setMoveForward(this.moveForward);
             this.entity.setMoveStrafing(this.moveStrafe);
             this.action = EntityMoveHelper.Action.WAIT;
-        } else if (this.action == EntityMoveHelper.Action.MOVE_TO)
-        {
+        } else if (this.action == EntityMoveHelper.Action.MOVE_TO) {
             this.action = EntityMoveHelper.Action.WAIT;
             double deltaX = this.posX - this.entity.posX;
             double deltaZ = this.posZ - this.entity.posZ;
             double deltaY = this.posY - this.entity.posY;
             double delta = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
 
-            if (delta < 2.5E-07)
-            {
+            if (delta < 2.5E-07) {
                 this.entity.setMoveForward(0.0F);
                 return;
             }
@@ -79,19 +70,15 @@ public class DinosaurMoveHelper extends EntityMoveHelper
             this.entity.rotationYaw = this.limitAngle(this.entity.rotationYaw, movementDirection, 30);
             this.entity.setAIMoveSpeed((float) (this.speed * speedAttribute));
 
-            if (deltaY > this.entity.stepHeight && deltaX * deltaX + deltaZ * deltaZ < Math.max(1.0F, this.entity.width + (deltaY * deltaY)))
-            {
+            if (deltaY > this.entity.stepHeight && deltaX * deltaX + deltaZ * deltaZ < Math.max(1.0F, this.entity.width + (deltaY * deltaY))) {
                 EntityJumpHelper jumpHelper = this.entity.getJumpHelper();
-                if (jumpHelper instanceof DinosaurJumpHelper && !this.entity.isInLava() && !this.entity.isInWater())
-                {
+                if (jumpHelper instanceof DinosaurJumpHelper && !this.entity.isInLava() && !this.entity.isInWater()) {
                     ((DinosaurJumpHelper) jumpHelper).jump((int) Math.ceil(deltaY));
-                } else
-                {
+                } else {
                     jumpHelper.setJumping();
                 }
             }
-        } else
-        {
+        } else {
             this.entity.setMoveForward(0.0F);
         }
     }

@@ -33,9 +33,10 @@ public class FossilizedEggItem extends Item implements GrindableItem {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+        if(this.getCreativeTab().equals(tab))
         for (NestFossilBlock.Variant variant : NestFossilBlock.Variant.values()) {
-            subItems.add(new ItemStack(item, 1, variant.ordinal()));
+            subItems.add(new ItemStack(this, 1, variant.ordinal()));
         }
     }
 

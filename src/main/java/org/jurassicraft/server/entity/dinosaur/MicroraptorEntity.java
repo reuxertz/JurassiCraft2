@@ -29,8 +29,8 @@ import org.jurassicraft.client.sound.SoundHandler;
 import org.jurassicraft.server.command.KeyBindingHandler;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.ai.LeapingMeleeEntityAI;
-import org.jurassicraft.server.entity.ai.entityspecific.RaptorClimbTreeAI;
-import org.jurassicraft.server.entity.ai.LeapEntityAI;
+import org.jurassicraft.server.entity.ai.RaptorClimbTreeAI;
+import org.jurassicraft.server.entity.ai.RaptorLeapEntityAI;
 import org.jurassicraft.server.entity.ai.animations.BirdPreenAnimationAI;
 import org.jurassicraft.server.entity.ai.animations.TailDisplayAnimationAI;
 import org.jurassicraft.server.message.MicroraptorDismountMessage;
@@ -162,7 +162,7 @@ public class MicroraptorEntity extends DinosaurEntity {
 
     @Override
     public EntityAIBase getAttackAI() {
-        return new LeapEntityAI(this);
+        return new RaptorLeapEntityAI(this);
     }
 
     @Override

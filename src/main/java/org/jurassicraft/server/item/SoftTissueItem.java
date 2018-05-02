@@ -48,14 +48,14 @@ public class SoftTissueItem extends Item implements SequencableItem {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subtypes) {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subtypes) {
         List<Dinosaur> dinosaurs = new LinkedList<>(EntityHandler.getDinosaurs().values());
 
         Collections.sort(dinosaurs);
-
+        if(this.getCreativeTab().equals(tab))
         for (Dinosaur dinosaur : dinosaurs) {
             if (dinosaur.shouldRegister()) {
-                subtypes.add(new ItemStack(item, 1, EntityHandler.getDinosaurId(dinosaur)));
+                subtypes.add(new ItemStack(this, 1, EntityHandler.getDinosaurId(dinosaur)));
             }
         }
     }

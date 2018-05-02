@@ -10,7 +10,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jurassicraft.server.achievements.AchievementHandler;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.EncasedFossilBlock;
 import org.jurassicraft.server.block.FossilBlock;
@@ -41,8 +40,6 @@ public class PlasterAndBandageItem extends Item {
                     if (!player.capabilities.isCreativeMode) {
                         stack.shrink(1);
                     }
-
-                    player.addStat(AchievementHandler.FOSSILS, 1);
                 }
 
                 return EnumActionResult.SUCCESS;
@@ -53,8 +50,6 @@ public class PlasterAndBandageItem extends Item {
                     if (!player.capabilities.isCreativeMode) {
                         stack.shrink(1);
                     }
-
-                    player.addStat(AchievementHandler.FOSSILS, 1);
                 }
 
                 return EnumActionResult.SUCCESS;

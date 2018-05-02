@@ -27,7 +27,6 @@ public final class TourRailBlock extends BlockRail {
     public TourRailBlock(boolean isPowered) {
         this.isPowered = isPowered;
         this.setCreativeTab(isPowered ? null : TabHandler.BLOCKS);
-        this.setUnlocalizedName("tour_rail");
         this.setHarvestLevel("pickaxe", 1);
         this.setHardness(1);
     }

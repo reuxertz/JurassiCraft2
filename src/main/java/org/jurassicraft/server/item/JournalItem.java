@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import net.minecraft.client.util.ITooltipFlag;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.tab.TabHandler;
 
@@ -44,16 +45,17 @@ public class JournalItem extends Item {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+    public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         JournalType type = JournalType.get(stack.getMetadata());
         tooltip.add(I18n.translateToLocal("journal." + type.getIdentifier().getResourcePath() + ".name"));
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+        if(this.getCreativeTab().equals(tab))
         for (JournalType type : JournalType.values()) {
-            subItems.add(new ItemStack(item, 1, type.getMetadata()));
+            items.add(new ItemStack(this, 1, type.getMetadata()));
         }
     }
 

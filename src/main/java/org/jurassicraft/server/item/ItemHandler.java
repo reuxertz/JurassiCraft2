@@ -1,5 +1,7 @@
 package org.jurassicraft.server.item;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -8,8 +10,12 @@ import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemSeedFood;
 import net.minecraft.item.ItemSeeds;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.registries.IForgeRegistry;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.sound.SoundHandler;
 import org.jurassicraft.server.api.Hybrid;
@@ -21,11 +27,12 @@ import org.jurassicraft.server.item.block.AncientDoorItem;
 import org.jurassicraft.server.item.vehicles.HelicopterItem;
 import org.jurassicraft.server.item.vehicles.HelicopterModuleItem;
 import org.jurassicraft.server.tab.TabHandler;
+import org.jurassicraft.server.util.RegistryHandler;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
 
 public class ItemHandler {
     public static final Map<TreeType, AncientDoorItem> ANCIENT_DOORS = new HashMap<>();
@@ -218,7 +225,6 @@ public class ItemHandler {
 
     public static final BasicFoodItem GOAT_RAW = new BasicFoodItem(3, 0.3F, true, TabHandler.FOODS);
     public static final BasicFoodItem GOAT_COOKED = new BasicFoodItem(6, 1.0F, true, TabHandler.FOODS);
-
     public static void init() {
         registerItem(FOSSILIZED_EGG, "Fossilized Egg");
 
@@ -276,7 +282,7 @@ public class ItemHandler {
         registerItem(TRACKER, "Tracker");
         registerItem(BASIC_CIRCUIT, "Basic Circuit");
         registerItem(ADVANCED_CIRCUIT, "Advanced Circuit");
-        registerItemOreDict(IRON_NUGGET, "Iron Nugget", "nuggetIron");
+        registerItem(IRON_NUGGET, "Iron Nugget");
         registerItem(COMPUTER_SCREEN, "Computer Screen");
         registerItem(KEYBOARD, "Keyboard");
         registerItem(DNA_ANALYZER, "DNA Analyzer");
@@ -356,25 +362,21 @@ public class ItemHandler {
         }
     }
 
-    public static void registerTreeType(TreeType type) {
-        String typeName = type.name();
-
-        AncientDoorItem door = new AncientDoorItem(BlockHandler.ANCIENT_DOORS.get(type));
-
-        ANCIENT_DOORS.put(type, door);
-
-        registerItem(door, typeName + " Door Item");
+    public static void registerOres()
+    {
+        OreDictionary.registerOre("nuggetIron", IRON_NUGGET);
     }
 
-    public static void registerItemOreDict(Item item, String name, String oreDict) {
-        registerItem(item, name);
-        OreDictionary.registerOre(oreDict, item);
+    public static void registerTreeType(TreeType type) {
+        String typeName = type.name();
+        AncientDoorItem door = new AncientDoorItem(BlockHandler.ANCIENT_DOORS.get(type));
+        ANCIENT_DOORS.put(type, door);
+        registerItem(door, typeName + " Door Item");
     }
 
     public static void registerItem(Item item, String name) {
         String formattedName = name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_").replaceAll("'", "");
         item.setUnlocalizedName(formattedName);
-
-        GameRegistry.register(item, new ResourceLocation(JurassiCraft.MODID, formattedName));
+        RegistryHandler.registerItem(item, name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_"));
     }
 }

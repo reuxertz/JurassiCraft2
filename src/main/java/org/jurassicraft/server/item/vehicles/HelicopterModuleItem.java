@@ -1,8 +1,10 @@
 package org.jurassicraft.server.item.vehicles;
 
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import org.jurassicraft.server.entity.vehicle.modules.HelicopterModule;
 import org.jurassicraft.server.tab.TabHandler;
 
@@ -21,8 +23,8 @@ public class HelicopterModuleItem extends Item {
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, playerIn, tooltip, advanced);
+    public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag tooltipFlag) {
+        super.addInformation(stack, worldIn, tooltip, tooltipFlag);
         tooltip.add("Right click on a helicopter to attach this module");
     }
 

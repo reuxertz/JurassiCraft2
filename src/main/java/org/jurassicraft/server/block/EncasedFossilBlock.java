@@ -72,7 +72,7 @@ public class EncasedFossilBlock extends Block implements SubBlocksBlock, Cleanab
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubBlocks(Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
+    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
         Map<Integer, Dinosaur> dinosaurs = EntityHandler.getDinosaurs();
 
         for (int i = 0; i < 16; i++) {

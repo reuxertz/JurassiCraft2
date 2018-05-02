@@ -30,7 +30,7 @@ public class ElectricFencePoleRenderer extends TileEntitySpecialRenderer<Electri
     }
 
     @Override
-    public void renderTileEntityAt(ElectricFencePoleBlockEntity tile, double x, double y, double z, float partialTicks, int destroyStage) {
+    public void render(ElectricFencePoleBlockEntity tile, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         if (tile != null) {
             boolean active = false;
 

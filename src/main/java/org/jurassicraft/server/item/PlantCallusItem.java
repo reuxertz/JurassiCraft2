@@ -9,6 +9,7 @@ import org.jurassicraft.server.block.plant.DoublePlantBlock;
 import org.jurassicraft.server.block.plant.JCBlockCropsBase;
 import org.jurassicraft.server.plant.Plant;
 import org.jurassicraft.server.plant.PlantHandler;
+import org.jurassicraft.server.tab.TabHandler;
 import org.jurassicraft.server.util.LangHelper;
 
 import net.minecraft.block.Block;
@@ -28,7 +29,7 @@ import net.minecraft.world.World;
 public class PlantCallusItem extends Item {
     public PlantCallusItem() {
         super();
-
+        this.setCreativeTab(TabHandler.PLANTS);
         this.setHasSubtypes(true);
     }
 
@@ -67,13 +68,13 @@ public class PlantCallusItem extends Item {
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
         List<Plant> plants = new LinkedList<>(PlantHandler.getPrehistoricPlantsAndTrees());
         Collections.sort(plants);
-
+        if(this.getCreativeTab().equals(tab))
         for (Plant plant : plants) {
             if (plant.shouldRegister()) {
-                subItems.add(new ItemStack(item, 1, PlantHandler.getPlantId(plant)));
+                subItems.add(new ItemStack(this, 1, PlantHandler.getPlantId(plant)));
             }
         }
     }

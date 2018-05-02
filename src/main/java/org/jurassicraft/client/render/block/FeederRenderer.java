@@ -32,7 +32,7 @@ public class FeederRenderer extends TileEntitySpecialRenderer<FeederBlockEntity>
     }
 
     @Override
-    public void renderTileEntityAt(FeederBlockEntity tile, double x, double y, double z, float partialTicks, int destroyStage) {
+    public void render(FeederBlockEntity tile, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         IBlockState blockState = tile.getWorld().getBlockState(tile.getPos());
 
         if (blockState.getBlock() == BlockHandler.FEEDER) {

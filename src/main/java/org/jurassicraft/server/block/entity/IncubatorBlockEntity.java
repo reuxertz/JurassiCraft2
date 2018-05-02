@@ -1,19 +1,19 @@
 package org.jurassicraft.server.block.entity;
 
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.NonNullList;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.api.IncubatorEnvironmentItem;
 import org.jurassicraft.server.container.IncubatorContainer;
 import org.jurassicraft.server.item.DinosaurEggItem;
 import org.jurassicraft.server.item.ItemHandler;
+
+import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 
 public class IncubatorBlockEntity extends MachineBaseBlockEntity implements TemperatureControl {
     private static final int[] INPUTS = new int[] { 0, 1, 2, 3, 4 };
@@ -21,7 +21,7 @@ public class IncubatorBlockEntity extends MachineBaseBlockEntity implements Temp
 
     private int[] temperature = new int[5];
 
-    private NonNullList<ItemStack> slots = NonNullList.withSize(6, ItemStack.EMPTY);
+    private NonNullList<ItemStack> slots = NonNullList.<ItemStack>withSize(6, ItemStack.EMPTY);
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
@@ -30,8 +30,6 @@ public class IncubatorBlockEntity extends MachineBaseBlockEntity implements Temp
         for (int i = 0; i < this.getProcessCount(); i++) {
             this.temperature[i] = compound.getShort("Temperature" + i);
         }
-
-        ItemStackHelper.loadAllItems(compound, this.slots);
     }
 
     @Override
@@ -41,8 +39,6 @@ public class IncubatorBlockEntity extends MachineBaseBlockEntity implements Temp
         for (int i = 0; i < this.getProcessCount(); i++) {
             compound.setShort("Temperature" + i, (short) this.temperature[i]);
         }
-
-        ItemStackHelper.saveAllItems(compound, this.slots);
 
         return compound;
     }
@@ -61,7 +57,7 @@ public class IncubatorBlockEntity extends MachineBaseBlockEntity implements Temp
         ItemStack environment = this.slots.get(5);
         boolean hasEnvironment = false;
 
-        if (!environment.isEmpty()) {
+        if (environment != null) {
             Item item = environment.getItem();
 
             if (item instanceof IncubatorEnvironmentItem || Block.getBlockFromItem(item) instanceof IncubatorEnvironmentItem) {
@@ -69,7 +65,7 @@ public class IncubatorBlockEntity extends MachineBaseBlockEntity implements Temp
             }
         }
 
-        return hasEnvironment && !this.slots.get(process).isEmpty() && this.slots.get(process).getCount() > 0 && this.slots.get(process).getItem() instanceof DinosaurEggItem;
+        return hasEnvironment && this.slots.get(process) != null && this.slots.get(process).getCount() > 0 && this.slots.get(process).getItem() instanceof DinosaurEggItem;
     }
 
     @Override
@@ -193,12 +189,12 @@ public class IncubatorBlockEntity extends MachineBaseBlockEntity implements Temp
         return this.temperature.length;
     }
 
-    @Override
-    public boolean isEmpty() {
-        return false;
-    }
+	@Override
+	public boolean isEmpty() {
+		return false;
+	}
 
-    @Override
-    protected void setSlots(NonNullList[] slots) {
-    }
+	@Override
+	protected void setSlots(NonNullList[] slots) {
+	}
 }

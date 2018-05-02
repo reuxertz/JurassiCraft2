@@ -3,94 +3,27 @@ package org.jurassicraft.server.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
-import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.api.SubBlocksBlock;
-import org.jurassicraft.server.block.entity.BugCrateBlockEntity;
-import org.jurassicraft.server.block.entity.CleaningStationBlockEntity;
-import org.jurassicraft.server.block.entity.CultivatorBlockEntity;
-import org.jurassicraft.server.block.entity.DNACombinatorHybridizerBlockEntity;
-import org.jurassicraft.server.block.entity.DNAExtractorBlockEntity;
-import org.jurassicraft.server.block.entity.DNASequencerBlockEntity;
-import org.jurassicraft.server.block.entity.DNASynthesizerBlockEntity;
-import org.jurassicraft.server.block.entity.DisplayBlockEntity;
-import org.jurassicraft.server.block.entity.ElectricFenceBaseBlockEntity;
-import org.jurassicraft.server.block.entity.ElectricFencePoleBlockEntity;
-import org.jurassicraft.server.block.entity.ElectricFenceWireBlockEntity;
-import org.jurassicraft.server.block.entity.EmbryoCalcificationMachineBlockEntity;
-import org.jurassicraft.server.block.entity.EmbryonicMachineBlockEntity;
-import org.jurassicraft.server.block.entity.FeederBlockEntity;
-import org.jurassicraft.server.block.entity.FossilGrinderBlockEntity;
-import org.jurassicraft.server.block.entity.IncubatorBlockEntity;
+import org.jurassicraft.server.block.entity.*;
 import org.jurassicraft.server.block.fence.ElectricFenceBaseBlock;
 import org.jurassicraft.server.block.fence.ElectricFencePoleBlock;
 import org.jurassicraft.server.block.fence.ElectricFenceWireBlock;
 import org.jurassicraft.server.block.fence.FenceType;
-import org.jurassicraft.server.block.machine.CleaningStationBlock;
-import org.jurassicraft.server.block.machine.CultivatorBottomBlock;
-import org.jurassicraft.server.block.machine.CultivatorTopBlock;
-import org.jurassicraft.server.block.machine.DNACombinatorHybridizerBlock;
-import org.jurassicraft.server.block.machine.DNAExtractorBlock;
-import org.jurassicraft.server.block.machine.DNASequencerBlock;
-import org.jurassicraft.server.block.machine.DNASynthesizerBlock;
-import org.jurassicraft.server.block.machine.EmbryoCalcificationMachineBlock;
-import org.jurassicraft.server.block.machine.EmbryonicMachineBlock;
-import org.jurassicraft.server.block.machine.FeederBlock;
-import org.jurassicraft.server.block.machine.FossilGrinderBlock;
-import org.jurassicraft.server.block.machine.IncubatorBlock;
-import org.jurassicraft.server.block.machine.SkeletonAssemblyBlock;
-import org.jurassicraft.server.block.plant.AjuginuculaSmithiiBlock;
-import org.jurassicraft.server.block.plant.AncientCoralBlock;
-import org.jurassicraft.server.block.plant.AncientPlantBlock;
-import org.jurassicraft.server.block.plant.BennettitaleanCycadeoideaBlock;
-import org.jurassicraft.server.block.plant.CycadZamitesBlock;
-import org.jurassicraft.server.block.plant.DicksoniaBlock;
-import org.jurassicraft.server.block.plant.DicroidiumZuberiBlock;
-import org.jurassicraft.server.block.plant.DictyophyllumBlock;
-import org.jurassicraft.server.block.plant.DoublePlantBlock;
-import org.jurassicraft.server.block.plant.EncephalartosBlock;
-import org.jurassicraft.server.block.plant.GracilariaBlock;
-import org.jurassicraft.server.block.plant.LiriodendritesBlock;
-import org.jurassicraft.server.block.plant.MossBlock;
-import org.jurassicraft.server.block.plant.OrontiumMackiiBlock;
-import org.jurassicraft.server.block.plant.RaphaeliaBlock;
-import org.jurassicraft.server.block.plant.RhamnusSalifocifusBlock;
-import org.jurassicraft.server.block.plant.ScalyTreeFernBlock;
-import org.jurassicraft.server.block.plant.SerennaVeriformansBlock;
-import org.jurassicraft.server.block.plant.SmallChainFernBlock;
-import org.jurassicraft.server.block.plant.SmallCycadBlock;
-import org.jurassicraft.server.block.plant.SmallPlantBlock;
-import org.jurassicraft.server.block.plant.SmallRoyalFernBlock;
-import org.jurassicraft.server.block.plant.UmaltolepisBlock;
-import org.jurassicraft.server.block.plant.WestIndianLilacBlock;
-import org.jurassicraft.server.block.plant.WildOnionBlock;
-import org.jurassicraft.server.block.plant.WildPotatoBlock;
-import org.jurassicraft.server.block.tree.AncientDoorBlock;
-import org.jurassicraft.server.block.tree.AncientDoubleSlabBlock;
-import org.jurassicraft.server.block.tree.AncientFenceBlock;
-import org.jurassicraft.server.block.tree.AncientFenceGateBlock;
-import org.jurassicraft.server.block.tree.AncientLeavesBlock;
-import org.jurassicraft.server.block.tree.AncientLogBlock;
-import org.jurassicraft.server.block.tree.AncientPlanksBlock;
-import org.jurassicraft.server.block.tree.AncientSaplingBlock;
-import org.jurassicraft.server.block.tree.AncientSlabHalfBlock;
-import org.jurassicraft.server.block.tree.AncientStairsBlock;
-import org.jurassicraft.server.block.tree.TreeType;
+import org.jurassicraft.server.block.machine.*;
+import org.jurassicraft.server.block.plant.*;
+import org.jurassicraft.server.block.tree.*;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.item.ItemHandler;
+import org.jurassicraft.server.util.RegistryHandler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
-public class BlockHandler {
+public class BlockHandler
+{
     public static final Map<TreeType, AncientPlanksBlock> ANCIENT_PLANKS = new HashMap<>();
     public static final Map<TreeType, AncientLogBlock> ANCIENT_LOGS = new HashMap<>();
     public static final Map<TreeType, AncientLeavesBlock> ANCIENT_LEAVES = new HashMap<>();
@@ -190,25 +123,12 @@ public class BlockHandler {
 
     public static final SwarmBlock PLANKTON_SWARM = new SwarmBlock(() -> ItemHandler.PLANKTON);
     public static final SwarmBlock KRILL_SWARM = new SwarmBlock(() -> ItemHandler.KRILL);
-
-    public static ElectricFencePoleBlock LOW_SECURITY_FENCE_POLE;
-    public static ElectricFencePoleBlock MED_SECURITY_FENCE_POLE;
-    public static ElectricFencePoleBlock HIGH_SECURITY_FENCE_POLE;
-
-    public static ElectricFenceBaseBlock LOW_SECURITY_FENCE_BASE;
-    public static ElectricFenceBaseBlock MED_SECURITY_FENCE_BASE;
-    public static ElectricFenceBaseBlock HIGH_SECURITY_FENCE_BASE;
-
-    public static ElectricFenceWireBlock LOW_SECURITY_FENCE_WIRE;
-    public static ElectricFenceWireBlock MED_SECURITY_FENCE_WIRE;
-    public static ElectricFenceWireBlock HIGH_SECURITY_FENCE_WIRE;
-
-    public static final JPMainGateBlock JP_MAIN_GATE_BLOCK = new JPMainGateBlock();
     public static final TourRailBlock TOUR_RAIL = new TourRailBlock(false);
     public static final TourRailBlock TOUR_RAIL_POWERED = new TourRailBlock(true);
-    
     public static final SkeletonAssemblyBlock SKELETON_ASSEMBLY = new SkeletonAssemblyBlock();
-
+    public static ElectricFencePoleBlock LOW_SECURITY_FENCE_POLE;
+    public static ElectricFenceBaseBlock LOW_SECURITY_FENCE_BASE;
+    public static ElectricFenceWireBlock LOW_SECURITY_FENCE_WIRE;
     public static PaleoBaleBlock PALEO_BALE_CYCADEOIDEA;
     public static PaleoBaleBlock PALEO_BALE_CYCAD;
     public static PaleoBaleBlock PALEO_BALE_FERN;
@@ -216,13 +136,15 @@ public class BlockHandler {
 
     public static PaleoBaleBlock PALEO_BALE_OTHER;
 
-    public static void init() {
+    public static void init()
+    {
         registerBlock(PLANT_FOSSIL, "Plant Fossil Block");
         registerBlock(FOSSILIZED_TRACKWAY, "Fossilized Trackway");
         registerBlock(NEST_FOSSIL, "Nest Fossil");
         registerBlock(ENCASED_NEST_FOSSIL, "Encased Nest Fossil");
 
-        for (int i = 0; i < (int) Math.ceil(EntityHandler.getHighestID() / 16.0F); i++) {
+        for (int i = 0; i < (int) Math.ceil(EntityHandler.getHighestID() / 16.0F); i++)
+        {
             FossilBlock fossil = new FossilBlock(i * 16);
             EncasedFossilBlock encasedFossil = new EncasedFossilBlock(i * 16);
 
@@ -231,11 +153,10 @@ public class BlockHandler {
 
             registerBlock(fossil, "Fossil Block " + i);
             registerBlock(encasedFossil, "Encased Fossil " + i);
-
-            OreDictionary.registerOre("fossil", fossil);
         }
 
-        for (TreeType type : TreeType.values()) {
+        for (TreeType type : TreeType.values())
+        {
             registerTreeType(type);
         }
 
@@ -324,28 +245,13 @@ public class BlockHandler {
         PALEO_BALE_OTHER = new PaleoBaleBlock(PaleoBaleBlock.Variant.OTHER);
 
         LOW_SECURITY_FENCE_WIRE = new ElectricFenceWireBlock(FenceType.LOW);
-        MED_SECURITY_FENCE_WIRE = new ElectricFenceWireBlock(FenceType.MED);
-        HIGH_SECURITY_FENCE_WIRE = new ElectricFenceWireBlock(FenceType.HIGH);
 
         LOW_SECURITY_FENCE_POLE = new ElectricFencePoleBlock(FenceType.LOW);
-        MED_SECURITY_FENCE_POLE = new ElectricFencePoleBlock(FenceType.MED);
-        HIGH_SECURITY_FENCE_POLE = new ElectricFencePoleBlock(FenceType.HIGH);
-
         LOW_SECURITY_FENCE_BASE = new ElectricFenceBaseBlock(FenceType.LOW);
-        MED_SECURITY_FENCE_BASE = new ElectricFenceBaseBlock(FenceType.MED);
-        HIGH_SECURITY_FENCE_BASE = new ElectricFenceBaseBlock(FenceType.HIGH);
 
         registerBlock(LOW_SECURITY_FENCE_WIRE, "Low Security Fence Wire");
-        registerBlock(MED_SECURITY_FENCE_WIRE, "Med Security Fence Wire");
-        registerBlock(HIGH_SECURITY_FENCE_WIRE, "High Security Fence Wire");
-
         registerBlock(LOW_SECURITY_FENCE_POLE, "Low Security Fence Pole");
-        registerBlock(MED_SECURITY_FENCE_POLE, "Med Security Fence Pole");
-        registerBlock(HIGH_SECURITY_FENCE_POLE, "High Security Fence Pole");
-
         registerBlock(LOW_SECURITY_FENCE_BASE, "Low Security Fence Base");
-        registerBlock(MED_SECURITY_FENCE_BASE, "Med Security Fence Base");
-        registerBlock(HIGH_SECURITY_FENCE_BASE, "High Security Fence Base");
 
         registerBlock(PALEO_BALE_OTHER, "Paleo Bale Other");
         registerBlock(PALEO_BALE_CYCADEOIDEA, "Paleo Bale Cycadeoidea");
@@ -354,7 +260,8 @@ public class BlockHandler {
         registerBlock(PALEO_BALE_LEAVES, "Paleo Bale Leaves");
     }
 
-    public static void registerTreeType(TreeType type) {
+    public static void registerTreeType(TreeType type)
+    {
         AncientPlanksBlock planks = new AncientPlanksBlock(type);
         AncientLogBlock log = new AncientLogBlock(type, false);
         AncientLogBlock petrifiedLog = new AncientLogBlock(type, true);
@@ -393,18 +300,6 @@ public class BlockHandler {
         registerBlock(fenceGate, typeName + " Fence Gate");
         registerBlock(door, typeName + " Door");
 
-        OreDictionary.registerOre("logWood", log);
-        OreDictionary.registerOre("logWood", petrifiedLog);
-        OreDictionary.registerOre("plankWood", planks);
-        OreDictionary.registerOre("treeLeaves", leaves);
-        OreDictionary.registerOre("treeSapling", sapling);
-        OreDictionary.registerOre("slabWood", slab);
-        OreDictionary.registerOre("stairWood", stair);
-        OreDictionary.registerOre("fenceWood", fence);
-        OreDictionary.registerOre("gateWood", fenceGate);
-        OreDictionary.registerOre("fenceGateWood", fenceGate);
-        OreDictionary.registerOre("doorWood", door);
-
         Blocks.FIRE.setFireInfo(leaves, 30, 60);
         Blocks.FIRE.setFireInfo(planks, 5, 20);
         Blocks.FIRE.setFireInfo(log, 5, 5);
@@ -416,61 +311,87 @@ public class BlockHandler {
         Blocks.FIRE.setFireInfo(fenceGate, 5, 20);
     }
 
-    public static FossilBlock getFossilBlock(Dinosaur dinosaur) {
+    /**
+     * Ores need to be registered after blocks and items.
+     */
+    public static void registerOres()
+    {
+        for(int i = 0; i < TreeType.values().length; i++)
+        {
+            OreDictionary.registerOre("logWood", ANCIENT_LOGS.get(TreeType.values()[i]));
+            OreDictionary.registerOre("logWood", PETRIFIED_LOGS.get(TreeType.values()[i]));
+            OreDictionary.registerOre("plankWood", ANCIENT_PLANKS.get(TreeType.values()[i]));
+            OreDictionary.registerOre("treeLeaves", ANCIENT_LEAVES.get(TreeType.values()[i]));
+            OreDictionary.registerOre("treeSapling", ANCIENT_SAPLINGS.get(TreeType.values()[i]));
+            OreDictionary.registerOre("slabWood", ANCIENT_SLABS.get(TreeType.values()[i]));
+            OreDictionary.registerOre("stairWood", ANCIENT_STAIRS.get(TreeType.values()[i]));
+            OreDictionary.registerOre("fenceWood", ANCIENT_FENCES.get(TreeType.values()[i]));
+            OreDictionary.registerOre("gateWood", ANCIENT_FENCE_GATES.get(TreeType.values()[i]));
+            OreDictionary.registerOre("fenceGateWood", ANCIENT_FENCE_GATES.get(TreeType.values()[i]));
+            OreDictionary.registerOre("doorWood", ANCIENT_DOORS.get(TreeType.values()[i]));
+        }
+        for(FossilBlock fossil : FOSSILS)
+        {
+            OreDictionary.registerOre("fossil", fossil);
+        }
+    }
+
+    public static FossilBlock getFossilBlock(Dinosaur dinosaur)
+    {
         return getFossilBlock(EntityHandler.getDinosaurId(dinosaur));
     }
 
-    private static int getBlockId(int id) {
+    private static int getBlockId(int id)
+    {
         return (int) (Math.floor((((float) id + 1.0F) / 16.0F) - 0.0625F));
     }
 
-    public static EncasedFossilBlock getEncasedFossil(Dinosaur dinosaur) {
+    public static EncasedFossilBlock getEncasedFossil(Dinosaur dinosaur)
+    {
         return getEncasedFossil(EntityHandler.getDinosaurId(dinosaur));
     }
 
-    public static EncasedFossilBlock getEncasedFossil(int id) {
+    public static EncasedFossilBlock getEncasedFossil(int id)
+    {
         return ENCASED_FOSSILS.get(getBlockId(id));
     }
 
-    public static FossilBlock getFossilBlock(int id) {
+    public static FossilBlock getFossilBlock(int id)
+    {
         return FOSSILS.get(getBlockId(id));
     }
 
-    public static int getDinosaurId(FossilBlock fossil, int metadata) {
+    public static int getDinosaurId(FossilBlock fossil, int metadata)
+    {
         return (FOSSILS.indexOf(fossil) * 16) + metadata;
     }
 
-    public static int getDinosaurId(EncasedFossilBlock fossil, int metadata) {
+    public static int getDinosaurId(EncasedFossilBlock fossil, int metadata)
+    {
         return (ENCASED_FOSSILS.indexOf(fossil) * 16) + metadata;
     }
 
-    public static int getMetadata(int id) {
+    public static int getMetadata(int id)
+    {
         return id % 16;
     }
 
-    public static int getMetadata(Dinosaur dinosaur) {
+    public static int getMetadata(Dinosaur dinosaur)
+    {
         return getMetadata(EntityHandler.getDinosaurId(dinosaur));
     }
 
-    public static void registerBlock(Class<? extends TileEntity> tileEntity, Block block, String name) {
+    public static void registerBlock(Class<? extends TileEntity> tileEntity, Block block, String name)
+    {
         registerBlock(block, name);
-
-        GameRegistry.registerTileEntity(tileEntity, "jurassicraft:" + name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_"));
+        GameRegistry.registerTileEntity(tileEntity, name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_"));
     }
 
-    public static void registerBlock(Block block, String name) {
-        name = name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
-
-        block.setUnlocalizedName(name);
-
-        ResourceLocation resource = new ResourceLocation(JurassiCraft.MODID, name);
-
-        if (block instanceof SubBlocksBlock) {
-            GameRegistry.register(block, resource);
-            GameRegistry.register(((SubBlocksBlock) block).getItemBlock(), resource);
-        } else {
-            GameRegistry.register(block, resource);
-            GameRegistry.register(new ItemBlock(block), resource);
-        }
+    public static void registerBlock(Block block, String name)
+    {
+        if(block instanceof SubBlocksBlock)
+            RegistryHandler.registerBlockWithCustomItem(block, ((SubBlocksBlock) block).getItemBlock(), name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_"));
+        else
+            RegistryHandler.registerBlockWithItem(block, name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_"));
     }
 }

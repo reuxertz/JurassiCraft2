@@ -10,7 +10,7 @@ public class DisplayBlockRenderer extends TileEntitySpecialRenderer<DisplayBlock
     private Minecraft mc = Minecraft.getMinecraft();
 
     @Override
-    public void renderTileEntityAt(DisplayBlockEntity tileEntity, double x, double y, double z, float p_180535_8_, int p_180535_9_) {
+    public void render(DisplayBlockEntity tileEntity, double x, double y, double z, float p_180535_8_, int p_180535_9_, float alpha) {
         GlStateManager.pushMatrix();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.translate(x + 0.5, y, z + 0.5);
@@ -22,7 +22,7 @@ public class DisplayBlockRenderer extends TileEntitySpecialRenderer<DisplayBlock
 
         DinosaurEntity entity = tileEntity.getEntity();
         if (entity != null) {
-            this.mc.getRenderManager().doRenderEntity(entity, 0, 0, 0, 0, 0, false);
+            this.mc.getRenderManager().renderEntity(entity, 0, 0, 0, 0, 0, false);
         }
 
         GlStateManager.popMatrix();

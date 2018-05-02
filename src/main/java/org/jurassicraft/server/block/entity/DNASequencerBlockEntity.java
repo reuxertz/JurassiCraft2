@@ -3,9 +3,7 @@ package org.jurassicraft.server.block.entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.api.SequencableItem;
@@ -22,27 +20,11 @@ public class DNASequencerBlockEntity extends MachineBaseBlockEntity {
 
     private static final int[] OUTPUTS = new int[] { 6, 7, 8 };
 
-    private NonNullList<ItemStack> slots = NonNullList.withSize(9, ItemStack.EMPTY);
+    private NonNullList<ItemStack> slots = NonNullList.<ItemStack>withSize(9, ItemStack.EMPTY);
 
     @Override
     protected int getProcess(int slot) {
         return Math.min(5, (int) Math.floor(slot / 2));
-    }
-
-    @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
-
-        ItemStackHelper.loadAllItems(compound, this.slots);
-    }
-
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        compound = super.writeToNBT(compound);
-
-        ItemStackHelper.saveAllItems(compound, this.slots);
-
-        return compound;
     }
 
     @Override
@@ -55,8 +37,8 @@ public class DNASequencerBlockEntity extends MachineBaseBlockEntity {
         SequencableItem sequencableItem = SequencableItem.getSequencableItem(input);
 
         if (sequencableItem != null && sequencableItem.isSequencable(input)) {
-            if (!storage.isEmpty() && storage.getItem() == ItemHandler.STORAGE_DISC) {
-                if (this.slots.get(process + 6).isEmpty()) {
+            if (storage != null && storage.getItem() == ItemHandler.STORAGE_DISC) {
+                if (this.slots.get(process + 6) == null) {
                     return true;
                 }
             }
@@ -140,12 +122,12 @@ public class DNASequencerBlockEntity extends MachineBaseBlockEntity {
         return this.hasCustomName() ? this.customName : "container.dna_sequencer";
     }
 
-    @Override
-    public boolean isEmpty() {
-        return false;
-    }
+	@Override
+	public boolean isEmpty() {
+		return false;
+	}
 
-    @Override
-    protected void setSlots(NonNullList[] slots) {
-    }
+	@Override
+	protected void setSlots(NonNullList[] slots) {
+	}
 }

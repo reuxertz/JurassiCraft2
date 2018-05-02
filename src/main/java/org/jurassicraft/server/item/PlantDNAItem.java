@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.world.World;
 import org.jurassicraft.server.plant.Plant;
 import org.jurassicraft.server.plant.PlantHandler;
 import org.jurassicraft.server.tab.TabHandler;
@@ -48,7 +50,7 @@ public class PlantDNAItem extends Item {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subtypes) {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subtypes) {
         List<Plant> plants = new LinkedList<>(PlantHandler.getPrehistoricPlantsAndTrees());
 
         Map<Plant, Integer> ids = new HashMap<>();
@@ -58,10 +60,10 @@ public class PlantDNAItem extends Item {
         }
 
         Collections.sort(plants);
-
+        if(this.getCreativeTab().equals(tab))
         for (Plant plant : plants) {
             if (plant.shouldRegister()) {
-                subtypes.add(new ItemStack(item, 1, ids.get(plant)));
+                subtypes.add(new ItemStack(this, 1, ids.get(plant)));
             }
         }
     }
@@ -86,22 +88,22 @@ public class PlantDNAItem extends Item {
         return quality;
     }
 
-    @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> lore, boolean advanced) {
-        int quality = this.getDNAQuality(player, stack);
-
-        TextFormatting formatting;
-
-        if (quality > 75) {
-            formatting = TextFormatting.GREEN;
-        } else if (quality > 50) {
-            formatting = TextFormatting.YELLOW;
-        } else if (quality > 25) {
-            formatting = TextFormatting.GOLD;
-        } else {
-            formatting = TextFormatting.RED;
-        }
-
-        lore.add(formatting + new LangHelper("lore.dna_quality.name").withProperty("quality", quality + "").build());
-    }
+//    @Override
+//    public void addInformation(ItemStack stack, World worldIn, List<String> lore, ITooltipFlag flagIn) {
+//        int quality = this.getDNAQuality(player, stack);
+//
+//        TextFormatting formatting;
+//
+//        if (quality > 75) {
+//            formatting = TextFormatting.GREEN;
+//        } else if (quality > 50) {
+//            formatting = TextFormatting.YELLOW;
+//        } else if (quality > 25) {
+//            formatting = TextFormatting.GOLD;
+//        } else {
+//            formatting = TextFormatting.RED;
+//        }
+//
+//        lore.add(formatting + new LangHelper("lore.dna_quality.name").withProperty("quality", quality + "").build());
+//    }
 }

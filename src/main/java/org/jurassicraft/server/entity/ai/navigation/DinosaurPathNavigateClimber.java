@@ -7,38 +7,31 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jurassicraft.server.entity.DinosaurEntity;
 
-public class DinosaurPathNavigateClimber extends DinosaurPathNavigate
-{
+public class DinosaurPathNavigateClimber extends DinosaurPathNavigate {
     private BlockPos targetPosition;
 
-    public DinosaurPathNavigateClimber(DinosaurEntity entity, World world)
-    {
+    public DinosaurPathNavigateClimber(DinosaurEntity entity, World world) {
         super(entity, world);
     }
 
     @Override
-    public Path getPathToPos(BlockPos pos)
-    {
+    public Path getPathToPos(BlockPos pos) {
         this.targetPosition = pos;
         return super.getPathToPos(pos);
     }
 
     @Override
-    public Path getPathToEntityLiving(Entity entity)
-    {
+    public Path getPathToEntityLiving(Entity entity) {
         this.targetPosition = new BlockPos(entity);
         return super.getPathToEntityLiving(entity);
     }
 
     @Override
-    public boolean tryMoveToEntityLiving(Entity entity, double speed)
-    {
+    public boolean tryMoveToEntityLiving(Entity entity, double speed) {
         Path path = this.getPathToEntityLiving(entity);
-        if (path != null)
-        {
+        if (path != null) {
             return this.setPath(path, speed);
-        } else
-        {
+        } else {
             this.targetPosition = new BlockPos(entity);
             this.speed = speed;
             return true;
@@ -46,23 +39,17 @@ public class DinosaurPathNavigateClimber extends DinosaurPathNavigate
     }
 
     @Override
-    public void onUpdateNavigation()
-    {
-        if (this.noPath())
-        {
-            if (this.targetPosition != null)
-            {
+    public void onUpdateNavigation() {
+        if (this.noPath()) {
+            if (this.targetPosition != null) {
                 double size = (this.entity.width * this.entity.width);
-                if (this.entity.getDistanceSqToCenter(this.targetPosition) >= size && (this.entity.posY <= this.targetPosition.getY() || this.entity.getDistanceSqToCenter(new BlockPos(this.targetPosition.getX(), MathHelper.floor(this.entity.posY), this.targetPosition.getZ())) >= size))
-                {
+                if (this.entity.getDistanceSqToCenter(this.targetPosition) >= size && (this.entity.posY <= this.targetPosition.getY() || this.entity.getDistanceSqToCenter(new BlockPos(this.targetPosition.getX(), MathHelper.floor(this.entity.posY), this.targetPosition.getZ())) >= size)) {
                     this.entity.getMoveHelper().setMoveTo(this.targetPosition.getX(), this.targetPosition.getY(), this.targetPosition.getZ(), this.speed);
-                } else
-                {
+                } else {
                     this.targetPosition = null;
                 }
             }
-        } else
-        {
+        } else {
             super.onUpdateNavigation();
         }
     }

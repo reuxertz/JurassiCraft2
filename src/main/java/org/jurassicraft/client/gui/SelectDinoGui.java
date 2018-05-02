@@ -2,9 +2,9 @@ package org.jurassicraft.client.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -215,7 +215,7 @@ public class SelectDinoGui extends GuiScreen {
         float f = 1.0F / (float) width;
         float f1 = 1.0F / (float) height;
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer vertexBuffer = tessellator.getBuffer();
+        BufferBuilder vertexBuffer = tessellator.getBuffer();
         vertexBuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
         vertexBuffer.pos((double) (x), (double) (y + height), (double) this.zLevel).tex((double) (0), (double) ((float) (height) * f1)).endVertex();
         vertexBuffer.pos((double) (x + width), (double) (y + height), (double) this.zLevel).tex((double) ((float) (width) * f), (double) ((float) (height) * f1)).endVertex();
@@ -237,7 +237,7 @@ public class SelectDinoGui extends GuiScreen {
 
     public void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height, int textureWidth, int textureHeight) {
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer vertexbuffer = tessellator.getBuffer();
+        BufferBuilder vertexbuffer = tessellator.getBuffer();
         vertexbuffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         vertexbuffer.pos(x, y + height, this.zLevel).tex(textureX / textureWidth, (textureY + height) / textureHeight).endVertex();
         vertexbuffer.pos(x + width, y + height, this.zLevel).tex((textureX + width) / textureWidth, (textureY + height) / textureHeight).endVertex();

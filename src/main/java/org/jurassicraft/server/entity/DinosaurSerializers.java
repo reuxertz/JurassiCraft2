@@ -21,6 +21,12 @@ public class DinosaurSerializers {
         public DataParameter<DinosaurEntity.Order> createKey(int id) {
             return new DataParameter<>(id, this);
         }
+
+        @Override
+        public DinosaurEntity.Order copyValue(DinosaurEntity.Order value)
+        {
+            return null;
+        }
     };
 
     public static void register() {

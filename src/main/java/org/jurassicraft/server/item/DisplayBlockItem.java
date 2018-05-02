@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+import net.minecraft.client.util.ITooltipFlag;
 import org.jurassicraft.client.render.RenderingHandler;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.entity.DisplayBlockEntity;
@@ -99,16 +100,16 @@ public class DisplayBlockItem extends Item {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subtypes) {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subtypes) {
         List<Dinosaur> dinosaurs = new LinkedList<>(EntityHandler.getDinosaurs().values());
 
         Collections.sort(dinosaurs);
-
+        if(this.getCreativeTab().equals(tab))
         for (Dinosaur dinosaur : dinosaurs) {
             if (dinosaur.shouldRegister()) {
-                subtypes.add(new ItemStack(item, 1, getMetadata(EntityHandler.getDinosaurId(dinosaur), 0, false)));
+                subtypes.add(new ItemStack(this, 1, getMetadata(EntityHandler.getDinosaurId(dinosaur), 0, false)));
                 for (int variant = 1; variant < 3; variant++) {
-                    subtypes.add(new ItemStack(item, 1, getMetadata(EntityHandler.getDinosaurId(dinosaur), variant, true)));
+                    subtypes.add(new ItemStack(this, 1, getMetadata(EntityHandler.getDinosaurId(dinosaur), variant, true)));
                 }
             }
         }
@@ -144,7 +145,7 @@ public class DisplayBlockItem extends Item {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> lore, boolean advanced) {
+    public void addInformation(ItemStack stack, World world, List<String> lore, ITooltipFlag tooltipFlag) {
         if (!this.isSkeleton(stack)) {
             lore.add(TextFormatting.BLUE + I18n.format("lore.change_gender.name"));
         }

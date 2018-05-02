@@ -6,11 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
@@ -230,7 +226,7 @@ public class FieldGuideGui extends GuiScreen {
 
     private void drawFullTexturedRect(int x, int y, int width, int height) {
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer buffer = tessellator.getBuffer();
+        BufferBuilder buffer = tessellator.getBuffer();
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         buffer.pos(x, y + height, this.zLevel).tex(0.0F, 1.0F).endVertex();
         buffer.pos(x + width, y + height, this.zLevel).tex(1.0F, 1.0F).endVertex();
@@ -273,7 +269,7 @@ public class FieldGuideGui extends GuiScreen {
         GlStateManager.rotate(45.0F, 0.0F, 1.0F, 0.0F);
         float partialTicks = LLibrary.PROXY.getPartialTicks();
         GlStateManager.rotate(ClientUtils.interpolate(entity.prevRenderYawOffset, entity.renderYawOffset, partialTicks), 0.0F, 1.0F, 0.0F);
-        renderManager.doRenderEntity(entity, 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, false);
+        renderManager.renderEntity(entity, 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, false);
         renderManager.setRenderShadow(true);
         GlStateManager.popMatrix();
         RenderHelper.disableStandardItemLighting();
@@ -298,7 +294,7 @@ public class FieldGuideGui extends GuiScreen {
         }
 
         @Override
-        public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+        public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
             if (this.visible) {
                 boolean selected = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);

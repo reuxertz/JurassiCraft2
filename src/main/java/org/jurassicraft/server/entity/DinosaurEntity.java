@@ -19,21 +19,24 @@ import org.jurassicraft.server.block.entity.FeederBlockEntity;
 import org.jurassicraft.server.block.machine.FeederBlock;
 import org.jurassicraft.server.damage.DinosaurDamageSource;
 import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.ai.navigation.AdvancedSwimEntityAI;
+import org.jurassicraft.server.entity.ai.AdvancedSwimEntityAI;
+import org.jurassicraft.server.entity.ai.AssistOwnerEntityAI;
+import org.jurassicraft.server.entity.ai.DefendOwnerEntityAI;
 import org.jurassicraft.server.entity.ai.DinosaurAttackMeleeEntityAI;
-import org.jurassicraft.server.entity.ai.core.DinosaurLookHelper;
+import org.jurassicraft.server.entity.ai.DinosaurLookHelper;
 import org.jurassicraft.server.entity.ai.DinosaurWanderEntityAI;
 import org.jurassicraft.server.entity.ai.EscapeWireEntityAI;
-import org.jurassicraft.server.entity.ai.core.Family;
+import org.jurassicraft.server.entity.ai.Family;
 import org.jurassicraft.server.entity.ai.FleeEntityAI;
-import org.jurassicraft.server.entity.ai.core.Herd;
+import org.jurassicraft.server.entity.ai.FollowOwnerEntityAI;
+import org.jurassicraft.server.entity.ai.Herd;
 import org.jurassicraft.server.entity.ai.MateEntityAI;
 import org.jurassicraft.server.entity.ai.ProtectInfantEntityAI;
-import org.jurassicraft.server.entity.ai.core.Relationship;
+import org.jurassicraft.server.entity.ai.Relationship;
 import org.jurassicraft.server.entity.ai.RespondToAttackEntityAI;
 import org.jurassicraft.server.entity.ai.SelectTargetEntityAI;
 import org.jurassicraft.server.entity.ai.SleepEntityAI;
-import org.jurassicraft.server.entity.ai.core.SmartBodyHelper;
+import org.jurassicraft.server.entity.ai.SmartBodyHelper;
 import org.jurassicraft.server.entity.ai.TargetCarcassEntityAI;
 import org.jurassicraft.server.entity.ai.TemptNonAdultEntityAI;
 import org.jurassicraft.server.entity.ai.animations.CallAnimationAI;
@@ -47,7 +50,6 @@ import org.jurassicraft.server.entity.ai.metabolism.GrazeEntityAI;
 import org.jurassicraft.server.entity.ai.navigation.DinosaurJumpHelper;
 import org.jurassicraft.server.entity.ai.navigation.DinosaurMoveHelper;
 import org.jurassicraft.server.entity.ai.navigation.DinosaurPathNavigate;
-import org.jurassicraft.server.entity.ai.util.MovementType;
 import org.jurassicraft.server.entity.ai.util.OnionTraverser;
 import org.jurassicraft.server.entity.item.DinosaurEggEntity;
 import org.jurassicraft.server.food.FoodHelper;
@@ -228,10 +230,10 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
 
         this.tasks.addTask(1, new TemptNonAdultEntityAI(this, 0.6));
 
-//        if (this.dinosaur.shouldDefendOwner()) {
-//            this.tasks.addTask(2, new DefendOwnerEntityAI(this));
-//            this.tasks.addTask(2, new AssistOwnerEntityAI(this));
-//        }
+        if (this.dinosaur.shouldDefendOwner()) {
+            this.tasks.addTask(2, new DefendOwnerEntityAI(this));
+            this.tasks.addTask(2, new AssistOwnerEntityAI(this));
+        }
 
         if (this.dinosaur.shouldFlee()) {
             this.tasks.addTask(2, new FleeEntityAI(this));
@@ -239,8 +241,8 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
 
         this.tasks.addTask(2, new ProtectInfantEntityAI<>(this));
 
-        this.tasks.addTask(3, this.getWanderAI());
-//        this.tasks.addTask(3, new FollowOwnerEntityAI(this));
+        this.tasks.addTask(3, new DinosaurWanderEntityAI(this, 0.8F, 10));
+        this.tasks.addTask(3, new FollowOwnerEntityAI(this));
 
         this.tasks.addTask(3, this.getAttackAI());
 
@@ -671,7 +673,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         if (!this.isMale() && !this.world.isRemote) {
             if (this.pregnantTime > 0) {
                 if (--this.pregnantTime <= 0) {
-                    this.getNavigator().clearPathEntity();
+                    this.getNavigator().clearPath();
                     this.setAnimation(this.dinosaur.givesDirectBirth() ? EntityAnimation.GIVING_BIRTH.get() : EntityAnimation.LAYING_EGG.get());
                     this.family.setHome(this.getPosition(), 6000);
                     this.children.clear();
@@ -1289,7 +1291,6 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         return this.getSoundForAnimation(EntityAnimation.SPEAK.get());
     }
 
-    @Override
     public SoundEvent getHurtSound() {
         return this.getSoundForAnimation(EntityAnimation.INJURED.get());
     }
@@ -1678,10 +1679,6 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
 
     public EntityAIBase getAttackAI() {
         return new DinosaurAttackMeleeEntityAI(this, this.dinosaur.getAttackSpeed(), false);
-    }
-    
-    public EntityAIBase getWanderAI() {
-    	return new DinosaurWanderEntityAI(this, 0.8F, 10);
     }
 
     public List<Class<? extends EntityLivingBase>> getAttackTargets() {

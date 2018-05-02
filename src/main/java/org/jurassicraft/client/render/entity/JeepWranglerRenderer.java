@@ -55,12 +55,11 @@ public class JeepWranglerRenderer extends Render<JeepWranglerEntity> {
 
     @Override
     public void doRender(JeepWranglerEntity entity, double x, double y, double z, float yaw, float delta) {
-    	float pitch = entity.rotationPitch;
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
         this.bindEntityTexture(entity);
-        this.renderModel(entity, x, y, z, yaw, pitch, false, false);
-        this.renderModel(entity, x, y, z, yaw, pitch, true, false);
+        this.renderModel(entity, x, y, z, yaw, false, false);
+        this.renderModel(entity, x, y, z, yaw, true, false);
         int destroyStage = Math.min(10, (int) (10 - (entity.getHealth() / CarEntity.MAX_HEALTH) * 10)) - 1;
         if (destroyStage >= 0) {
             GlStateManager.color(1, 1, 1, 0.5F);
@@ -69,7 +68,7 @@ public class JeepWranglerRenderer extends Render<JeepWranglerEntity> {
             GlStateManager.enablePolygonOffset();
             RenderHelper.disableStandardItemLighting();
             this.bindTexture(DESTROY_STAGES[destroyStage]);
-            this.renderModel(entity, x, y, z, yaw, pitch, false, true);
+            this.renderModel(entity, x, y, z, yaw, false, true);
             GlStateManager.doPolygonOffset(0, 0);
             GlStateManager.disablePolygonOffset();
             RenderHelper.enableStandardItemLighting();
@@ -78,13 +77,10 @@ public class JeepWranglerRenderer extends Render<JeepWranglerEntity> {
         super.doRender(entity, x, y, z, yaw, delta);
     }
 
-    private void renderModel(JeepWranglerEntity entity, double x, double y, double z, float yaw, float pitch, boolean windscreen, boolean destroy) {
+    private void renderModel(JeepWranglerEntity entity, double x, double y, double z, float yaw, boolean windscreen, boolean destroy) {
         GlStateManager.pushMatrix();
         GlStateManager.translate((float) x, (float) y + 1.25F, (float) z);
         GlStateManager.rotate(180 - yaw, 0, 1, 0);
-        GlStateManager.translate(0, -0.5, 1.4);
-        GlStateManager.rotate(pitch, 1, 0, 0);
-        GlStateManager.translate(0, 0.5, -1.4);
         GlStateManager.scale(-1, -1, 1);
         (windscreen ? this.windscreen : destroy ? this.destroyModel : this.baseModel).render(entity, 0, 0, 0, 0, 0, 0.0625F);
         GlStateManager.popMatrix();

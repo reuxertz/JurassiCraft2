@@ -1,9 +1,18 @@
 package org.jurassicraft.client.sound;
 
+import com.google.common.collect.Lists;
+import net.minecraft.client.audio.Sound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.registries.IForgeRegistry;
 import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.util.RegistryHandler;
+
+import java.util.List;
 
 public class SoundHandler {
     public static final SoundEvent TROODONS_AND_RAPTORS = create("troodons_and_raptors");
@@ -66,8 +75,17 @@ public class SoundHandler {
 
     public static final SoundEvent FENCE_SHOCK = create("fence_shock");
 
-    public static SoundEvent create(String name) {
-        ResourceLocation resource = new ResourceLocation(JurassiCraft.MODID, name);
-        return GameRegistry.register(new SoundEvent(resource), resource);
+    private static List<SoundEvent> sounds = Lists.newArrayList();
+
+
+    public static SoundEvent create(String soundName) {
+        SoundEvent sound = new SoundEvent(new ResourceLocation(JurassiCraft.MODID, soundName));
+        RegistryHandler.registerSound(sound, soundName);
+        return sound;
+    }
+
+    public static List<SoundEvent> getSounds()
+    {
+        return sounds;
     }
 }

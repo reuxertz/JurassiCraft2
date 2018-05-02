@@ -84,7 +84,7 @@ public class ClientProxy extends ServerProxy {
 
         ClientEventHandler eventHandler = new ClientEventHandler();
         MinecraftForge.EVENT_BUS.register(eventHandler);
-
+        MinecraftForge.EVENT_BUS.register(RenderingHandler.INSTANCE);
         RenderingHandler.INSTANCE.preInit();
     }
 

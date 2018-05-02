@@ -47,7 +47,6 @@ public class PlantSoftTissueItem extends Item implements SequencableItem {
         return plant;
     }
 
-    @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subtypes) {
         List<Plant> plants = new LinkedList<>(PlantHandler.getPrehistoricPlantsAndTrees());
@@ -59,7 +58,7 @@ public class PlantSoftTissueItem extends Item implements SequencableItem {
         }
 
         Collections.sort(plants);
-
+        if(this.getCreativeTab().equals(tab))
         for (Plant plant : plants) {
             subtypes.add(new ItemStack(item, 1, ids.get(plant)));
         }

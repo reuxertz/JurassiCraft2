@@ -80,9 +80,10 @@ public class FossilizedTrackwayBlock extends Block implements SubBlocksBlock {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubBlocks(Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
+    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
         for (TrackwayType type : TrackwayType.values()) {
-            list.add(new ItemStack(item, 1, type.ordinal()));
+            if(this.getCreativeTabToDisplayOn().equals(TabHandler.FOSSILS))
+                list.add(new ItemStack(this, 1, type.ordinal()));
         }
     }
 

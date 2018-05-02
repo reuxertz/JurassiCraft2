@@ -7,7 +7,7 @@ import net.minecraft.pathfinding.PathNavigateSwimmer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import org.jurassicraft.server.entity.ai.navigation.MoveUnderwaterEntityAI;
+import org.jurassicraft.server.entity.ai.MoveUnderwaterEntityAI;
 
 public abstract class SwimmingDinosaurEntity extends DinosaurEntity {
     public SwimmingDinosaurEntity(World world) {
@@ -45,16 +45,17 @@ public abstract class SwimmingDinosaurEntity extends DinosaurEntity {
         return this.height * 0.5F;
     }
 
+    /*TODO: make sure this works */
     @Override
-    public void moveEntityWithHeading(float strafe, float forward) {
+    public void travel(float strafe, float vertical, float forward) {
         if (this.isServerWorld() && this.isInWater() && !this.isCarcass()) {
-            this.moveRelative(strafe, forward, 0.1F);
+            this.moveRelative(strafe, forward, 0.1F, 0.1F);
             this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
             this.motionX *= 0.7D;
             this.motionY *= 0.7D;
             this.motionZ *= 0.7D;
         } else {
-            super.moveEntityWithHeading(strafe, forward);
+            super.travel(strafe, vertical, forward);
         }
     }
 
@@ -75,7 +76,7 @@ public abstract class SwimmingDinosaurEntity extends DinosaurEntity {
                 distance = (double) MathHelper.sqrt(distance);
                 distanceY /= distance;
                 float f = (float) (Math.atan2(distanceZ, distanceX) * 180.0D / Math.PI) - 90.0F;
-                this.swimmingEntity.rotationYaw = this.limitAngle(this.swimmingEntity.rotationYaw, f, 15.0F);
+                this.swimmingEntity.rotationYaw = this.limitAngle(this.swimmingEntity.rotationYaw, f, 30.0F);
                 this.swimmingEntity.setAIMoveSpeed((float) (this.swimmingEntity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getAttributeValue() * this.speed));
                 this.swimmingEntity.motionY += (double) this.swimmingEntity.getAIMoveSpeed() * distanceY * 0.05D;
             } else {

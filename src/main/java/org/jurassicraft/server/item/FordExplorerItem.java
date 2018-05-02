@@ -11,7 +11,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jurassicraft.server.block.TourRailBlock;
 import org.jurassicraft.server.entity.vehicle.FordExplorerEntity;
-import org.jurassicraft.server.entity.vehicle.JeepWranglerEntity;
 import org.jurassicraft.server.tab.TabHandler;
 
 public final class FordExplorerItem extends Item {
@@ -21,17 +20,20 @@ public final class FordExplorerItem extends Item {
 
     @Override
     public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        ItemStack stack = player.getHeldItem(hand);
-        if (!world.isRemote) {
-            pos = pos.offset(side);
-
-            FordExplorerEntity entity = new FordExplorerEntity(world);
-            entity.setPositionAndRotation(pos.getX() + 0.5F, pos.getY(), pos.getZ() + 0.5F, player.rotationYaw, 0.0F);
-            world.spawnEntity(entity);
-
-            stack.shrink(1);
+    	ItemStack stack = player.getHeldItem(hand);
+        IBlockState state = world.getBlockState(pos);
+        if (state.getBlock() instanceof TourRailBlock) {
+            if (!world.isRemote) {
+                FordExplorerEntity.OrientatedRail orientatedRail = FordExplorerEntity.OrientatedRail.get(state);
+                FordExplorerEntity entity = new FordExplorerEntity(world);
+                entity.setHead(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
+                entity.rotationYaw = orientatedRail.getOutputVector().getHorizontalAngle();
+                entity.pull();
+                world.spawnEntity(entity);
+                stack.shrink(1);
+            }
+            return EnumActionResult.SUCCESS;
         }
-
-        return EnumActionResult.SUCCESS;
+        return EnumActionResult.PASS;
     }
 }

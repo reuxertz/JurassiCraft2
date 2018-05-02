@@ -1,5 +1,6 @@
 package org.jurassicraft.server.block.machine;
 
+import net.minecraft.world.IBlockAccess;
 import org.jurassicraft.server.api.SubBlocksBlock;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.entity.CultivatorBlockEntity;
@@ -58,11 +59,11 @@ public class CultivatorBlock extends BlockContainer implements SubBlocksBlock {
     
     @SideOnly(Side.CLIENT)
     @Override
-    public void getSubBlocks(Item item, CreativeTabs tab, NonNullList<ItemStack> subtypes) {
+    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> subtypes) {
         EnumDyeColor[] colors = EnumDyeColor.values();
 
         for (EnumDyeColor color : colors) {
-            subtypes.add(new ItemStack(item, 1, color.getMetadata()));
+            subtypes.add(new ItemStack(this, 1, color.getMetadata()));
         }
     }
 
@@ -77,8 +78,9 @@ public class CultivatorBlock extends BlockContainer implements SubBlocksBlock {
     }
 
     @Override
-    public MapColor getMapColor(IBlockState state) {
-        return state.getValue(COLOR).getMapColor();
+    public MapColor getMapColor(IBlockState state, IBlockAccess worldIn, BlockPos pos)
+    {
+        return state.getMapColor(worldIn, pos);
     }
 
     @Override

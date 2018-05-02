@@ -13,6 +13,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -29,7 +30,6 @@ public class DNACombinatorHybridizerBlock extends OrientedBlock {
 
     public DNACombinatorHybridizerBlock() {
         super(Material.IRON);
-        this.setUnlocalizedName("dna_combinator_hybridizer");
         this.setHardness(2.0F);
         this.setSoundType(SoundType.METAL);
         this.setCreativeTab(TabHandler.BLOCKS);
@@ -61,7 +61,7 @@ public class DNACombinatorHybridizerBlock extends OrientedBlock {
 
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new DNACombinatorHybridizerBlockEntity();
+        return new DNACombinatorHybridizerBlockEntity(); 
     }
 
     @Override

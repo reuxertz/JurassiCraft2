@@ -21,10 +21,11 @@ import org.jurassicraft.client.sound.SoundHandler;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.GoatEntity;
 import org.jurassicraft.server.entity.VenomEntity;
-import org.jurassicraft.server.entity.ai.entityspecific.DilophosaurusMeleeEntityAI;
-import org.jurassicraft.server.entity.ai.entityspecific.DilophosaurusSpitEntityAI;
+import org.jurassicraft.server.entity.ai.DilophosaurusMeleeEntityAI;
+import org.jurassicraft.server.entity.ai.DilophosaurusSpitEntityAI;
 
 public class DilophosaurusEntity extends DinosaurEntity implements IRangedAttackMob {
+
     private static final DataParameter<Boolean> WATCHER_HAS_TARGET = EntityDataManager.createKey(DinosaurEntity.class, DataSerializers.BOOLEAN);
     private int targetCooldown;
 
@@ -41,8 +42,16 @@ public class DilophosaurusEntity extends DinosaurEntity implements IRangedAttack
         double deltaY = target.posY + (double) target.getEyeHeight() - 1.100000023841858D - venom.posY;
         double deltaZ = target.posZ - venom.posZ;
         float yOffset = MathHelper.sqrt(deltaX * deltaX + deltaZ * deltaZ) * 0.2F;
-        venom.setThrowableHeading(deltaX, deltaY + (double) yOffset, deltaZ, 1.5F, 0F);
+        venom.shoot(deltaX, deltaY + (double) yOffset, deltaZ, 1.5F, 0F);
         this.world.spawnEntity(venom);
+    }
+
+
+    //TODO: ????
+    @Override
+    public void setSwingingArms(boolean swingingArms)
+    {
+
     }
 
     @Override

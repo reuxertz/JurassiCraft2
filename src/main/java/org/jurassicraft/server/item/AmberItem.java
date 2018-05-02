@@ -24,8 +24,11 @@ public class AmberItem extends Item {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        subItems.add(new ItemStack(item, 1, 0));
-        subItems.add(new ItemStack(item, 1, 1));
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+        if(this.getCreativeTab().equals(tab))
+        {
+            subItems.add(new ItemStack(this, 1, 0));
+            subItems.add(new ItemStack(this, 1, 1));
+        }
     }
 }

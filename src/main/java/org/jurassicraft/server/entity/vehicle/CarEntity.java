@@ -4,13 +4,8 @@ import java.util.List;
 
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.proxy.ClientProxy;
-import org.jurassicraft.server.entity.ai.util.MathUtils;
 import org.jurassicraft.server.message.UpdateVehicleControlMessage;
-import org.omg.CORBA.DoubleHolder;
 
-import com.google.common.collect.Lists;
-
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -24,7 +19,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -268,60 +262,17 @@ public abstract class CarEntity extends Entity {
     }
 
     private void tickInterp() {
-//    	if(!world.isRemote) 
-    	{
-        	double backWheel = getWheelHeight(2f);
-        	double frontWheel = getWheelHeight(-2.5f);
-        	if(backWheel == frontWheel) {
-        		this.rotationPitch = 0f;
-        	}
-        	
-        	float localRotatinPitch = (float) MathUtils.cosineFromPoints(new Vec3d(frontWheel, 0, -2.5f), new Vec3d(backWheel, 0, -2.5f), new Vec3d(backWheel, 0, 2f));//No need for cosine as is a right angled triangle. I'm to lazy to work out the right maths. //TODO: SOHCAHTOA this
-        	this.rotationPitch = frontWheel < backWheel ? -localRotatinPitch : localRotatinPitch;
-    	}
         if (this.interpProgress > 0 && !this.canPassengerSteer()) {
             double interpolatedX = this.posX + (this.interpTargetX - this.posX) / (double) this.interpProgress;
             double interpolatedY = this.posY + (this.interpTargetY - this.posY) / (double) this.interpProgress;
             double interpolatedZ = this.posZ + (this.interpTargetZ - this.posZ) / (double) this.interpProgress;
             double deltaYaw = MathHelper.wrapDegrees(this.interpTargetYaw - (double) this.rotationYaw);
             this.rotationYaw = (float) ((double) this.rotationYaw + deltaYaw / (double) this.interpProgress);
-//            double deltaPitch = MathHelper.wrapDegrees(this.interpTargetPitch - (double) this.rotationPitch);
-//            this.rotationPitch = (float) ((double) this.rotationPitch + deltaPitch  / (double) this.interpProgress);
-//            this.rotationPitch = (float) ((double) this.rotationPitch + (this.interpTargetPitch - (double) this.rotationPitch) / (double) this.interpProgress);
+            this.rotationPitch = (float) ((double) this.rotationPitch + (this.interpTargetPitch - (double) this.rotationPitch) / (double) this.interpProgress);
             this.interpProgress--;
             this.setPosition(interpolatedX, interpolatedY, interpolatedZ);
             this.setRotation(this.rotationYaw, this.rotationPitch);
         }
-    }
-    
-    private double getWheelHeight(float relWheelOffset) { //TODO: get top height from full width, not just center
-		float localYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw);
-    	float xRot = (float) (Math.sin(Math.toRadians(localYaw)) * relWheelOffset); 
-    	float zRot = - (float) (Math.cos(Math.toRadians(localYaw)) * relWheelOffset);
-    	BlockPos pos = new BlockPos(posX + xRot, this.posY, posZ + zRot);
-    	boolean found = false;
-    	while(!found) {
-    		if(pos.getY() < 0) {
-    			break;
-    		}
-    		if(world.isAirBlock(pos)) {
-    			pos = pos.down();
-    		} else {
-    			found = true;
-    		}
-    	}
-    	if(!found) {
-    		return posY;
-    	}
-    	IBlockState state = world.getBlockState(pos);
-    	List<AxisAlignedBB> aabbList = Lists.newArrayList();
-    	state.addCollisionBoxToList(world, pos, new AxisAlignedBB(pos), aabbList, this, false);
-    	if(aabbList.isEmpty()) {
-    		return pos.getY();
-    	}
-    	DoubleHolder holder = new DoubleHolder(Integer.MIN_VALUE);
-    	aabbList.forEach(aabb -> holder.value = Math.max(aabb.maxY, holder.value));
-    	return holder.value;
     }
 
     @Override

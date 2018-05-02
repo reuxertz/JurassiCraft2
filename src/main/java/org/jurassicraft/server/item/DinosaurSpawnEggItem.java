@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+import net.minecraft.client.util.ITooltipFlag;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.EntityHandler;
@@ -117,14 +118,14 @@ public class DinosaurSpawnEggItem extends Item {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subtypes) {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subtypes) {
         List<Dinosaur> dinosaurs = new LinkedList<>(EntityHandler.getDinosaurs().values());
 
         Collections.sort(dinosaurs);
-
+        if(this.getCreativeTab().equals(tab))
         for (Dinosaur dinosaur : dinosaurs) {
             if (dinosaur.shouldRegister()) {
-                subtypes.add(new ItemStack(item, 1, EntityHandler.getDinosaurId(dinosaur)));
+                subtypes.add(new ItemStack(this, 1, EntityHandler.getDinosaurId(dinosaur)));
             }
         }
     }
@@ -208,7 +209,7 @@ public class DinosaurSpawnEggItem extends Item {
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> lore, boolean advanced) {
+    public void addInformation(ItemStack stack, World worldIn, List<String> lore, ITooltipFlag tooltipFlag) {
         lore.add(TextFormatting.BLUE + I18n.format("lore.baby_dino.name"));
         lore.add(TextFormatting.YELLOW + I18n.format("lore.change_gender.name"));
     }

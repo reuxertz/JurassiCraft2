@@ -12,7 +12,6 @@ import org.jurassicraft.client.sound.SoundHandler;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.GoatEntity;
 import org.jurassicraft.server.entity.LegSolverBiped;
-import org.jurassicraft.server.entity.ai.animations.CallAnimationAI;
 
 public class TyrannosaurusEntity extends DinosaurEntity {
     private int stepCount = 0;
@@ -22,7 +21,6 @@ public class TyrannosaurusEntity extends DinosaurEntity {
     public TyrannosaurusEntity(World world) {
         super(world);
         this.target(GoatEntity.class, EntityPlayer.class, EntityAnimal.class, EntityVillager.class, EntityMob.class, DilophosaurusEntity.class, GallimimusEntity.class, TriceratopsEntity.class, ParasaurolophusEntity.class, VelociraptorEntity.class, MussaurusEntity.class);
-        this.animationTasks.addTask(1, new CallAnimationAI(this));
     }
 
     @Override

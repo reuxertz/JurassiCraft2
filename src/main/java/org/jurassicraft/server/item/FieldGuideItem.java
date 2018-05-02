@@ -11,8 +11,6 @@ import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.message.OpenFieldGuideGuiMessage;
 import org.jurassicraft.server.tab.TabHandler;
 
-import java.util.List;
-
 public class FieldGuideItem extends Item {
     public FieldGuideItem() {
         super();
@@ -29,11 +27,4 @@ public class FieldGuideItem extends Item {
         }
         return false;
     }
-
-    @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        tooltip.add("Use Me on a Dinosaur!");
-        super.addInformation(stack, playerIn, tooltip, advanced);
-    }
-
 }

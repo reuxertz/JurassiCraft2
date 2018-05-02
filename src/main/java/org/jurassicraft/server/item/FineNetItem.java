@@ -19,7 +19,7 @@ public class FineNetItem extends Item {
         this.setCreativeTab(TabHandler.ITEMS);
         this.setMaxDamage(50);
         this.setMaxStackSize(1);
-    }
+        }
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {

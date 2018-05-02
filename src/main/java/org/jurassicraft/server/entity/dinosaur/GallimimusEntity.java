@@ -5,7 +5,7 @@ import org.jurassicraft.client.model.animation.EntityAnimation;
 import org.jurassicraft.client.sound.SoundHandler;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.LegSolverBiped;
-import org.jurassicraft.server.entity.ai.LeapEntityAI;
+import org.jurassicraft.server.entity.ai.RaptorLeapEntityAI;
 import org.jurassicraft.server.entity.ai.animations.PeckGroundAnimationAI;
 
 import net.ilexiconn.llibrary.server.animation.Animation;
@@ -18,12 +18,12 @@ public class GallimimusEntity extends DinosaurEntity {
     public GallimimusEntity(World world) {
         super(world);
         this.animationTasks.addTask(3, new PeckGroundAnimationAI(this));
-        this.tasks.addTask(1, new LeapEntityAI(this));
+        this.tasks.addTask(1, new RaptorLeapEntityAI(this));
     }
 
     @Override
     public EntityAIBase getAttackAI() {
-        return new LeapEntityAI(this);
+        return new RaptorLeapEntityAI(this);
     }
 
     @Override

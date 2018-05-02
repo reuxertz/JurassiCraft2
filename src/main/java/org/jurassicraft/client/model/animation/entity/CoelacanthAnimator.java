@@ -5,7 +5,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.client.model.AnimatableModel;
 import org.jurassicraft.client.model.animation.EntityAnimator;
-import org.jurassicraft.server.entity.dinosaur.aquatic.CoelacanthEntity;
+import org.jurassicraft.server.entity.dinosaur.CoelacanthEntity;
 
 @SideOnly(Side.CLIENT)
 public class CoelacanthAnimator extends EntityAnimator<CoelacanthEntity> {
@@ -31,7 +31,7 @@ public class CoelacanthAnimator extends EntityAnimator<CoelacanthEntity> {
             model.walk(leftFlipper, 0.2F, 0.25F, false, 1.0F, 0.1F, ticks, 0.25F);
             model.walk(rightFlipper, 0.2F, 0.25F, false, 1.0F, 0.1F, ticks, 0.25F);
             model.chainSwing(body, 0.05F, -0.075F, 1.5D, ticks, 0.25F);
-            neck.rotateAngleX = (float) -entity.getLookVec().y;
+
             model.bob(neck, 0.125F, 4.5F, false, ticks, 0.25F);
             model.walk(lowerJawFront, 0.1F, 0.7F, false, 0.0F, 0.5F, ticks, 0.25F);
         }

@@ -15,7 +15,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.achievements.AchievementHandler;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.entity.BugCrateBlockEntity;
 import org.jurassicraft.server.block.entity.CleaningStationBlockEntity;
@@ -53,6 +52,7 @@ import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.item.JournalItem;
 import org.jurassicraft.server.plant.PlantHandler;
 import org.jurassicraft.server.recipe.RecipeHandler;
+import org.jurassicraft.server.util.RegistryHandler;
 import org.jurassicraft.server.world.WorldGenerator;
 
 public class ServerProxy implements IGuiHandler {
@@ -80,7 +80,6 @@ public class ServerProxy implements IGuiHandler {
         BlockHandler.init();
         ItemHandler.init();
         RecipeHandler.init();
-        AchievementHandler.init();
         StorageTypeRegistry.init();
 
         FoodNutrients.register();
@@ -90,11 +89,14 @@ public class ServerProxy implements IGuiHandler {
         NetworkRegistry.INSTANCE.registerGuiHandler(JurassiCraft.INSTANCE, this);
 
         ServerEventHandler eventHandler = new ServerEventHandler();
+        MinecraftForge.EVENT_BUS.register(new RegistryHandler());
         MinecraftForge.EVENT_BUS.register(eventHandler);
     }
 
     public void onPostInit(FMLPostInitializationEvent event) {
         FoodHelper.init();
+        BlockHandler.registerOres();
+        ItemHandler.registerOres();
     }
 
     public void onInit(FMLInitializationEvent event) {

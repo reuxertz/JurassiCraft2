@@ -12,7 +12,7 @@ import org.jurassicraft.client.sound.SoundHandler;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.GoatEntity;
 import org.jurassicraft.server.entity.ai.LeapingMeleeEntityAI;
-import org.jurassicraft.server.entity.ai.LeapEntityAI;
+import org.jurassicraft.server.entity.ai.RaptorLeapEntityAI;
 
 public class VelociraptorEntity extends DinosaurEntity {
     public VelociraptorEntity(World world) {
@@ -23,7 +23,7 @@ public class VelociraptorEntity extends DinosaurEntity {
 
     @Override
     public EntityAIBase getAttackAI() {
-        return new LeapEntityAI(this);
+        return new RaptorLeapEntityAI(this);
     }
 
     @Override

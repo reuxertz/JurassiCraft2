@@ -17,7 +17,7 @@ public class DNAExtractorRenderer extends TileEntitySpecialRenderer<DNAExtractor
     private Minecraft mc = Minecraft.getMinecraft();
 
     @Override
-    public void renderTileEntityAt(DNAExtractorBlockEntity tileEntity, double x, double y, double z, float p_180535_8_, int p_180535_9_) {
+    public void render(DNAExtractorBlockEntity tileEntity, double x, double y, double z, float p_180535_8_, int p_180535_9_, float alpha) {
         IBlockState state = tileEntity.getWorld().getBlockState(tileEntity.getPos());
         ItemStack extraction = tileEntity.getStackInSlot(0);
 

@@ -22,7 +22,6 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.achievements.AchievementHandler;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.FossilizedTrackwayBlock;
 import org.jurassicraft.server.block.plant.DoublePlantBlock;
@@ -40,30 +39,6 @@ public class ServerEventHandler {
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load event) {
         GameRuleHandler.register(event.getWorld());
-    }
-
-    @SubscribeEvent(priority = EventPriority.NORMAL)
-    public void onItemPickup(PlayerEvent.ItemPickupEvent event) {
-        if (event.pickedUp.getItem().getItem() == ItemHandler.AMBER) {
-            event.player.addStat(AchievementHandler.AMBER, 1);
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.NORMAL)
-    public void onCraft(PlayerEvent.ItemCraftedEvent event) {
-        Item item = event.crafting.getItem();
-
-        if (item == ItemHandler.PLASTER_AND_BANDAGE) {
-            event.player.addStat(AchievementHandler.PALEONTOLOGY, 1);
-        } else if (item == Item.getItemFromBlock(BlockHandler.CLEANING_STATION)) {
-            event.player.addStat(AchievementHandler.CLEANING_STATION, 1);
-        } else if (item == Item.getItemFromBlock(BlockHandler.FOSSIL_GRINDER)) {
-            event.player.addStat(AchievementHandler.FOSSIL_GRINDER, 1);
-        } else if (item == Item.getItemFromBlock(BlockHandler.REINFORCED_STONE)) {
-            event.player.addStat(AchievementHandler.REINFORCED_STONE, 1);
-        } else if (item == Item.getItemFromBlock(BlockHandler.REINFORCED_BRICKS)) {
-            event.player.addStat(AchievementHandler.REINFORCED_STONE, 1);
-        }
     }
 
     @SubscribeEvent(priority = EventPriority.NORMAL)

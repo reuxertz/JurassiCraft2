@@ -56,9 +56,10 @@ public class AttractionSignItem extends Item {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+        if(this.getCreativeTab().equals(tab))
         for (AttractionSignEntity.AttractionSignType signType : AttractionSignEntity.AttractionSignType.values()) {
-            subItems.add(new ItemStack(item, 1, signType.ordinal()));
+            subItems.add(new ItemStack(this, 1, signType.ordinal()));
         }
     }
 }

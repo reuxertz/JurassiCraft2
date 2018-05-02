@@ -22,7 +22,6 @@ public class GracilariaItem extends Item implements IPlantable {
 
     public GracilariaItem(Block crops) {
         this.seaweedBlock = crops;
-        this.setUnlocalizedName("gracilaria");
     }
     @Override
     public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {

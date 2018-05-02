@@ -1,11 +1,13 @@
 package org.jurassicraft.server.item;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.server.api.SynthesizableItem;
@@ -24,17 +26,18 @@ public class StorageDiscItem extends Item implements SynthesizableItem {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+    public void addInformation(ItemStack stack, World worldIn, List<String> toolTip, ITooltipFlag flagIn)
+    {
         NBTTagCompound tag = stack.getTagCompound();
         if (tag != null) {
             String storageId = tag.getString("StorageId");
             StorageType type = StorageTypeRegistry.getStorageType(storageId);
             if (type != null) {
                 type.readFromNBT(tag);
-                type.addInformation(stack, tooltip);
+                type.addInformation(stack, toolTip);
             }
         } else {
-            tooltip.add(TextFormatting.RED + I18n.format("cage.empty.name"));
+            toolTip.add(TextFormatting.RED + I18n.format("cage.empty.name"));
         }
     }
 

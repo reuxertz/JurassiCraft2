@@ -91,8 +91,9 @@ public class Loot {
             LootEntry amber = Loot.entry(ItemHandler.AMBER).weight(2).count(0, 1).data(0, 1).build();
             LootEntry skull = Loot.entry(ItemHandler.FOSSILS.get("skull")).weight(2).function(DINOSAUR_DATA).count(1, 2).build();
             table.addPool(Loot.pool("fossils").rolls(1, 2).entries(plantFossil, twig, amber, skull).build());
-            LootEntry[] records = Loot.entries(ItemHandler.JURASSICRAFT_THEME_DISC, ItemHandler.DONT_MOVE_A_MUSCLE_DISC, ItemHandler.TROODONS_AND_RAPTORS_DISC).buildEntries();
-            table.addPool(Loot.pool("records").rolls(0, 2).entries(records).build());
+            //TODO:
+//            LootEntry[] records = Loot.entries(ItemHandler.JURASSICRAFT_THEME_DISC, ItemHandler.DONT_MOVE_A_MUSCLE_DISC, ItemHandler.TROODONS_AND_RAPTORS_DISC).buildEntries();
+//            table.addPool(Loot.pool("records").rolls(0, 2).entries(records).build());
         } else if (name == Loot.VISITOR_GROUND_STORAGE) {
             LootEntry amber = Loot.entry(ItemHandler.AMBER).data(0, 1).count(0, 3).build();
             LootEntry wool = Loot.entry(Blocks.WOOL).data(0, 15).count(0, 64).build();
