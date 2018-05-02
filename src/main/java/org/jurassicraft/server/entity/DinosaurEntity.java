@@ -81,6 +81,7 @@ import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.ai.EntityLookHelper;
+import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -264,7 +265,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         }
 
         this.ignoreFrustumCheck = true;
-        this.setSkeleton(false);
+        this.setSkeleton(false);        
     }
 
     protected LegSolver createLegSolver() {
@@ -1841,6 +1842,10 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     public void setSkeleton(boolean isSkeleton) {
         this.isSkeleton = isSkeleton;
     }
+    
+    public boolean canDinoSwim() {
+    	return this.getGrowthStage() != GrowthStage.INFANT && this.getGrowthStage() != GrowthStage.JUVENILE;
+    }
 
     public static class FieldGuideInfo {
         public int hunger;
@@ -1887,5 +1892,40 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
 
     public enum Order {
         WANDER, FOLLOW, SIT
+    }
+    
+    @Override
+    public boolean isInWater() {
+    	return world.getBlockState(this.getPosition()).getMaterial() == Material.WATER; ///TODO: revert back to original
+    }
+    
+    @Override
+    protected void handleJumpWater() {
+        if(this.canDinoSwim()) {
+        	super.handleJumpWater();
+        }
+    }
+
+    
+    @Override
+    public boolean handleWaterMovement() {
+    	if(this.canDinoSwim()) {
+    		if (this.getRidingEntity() instanceof EntityBoat) {
+    			return false;
+            }
+            else if (this.world.isMaterialInBB(this.getEntityBoundingBox().grow(0.0D, -0.4000000059604645D, 0.0D).shrink(0.001D), Material.WATER))
+            {
+                if (!this.isInWater() && !this.firstUpdate) {
+                    this.doWaterSplashEffect();
+                }
+                this.fallDistance = 0.0F;
+                this.extinguish();
+                return true;
+            }
+            else {
+                return false;
+            }
+    	}
+    	return super.handleWaterMovement();
     }
 }
