@@ -105,7 +105,11 @@ public class ClientProxy extends ServerProxy {
             List<String> patrons = WebUtils.readPastebinAsList("fgJQkCMa");
             if (patrons != null) {
                 for (String patron : patrons) {
-                    PATRONS.add(UUID.fromString(patron));
+                	try {
+                		PATRONS.add(UUID.fromString(patron));
+                	} catch (IllegalArgumentException e) {
+						JurassiCraft.INSTANCE.getLogger().error("Error getting UUID: " + e.getMessage());
+					}
                 }
             }
         }).start();
