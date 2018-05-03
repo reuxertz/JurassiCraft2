@@ -231,10 +231,12 @@ public abstract class CarEntity extends Entity {
         for(BlockPos pos : BlockPos.getAllInBoxMutable(new BlockPos(Math.floor(aabb.minX), Math.floor(aabb.minY), Math.floor(aabb.minZ)), new BlockPos(Math.ceil(aabb.maxX), Math.ceil(aabb.maxY), Math.ceil(aabb.maxZ)))) {
         	IBlockState state = world.getBlockState(pos);
         	if(state.getMaterial() == Material.VINE) {
-        		world.setBlockToAir(pos);
         		if(world.isRemote) {
         			world.playEvent(2001, pos, Block.getStateId(state));
+        		} else {
+            		state.getBlock().dropBlockAsItem(world, pos, state, 0);
         		}
+        		world.setBlockToAir(pos);
         	}
         }
         
