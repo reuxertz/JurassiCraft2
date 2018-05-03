@@ -56,12 +56,12 @@ public class JeepWranglerRenderer extends Render<JeepWranglerEntity> {
     }
 
     @Override
-    public void doRender(JeepWranglerEntity entity, double x, double y, double z, float yaw, float delta) {
+    public void doRender(JeepWranglerEntity entity, double x, double y, double z, float yaw, float partialTicks) {
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
         this.bindEntityTexture(entity);
-        this.renderModel(entity, x, y, z, yaw, false, false);
-        this.renderModel(entity, x, y, z, yaw, true, false);
+        this.renderModel(entity, x, y, z, yaw, partialTicks, false, false);
+        this.renderModel(entity, x, y, z, yaw, partialTicks, true, false);
         int destroyStage = Math.min(10, (int) (10 - (entity.getHealth() / CarEntity.MAX_HEALTH) * 10)) - 1;
         if (destroyStage >= 0) {
             GlStateManager.color(1, 1, 1, 0.5F);
@@ -70,33 +70,39 @@ public class JeepWranglerRenderer extends Render<JeepWranglerEntity> {
             GlStateManager.enablePolygonOffset();
             RenderHelper.disableStandardItemLighting();
             this.bindTexture(DESTROY_STAGES[destroyStage]);
-            this.renderModel(entity, x, y, z, yaw, false, true);
+            this.renderModel(entity, x, y, z, yaw, partialTicks, false, true);
             GlStateManager.doPolygonOffset(0, 0);
             GlStateManager.disablePolygonOffset();
             RenderHelper.enableStandardItemLighting();
         }
         GlStateManager.disableBlend();
-        super.doRender(entity, x, y, z, yaw, delta);
+        super.doRender(entity, x, y, z, yaw, partialTicks);
     }
 
-    private void renderModel(JeepWranglerEntity entity, double x, double y, double z, float yaw, boolean windscreen, boolean destroy) {
+    private void renderModel(JeepWranglerEntity entity, double x, double y, double z, float yaw, float partialTicks, boolean windscreen, boolean destroy) {
         GlStateManager.pushMatrix();
         GlStateManager.translate((float) x, (float) y + 1.25F, (float) z);
         double lowDown = entity.posY;
-        if(entity.relBackWheel < lowDown) {
-        	lowDown = entity.relBackWheel;
+        
+        double backWheel = entity.backWheel.getValueForRendering(partialTicks);
+        double frontWheel = entity.frontWheel.getValueForRendering(partialTicks);
+        double leftWheel = entity.leftWheel.getValueForRendering(partialTicks);
+        double rightWheel = entity.rightWheel.getValueForRendering(partialTicks);
+
+        if(backWheel < lowDown) {
+        	lowDown = backWheel;
         }
-        if(Math.min(entity.relLeftWheel, entity.relRightWheel) < lowDown) {
-        	lowDown = Math.min(entity.relLeftWheel, entity.relRightWheel);
+        if(Math.min(leftWheel, rightWheel) < lowDown) {
+        	lowDown = Math.min(leftWheel, rightWheel);
         }
 //        GlStateManager.translate(0, lowDown - entity.posY, 0); //TODO: try and reimpliment in a less buggy way
         GlStateManager.rotate(180 - yaw, 0, 1, 0);
         GlStateManager.translate(0, -0.5, 1.4);
-        float localRotationPitch = (float) MathUtils.cosineFromPoints(new Vec3d(entity.relFrontWheel, 0, -2.5f), new Vec3d(entity.relBackWheel, 0, -2.5f), new Vec3d(entity.relBackWheel, 0, 2f));//No need for cosine as is a right angled triangle. I'm to lazy to work out the right maths. //TODO: SOHCAHTOA this
-        GlStateManager.rotate(entity.relFrontWheel < entity.relBackWheel ? -localRotationPitch : localRotationPitch, 1, 0, 0);
+        float localRotationPitch = (float) MathUtils.cosineFromPoints(new Vec3d(frontWheel, 0, -2.5f), new Vec3d(backWheel, 0, -2.5f), new Vec3d(backWheel, 0, 2f));//No need for cosine as is a right angled triangle. I'm to lazy to work out the right maths. //TODO: SOHCAHTOA this
+        GlStateManager.rotate(frontWheel < backWheel ? -localRotationPitch : localRotationPitch, 1, 0, 0);
         GlStateManager.translate(0, 0.5, -1.4);
-        float localRotationRoll = (float) MathUtils.cosineFromPoints(new Vec3d(entity.relRightWheel, 0, -1.3f), new Vec3d(entity.relLeftWheel, 0, -1.3f), new Vec3d(entity.relLeftWheel, 0, 1.3f));//TODO: same as above
-        GlStateManager.rotate(entity.relLeftWheel < entity.relRightWheel ? localRotationRoll : -localRotationRoll, 0, 0, 1);
+        float localRotationRoll = (float) MathUtils.cosineFromPoints(new Vec3d(rightWheel, 0, -1.3f), new Vec3d(leftWheel, 0, -1.3f), new Vec3d(leftWheel, 0, 1.3f));//TODO: same as above
+        GlStateManager.rotate(leftWheel < rightWheel ? localRotationRoll : -localRotationRoll, 0, 0, 1);
         GlStateManager.scale(-1, -1, 1);
         (windscreen ? this.windscreen : destroy ? this.destroyModel : this.baseModel).render(entity, 0, 0, 0, 0, 0, 0.0625F);
         GlStateManager.popMatrix();

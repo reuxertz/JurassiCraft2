@@ -4,12 +4,15 @@ import java.util.List;
 
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.proxy.ClientProxy;
+import org.jurassicraft.server.entity.ai.util.InterpValue;
 import org.jurassicraft.server.entity.ai.util.MathUtils;
 import org.jurassicraft.server.message.UpdateVehicleControlMessage;
 import org.omg.CORBA.DoubleHolder;
 
 import com.google.common.collect.Lists;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
@@ -57,10 +60,12 @@ public abstract class CarEntity extends Entity {
     private double interpTargetYaw;
     private double interpTargetPitch;
 
-    public double relBackWheel;
-    public double relFrontWheel;
-    public double relLeftWheel;
-    public double relRightWheel;
+    public InterpValue backWheel = new InterpValue(); 
+    public InterpValue frontWheel = new InterpValue();
+    public InterpValue leftWheel = new InterpValue();
+    public InterpValue rightWheel = new InterpValue();
+    
+    private List<InterpValue> allInterps = Lists.newArrayList(backWheel, frontWheel, leftWheel, rightWheel);
     
     private float healAmount;
     private int healCooldown = 40;
@@ -154,11 +159,6 @@ public abstract class CarEntity extends Entity {
     }
 
     @Override
-    public AxisAlignedBB getCollisionBox(Entity entity) {
-        return this.getEntityBoundingBox();
-    }
-
-    @Override
     public boolean canBeCollidedWith() {
         return true;
     }
@@ -181,11 +181,12 @@ public abstract class CarEntity extends Entity {
 
     @Override
     public void onEntityUpdate() {
+    	allInterps.forEach(InterpValue::preTick);
         super.onEntityUpdate();
-        this.relBackWheel = MathHelper.clamp(getWheelHeight(2f, false), posY - 3, posY + 3);
-        this.relFrontWheel = MathHelper.clamp(getWheelHeight(-2.5f, false), posY - 3, posY + 3);
-        this.relLeftWheel = MathHelper.clamp(getWheelHeight(1.3f, true), posY - 3, posY + 3);
-        this.relRightWheel = MathHelper.clamp(getWheelHeight(-1.3f, true), posY - 3, posY + 3);
+        this.backWheel.setTarget(MathHelper.clamp(getWheelHeight(2f, false), posY - 3, posY + 3));
+        this.frontWheel.setTarget(MathHelper.clamp(getWheelHeight(-2.5f, false), posY - 3, posY + 3));
+        this.leftWheel.setTarget(MathHelper.clamp(getWheelHeight(1.3f, true), posY - 3, posY + 3));
+        this.rightWheel.setTarget(MathHelper.clamp(getWheelHeight(-1.3f, true), posY - 3, posY + 3));
 
         if (!this.world.isRemote) {
             if (this.healCooldown > 0) {
@@ -280,6 +281,7 @@ public abstract class CarEntity extends Entity {
     }
 
     private void tickInterp() {
+    	allInterps.forEach(InterpValue::tick);
         if (this.interpProgress > 0 && !this.canPassengerSteer()) {
             double interpolatedX = this.posX + (this.interpTargetX - this.posX) / (double) this.interpProgress;
             double interpolatedY = this.posY + (this.interpTargetY - this.posY) / (double) this.interpProgress;
@@ -326,7 +328,7 @@ public abstract class CarEntity extends Entity {
     		world.getBlockState(pos.up()).addCollisionBoxToList(world, pos.up(), new AxisAlignedBB(pos.up()), list, this, false);
     		world.getBlockState(pos.up(2)).addCollisionBoxToList(world, pos.up(2), new AxisAlignedBB(pos.up(2)), list, this, false);
     		if(!list.isEmpty()) {
-    			return posY; //Means its on a wall. 
+    			return posY; //Means its facing a wall. 
     		}
     	}
     	if(aabbList.isEmpty()) {
@@ -344,7 +346,7 @@ public abstract class CarEntity extends Entity {
         }
         return true;
     }
-
+    
     @Override
     protected void addPassenger(Entity passenger) {
         super.addPassenger(passenger);
