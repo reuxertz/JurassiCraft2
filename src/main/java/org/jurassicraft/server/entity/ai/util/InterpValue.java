@@ -17,7 +17,15 @@ public class InterpValue {
 	}
 	
 	public void tick() {
-		current += Math.abs(current - target) <= INTERP_AMOUNT ? 0 : current < target ? INTERP_AMOUNT : -INTERP_AMOUNT;
+		double add;
+		if(Math.abs(current - target) <= INTERP_AMOUNT) {
+			add = 0;
+		} else if(current < target) {
+			add = INTERP_AMOUNT;
+		} else {
+			add = -INTERP_AMOUNT;
+		}
+		current += add;
 	}
 	
 	public double getValueForRendering(float partialTicks) {
