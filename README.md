@@ -3,23 +3,28 @@ JurassiCraft is a mod made to bring prehistoric creatures to the world of Minecr
 
 # Contributors
 
-### Branch Leaders
-Reuxertz    
+### JurassiCraft Council
 CarrotJet   
 Kash    
+JTGhawk137  
+Cody  
+Hyperion  
+Totemaster
 
 ### Developers
 JTGhawk137  
 Reuxertz    
 AnarchCassius   
 Collin  
-Wyn
+Wyn Price  
+NeusFear
 
 ### Modelers / Texturers
 CarrotJet   
 RaptorWhisper   
 HarvNut     
-Bolcko  
+Andreas     
+Cody    
 
 ### Special Mentions for all JurassiCraft projects
 
