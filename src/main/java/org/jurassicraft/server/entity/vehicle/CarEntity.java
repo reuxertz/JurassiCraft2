@@ -322,45 +322,51 @@ public abstract class CarEntity extends Entity {
     }
     
     private double getWheelHeight(float relWheelOffset, boolean leftRight) { 
-		float localYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw);
-    	double xRot = Math.sin(Math.toRadians(localYaw)) * relWheelOffset; 
-    	double zRot = - Math.cos(Math.toRadians(localYaw)) * relWheelOffset;
-    	if(leftRight) {
-	   		 xRot = Math.cos(Math.toRadians(localYaw)) * relWheelOffset; 
-	       	 zRot = Math.sin(Math.toRadians(localYaw)) * relWheelOffset;
-    	}	
-    	BlockPos pos = new BlockPos(posX + xRot, this.posY, posZ + zRot);
-    	boolean found = false;
-		List<AxisAlignedBB> aabbList = Lists.newArrayList();;
-    	while(!found) {
-    		if(pos.getY() < 0) {
-    			break;
-    		}
-    		aabbList.clear();
-        	world.getBlockState(pos).addCollisionBoxToList(world, pos, new AxisAlignedBB(pos), aabbList, this, false);
-    		if(world.isAirBlock(pos) || aabbList.isEmpty()) {
-    			pos = pos.down();
-    		} else {
-    			found = true;
-    		}
+    	double ret = Integer.MIN_VALUE;
+    	for(int i = -1 ; i <= 1; i++) {
+    		float localYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw);
+        	double xRot = Math.sin(Math.toRadians(localYaw)) * relWheelOffset - Math.cos(Math.toRadians(localYaw)) * i; 
+        	double zRot = - Math.cos(Math.toRadians(localYaw)) * relWheelOffset + Math.sin(Math.toRadians(localYaw)) * i;
+        	if(leftRight) {
+    	   		 xRot = Math.cos(Math.toRadians(localYaw)) * relWheelOffset - Math.sin(Math.toRadians(localYaw)) * i;  
+    	       	 zRot = Math.sin(Math.toRadians(localYaw)) * relWheelOffset - Math.cos(Math.toRadians(localYaw)) * i;
+        	}	
+        	BlockPos pos = new BlockPos(posX + xRot, this.posY, posZ + zRot);
+        	boolean found = false;
+    		List<AxisAlignedBB> aabbList = Lists.newArrayList();;
+        	while(!found) {
+        		if(pos.getY() < 0) {
+        			break;
+        		}
+        		aabbList.clear();
+            	world.getBlockState(pos).addCollisionBoxToList(world, pos, new AxisAlignedBB(pos), aabbList, this, false);
+        		if(world.isAirBlock(pos) || aabbList.isEmpty()) {
+        			pos = pos.down();
+        		} else {
+        			found = true;
+        		}
+        	}
+        	if(!found) {
+        		return posY;
+        	}
+        	if(found && !world.isAirBlock(pos.up()) && !world.isAirBlock(pos.up(2))) {
+        		List<AxisAlignedBB> list = Lists.newArrayList();
+        		world.getBlockState(pos.up()).addCollisionBoxToList(world, pos.up(), new AxisAlignedBB(pos.up()), list, this, false);
+        		world.getBlockState(pos.up(2)).addCollisionBoxToList(world, pos.up(2), new AxisAlignedBB(pos.up(2)), list, this, false);
+        		if(!list.isEmpty()) {
+        			return posY; //Means its facing a wall. 
+        		}
+        	}
+        	if(aabbList.isEmpty()) {
+        		return pos.getY();
+        	}
+        	DoubleHolder holder = new DoubleHolder(Integer.MIN_VALUE);
+        	aabbList.forEach(aabb -> holder.value = Math.max(aabb.maxY, holder.value));
+        	if(holder.value > ret) {
+        		ret = holder.value;
+        	}
     	}
-    	if(!found) {
-    		return posY;
-    	}
-    	if(found && !world.isAirBlock(pos.up()) && !world.isAirBlock(pos.up(2))) {
-    		List<AxisAlignedBB> list = Lists.newArrayList();
-    		world.getBlockState(pos.up()).addCollisionBoxToList(world, pos.up(), new AxisAlignedBB(pos.up()), list, this, false);
-    		world.getBlockState(pos.up(2)).addCollisionBoxToList(world, pos.up(2), new AxisAlignedBB(pos.up(2)), list, this, false);
-    		if(!list.isEmpty()) {
-    			return posY; //Means its facing a wall. 
-    		}
-    	}
-    	if(aabbList.isEmpty()) {
-    		return pos.getY();
-    	}
-    	DoubleHolder holder = new DoubleHolder(Integer.MIN_VALUE);
-    	aabbList.forEach(aabb -> holder.value = Math.max(aabb.maxY, holder.value));
-    	return holder.value;
+    	return ret;
     }
 
     @Override
