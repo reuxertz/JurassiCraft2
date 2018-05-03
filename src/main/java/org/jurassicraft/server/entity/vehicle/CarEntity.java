@@ -218,6 +218,17 @@ public abstract class CarEntity extends Entity {
     @Override
     public void onUpdate() {
         super.onUpdate();
+        AxisAlignedBB aabb = this.getEntityBoundingBox().shrink(0.9f);
+        for(BlockPos pos : BlockPos.getAllInBoxMutable(new BlockPos(Math.floor(aabb.minX), Math.floor(aabb.minY), Math.floor(aabb.minZ)), new BlockPos(Math.ceil(aabb.maxX), Math.ceil(aabb.maxY), Math.ceil(aabb.maxZ)))) {
+        	IBlockState state = world.getBlockState(pos);
+        	if(state.getMaterial() == Material.VINE) {
+        		world.setBlockToAir(pos);
+        		if(world.isRemote) {
+        			world.playEvent(2001, pos, Block.getStateId(state));
+        		}
+        	}
+        }
+        
         world.getEntitiesWithinAABB(EntityLivingBase.class, aabb.grow(1f)).forEach(entity -> entity.attackEntityFrom(new DamageSource("jeep"), 5f));//TODO: create own damage source singleton
         
         this.prevWheelRotateAmount = this.wheelRotateAmount;
