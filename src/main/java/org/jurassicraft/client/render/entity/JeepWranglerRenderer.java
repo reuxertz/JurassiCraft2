@@ -81,21 +81,11 @@ public class JeepWranglerRenderer extends Render<JeepWranglerEntity> {
 
     private void renderModel(JeepWranglerEntity entity, double x, double y, double z, float yaw, float partialTicks, boolean windscreen, boolean destroy) {
         GlStateManager.pushMatrix();
-        GlStateManager.translate((float) x, (float) y + 1.25F, (float) z);
-        double lowDown = entity.posY;
-        
+        GlStateManager.translate((float) x, (float) y + 1.25F, (float) z);        
         double backWheel = entity.backWheel.getValueForRendering(partialTicks);
         double frontWheel = entity.frontWheel.getValueForRendering(partialTicks);
         double leftWheel = entity.leftWheel.getValueForRendering(partialTicks);
         double rightWheel = entity.rightWheel.getValueForRendering(partialTicks);
-
-        if(backWheel < lowDown) {
-        	lowDown = backWheel;
-        }
-        if(Math.min(leftWheel, rightWheel) < lowDown) {
-        	lowDown = Math.min(leftWheel, rightWheel);
-        }
-//        GlStateManager.translate(0, lowDown - entity.posY, 0); //TODO: try and reimpliment in a less buggy way
         GlStateManager.rotate(180 - yaw, 0, 1, 0);
         GlStateManager.translate(0, -0.5, 1.4);
         float localRotationPitch = (float) MathUtils.cosineFromPoints(new Vec3d(frontWheel, 0, -2.5f), new Vec3d(backWheel, 0, -2.5f), new Vec3d(backWheel, 0, 2f));//No need for cosine as is a right angled triangle. I'm to lazy to work out the right maths. //TODO: SOHCAHTOA this
