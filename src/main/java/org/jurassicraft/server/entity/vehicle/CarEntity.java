@@ -218,6 +218,8 @@ public abstract class CarEntity extends Entity {
     @Override
     public void onUpdate() {
         super.onUpdate();
+        world.getEntitiesWithinAABB(EntityLivingBase.class, aabb.grow(1f)).forEach(entity -> entity.attackEntityFrom(new DamageSource("jeep"), 5f));//TODO: create own damage source singleton
+        
         this.prevWheelRotateAmount = this.wheelRotateAmount;
         double deltaX = this.posX - this.prevPosX;
         double deltaZ = this.posZ - this.prevPosZ;
