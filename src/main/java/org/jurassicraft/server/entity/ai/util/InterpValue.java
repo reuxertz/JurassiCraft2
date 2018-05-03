@@ -8,6 +8,14 @@ public class InterpValue {
 	private double current;
 	private double previousCurrent;
 	
+	private boolean initilized;
+	
+	public void setCurrent(double current) {
+		this.current = current;
+		this.target = current;
+		this.previousCurrent = current;
+	}
+	
 	public void setTarget(double target) {
 		this.target = target;
 	}
@@ -20,6 +28,7 @@ public class InterpValue {
 		double add;
 		if(Math.abs(current - target) <= INTERP_AMOUNT) {
 			add = 0;
+			current = target;
 		} else if(current < target) {
 			add = INTERP_AMOUNT;
 		} else {
@@ -30,5 +39,17 @@ public class InterpValue {
 	
 	public double getValueForRendering(float partialTicks) {
 		return previousCurrent + (current - previousCurrent) * partialTicks;
+	}
+	
+	public boolean hasInitilized() {
+		return initilized;
+	}
+	
+	public void initilize() {
+		initilized = true;
+	}
+	
+	public double getCurrent() {
+		return current;
 	}
 }

@@ -60,10 +60,10 @@ public abstract class CarEntity extends Entity {
     private double interpTargetYaw;
     private double interpTargetPitch;
 
-    public InterpValue backWheel = new InterpValue(); 
-    public InterpValue frontWheel = new InterpValue();
-    public InterpValue leftWheel = new InterpValue();
-    public InterpValue rightWheel = new InterpValue();
+    public final InterpValue backWheel = new InterpValue(); 
+    public final InterpValue frontWheel = new InterpValue();
+    public final InterpValue leftWheel = new InterpValue();
+    public final InterpValue rightWheel = new InterpValue();
     
     private List<InterpValue> allInterps = Lists.newArrayList(backWheel, frontWheel, leftWheel, rightWheel);
     
@@ -157,7 +157,7 @@ public abstract class CarEntity extends Entity {
         List<Entity> passengers = this.getPassengers();
         return passengers.isEmpty() ? null : passengers.get(0);
     }
-
+    
     @Override
     public boolean canBeCollidedWith() {
         return true;
@@ -183,12 +183,11 @@ public abstract class CarEntity extends Entity {
     public void onEntityUpdate() {
     	allInterps.forEach(InterpValue::preTick);
         super.onEntityUpdate();
-        this.backWheel.setTarget(MathHelper.clamp(getWheelHeight(2f, false), posY - 3, posY + 3));
-        this.frontWheel.setTarget(MathHelper.clamp(getWheelHeight(-2.5f, false), posY - 3, posY + 3));
-        this.leftWheel.setTarget(MathHelper.clamp(getWheelHeight(1.3f, true), posY - 3, posY + 3));
-        this.rightWheel.setTarget(MathHelper.clamp(getWheelHeight(-1.3f, true), posY - 3, posY + 3));
-
-        if (!this.world.isRemote) {
+        setTarget(this.backWheel, getWheelHeight(2f, false));
+    	setTarget(this.frontWheel, getWheelHeight(-2.5f, false));
+    	setTarget(this.leftWheel, getWheelHeight(1.3f, true));
+    	setTarget(this.rightWheel, getWheelHeight(-1.3f, true));        
+    	if (!this.world.isRemote) {
             if (this.healCooldown > 0) {
                 this.healCooldown--;
             } else if (this.healAmount > 0) {
@@ -213,6 +212,16 @@ public abstract class CarEntity extends Entity {
         } else {
             this.motionX = this.motionY = this.motionZ = 0;
         }
+    }
+
+    private void setTarget(InterpValue value, double wheelHeight) {
+    	wheelHeight = MathHelper.clamp(wheelHeight, posY - 3, posY + 3);
+    	if(!value.hasInitilized()) {
+    		value.setCurrent(wheelHeight);
+    		value.initilize();
+    	} else {
+    		value.setTarget(wheelHeight);
+    	}
     }
 
     @Override
@@ -430,9 +439,6 @@ public abstract class CarEntity extends Entity {
                 pos = new Vec3d(this.posX, this.posY + this.height, this.posZ);
             } else {
                 pos = seat.getPos();
-//                if(this.relBackWheel < this.posY) {
-//                	pos = pos.addVector(0, this.relBackWheel - this.posY, 0);
-//                }
             }
             passenger.setPosition(pos.x, pos.y, pos.z);
             passenger.rotationYaw += this.rotationDelta;
