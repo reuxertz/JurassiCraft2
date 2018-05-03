@@ -16,7 +16,7 @@ JTGhawk137
 Reuxertz    
 AnarchCassius   
 Collin  
-Wyn Price
+Wyn Price  
 NeusFear
 
 ### Modelers / Texturers
