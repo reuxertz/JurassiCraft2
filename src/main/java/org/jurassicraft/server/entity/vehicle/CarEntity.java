@@ -4,8 +4,9 @@ import java.util.List;
 
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.proxy.ClientProxy;
-import org.jurassicraft.server.entity.ai.util.InterpValue;
-import org.jurassicraft.server.entity.ai.util.MathUtils;
+import org.jurassicraft.server.entity.vehicle.util.CarWheel;
+import org.jurassicraft.server.entity.vehicle.util.WheelParticleData;
+import org.jurassicraft.server.entity.vehicle.util.WheelVec;
 import org.jurassicraft.server.message.UpdateVehicleControlMessage;
 import org.omg.CORBA.DoubleHolder;
 
@@ -15,7 +16,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
@@ -60,12 +60,15 @@ public abstract class CarEntity extends Entity {
     private double interpTargetYaw;
     private double interpTargetPitch;
 
-    public final InterpValue backWheel = new InterpValue(); 
-    public final InterpValue frontWheel = new InterpValue();
-    public final InterpValue leftWheel = new InterpValue();
-    public final InterpValue rightWheel = new InterpValue();
+    public final CarWheel backWheel = new CarWheel(); 
+    public final CarWheel frontWheel = new CarWheel();
+    public final CarWheel leftWheel = new CarWheel();
+    public final CarWheel rightWheel = new CarWheel();
     
-    private List<InterpValue> allInterps = Lists.newArrayList(backWheel, frontWheel, leftWheel, rightWheel);
+    public final List<WheelParticleData> wheelDataList = Lists.newArrayList(); //Entirely useless server-side. //TODO: stop adding to this on server-side.
+    private final List<WheelParticleData> markedRemoved = Lists.newArrayList();
+    
+    public List<CarWheel> allInterps = Lists.newArrayList(backWheel, frontWheel, leftWheel, rightWheel);
     
     private float healAmount;
     private int healCooldown = 40;
@@ -181,13 +184,19 @@ public abstract class CarEntity extends Entity {
 
     @Override
     public void onEntityUpdate() {
-    	allInterps.forEach(InterpValue::preTick);
+        allInterps.forEach(CarWheel::onUpdate);
+        wheelDataList.forEach(WheelParticleData::onUpdate);
+        
+        markedRemoved.forEach(wheelDataList::remove);
+        markedRemoved.clear();
+        
         super.onEntityUpdate();
-        setTarget(this.backWheel, getWheelHeight(2f, false));
-    	setTarget(this.frontWheel, getWheelHeight(-2.5f, false));
-    	setTarget(this.leftWheel, getWheelHeight(1.3f, true));
-    	setTarget(this.rightWheel, getWheelHeight(-1.3f, true));        
-    	if (!this.world.isRemote) {
+        processWheel(this.backWheel, getWheelVec(2f, 1.3f, false));
+        processWheel(this.frontWheel, getWheelVec(-2.5f, -1.3f, false));
+        processWheel(this.leftWheel, getWheelVec(-2.5f, 1.3f, true));
+        processWheel(this.rightWheel, getWheelVec(2f, -1.3f, true));      
+        
+        if (!this.world.isRemote) {
             if (this.healCooldown > 0) {
                 this.healCooldown--;
             } else if (this.healAmount > 0) {
@@ -213,15 +222,15 @@ public abstract class CarEntity extends Entity {
             this.motionX = this.motionY = this.motionZ = 0;
         }
     }
+    
+    public void markRemoval(WheelParticleData data) {
+	markedRemoved.add(data);
+    }
 
-    private void setTarget(InterpValue value, double wheelHeight) {
-    	wheelHeight = MathHelper.clamp(wheelHeight, posY - 3, posY + 3);
-    	if(!value.hasInitilized()) {
-    		value.setCurrent(wheelHeight);
-    		value.initilize();
-    	} else {
-    		value.setTarget(wheelHeight);
-    	}
+    private void processWheel(CarWheel wheel, WheelVec wheelLoc) {
+        wheel.setTargetY(MathHelper.clamp(wheelLoc.targetY, posY - 3, posY + 3));
+        wheel.setCurrentWheelPos(wheelLoc.getPos());
+        this.wheelDataList.add(new WheelParticleData(this, wheelLoc.actualPos));
     }
 
     @Override
@@ -229,18 +238,20 @@ public abstract class CarEntity extends Entity {
         super.onUpdate();
         AxisAlignedBB aabb = this.getEntityBoundingBox().shrink(0.9f);
         for(BlockPos pos : BlockPos.getAllInBoxMutable(new BlockPos(Math.floor(aabb.minX), Math.floor(aabb.minY), Math.floor(aabb.minZ)), new BlockPos(Math.ceil(aabb.maxX), Math.ceil(aabb.maxY), Math.ceil(aabb.maxZ)))) {
-        	IBlockState state = world.getBlockState(pos);
-        	if(state.getMaterial() == Material.VINE) {
-        		if(world.isRemote) {
-        			world.playEvent(2001, pos, Block.getStateId(state));
-        		} else {
-            		state.getBlock().dropBlockAsItem(world, pos, state, 0);
-        		}
-        		world.setBlockToAir(pos);
-        	}
+            IBlockState state = world.getBlockState(pos);
+            if(state.getMaterial() == Material.VINE) {
+                if(world.isRemote) {
+                    world.playEvent(2001, pos, Block.getStateId(state));
+                } else {
+                    state.getBlock().dropBlockAsItem(world, pos, state, 0);
+                }
+                world.setBlockToAir(pos);
+            }
         }
         
-        world.getEntitiesWithinAABB(EntityLivingBase.class, aabb.grow(1f)).forEach(entity -> entity.attackEntityFrom(new DamageSource("jeep"), 5f));//TODO: create own damage source singleton
+        if(!world.isRemote) {
+            world.getEntitiesWithinAABB(EntityLivingBase.class, aabb.grow(1f)).forEach(entity -> entity.attackEntityFrom(new DamageSource("jeep"), 5F));//TODO: create own damage source singleton, and make source dependant on speed
+        }
         
         this.prevWheelRotateAmount = this.wheelRotateAmount;
         double deltaX = this.posX - this.prevPosX;
@@ -305,7 +316,7 @@ public abstract class CarEntity extends Entity {
     }
 
     private void tickInterp() {
-    	allInterps.forEach(InterpValue::tick);
+        allInterps.forEach(CarWheel::doInterps);
         if (this.interpProgress > 0 && !this.canPassengerSteer()) {
             double interpolatedX = this.posX + (this.interpTargetX - this.posX) / (double) this.interpProgress;
             double interpolatedY = this.posY + (this.interpTargetY - this.posY) / (double) this.interpProgress;
@@ -321,52 +332,82 @@ public abstract class CarEntity extends Entity {
         }
     }
     
-    private double getWheelHeight(float relWheelOffset, boolean leftRight) { 
-    	double ret = Integer.MIN_VALUE;
-    	for(int i = -1 ; i <= 1; i++) {
-    		float localYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw);
-        	double xRot = Math.sin(Math.toRadians(localYaw)) * relWheelOffset - Math.cos(Math.toRadians(localYaw)) * i; 
-        	double zRot = - Math.cos(Math.toRadians(localYaw)) * relWheelOffset + Math.sin(Math.toRadians(localYaw)) * i;
-        	if(leftRight) {
-    	   		 xRot = Math.cos(Math.toRadians(localYaw)) * relWheelOffset - Math.sin(Math.toRadians(localYaw)) * i;  
-    	       	 zRot = Math.sin(Math.toRadians(localYaw)) * relWheelOffset - Math.cos(Math.toRadians(localYaw)) * i;
-        	}	
-        	BlockPos pos = new BlockPos(posX + xRot, this.posY, posZ + zRot);
-        	boolean found = false;
-    		List<AxisAlignedBB> aabbList = Lists.newArrayList();;
-        	while(!found) {
-        		if(pos.getY() < 0) {
-        			break;
-        		}
-        		aabbList.clear();
-            	world.getBlockState(pos).addCollisionBoxToList(world, pos, new AxisAlignedBB(pos), aabbList, this, false);
-        		if(world.isAirBlock(pos) || aabbList.isEmpty()) {
-        			pos = pos.down();
-        		} else {
-        			found = true;
-        		}
-        	}
-        	if(!found) {
-        		return posY;
-        	}
-        	if(found && !world.isAirBlock(pos.up()) && !world.isAirBlock(pos.up(2))) {
-        		List<AxisAlignedBB> list = Lists.newArrayList();
-        		world.getBlockState(pos.up()).addCollisionBoxToList(world, pos.up(), new AxisAlignedBB(pos.up()), list, this, false);
-        		world.getBlockState(pos.up(2)).addCollisionBoxToList(world, pos.up(2), new AxisAlignedBB(pos.up(2)), list, this, false);
-        		if(!list.isEmpty()) {
-        			return posY; //Means its facing a wall. 
-        		}
-        	}
-        	if(aabbList.isEmpty()) {
-        		return pos.getY();
-        	}
-        	DoubleHolder holder = new DoubleHolder(Integer.MIN_VALUE);
-        	aabbList.forEach(aabb -> holder.value = Math.max(aabb.maxY, holder.value));
-        	if(holder.value > ret) {
-        		ret = holder.value;
-        	}
-    	}
-    	return ret;
+    private WheelVec getWheelVec(float wheelOffsetX, float wheelOffsetZ, boolean leftRight) { 
+
+        float localYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw);
+	double x = Math.sin(Math.toRadians(localYaw)) * wheelOffsetX - Math.cos(Math.toRadians(localYaw)) * wheelOffsetZ; 
+        double z = - Math.cos(Math.toRadians(localYaw)) * wheelOffsetX - Math.sin(Math.toRadians(localYaw)) * wheelOffsetZ;
+               
+        Vec3d actualPos = new Vec3d(this.posX + x, this.posY, this.posZ + z);
+        
+        double ret = Integer.MIN_VALUE;
+        
+        double retX = Integer.MIN_VALUE;
+        double retY = Integer.MIN_VALUE;
+        double retZ = Integer.MIN_VALUE;
+        
+        double retTargetY = Integer.MIN_VALUE;
+        
+        boolean calculate = true;
+        
+        for(int i = -1 ; i <= 1; i++) {
+            double rad = Math.toRadians(localYaw);
+            double xRot = Math.sin(Math.toRadians(localYaw)) * (leftRight ? i : wheelOffsetX) - Math.cos(Math.toRadians(localYaw)) * (leftRight ? wheelOffsetZ : i); 
+            double zRot = - Math.cos(Math.toRadians(localYaw)) * (leftRight ? i : wheelOffsetX) - Math.sin(Math.toRadians(localYaw)) * (leftRight ? wheelOffsetZ : i);
+            Vec3d vec = new Vec3d(posX + xRot, this.posY, posZ + zRot);
+            BlockPos pos = new BlockPos(vec);
+            
+            if(i == 0) {
+                retX = vec.x;
+                retY = vec.y;
+                retZ = vec.z;
+            }
+            
+            if(!calculate) {
+                continue;
+            }
+            boolean found = false;
+            List<AxisAlignedBB> aabbList = Lists.newArrayList();;
+            while(!found) {
+                if(pos.getY() < 0) {
+                    calculate = false;
+                    found = true;
+                }
+                aabbList.clear();
+                world.getBlockState(pos).addCollisionBoxToList(world, pos, new AxisAlignedBB(pos), aabbList, this, false);
+                if(world.isAirBlock(pos) || aabbList.isEmpty()) {
+                    pos = pos.down();
+                } else {
+                    found = true;
+                }
+            }
+            if(!found) {
+                retTargetY = posY;
+                calculate = false;
+            }
+            if(found && !world.isAirBlock(pos.up()) && !world.isAirBlock(pos.up(2))) {
+                List<AxisAlignedBB> list = Lists.newArrayList();
+                world.getBlockState(pos.up()).addCollisionBoxToList(world, pos.up(), new AxisAlignedBB(pos.up()), list, this, false);
+                world.getBlockState(pos.up(2)).addCollisionBoxToList(world, pos.up(2), new AxisAlignedBB(pos.up(2)), list, this, false);
+                if(!list.isEmpty()) {
+                    retTargetY = posY;
+                    calculate = false; //Means its facing a wall. 
+                }
+            }
+            if(aabbList.isEmpty()) {
+                retTargetY = pos.getY();
+                calculate = false;
+            }
+            DoubleHolder holder = new DoubleHolder(Integer.MIN_VALUE);
+            aabbList.forEach(aabb -> holder.value = Math.max(aabb.maxY, holder.value));
+            if(holder.value > ret) {
+                ret = holder.value;
+            }
+        }
+        if(retX == Integer.MIN_VALUE || retY == Integer.MIN_VALUE || retZ == Integer.MIN_VALUE) {
+            throw new RuntimeException("Returning positions wern't set. This should be impossile");
+        }
+        return new WheelVec(retX, retY, retZ, retTargetY != Integer.MIN_VALUE ? retTargetY : ret, actualPos);
     }
 
     @Override
