@@ -1,5 +1,8 @@
 package org.genesis.genetics;
 
+import net.minecraft.nbt.NBTTagCompound;
+import org.genesis.genetics.Genes.Gene;
+
 import java.util.*;
 
 public class Genome
@@ -87,7 +90,6 @@ public class Genome
 
         return result;
     }
-
     public static List<Gene> FilterDominantGenes(List<Gene> allGenes)
     {
         HashMap<String, Gene> resultMap = new HashMap<String, Gene>();
@@ -95,15 +97,15 @@ public class Genome
         for (int i = 0; i < allGenes.size(); i++)
         {
             Gene newGene = allGenes.get(i);
-            if (!resultMap.containsKey(newGene.Codon))
-                resultMap.put(newGene.Codon, allGenes.get(i));
+            if (!resultMap.containsKey(newGene.codon))
+                resultMap.put(newGene.codon, allGenes.get(i));
             else
             {
-                Gene existingGene = resultMap.get(newGene.Codon);
-                if (existingGene.Dominance <= newGene.Dominance)
+                Gene existingGene = resultMap.get(newGene.codon);
+                if (existingGene.dominance <= newGene.dominance)
                 {
-                    resultMap.remove(existingGene.Codon);
-                    resultMap.put(newGene.Codon, newGene);
+                    resultMap.remove(existingGene.codon);
+                    resultMap.put(newGene.codon, newGene);
                 }
             }
         }
@@ -117,6 +119,10 @@ public class Genome
     public List<Gene> Sequence2Genes;
     public List<Gene> ExpressedGenes;
 
+    public Genome(String sequence)
+    {
+        this(sequence, sequence);
+    }
     public Genome(String sequence1, String sequence2)
     {
         Sequence1 = sequence1;
@@ -134,5 +140,16 @@ public class Genome
         allGenes.addAll(Sequence2Genes);
 
         ExpressedGenes = FilterDominantGenes(allGenes);
+    }
+
+    public void writeToNBT(NBTTagCompound nbt)
+    {
+        nbt.setString("Sequence1", this.Sequence1);
+        nbt.setString("Sequence2", this.Sequence2);
+    }
+
+    public static Genome readFromNBT(NBTTagCompound nbt)
+    {
+        return new Genome(nbt.getString("Sequence1"), nbt.getString("Sequence2"));
     }
 }
