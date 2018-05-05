@@ -87,6 +87,9 @@ public abstract class CarEntity extends Entity {
     private float healAmount;
     private int healCooldown = 40;
 
+    private Vec3d previousPosition = null; //Used for speed calculations
+    private long prevWorldTime = -1;//Also used for speed calculations
+    
     public CarEntity(World world) {
         super(world);
         this.setSize(3.0F, 2.5F);
@@ -207,6 +210,14 @@ public abstract class CarEntity extends Entity {
 
     @Override
     public void onEntityUpdate() {
+        if(!world.isRemote) {
+            if(previousPosition != null && prevWorldTime != -1) {
+                world.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().grow(0.1f), this::canRunoverEntity).forEach(this::runOverEntity);
+            }
+            previousPosition = this.getPositionVector();
+            prevWorldTime = world.getTotalWorldTime();
+        }
+        
         allInterps.forEach(InterpValue::onEntityUpdate);
         List<WheelParticleData> markedRemoved = Lists.newArrayList();
         wheelDataList.forEach(wheel -> wheel.onUpdate(markedRemoved));
@@ -248,6 +259,16 @@ public abstract class CarEntity extends Entity {
         } else {
             this.motionX = this.motionY = this.motionZ = 0;
         }
+        
+    }
+    
+    protected boolean canRunoverEntity(Entity entity) {
+	return EntitySelectors.NOT_SPECTATING.apply(entity) && !this.getPassengers().contains(entity);
+    }
+    
+    protected void runOverEntity(Entity entity) {
+	double rawSpeed = this.getPositionVector().distanceTo(previousPosition) / (world.getTotalWorldTime() - prevWorldTime);
+	entity.attackEntityFrom(DamageSources.CAR, (float) (rawSpeed * 20D));
     }
 
     private void processWheel(CarWheel wheel) {
@@ -275,10 +296,6 @@ public abstract class CarEntity extends Entity {
                 }
                 world.setBlockToAir(pos);
             }
-        }
-        
-        if(!world.isRemote) {
-            world.getEntitiesWithinAABB(EntityLivingBase.class, aabb.grow(1f), entity -> EntitySelectors.NOT_SPECTATING.apply(entity) && !this.getPassengers().contains(entity)).forEach(entity -> entity.attackEntityFrom(DamageSources.CAR, 5F));
         }
         
         this.prevWheelRotateAmount = this.wheelRotateAmount;
