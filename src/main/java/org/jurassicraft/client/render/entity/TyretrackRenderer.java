@@ -41,14 +41,13 @@ public class TyretrackRenderer {
         Minecraft mc = Minecraft.getMinecraft();
         World world = mc.world;
         EntityPlayer player = mc.player;
-        TextureManager manager = mc.getTextureManager();
         
         GlStateManager.enableBlend();
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-            
-        manager.bindTexture(TYRE_TRACKS_LOCATION);
-        manager.getTexture(TYRE_TRACKS_LOCATION).setBlurMipmap(false, false);
+        GlStateManager.alphaFunc(GL11.GL_GREATER, 0.003921569F);
+        
+        mc.getTextureManager().bindTexture(TYRE_TRACKS_LOCATION);
 
         Tessellator tess = Tessellator.getInstance();
         VertexBuffer buffer = tess.getBuffer();
@@ -109,6 +108,7 @@ public class TyretrackRenderer {
         tess.draw();
         buffer.setTranslation(0, 0, 0);
             
+        GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.disableBlend();
     
