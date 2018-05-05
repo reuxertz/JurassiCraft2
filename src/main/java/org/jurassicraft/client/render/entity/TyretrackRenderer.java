@@ -27,16 +27,21 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-@EventBusSubscriber(modid=JurassiCraft.MODID, value=Side.CLIENT)
+@EventBusSubscriber(modid=JurassiCraft.MODID)
 public class TyretrackRenderer {
     
     public static final List<Material> ALLOWED_MATERIALS = Lists.newArrayList(Material.GRASS, Material.GROUND, Material.SAND);//TODO: configurable ?
-    
     public static final ResourceLocation TYRE_TRACKS_LOCATION = new ResourceLocation(JurassiCraft.MODID, "textures/misc/tyre-tracks.png");
-        
+    
+    private static final List<List<WheelParticleData>> DEAD_CARS_LISTS = Lists.newArrayList();
+    
     @SubscribeEvent
+    @SideOnly(Side.CLIENT)
     public static void onRenderWorldLast(RenderWorldLastEvent event) {
         Minecraft mc = Minecraft.getMinecraft();
         World world = mc.world;
@@ -51,66 +56,95 @@ public class TyretrackRenderer {
 
         Tessellator tess = Tessellator.getInstance();
         VertexBuffer buffer = tess.getBuffer();
+        
+        double d0 = (player.lastTickPosX + (player.posX - player.lastTickPosX) * (double)event.getPartialTicks());
+        double d1 = (player.lastTickPosY + (player.posY - player.lastTickPosY) * (double)event.getPartialTicks());
+        double d2 = (player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * (double)event.getPartialTicks());
+        buffer.setTranslation(-d0, -d1, -d2);
+        
         buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
         for(Entity entity : world.loadedEntityList) {
             if(entity instanceof CarEntity) {
             CarEntity car = (CarEntity)entity;
                 GlStateManager.pushMatrix(); 
-                {
-                    double d0 = (player.lastTickPosX + (player.posX - player.lastTickPosX) * (double)event.getPartialTicks());
-                    double d1 = (player.lastTickPosY + (player.posY - player.lastTickPosY) * (double)event.getPartialTicks());
-                    double d2 = (player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * (double)event.getPartialTicks());
-                    buffer.setTranslation(-d0, -d1, -d2);
-                    List<WheelParticleData> dataList = car.wheelDataList;
-                    for(int i = 0; i < dataList.size() - 4; i++) {
-                        
-                        WheelParticleData start = dataList.get(i);
-                        WheelParticleData end = dataList.get(i + 4);
-                            
-                        Vec3d sv = start.getPosition();
-                        Vec3d ev = end.getPosition();
-                        Vec3d opposite = dataList.get(i - (i % 4) + (3 - i % 4)/*//TODO: simplify (if possible?)*/).getPosition();
-                       
-                        BlockPos position = new BlockPos(sv);
-                        BlockPos downPos = position.down();
-                        IBlockState downState = world.getBlockState(downPos);
-                        if(!downState.isSideSolid(world, downPos, EnumFacing.UP) || sv.y != ev.y || !ALLOWED_MATERIALS.contains(downState.getMaterial())) { //TODO: Dont create the particles if theyll never be rendered. 
-                            continue;
-                        }
-                        
-                        double d = 1D / Math.sqrt(Math.pow(sv.x - opposite.x, 2) + Math.pow(sv.z - opposite.z, 2)) / 2D;    
-                        Vec3d vec = new Vec3d((sv.x - opposite.x) * d, 0, (sv.z - opposite.z) * d);
-                        
-                        float sl = world.getLightBrightness(position);
-                        float el = world.getLightBrightness(new BlockPos(ev));
-                            
-                            
-                        float sa = start.getAlpha(event.getPartialTicks());
-                        float ea = end.getAlpha(event.getPartialTicks());
-                                            
-                        double offset = (i + 1) * 0.000002D; //No z-fighting on my watch
-                        
-                        buffer.pos(sv.x , sv.y + offset, sv.z).tex(0, 0).color(sl, sl, sl, sa).endVertex();
-                        buffer.pos(sv.x - vec.x, sv.y + offset, sv.z - vec.z).tex(0, 1).color(sl, sl, sl, sa).endVertex();
-                        buffer.pos(ev.x - vec.x, ev.y + offset, ev.z - vec.z).tex(1, 1).color(el, el, el, ea).endVertex();
-                        buffer.pos(ev.x, ev.y + offset, ev.z).tex(1, 0).color(el, el, el, ea).endVertex();
-                            
-                        //Flip quad to render upside down. Means when looking at tyre track from underneath, it still rendered. Needed because one set of tyres are upside down. //TODO: Fix that
-                        buffer.pos(sv.x , sv.y + offset, sv.z).tex(0, 0).color(sl, sl, sl, sa).endVertex();
-                        buffer.pos(ev.x, ev.y + offset, ev.z).tex(1, 0).color(el, el, el, ea).endVertex();     
-                        buffer.pos(ev.x - vec.x, ev.y + offset, ev.z - vec.z).tex(1, 1).color(el, el, el, ea).endVertex();
-                        buffer.pos(sv.x - vec.x, sv.y + offset, sv.z - vec.z).tex(0, 1).color(sl, sl, sl, sa).endVertex();
-                    }
-                }
+                renderList(car.wheelDataList, buffer, event.getPartialTicks());
                 GlStateManager.popMatrix();
             }
         }
+        GlStateManager.pushMatrix();
+        DEAD_CARS_LISTS.forEach(list -> renderList(list, buffer, event.getPartialTicks()));
+        GlStateManager.popMatrix();
         tess.draw();
         buffer.setTranslation(0, 0, 0);
             
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.disableBlend();
+    }
     
+    @SideOnly(Side.CLIENT)
+    private static void renderList(List<WheelParticleData> dataList, VertexBuffer buffer, float partialTicks) {
+        World world = Minecraft.getMinecraft().world;
+	for(int i = 0; i < dataList.size() - 4; i++) {
+            WheelParticleData start = dataList.get(i);
+            WheelParticleData end = dataList.get(i + 4);
+                
+            Vec3d sv = start.getPosition();
+            Vec3d ev = end.getPosition();
+            
+            Vec3d opposite = dataList.get(i + ((i % 4) / 2 == 0 ? 2 : -2)).getPosition();
+
+            BlockPos position = new BlockPos(sv);
+            BlockPos downPos = position.down();
+            IBlockState downState = world.getBlockState(downPos);
+            if(!downState.isSideSolid(world, downPos, EnumFacing.UP) || sv.y != ev.y || !ALLOWED_MATERIALS.contains(downState.getMaterial())) { //TODO: Dont create the particles if theyll never be rendered. 
+                continue;
+            }
+            
+            double d = 1D / Math.sqrt(Math.pow(sv.x - opposite.x, 2) + Math.pow(sv.z - opposite.z, 2)) / 2D;    
+            Vec3d vec = new Vec3d((sv.x - opposite.x) * d, 0, (sv.z - opposite.z) * d);
+            
+            float sl = world.getLightBrightness(position);
+            float el = world.getLightBrightness(new BlockPos(ev));
+                
+                
+            float sa = start.getAlpha(partialTicks);
+            float ea = end.getAlpha(partialTicks);
+                                
+            double offset = (i + 1) * 0.000002D; //No z-fighting on my watch
+            
+            buffer.pos(sv.x , sv.y + offset, sv.z).tex(0, 0).color(sl, sl, sl, sa).endVertex();
+            buffer.pos(sv.x - vec.x, sv.y + offset, sv.z - vec.z).tex(0, 1).color(sl, sl, sl, sa).endVertex();
+            buffer.pos(ev.x - vec.x, ev.y + offset, ev.z - vec.z).tex(1, 1).color(el, el, el, ea).endVertex();
+            buffer.pos(ev.x, ev.y + offset, ev.z).tex(1, 0).color(el, el, el, ea).endVertex();
+                
+            //Flip quad to render upside down. Means when looking at tyre track from underneath, it still rendered. Needed because one set of tyres are upside down. //TODO: Fix that
+            buffer.pos(sv.x , sv.y + offset, sv.z).tex(0, 0).color(sl, sl, sl, sa).endVertex();
+            buffer.pos(ev.x, ev.y + offset, ev.z).tex(1, 0).color(el, el, el, ea).endVertex();     
+            buffer.pos(ev.x - vec.x, ev.y + offset, ev.z - vec.z).tex(1, 1).color(el, el, el, ea).endVertex();
+            buffer.pos(sv.x - vec.x, sv.y + offset, sv.z - vec.z).tex(0, 1).color(sl, sl, sl, sa).endVertex();
+        }
+    }
+    
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public static void onWorldTick(ClientTickEvent event) {
+	List<List<WheelParticleData>> emptyLists = Lists.newArrayList();
+	DEAD_CARS_LISTS.forEach(list -> {
+	    List<WheelParticleData> markedRemoved = Lists.newArrayList();
+	    list.forEach(wheel -> wheel.onUpdate(markedRemoved));
+	    markedRemoved.forEach(list::remove);
+	    markedRemoved.clear();
+	    if(list.isEmpty()) {
+		emptyLists.add(list);
+	    }
+	});
+	emptyLists.forEach(DEAD_CARS_LISTS::remove);
+    }
+    
+    public static void uploadList(CarEntity entity) {
+	if(entity.world.isRemote) {
+	    DEAD_CARS_LISTS.add(entity.wheelDataList);
+	}
     }
 }

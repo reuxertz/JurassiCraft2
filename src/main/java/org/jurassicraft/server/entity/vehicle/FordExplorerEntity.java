@@ -23,4 +23,9 @@ public class FordExplorerEntity extends CarEntity {
         Seat backRight = new Seat(3, -0.5F, 0.7F, -2.2F, 0.4F, 0.25F);
         return new Seat[] { frontLeft, frontRight, backLeft, backRight };
     }
+
+    @Override
+    protected WheelData createWheels() {
+	return new WheelData(1.3, 2, -1.3, -2.2);
+    }
 }

@@ -1,5 +1,7 @@
 package org.jurassicraft.server.entity.vehicle.util;
 
+import java.util.List;
+
 import org.jurassicraft.server.entity.vehicle.CarEntity;
 
 import net.minecraft.util.math.Vec3d;
@@ -9,17 +11,14 @@ public class WheelParticleData {
     
     private final Vec3d position;
     private final int maxAge = 200;
-    
-    private final CarEntity parentEntity;
-    
-    public WheelParticleData(CarEntity parentEntity, Vec3d position) {
-        this.parentEntity = parentEntity;
+        
+    public WheelParticleData(Vec3d position) {
         this.position = position;
     }
     
-    public void onUpdate() {
+    public void onUpdate(List<WheelParticleData> markedRemoved) {
         if (this.age++ >= this.maxAge) {
-            this.parentEntity.markRemoval(this);
+            markedRemoved.add(this);
         }
     }
     
@@ -41,9 +40,5 @@ public class WheelParticleData {
 
         f1 = f1 * 0.3F;
         return f1;
-    }
-    
-    public CarEntity getParentEntity() {
-	return parentEntity;
     }
 }

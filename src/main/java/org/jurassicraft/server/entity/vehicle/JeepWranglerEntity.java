@@ -1,5 +1,6 @@
 package org.jurassicraft.server.entity.vehicle;
 
+import org.jurassicraft.server.entity.vehicle.CarEntity.WheelData;
 import org.jurassicraft.server.item.ItemHandler;
 
 import net.minecraft.world.World;
@@ -21,5 +22,10 @@ public class JeepWranglerEntity extends CarEntity {
         Seat backLeft = new Seat(2, 0.5F, 0.7F, -2.2F, 0.4F, 0.25F);
         Seat backRight = new Seat(3, -0.5F, 0.7F, -2.2F, 0.4F, 0.25F);
         return new Seat[] { frontLeft, frontRight, backLeft, backRight };
+    }
+    
+    @Override
+    protected WheelData createWheels() {
+	return new WheelData(1.3, 1.5, -1.3, -2.65);
     }
 }

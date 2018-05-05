@@ -4,7 +4,7 @@ import net.minecraft.util.math.Vec3d;
 
 public class InterpValue {
     
-    protected static final double INTERP_AMOUNT = 0.2D; //TODO: Config value ?
+    protected static final double INTERP_AMOUNT = 0.25D; //TODO: Config value ?
     
     private double target;
     private double current;
