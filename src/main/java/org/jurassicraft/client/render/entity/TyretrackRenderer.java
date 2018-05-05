@@ -15,6 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,25 +35,21 @@ public class TyretrackRenderer {
     public static final List<Material> ALLOWED_MATERIALS = Lists.newArrayList(Material.GRASS, Material.GROUND, Material.SAND);//TODO: configurable ?
     
     public static final ResourceLocation TYRE_TRACKS_LOCATION = new ResourceLocation(JurassiCraft.MODID, "textures/misc/tyre-tracks.png");
-    
-    private static boolean hasChangedMipMapping;
-    
+        
     @SubscribeEvent
     public static void onRenderWorldLast(RenderWorldLastEvent event) {
         Minecraft mc = Minecraft.getMinecraft();
         World world = mc.world;
         EntityPlayer player = mc.player;
+        TextureManager manager = mc.getTextureManager();
         
         GlStateManager.enableBlend();
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
             
-        mc.getTextureManager().bindTexture(TYRE_TRACKS_LOCATION);
-        if(!hasChangedMipMapping)  {
-            hasChangedMipMapping = true;
-	    GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-            GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-	}
+        manager.bindTexture(TYRE_TRACKS_LOCATION);
+        manager.getTexture(TYRE_TRACKS_LOCATION).setBlurMipmap(false, false);
+
         Tessellator tess = Tessellator.getInstance();
         VertexBuffer buffer = tess.getBuffer();
         buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
