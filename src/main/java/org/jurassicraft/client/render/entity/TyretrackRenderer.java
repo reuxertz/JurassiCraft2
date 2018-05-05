@@ -92,8 +92,10 @@ public class TyretrackRenderer {
             Vec3d sv = start.getPosition();
             Vec3d ev = end.getPosition();
             
-            Vec3d opposite = dataList.get(i + ((i % 4) / 2 == 0 ? 2 : -2)).getPosition();
+            Vec3d startOpposite = dataList.get(i + ((i % 4) / 2 == 0 ? 2 : -2)).getPosition();
+            Vec3d endOpposite = dataList.get((i + 4) + (((i + 4) % 4) / 2 == 0 ? 2 : -2)).getPosition();
 
+            
             BlockPos position = new BlockPos(sv);
             BlockPos downPos = position.down();
             IBlockState downState = world.getBlockState(downPos);
@@ -101,8 +103,11 @@ public class TyretrackRenderer {
                 continue;
             }
             
-            double d = 1D / Math.sqrt(Math.pow(sv.x - opposite.x, 2) + Math.pow(sv.z - opposite.z, 2)) / 2D;    
-            Vec3d vec = new Vec3d((sv.x - opposite.x) * d, 0, (sv.z - opposite.z) * d);
+            double d = 1D / Math.sqrt(Math.pow(sv.x - startOpposite.x, 2) + Math.pow(sv.z - startOpposite.z, 2)) / 2D;    
+            Vec3d vec = new Vec3d((sv.x - startOpposite.x) * d, 0, (sv.z - startOpposite.z) * d);
+            
+            double d1 = 1D / Math.sqrt(Math.pow(ev.x - endOpposite.x, 2) + Math.pow(ev.z - endOpposite.z, 2)) / 2D;    
+            Vec3d vec1 = new Vec3d((ev.x - endOpposite.x) * d, 0, (ev.z - endOpposite.z) * d);
             
             float sl = world.getLightBrightness(position);
             float el = world.getLightBrightness(new BlockPos(ev));
@@ -115,13 +120,13 @@ public class TyretrackRenderer {
             
             buffer.pos(sv.x , sv.y + offset, sv.z).tex(0, 0).color(sl, sl, sl, sa).endVertex();
             buffer.pos(sv.x - vec.x, sv.y + offset, sv.z - vec.z).tex(0, 1).color(sl, sl, sl, sa).endVertex();
-            buffer.pos(ev.x - vec.x, ev.y + offset, ev.z - vec.z).tex(1, 1).color(el, el, el, ea).endVertex();
+            buffer.pos(ev.x - vec1.x, ev.y + offset, ev.z - vec1.z).tex(1, 1).color(el, el, el, ea).endVertex();
             buffer.pos(ev.x, ev.y + offset, ev.z).tex(1, 0).color(el, el, el, ea).endVertex();
                 
             //Flip quad to render upside down. Means when looking at tyre track from underneath, it still rendered. Needed because one set of tyres are upside down. //TODO: Fix that
             buffer.pos(sv.x , sv.y + offset, sv.z).tex(0, 0).color(sl, sl, sl, sa).endVertex();
-            buffer.pos(ev.x, ev.y + offset, ev.z).tex(1, 0).color(el, el, el, ea).endVertex();     
-            buffer.pos(ev.x - vec.x, ev.y + offset, ev.z - vec.z).tex(1, 1).color(el, el, el, ea).endVertex();
+            buffer.pos(ev.x, ev.y + offset, ev.z).tex(1, 0).color(el, el, el, ea).endVertex();
+            buffer.pos(ev.x - vec1.x, ev.y + offset, ev.z - vec1.z).tex(1, 1).color(el, el, el, ea).endVertex();
             buffer.pos(sv.x - vec.x, sv.y + offset, sv.z - vec.z).tex(0, 1).color(sl, sl, sl, sa).endVertex();
         }
     }
