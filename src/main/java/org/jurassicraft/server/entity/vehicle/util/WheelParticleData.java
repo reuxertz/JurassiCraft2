@@ -28,7 +28,7 @@ public class WheelParticleData {
     }
     
     public float getAlpha(float partialTicks) {
-	if(age > 190) {
+	if(age > 199) {
 	    return 0f;
 	}
 	float f = (float) Math.pow(((double)this.age + partialTicks) / (double)this.maxAge, 2);

@@ -660,6 +660,11 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     public void setGenetics(String genetics) {
         this.genetics = genetics;
     }
+    
+    //Should really be @SideOnly(Side.CLIENT)
+    public float getPitchRotation(float partialTicks) {
+	return 0;
+    }
 
     @Override
     public void onLivingUpdate() {

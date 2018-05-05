@@ -10,10 +10,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.ai.EntityMoveHelper;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -45,11 +42,15 @@ public abstract class FlyingDinosaurEntity extends DinosaurEntity {
     	    ticksOnFloor = 0;
     	}
     	
-    	
     	if(ticksInAir > 150) {
     	    this.takingOff = false;
     	}
     	super.onEntityUpdate();
+    }
+    
+    @Override
+    public float getPitchRotation(float partialTicks) {
+	return prevRotationPitch + (rotationPitch - prevRotationPitch) * partialTicks;
     }
     
     @Override
@@ -63,6 +64,11 @@ public abstract class FlyingDinosaurEntity extends DinosaurEntity {
     
     public void startTakeOff() {
 	takingOff = true;
+    }
+    
+    @Override
+    public int getHorizontalFaceSpeed() {
+        return getVerticalFaceSpeed();
     }
     
     @Override
@@ -156,7 +162,7 @@ public abstract class FlyingDinosaurEntity extends DinosaurEntity {
 	
 	@Override
 	public boolean shouldExecute() {
-	    return dino.ticksOnFloor >= 150/*TODO: config this ?*/ && dino.isOnGround() && this.dino.rand.nextFloat() < 0.1F; //TODO: config this value
+	    return dino.ticksOnFloor >= 150/*TODO: config this ?*/ && dino.isOnGround() && this.dino.rand.nextFloat() < 0.02F; //TODO: config this value
 	}
 	
 	@Override
@@ -214,6 +220,7 @@ public abstract class FlyingDinosaurEntity extends DinosaurEntity {
                 Vec3d vecPos = new Vec3d(destinationX, destinationY, destinationZ);
                 if(dino.isCourseTraversable(vecPos) && Math.abs(MathUtils.cosineFromPoints(vecPos, lookVec, new Vec3d(getPosition()))) < 45D) //TODO: make angle change depending on speed.
                 {
+                    this.dino.getLookHelper().setLookPosition(destinationX, destinationY, destinationZ, this.dino.getHorizontalFaceSpeed(), this.dino.getVerticalFaceSpeed());
                     this.dino.setAnimation(EntityAnimation.FLYING.get());
                     this.dino.getMoveHelper().setMoveTo(destinationX, destinationY, destinationZ, 2D);
                     return;

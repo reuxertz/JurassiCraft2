@@ -27,6 +27,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -185,7 +186,7 @@ public abstract class CarEntity extends Entity {
 
     @Override
     public void onEntityUpdate() {
-        allInterps.forEach(CarWheel::onUpdate);
+        allInterps.forEach(CarWheel::onEntityUpdate);
         wheelDataList.forEach(WheelParticleData::onUpdate);
         
         markedRemoved.forEach(wheelDataList::remove);
@@ -229,7 +230,7 @@ public abstract class CarEntity extends Entity {
     }
 
     private void processWheel(CarWheel wheel, WheelVec wheelLoc) {
-        wheel.setTargetY(MathHelper.clamp(wheelLoc.targetY, posY - 3, posY + 3));
+        wheel.setTarget(MathHelper.clamp(wheelLoc.targetY, posY - 3, posY + 3));
         wheel.setCurrentWheelPos(wheelLoc.getPos());
         this.wheelDataList.add(new WheelParticleData(this, wheelLoc.actualPos));
     }
