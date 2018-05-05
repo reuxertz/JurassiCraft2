@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.proxy.ClientProxy;
+import org.jurassicraft.server.damage.DamageSources;
 import org.jurassicraft.server.entity.vehicle.util.CarWheel;
 import org.jurassicraft.server.entity.vehicle.util.WheelParticleData;
 import org.jurassicraft.server.entity.vehicle.util.WheelVec;
@@ -250,7 +251,7 @@ public abstract class CarEntity extends Entity {
         }
         
         if(!world.isRemote) {
-            world.getEntitiesWithinAABB(EntityLivingBase.class, aabb.grow(1f)).forEach(entity -> entity.attackEntityFrom(new DamageSource("jeep"), 5F));//TODO: create own damage source singleton, and make source dependant on speed
+            world.getEntitiesWithinAABB(EntityLivingBase.class, aabb.grow(1f)).forEach(entity -> entity.attackEntityFrom(DamageSources.CAR, 5F));
         }
         
         this.prevWheelRotateAmount = this.wheelRotateAmount;
