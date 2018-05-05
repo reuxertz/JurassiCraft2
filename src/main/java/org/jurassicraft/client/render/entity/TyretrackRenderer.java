@@ -35,18 +35,24 @@ public class TyretrackRenderer {
     
     public static final ResourceLocation TYRE_TRACKS_LOCATION = new ResourceLocation(JurassiCraft.MODID, "textures/misc/tyre-tracks.png");
     
+    private static boolean hasChangedMipMapping;
+    
     @SubscribeEvent
     public static void onRenderWorldLast(RenderWorldLastEvent event) {
         Minecraft mc = Minecraft.getMinecraft();
         World world = mc.world;
         EntityPlayer player = mc.player;
-        Vec3d playerHead = player.getPositionEyes(event.getPartialTicks());
-      
+        
         GlStateManager.enableBlend();
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
             
         mc.getTextureManager().bindTexture(TYRE_TRACKS_LOCATION);
+        if(!hasChangedMipMapping)  {
+            hasChangedMipMapping = true;
+	    GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+            GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+	}
         Tessellator tess = Tessellator.getInstance();
         VertexBuffer buffer = tess.getBuffer();
         buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
@@ -72,7 +78,7 @@ public class TyretrackRenderer {
                         BlockPos position = new BlockPos(sv);
                         BlockPos downPos = position.down();
                         IBlockState downState = world.getBlockState(downPos);
-                        if(!downState.isSideSolid(world, downPos, EnumFacing.UP) || sv.y != ev.y || !ALLOWED_MATERIALS.contains(downState.getMaterial())) {
+                        if(!downState.isSideSolid(world, downPos, EnumFacing.UP) || sv.y != ev.y || !ALLOWED_MATERIALS.contains(downState.getMaterial())) { //TODO: Dont create the particles if theyll never be rendered. 
                             continue;
                         }
                         
