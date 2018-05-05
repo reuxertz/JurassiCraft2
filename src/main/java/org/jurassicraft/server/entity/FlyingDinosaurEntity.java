@@ -216,7 +216,6 @@ public abstract class FlyingDinosaurEntity extends DinosaurEntity {
                 {
                     this.dino.setAnimation(EntityAnimation.FLYING.get());
                     this.dino.getMoveHelper().setMoveTo(destinationX, destinationY, destinationZ, 2D);
-                    world.setBlockState(new BlockPos(destinationX, destinationY, destinationZ), Blocks.STONE.getDefaultState());
                     return;
                 }
             }
