@@ -13,6 +13,7 @@ import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.ai.EntityMoveHelper;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -21,12 +22,15 @@ import net.minecraft.world.World;
 
 public abstract class FlyingDinosaurEntity extends DinosaurEntity {
 	
-	private int ticksOnFloor;
-	
+    private int ticksOnFloor;
+    private int ticksInAir;
+    private boolean takingOff;
+    
     public FlyingDinosaurEntity(World world) {
         super(world);
         this.moveHelper = new FlyingDinosaurEntity.FlyingMoveHelper();
         this.tasks.addTask(1, new FlyingDinosaurEntity.AIFlyLand()); 
+        this.tasks.addTask(2, new FlyingDinosaurEntity.AIStartFlying());
         this.tasks.addTask(2, new FlyingDinosaurEntity.AIRandomFly());
     }
     
@@ -34,9 +38,16 @@ public abstract class FlyingDinosaurEntity extends DinosaurEntity {
     public void onEntityUpdate() {
     	setNoGravity(!isOnGround());
     	if(isOnGround()) {
-    		ticksOnFloor++;
+    	    ticksInAir = 0;
+    	    ticksOnFloor++;
     	} else {
-    		ticksOnFloor = 0;
+    	    ticksInAir++;
+    	    ticksOnFloor = 0;
+    	}
+    	
+    	
+    	if(ticksInAir > 150) {
+    	    this.takingOff = false;
     	}
     	super.onEntityUpdate();
     }
@@ -47,7 +58,11 @@ public abstract class FlyingDinosaurEntity extends DinosaurEntity {
     }
 
     public boolean isOnGround() {
-    	return !this.world.getCollisionBoxes(this, this.getEntityBoundingBox().grow(0.3d)).isEmpty();
+    	return !this.world.getCollisionBoxes(this, this.getEntityBoundingBox().grow(0.3d)).isEmpty() && !takingOff;
+    }
+    
+    public void startTakeOff() {
+	takingOff = true;
     }
     
     @Override
@@ -130,6 +145,33 @@ public abstract class FlyingDinosaurEntity extends DinosaurEntity {
 
         return true;
      }
+    
+    class AIStartFlying extends EntityAIBase {
+	private final FlyingDinosaurEntity dino = FlyingDinosaurEntity.this;
+
+	
+	public AIStartFlying() {
+            this.setMutexBits(1);
+	}
+	
+	@Override
+	public boolean shouldExecute() {
+	    return dino.ticksOnFloor >= 150/*TODO: config this ?*/ && dino.isOnGround() && this.dino.rand.nextFloat() < 0.1F; //TODO: config this value
+	}
+	
+	@Override
+	public boolean shouldContinueExecuting() {
+	    return false;
+	}
+	
+	@Override
+	public void startExecuting() {
+	    this.dino.startTakeOff();
+	    this.dino.setAnimation(EntityAnimation.FLYING_TAKING_OFF.get());
+	}
+	
+	
+    }
 
     class AIRandomFly extends EntityAIBase {
         private FlyingDinosaurEntity dino = FlyingDinosaurEntity.this;
@@ -139,10 +181,10 @@ public abstract class FlyingDinosaurEntity extends DinosaurEntity {
         }
 
         @Override
-        public boolean shouldExecute() {
-        	if(dino.ticksOnFloor <= 150 && dino.isOnGround()) {
-        		return false;
-        	}
+        public boolean shouldExecute() {	
+            if(dino.isOnGround()) {
+        	return false;
+            }
             EntityMoveHelper moveHelper = this.dino.getMoveHelper();
             if (!moveHelper.isUpdating()) {
                 return true;
@@ -151,7 +193,7 @@ public abstract class FlyingDinosaurEntity extends DinosaurEntity {
                 double moveY = moveHelper.getY() - this.dino.posY;
                 double moveZ = moveHelper.getZ() - this.dino.posZ;
                 double distance = moveX * moveX + moveY * moveY + moveZ * moveZ;
-                return distance < 1.0D || distance > 3600.0D;
+                return distance < 3.0D || distance > 3600.0D;
             }
         }
         
@@ -162,7 +204,7 @@ public abstract class FlyingDinosaurEntity extends DinosaurEntity {
 
         @Override
         public void startExecuting() {//TODO: Fix cosine issues. Not sure why they're happening. Maybe clash with diffrent ai or the task being run multiple times??
-    		Vec3d lookVec = new Vec3d(dino.getLookVec().x * 10D, dino.getLookVec().y * 10D, dino.getLookVec().z * 10D).add(new Vec3d(getPosition()));
+            Vec3d lookVec = new Vec3d(dino.getLookVec().x * 10D, dino.getLookVec().y * 10D, dino.getLookVec().z * 10D).add(new Vec3d(getPosition()));
             Random random = this.dino.getRNG();
             for(int i = 0; i < 100; i++) {
             	double destinationX = this.dino.posX + (double) ((random.nextFloat() * 2.0F - 1.0F) * 16.0F);
@@ -172,16 +214,10 @@ public abstract class FlyingDinosaurEntity extends DinosaurEntity {
                 Vec3d vecPos = new Vec3d(destinationX, destinationY, destinationZ);
                 if(dino.isCourseTraversable(vecPos) && Math.abs(MathUtils.cosineFromPoints(vecPos, lookVec, new Vec3d(getPosition()))) < 45D) //TODO: make angle change depending on speed.
                 {
-                	if(dino.isOnGround()) {
-                    	this.dino.setAnimation(EntityAnimation.FLYING_TAKING_OFF.get());
-
-                	} else {
-                    	this.dino.setAnimation(EntityAnimation.FLYING.get());
-
-                	}
-                	this.dino.motionY += 0.2f;//TODO: defiantly don't leave in
-                	this.dino.getMoveHelper().setMoveTo(destinationX, destinationY, destinationZ, 2D);
-                	return;
+                    this.dino.setAnimation(EntityAnimation.FLYING.get());
+                    this.dino.getMoveHelper().setMoveTo(destinationX, destinationY, destinationZ, 2D);
+                    world.setBlockState(new BlockPos(destinationX, destinationY, destinationZ), Blocks.STONE.getDefaultState());
+                    return;
                 }
             }
         }
@@ -197,7 +233,7 @@ public abstract class FlyingDinosaurEntity extends DinosaurEntity {
         @Override
         public boolean shouldExecute() {
         	if(dino.ticksOnFloor <= 150 && dino.isOnGround()) {
-        		return false;
+        	    return false;
         	}
         	EntityMoveHelper moveHelper = this.dino.getMoveHelper();
             if (!moveHelper.isUpdating() && dino.rand.nextFloat() < 0.1f) {
@@ -207,8 +243,8 @@ public abstract class FlyingDinosaurEntity extends DinosaurEntity {
                 double moveY = moveHelper.getY() - this.dino.posY;
                 double moveZ = moveHelper.getZ() - this.dino.posZ;
                 double distance = moveX * moveX + moveY * moveY + moveZ * moveZ;
-                if(distance < 1.0D || distance > 3600.0D) {
-                	return this.dino.world.getBlockState(this.dino.getPosition().down()).getMaterial() == Material.AIR && this.dino.getRNG().nextFloat() < 0.01f;//TODO: change float value
+                if(distance < 1.0D || distance > 3600.0D) {	
+                    return this.dino.world.getBlockState(this.dino.getPosition().down()).getMaterial() == Material.AIR && this.dino.getRNG().nextFloat() < 0.01f;//TODO: change float value
                 }
             }
         	 return false;
