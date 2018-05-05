@@ -251,7 +251,7 @@ public abstract class CarEntity extends Entity {
         }
         
         if(!world.isRemote) {
-            world.getEntitiesWithinAABB(EntityLivingBase.class, aabb.grow(1f)).forEach(entity -> entity.attackEntityFrom(DamageSources.CAR, 5F));
+            world.getEntitiesWithinAABB(EntityLivingBase.class, aabb.grow(1f), entity -> EntitySelectors.NOT_SPECTATING.apply(entity) && !this.getPassengers().contains(entity)).forEach(entity -> entity.attackEntityFrom(DamageSources.CAR, 5F));
         }
         
         this.prevWheelRotateAmount = this.wheelRotateAmount;
