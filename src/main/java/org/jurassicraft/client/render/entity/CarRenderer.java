@@ -2,6 +2,9 @@ package org.jurassicraft.client.render.entity;
 
 import java.util.stream.IntStream;
 
+import javax.vecmath.Vector2d;
+import javax.vecmath.Vector4d;
+
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -24,15 +27,19 @@ public abstract class CarRenderer<E extends CarEntity> extends Render<E> {
     }
     
     public static void doCarRotations(CarEntity entity, float partialTicks) {
-	double backWheel = entity.backValue.getValueForRendering(partialTicks);
-        double frontWheel = entity.frontValue.getValueForRendering(partialTicks);
-        double leftWheel = entity.leftValue.getValueForRendering(partialTicks);
-        double rightWheel = entity.rightValue.getValueForRendering(partialTicks);
-        GlStateManager.translate(0, -0.5, 1.4);
-        float localRotationPitch = (float) MathUtils.cosineFromPoints(new Vec3d(frontWheel, 0, -2.5f), new Vec3d(backWheel, 0, -2.5f), new Vec3d(backWheel, 0, 2f));//No need for cosine as is a right angled triangle. I'm to lazy to work out the right maths. //TODO: SOHCAHTOA this
-        GlStateManager.rotate(frontWheel < backWheel ? -localRotationPitch : localRotationPitch, 1, 0, 0);
-        GlStateManager.translate(0, 0.5, -1.4);
-        float localRotationRoll = (float) MathUtils.cosineFromPoints(new Vec3d(rightWheel, 0, -1.3f), new Vec3d(leftWheel, 0, -1.3f), new Vec3d(leftWheel, 0, 1.3f));//TODO: same as above
-        GlStateManager.rotate(leftWheel < rightWheel ? localRotationRoll : -localRotationRoll, 0, 0, 1);
+	double backValue = entity.backValue.getValueForRendering(partialTicks);
+        double frontValue = entity.frontValue.getValueForRendering(partialTicks);
+        double leftValue = entity.leftValue.getValueForRendering(partialTicks);
+        double rightValue = entity.rightValue.getValueForRendering(partialTicks);
+        
+        Vector4d vec = entity.getCarDimensions();
+        Vector2d rot = entity.getBackWheelRotationPoint();
+        	
+        GlStateManager.translate(0, rot.x, rot.y);
+        float localRotationPitch = (float) MathUtils.cosineFromPoints(new Vec3d(frontValue, 0, vec.w), new Vec3d(backValue, 0, vec.w), new Vec3d(backValue, 0, vec.y));//No need for cosine as is a right angled triangle. I'm to lazy to work out the right maths. //TODO: SOHCAHTOA this
+        GlStateManager.rotate(frontValue < backValue ? -localRotationPitch : localRotationPitch, 1, 0, 0);
+        GlStateManager.translate(0, -rot.x, -rot.y);
+        float localRotationRoll = (float) MathUtils.cosineFromPoints(new Vec3d(rightValue, 0, vec.z), new Vec3d(leftValue, 0, vec.z), new Vec3d(leftValue, 0, vec.x));//TODO: same as above
+        GlStateManager.rotate(leftValue < rightValue ? localRotationRoll : -localRotationRoll, 0, 0, 1);
     }
 }

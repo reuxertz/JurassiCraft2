@@ -73,10 +73,10 @@ public abstract class CarEntity extends Entity {
     public final InterpValue leftValue = new InterpValue();
     public final InterpValue rightValue = new InterpValue();
 
-    public final CarWheel backLeftWheel = new CarWheel(wheeldata.getBackLeftPos()); 
-    public final CarWheel backRightWheel = new CarWheel(wheeldata.getBackRightPos());
-    public final CarWheel frontLeftWheel = new CarWheel(wheeldata.getFrontLeftPos());
-    public final CarWheel frontRightWheel = new CarWheel(wheeldata.getFrontRightPos());
+    public final CarWheel backLeftWheel = new CarWheel(wheeldata.bl); 
+    public final CarWheel backRightWheel = new CarWheel(wheeldata.br);
+    public final CarWheel frontLeftWheel = new CarWheel(wheeldata.fl);
+    public final CarWheel frontRightWheel = new CarWheel(wheeldata.fr);
 
     public final List<WheelParticleData> wheelDataList = Lists.newArrayList(); //Entirely useless server-side. //TODO: stop adding to this on server-side.
     
@@ -185,6 +185,14 @@ public abstract class CarEntity extends Entity {
     protected boolean canTriggerWalking() {
         return false;
     }
+    
+    public Vector4d getCarDimensions() {
+	return this.wheeldata.carVector;
+    }
+    
+    public Vector2d getBackWheelRotationPoint() {
+	return new Vector2d(-0.5, 1.4);
+    }
 
     @Override
     @SideOnly(Side.CLIENT)
@@ -209,7 +217,7 @@ public abstract class CarEntity extends Entity {
         
         this.allWheels.forEach(this::processWheel);
         
-        Vector4d vec = wheeldata.getCarVector();
+        Vector4d vec = wheeldata.carVector;
         this.backValue.setTarget(this.calculateWheelHeight(vec.y, false));
         this.frontValue.setTarget(this.calculateWheelHeight(vec.w, false));
         this.leftValue.setTarget(this.calculateWheelHeight(vec.z, true));
@@ -358,7 +366,7 @@ public abstract class CarEntity extends Entity {
 
 	double ret = Integer.MIN_VALUE;
 
-	Vector4d carVec = wheeldata.getCarVector();
+	Vector4d carVec = wheeldata.carVector;
 	double sideLength = Math.abs(rotate90 ? carVec.x - carVec.z : carVec.z - carVec.w);
         for(double d = -sideLength ; d <= sideLength; d += 0.25D/*TODO: config this ?*/) {
             double xRot = Math.sin(Math.toRadians(localYaw)) * (rotate90 ? d : distance) - Math.cos(Math.toRadians(localYaw)) * (rotate90 ? distance : d); 
@@ -590,26 +598,6 @@ public abstract class CarEntity extends Entity {
 	    fr = new Vector2d(frontRightX, frontRightZ);
 	    
 	    carVector = new Vector4d(backLeftX, backLeftZ, frontRightX, frontRightZ); 
-	}
-	
-	public Vector2d getBackLeftPos() {
-	    return bl;
-	}
-	
-	public Vector2d getBackRightPos() {
-	    return br;
-	}
-	
-	public Vector2d getFrontLeftPos() {
-	    return fl;
-	}
-	
-	public Vector2d getFrontRightPos() {
-	    return fr;
-	}
-	
-	public Vector4d getCarVector() {
-	    return carVector;
 	}
     }
 
