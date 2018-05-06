@@ -14,6 +14,7 @@ import org.jurassicraft.server.entity.ai.util.InterpValue;
 import org.jurassicraft.server.entity.vehicle.util.CarWheel;
 import org.jurassicraft.server.entity.vehicle.util.WheelParticleData;
 import org.jurassicraft.server.message.UpdateVehicleControlMessage;
+import org.lwjgl.input.Keyboard;
 import org.omg.CORBA.DoubleHolder;
 
 import com.google.common.collect.Lists;
@@ -22,6 +23,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
@@ -47,10 +49,13 @@ public abstract class CarEntity extends Entity {
     public static final DataParameter<Byte> WATCHER_STATE = EntityDataManager.createKey(CarEntity.class, DataSerializers.BYTE);
     public static final DataParameter<Float> WATCHER_HEALTH = EntityDataManager.createKey(CarEntity.class, DataSerializers.FLOAT);
     public static final float MAX_HEALTH = 40;
-    private static final int LEFT     = 0b0001;
-    private static final int RIGHT    = 0b0010;
-    private static final int FORWARD  = 0b0100;
-    private static final int BACKWARD = 0b1000;
+    private static final int LEFT         = 0b0000001;
+    private static final int RIGHT        = 0b0000010;
+    private static final int FORWARD      = 0b0000100;
+    private static final int BACKWARD     = 0b0001000;
+    private static final int SPEED_FAST   = 0b0010000;
+    private static final int SPEED_MEDIUM = 0b0100000;
+    private static final int SPEED_SLOW   = 0b1000000;
 
     protected final Seat[] seats = createSeats();
     protected final WheelData wheeldata = createWheels();
@@ -121,6 +126,16 @@ public abstract class CarEntity extends Entity {
     public boolean backward() {
         return this.getStateBit(BACKWARD);
     }
+    
+    public Speed getSpeed() {
+	if(this.getStateBit(SPEED_SLOW)) {
+	    return Speed.SLOW;
+	} else if(this.getStateBit(SPEED_FAST)) {
+	    return Speed.FAST;
+	} else {
+	    return Speed.MEDIUM;
+	}
+    }
 
     public void left(boolean left) {
         this.setStateBit(LEFT, left);
@@ -136,6 +151,20 @@ public abstract class CarEntity extends Entity {
 
     public void backward(boolean backward) {
         this.setStateBit(BACKWARD, backward);
+    }
+    
+    public void speed(Speed speed) {
+	this.setStateBit(SPEED_SLOW, false);
+	this.setStateBit(SPEED_MEDIUM, false);
+	this.setStateBit(SPEED_FAST, false);
+
+	if(speed == Speed.SLOW) {
+	    this.setStateBit(SPEED_SLOW, true);
+	} else if(speed == Speed.FAST) {
+	    this.setStateBit(SPEED_FAST, true);
+	} else {
+	    this.setStateBit(SPEED_MEDIUM, true);
+	}
     }
 
     private boolean getStateBit(int mask) {
@@ -331,6 +360,11 @@ public abstract class CarEntity extends Entity {
         this.right(movementInput.rightKeyDown);
         this.forward(movementInput.forwardKeyDown);
         this.backward(movementInput.backKeyDown);
+        for(Speed speed : Speed.values()) {
+            if(Keyboard.isKeyDown(speed.keyboardInput)) {
+                this.speed(speed);
+            }
+        }
         this.applyMovement();
         if (this.getControlState() != previous) {
             JurassiCraft.NETWORK_WRAPPER.sendToServer(new UpdateVehicleControlMessage(this));
@@ -338,15 +372,16 @@ public abstract class CarEntity extends Entity {
     }
 
     protected void applyMovement() {
+	Speed speed = this.getSpeed();
         if (!this.isInWater()) {
             float moveAmount = 0.0F;
             if ((this.left() || this.right()) && !(this.forward() || this.backward())) {
                 moveAmount += 0.05F;
             }
             if (this.forward()) {
-                moveAmount += 0.1F;
+                moveAmount += 0.1F * speed.modifier;
             } else if (this.backward()) {
-                moveAmount -= 0.05F;
+                moveAmount -= 0.05F * speed.modifier;
             }
             if (this.left()) {
                 this.rotationDelta -= 20.0F * moveAmount;
@@ -616,6 +651,22 @@ public abstract class CarEntity extends Entity {
 	    
 	    carVector = new Vector4d(backLeftX, backLeftZ, frontRightX, frontRightZ); 
 	}
+    }
+    
+    public enum Speed {
+	
+	SLOW(Keyboard.KEY_LMENU, 0.2f),
+	MEDIUM(Keyboard.KEY_SPACE, 1f),
+	FAST(Keyboard.KEY_RMENU, 2f);
+	;
+	private final int keyboardInput;
+	private final float modifier;
+	
+	private Speed(int keyboardInput, float modifier) {
+	    this.keyboardInput = keyboardInput;
+	    this.modifier = modifier;
+	}
+	
     }
 
     protected abstract Seat[] createSeats();
