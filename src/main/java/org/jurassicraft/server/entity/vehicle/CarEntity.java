@@ -567,7 +567,6 @@ public abstract class CarEntity extends Entity {
         this.setHealth(compound.getFloat("Health"));
         this.healAmount = compound.getFloat("HealAmount");
         this.setSpeed(Speed.values()[compound.getInteger("Speed")]); 
-        System.out.println(compound.getInteger("Speed"));
         NBTTagCompound tag = compound.getCompoundTag("InterpValues");
         
         this.backValue.deserializeNBT(tag.getCompoundTag("Back"));
@@ -583,7 +582,6 @@ public abstract class CarEntity extends Entity {
         compound.setFloat("Health", this.getHealth());
         compound.setFloat("HealAmount", this.healAmount);
         compound.setInteger("Speed", this.getSpeed().ordinal());
-        System.out.println(this.getSpeed());
         NBTTagCompound tag = new NBTTagCompound();
         tag.setTag("Back", this.backValue.serializeNBT());
         tag.setTag("Front", this.frontValue.serializeNBT());
