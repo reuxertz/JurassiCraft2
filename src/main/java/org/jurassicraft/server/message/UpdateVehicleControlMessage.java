@@ -15,6 +15,8 @@ public class UpdateVehicleControlMessage extends AbstractMessage<UpdateVehicleCo
     private int entityId;
 
     private byte state;
+    
+    private CarEntity.Speed speed;
 
     public UpdateVehicleControlMessage()
     {}
@@ -23,6 +25,7 @@ public class UpdateVehicleControlMessage extends AbstractMessage<UpdateVehicleCo
     {
         this.entityId = entity.getEntityId();
         this.state = entity.getControlState();
+        this.speed = entity.getSpeed();
     }
 
     @Override
@@ -36,9 +39,9 @@ public class UpdateVehicleControlMessage extends AbstractMessage<UpdateVehicleCo
         if (entity instanceof CarEntity)
         {
             CarEntity car = (CarEntity) entity;
-            if (car.getControllingPassenger() == player)
-            {
+            if (car.getControllingPassenger() == player) {
                 car.setControlState(message.state);
+                car.setSpeed(message.speed);
             }
         }
     }
@@ -48,6 +51,7 @@ public class UpdateVehicleControlMessage extends AbstractMessage<UpdateVehicleCo
     {
         this.entityId = buf.readInt();
         this.state = buf.readByte();
+        this.speed = CarEntity.Speed.values()[buf.readInt()];
     }
 
     @Override
@@ -55,5 +59,6 @@ public class UpdateVehicleControlMessage extends AbstractMessage<UpdateVehicleCo
     {
         buf.writeInt(this.entityId);
         buf.writeByte(this.state);
+        buf.writeInt(this.speed.ordinal());
     }
 }

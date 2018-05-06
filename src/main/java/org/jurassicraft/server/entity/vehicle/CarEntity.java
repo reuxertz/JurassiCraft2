@@ -48,14 +48,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public abstract class CarEntity extends Entity {
     public static final DataParameter<Byte> WATCHER_STATE = EntityDataManager.createKey(CarEntity.class, DataSerializers.BYTE);
     public static final DataParameter<Float> WATCHER_HEALTH = EntityDataManager.createKey(CarEntity.class, DataSerializers.FLOAT);
+    public static final DataParameter<Integer> WATCHER_SPEED = EntityDataManager.createKey(CarEntity.class, DataSerializers.VARINT);
+
     public static final float MAX_HEALTH = 40;
-    private static final int LEFT         = 0b0000001;
-    private static final int RIGHT        = 0b0000010;
-    private static final int FORWARD      = 0b0000100;
-    private static final int BACKWARD     = 0b0001000;
-    private static final int SPEED_FAST   = 0b0010000;
-    private static final int SPEED_MEDIUM = 0b0100000;
-    private static final int SPEED_SLOW   = 0b1000000;
+    private static final int LEFT     = 0b0001;
+    private static final int RIGHT    = 0b0010;
+    private static final int FORWARD  = 0b0100;
+    private static final int BACKWARD = 0b1000;
 
     protected final Seat[] seats = createSeats();
     protected final WheelData wheeldata = createWheels();
@@ -91,7 +90,7 @@ public abstract class CarEntity extends Entity {
     
     private float healAmount;
     private int healCooldown = 40;
-
+    
     private Vec3d previousPosition = null; //Used for speed calculations
     private long prevWorldTime = -1;//Also used for speed calculations
     
@@ -109,6 +108,7 @@ public abstract class CarEntity extends Entity {
     protected void entityInit() {
         this.dataManager.register(WATCHER_STATE, (byte) 0);
         this.dataManager.register(WATCHER_HEALTH, MAX_HEALTH);
+        this.dataManager.register(WATCHER_SPEED, 1);
     }
 
     public boolean left() {
@@ -126,16 +126,6 @@ public abstract class CarEntity extends Entity {
     public boolean backward() {
         return this.getStateBit(BACKWARD);
     }
-    
-    public Speed getSpeed() {
-	if(this.getStateBit(SPEED_SLOW)) {
-	    return Speed.SLOW;
-	} else if(this.getStateBit(SPEED_FAST)) {
-	    return Speed.FAST;
-	} else {
-	    return Speed.MEDIUM;
-	}
-    }
 
     public void left(boolean left) {
         this.setStateBit(LEFT, left);
@@ -151,20 +141,6 @@ public abstract class CarEntity extends Entity {
 
     public void backward(boolean backward) {
         this.setStateBit(BACKWARD, backward);
-    }
-    
-    public void speed(Speed speed) {
-	this.setStateBit(SPEED_SLOW, false);
-	this.setStateBit(SPEED_MEDIUM, false);
-	this.setStateBit(SPEED_FAST, false);
-
-	if(speed == Speed.SLOW) {
-	    this.setStateBit(SPEED_SLOW, true);
-	} else if(speed == Speed.FAST) {
-	    this.setStateBit(SPEED_FAST, true);
-	} else {
-	    this.setStateBit(SPEED_MEDIUM, true);
-	}
     }
 
     private boolean getStateBit(int mask) {
@@ -182,6 +158,14 @@ public abstract class CarEntity extends Entity {
 
     public void setControlState(int state) {
         this.dataManager.set(WATCHER_STATE, (byte) state);
+    }
+    
+    public void setSpeed(Speed speed) {
+	this.dataManager.set(WATCHER_SPEED, speed.ordinal());
+    }
+    
+    public Speed getSpeed() {
+	return Speed.values()[this.dataManager.get(WATCHER_SPEED)];
     }
 
     public void setHealth(float health) {
@@ -256,6 +240,9 @@ public abstract class CarEntity extends Entity {
         super.onEntityUpdate();
         
         this.allWheels.forEach(this::processWheel);
+        if(this.getSpeed() == Speed.FAST) {
+            this.allWheels.forEach(wheel -> this.processWheel(wheel, true));
+        }
         
         Vector4d vec = wheeldata.carVector;
         this.backValue.setTarget(this.calculateWheelHeight(vec.y, false));
@@ -299,16 +286,24 @@ public abstract class CarEntity extends Entity {
 	double rawSpeed = this.getPositionVector().distanceTo(previousPosition) / (world.getTotalWorldTime() - prevWorldTime);
 	entity.attackEntityFrom(DamageSources.CAR, (float) (rawSpeed * 20D));
     }
-
     private void processWheel(CarWheel wheel) {
+	this.processWheel(wheel, false);
+    }
+    
+    private void processWheel(CarWheel wheel, boolean runBetween) {
 	float localYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw);
         double rad = Math.toRadians(localYaw);
 	Vector2d relPos = wheel.getRelativeWheelPosition();
 	double xRot = Math.sin(Math.toRadians(localYaw)) * relPos.y - Math.cos(Math.toRadians(localYaw)) * relPos.x; 
         double zRot = - Math.cos(Math.toRadians(localYaw)) * relPos.y - Math.sin(Math.toRadians(localYaw)) * relPos.x;
         Vec3d vec = new Vec3d(posX + xRot, this.posY, posZ + zRot);
-        wheel.setCurrentWheelPos(vec);
-        this.wheelDataList.add(new WheelParticleData(vec));
+        if(runBetween) {
+            Vec3d oldVec = wheel.getCurrentWheelPos();
+            this.wheelDataList.add(new WheelParticleData(new Vec3d((vec.x + oldVec.x) / 2D, (vec.y + oldVec.y) / 2D, (vec.z + oldVec.z) / 2D))); //Does this even help ?
+        } else {
+            wheel.setCurrentWheelPos(vec);
+            this.wheelDataList.add(new WheelParticleData(vec).setShouldRender(this.getSpeed() != Speed.SLOW /* || this.ticksExisted % 2 == 0*/));   
+        }
     }
 
     @Override
@@ -360,13 +355,15 @@ public abstract class CarEntity extends Entity {
         this.right(movementInput.rightKeyDown);
         this.forward(movementInput.forwardKeyDown);
         this.backward(movementInput.backKeyDown);
+        boolean newSpeed = false;
         for(Speed speed : Speed.values()) {
             if(Keyboard.isKeyDown(speed.keyboardInput)) {
-                this.speed(speed);
+                this.setSpeed(speed);
+                newSpeed = true;
             }
         }
         this.applyMovement();
-        if (this.getControlState() != previous) {
+        if (this.getControlState() != previous || newSpeed) {
             JurassiCraft.NETWORK_WRAPPER.sendToServer(new UpdateVehicleControlMessage(this));
         }
     }
@@ -564,12 +561,30 @@ public abstract class CarEntity extends Entity {
     protected void readEntityFromNBT(NBTTagCompound compound) {
         this.setHealth(compound.getFloat("Health"));
         this.healAmount = compound.getFloat("HealAmount");
+        this.setSpeed(Speed.values()[compound.getInteger("Speed")]); 
+        System.out.println(compound.getInteger("Speed"));
+        NBTTagCompound tag = compound.getCompoundTag("InterpValues");
+        
+        this.backValue.deserializeNBT(tag.getCompoundTag("Back"));
+        this.frontValue.deserializeNBT(tag.getCompoundTag("Front"));
+        this.leftValue.deserializeNBT(tag.getCompoundTag("Left"));
+        this.rightValue.deserializeNBT(tag.getCompoundTag("Right"));
+
+        
     }
 
     @Override
     protected void writeEntityToNBT(NBTTagCompound compound) {
         compound.setFloat("Health", this.getHealth());
         compound.setFloat("HealAmount", this.healAmount);
+        compound.setInteger("Speed", this.getSpeed().ordinal());
+        System.out.println(this.getSpeed());
+        NBTTagCompound tag = new NBTTagCompound();
+        tag.setTag("Back", this.backValue.serializeNBT());
+        tag.setTag("Front", this.frontValue.serializeNBT());
+        tag.setTag("Left", this.leftValue.serializeNBT());
+        tag.setTag("Right", this.rightValue.serializeNBT());        
+        compound.setTag("InterpValues", tag);
     }
 
     private void startSound() {
@@ -654,13 +669,13 @@ public abstract class CarEntity extends Entity {
     }
     
     public enum Speed {
-	
-	SLOW(Keyboard.KEY_LMENU, 0.2f),
+	//The modifiers ARE hardcoded. If you want to change them, please talk to me first. The tyre mark code relies on the modifiers being how they are
+	SLOW(Keyboard.KEY_LMENU, 0.5f),
 	MEDIUM(Keyboard.KEY_SPACE, 1f),
 	FAST(Keyboard.KEY_RMENU, 2f);
 	;
-	private final int keyboardInput;
-	private final float modifier;
+	public final int keyboardInput;
+	public final float modifier;
 	
 	private Speed(int keyboardInput, float modifier) {
 	    this.keyboardInput = keyboardInput;

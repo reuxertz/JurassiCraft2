@@ -1,8 +1,10 @@
 package org.jurassicraft.server.entity.ai.util;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.common.util.INBTSerializable;
 
-public class InterpValue {
+public class InterpValue implements INBTSerializable<NBTTagCompound> {
     
     protected static final double INTERP_AMOUNT = 0.25D; //TODO: Config value ?
     
@@ -15,9 +17,15 @@ public class InterpValue {
     public void setTarget(double target) {
         if(!initilized) {
             initilized = true;
-            this.previousCurrent = target;
-            this.current = target;
+            reset(target);
+        } else {
+            this.target = target;
         }
+    }
+    
+    public void reset(double target) {
+	this.previousCurrent = target;
+        this.current = target;
         this.target = target;
     }
     
@@ -44,5 +52,20 @@ public class InterpValue {
     
     public double getCurrent() {
 	return current;
+    }
+
+    @Override
+    public NBTTagCompound serializeNBT() {
+	NBTTagCompound tag = new NBTTagCompound();
+	tag.setDouble("target", target);
+	tag.setDouble("current", current);
+	return tag;
+    }
+
+    @Override
+    public void deserializeNBT(NBTTagCompound nbt) {
+	this.target = nbt.getDouble("target");
+	this.current = nbt.getDouble("current");
+	this.previousCurrent = current;
     }
 }

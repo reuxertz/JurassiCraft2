@@ -87,6 +87,9 @@ public class TyretrackRenderer {
         World world = Minecraft.getMinecraft().world;
 	for(int i = 0; i < dataList.size() - 4; i++) {
             WheelParticleData start = dataList.get(i);
+            if(!start.shouldRender()) {
+        	continue;
+            }
             WheelParticleData end = dataList.get(i + 4);
                 
             Vec3d sv = start.getPosition();
@@ -118,16 +121,16 @@ public class TyretrackRenderer {
                                 
             double offset = (i + 1) * 0.000002D; //No z-fighting on my watch
             
-            buffer.pos(sv.x , sv.y + offset, sv.z).tex(0, 0).color(sl, sl, sl, sa).endVertex();
-            buffer.pos(sv.x - vec.x, sv.y + offset, sv.z - vec.z).tex(0, 1).color(sl, sl, sl, sa).endVertex();
-            buffer.pos(ev.x - vec1.x, ev.y + offset, ev.z - vec1.z).tex(1, 1).color(el, el, el, ea).endVertex();
-            buffer.pos(ev.x, ev.y + offset, ev.z).tex(1, 0).color(el, el, el, ea).endVertex();
+            buffer.pos(sv.x + vec.x / 2D, sv.y + offset, sv.z + vec.z / 2D).tex(0, 0).color(sl, sl, sl, sa).endVertex();
+            buffer.pos(sv.x - vec.x / 2D, sv.y + offset, sv.z - vec.z / 2D).tex(0, 1).color(sl, sl, sl, sa).endVertex();
+            buffer.pos(ev.x - vec1.x / 2D, ev.y + offset, ev.z - vec1.z / 2D).tex(1, 1).color(el, el, el, ea).endVertex();
+            buffer.pos(ev.x + vec1.x / 2D, ev.y + offset, ev.z + vec1.z / 2D).tex(1, 0).color(el, el, el, ea).endVertex();
                 
             //Flip quad to render upside down. Means when looking at tyre track from underneath, it still rendered. Needed because one set of tyres are upside down. //TODO: Fix that
-            buffer.pos(sv.x , sv.y + offset, sv.z).tex(0, 0).color(sl, sl, sl, sa).endVertex();
-            buffer.pos(ev.x, ev.y + offset, ev.z).tex(1, 0).color(el, el, el, ea).endVertex();
-            buffer.pos(ev.x - vec1.x, ev.y + offset, ev.z - vec1.z).tex(1, 1).color(el, el, el, ea).endVertex();
-            buffer.pos(sv.x - vec.x, sv.y + offset, sv.z - vec.z).tex(0, 1).color(sl, sl, sl, sa).endVertex();
+            buffer.pos(sv.x + vec.x / 2D, sv.y + offset, sv.z + vec.z / 2D).tex(0, 0).color(sl, sl, sl, sa).endVertex();
+            buffer.pos(ev.x + vec1.x / 2D, ev.y + offset, ev.z + vec1.z / 2D).tex(1, 0).color(el, el, el, ea).endVertex();
+            buffer.pos(ev.x - vec1.x / 2D, ev.y + offset, ev.z - vec1.z / 2D).tex(1, 1).color(el, el, el, ea).endVertex();
+            buffer.pos(sv.x - vec.x / 2D, sv.y + offset, sv.z - vec.z / 2D).tex(0, 1).color(sl, sl, sl, sa).endVertex();
         }
     }
     

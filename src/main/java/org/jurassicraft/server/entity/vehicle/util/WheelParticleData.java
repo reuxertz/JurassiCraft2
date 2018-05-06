@@ -11,9 +11,20 @@ public class WheelParticleData {
     
     private final Vec3d position;
     private final int maxAge = 200;
-        
+    
+    private boolean shouldRender = true;
+    
     public WheelParticleData(Vec3d position) {
         this.position = position;
+    }
+    
+    public WheelParticleData setShouldRender(boolean shouldRender) {
+	this.shouldRender = shouldRender;
+	return this;
+    }
+    
+    public boolean shouldRender() {
+	return shouldRender;
     }
     
     public void onUpdate(List<WheelParticleData> markedRemoved) {
