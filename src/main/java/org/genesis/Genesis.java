@@ -35,8 +35,6 @@ public class Genesis {
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
         this.logger = event.getModLog();
-
-        OBJLoader.INSTANCE.addDomain(Genesis.MODID);
         PROXY.onPreInit(event);
 
     }
