@@ -102,7 +102,7 @@ public class TyretrackRenderer {
             BlockPos position = new BlockPos(sv);
             BlockPos downPos = position.down();
             IBlockState downState = world.getBlockState(downPos);
-            if(!downState.isSideSolid(world, downPos, EnumFacing.UP) || sv.y != ev.y || !ALLOWED_MATERIALS.contains(downState.getMaterial())) { //TODO: Dont create the particles if theyll never be rendered. 
+            if(world.getBlockState(position).getMaterial().isLiquid() || !downState.isSideSolid(world, downPos, EnumFacing.UP) || sv.y != ev.y || !ALLOWED_MATERIALS.contains(downState.getMaterial())) { //TODO: Dont create the particles if theyll never be rendered. 
                 continue;
             }
             
