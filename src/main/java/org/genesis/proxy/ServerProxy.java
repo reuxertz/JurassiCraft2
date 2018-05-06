@@ -1,5 +1,7 @@
 package org.genesis.proxy;
 
+import org.genesis.internal.GenesisApiHandler;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -18,7 +20,7 @@ public class ServerProxy implements IGuiHandler, IProxy {
     }
 
     public void onInit(FMLInitializationEvent event) {
-
+	GenesisApiHandler.register();
     }
 
     public EntityPlayer getPlayer() {

@@ -1,18 +1,17 @@
 package org.genesis;
 
-import net.minecraft.block.SoundType;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraftforge.client.model.obj.OBJLoader;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.Logger;
+import org.genesis.internal.GenesisApiHandler;
+import org.genesis.proxy.IProxy;
+
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import org.genesis.proxy.ServerProxy;
 
 @Mod(modid = Genesis.MODID, name = Genesis.NAME, version = Genesis.VERSION)
 @Mod.EventBusSubscriber(modid = Genesis.MODID)
@@ -22,7 +21,7 @@ public class Genesis {
     public static final String VERSION = "0.0.1";
 
     @SidedProxy(serverSide = "org.genesis.proxy.ServerProxy", clientSide = "org.genesis.proxy.ClientProxy")
-    public static ServerProxy PROXY;
+    public static IProxy PROXY;
 
     @Instance(Genesis.MODID)
     public static Genesis INSTANCE;
@@ -30,13 +29,13 @@ public class Genesis {
     //LLibrary issue @NetworkWrapper
     public static SimpleNetworkWrapper NETWORK_WRAPPER;
 
-    private Logger logger;
+    private static Logger logger;
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
         this.logger = event.getModLog();
         PROXY.onPreInit(event);
-
+        GenesisApiHandler.loadPlugins(event.getAsmData());
     }
 
     @Mod.EventHandler
@@ -54,7 +53,7 @@ public class Genesis {
 
     }
 
-    public Logger getLogger() {
-        return this.logger;
+    public static Logger getLogger() {
+        return logger;
     }
 }

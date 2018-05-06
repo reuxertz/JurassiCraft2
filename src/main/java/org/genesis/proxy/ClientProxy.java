@@ -1,12 +1,13 @@
 package org.genesis.proxy;
 
-import java.util.List;
-import java.util.Set;
+import org.genesis.Genesis;
+import org.genesis.internal.GenesisApiHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -21,18 +22,16 @@ public class ClientProxy extends ServerProxy {
 
     @Override
     public void onPreInit(FMLPreInitializationEvent event) {
-        super.onPreInit(event);
 
     }
 
     @Override
     public void onInit(FMLInitializationEvent event) {
-        super.onInit(event);
+	
     }
 
     @Override
     public void onPostInit(FMLPostInitializationEvent event) {
-        super.onPostInit(event);
 
         renderManager = Minecraft.getMinecraft().getRenderManager();
         renderItem = Minecraft.getMinecraft().getRenderItem();
@@ -40,6 +39,11 @@ public class ClientProxy extends ServerProxy {
 
         this.registerEntityRenderers();
         this.registerObjRegRenderers();
+        
+        ((IReloadableResourceManager)Minecraft.getMinecraft().getResourceManager()).registerReloadListener(resourceManager -> {
+            GenesisApiHandler.register();
+            Genesis.getLogger().info("Reloaded API");
+        });
     }
 
     // Protected Functions
