@@ -370,26 +370,31 @@ public abstract class CarEntity extends Entity {
 
     protected void applyMovement() {
 	Speed speed = this.getSpeed();
-        if (!this.isInWater()) {
-            float moveAmount = 0.0F;
-            if ((this.left() || this.right()) && !(this.forward() || this.backward())) {
-                moveAmount += 0.05F;
-            }
-            if (this.forward()) {
-                moveAmount += 0.1F * speed.modifier;
-            } else if (this.backward()) {
-                moveAmount -= 0.05F * speed.modifier;
-            }
-            if (this.left()) {
-                this.rotationDelta -= 20.0F * moveAmount;
-            } else if (this.right()) {
-                this.rotationDelta += 20.0F * moveAmount;
-            }
-            this.rotationDelta = MathHelper.clamp(this.rotationDelta, -30 * 0.1F, 30 * 0.1F);
-            this.rotationYaw += this.rotationDelta;
-            this.motionX += MathHelper.sin(-this.rotationYaw * 0.017453292F) * moveAmount;
-            this.motionZ += MathHelper.cos(this.rotationYaw * 0.017453292F) * moveAmount;
+
+        
+        float moveAmount = 0.0F;
+        if ((this.left() || this.right()) && !(this.forward() || this.backward())) {
+            moveAmount += 0.05F;
         }
+        if (this.forward()) {
+            moveAmount += 0.1F;
+        } else if (this.backward()) {
+            moveAmount -= 0.05F;
+        }
+        moveAmount *= speed.modifier;
+        if(this.isInWater()) {
+            moveAmount *= 0.1f;
+        }
+        if (this.left()) {
+            this.rotationDelta -= 20.0F * moveAmount;
+        } else if (this.right()) {
+            this.rotationDelta += 20.0F * moveAmount;
+        }
+        
+        this.rotationDelta = MathHelper.clamp(this.rotationDelta, -30 * 0.1F, 30 * 0.1F);
+        this.rotationYaw += this.rotationDelta;
+        this.motionX += MathHelper.sin(-this.rotationYaw * 0.017453292F) * moveAmount;
+        this.motionZ += MathHelper.cos(this.rotationYaw * 0.017453292F) * moveAmount;
     }
 
     private void tickInterp() {
@@ -485,7 +490,7 @@ public abstract class CarEntity extends Entity {
     private void usherPassenger(Entity passenger, int start) {
         for (int i = start; i < this.seats.length; i++) {
             Seat seat = this.seats[i];
-            if (seat.occupant == null) {
+            if (seat.occupant == null && seat.predicate.test(passenger)) {
                 seat.occupant = passenger;
                 return;
             }
