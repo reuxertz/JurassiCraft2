@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.model.ResetControlTabulaModel;
 import org.jurassicraft.client.model.animation.entity.vehicle.JeepWranglerAnimator;
+import org.jurassicraft.server.entity.ai.util.MathUtils;
 import org.jurassicraft.server.entity.vehicle.CarEntity;
 import org.jurassicraft.server.entity.vehicle.JeepWranglerEntity;
 import org.jurassicraft.server.tabula.TabulaModelHelper;
@@ -19,6 +20,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -54,12 +56,12 @@ public class JeepWranglerRenderer extends Render<JeepWranglerEntity> {
     }
 
     @Override
-    public void doRender(JeepWranglerEntity entity, double x, double y, double z, float yaw, float delta) {
+    public void doRender(JeepWranglerEntity entity, double x, double y, double z, float yaw, float partialTicks) {
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
         this.bindEntityTexture(entity);
-        this.renderModel(entity, x, y, z, yaw, false, false);
-        this.renderModel(entity, x, y, z, yaw, true, false);
+        this.renderModel(entity, x, y, z, yaw, partialTicks, false, false);
+        this.renderModel(entity, x, y, z, yaw, partialTicks, true, false);
         int destroyStage = Math.min(10, (int) (10 - (entity.getHealth() / CarEntity.MAX_HEALTH) * 10)) - 1;
         if (destroyStage >= 0) {
             GlStateManager.color(1, 1, 1, 0.5F);
@@ -68,19 +70,20 @@ public class JeepWranglerRenderer extends Render<JeepWranglerEntity> {
             GlStateManager.enablePolygonOffset();
             RenderHelper.disableStandardItemLighting();
             this.bindTexture(DESTROY_STAGES[destroyStage]);
-            this.renderModel(entity, x, y, z, yaw, false, true);
+            this.renderModel(entity, x, y, z, yaw, partialTicks, false, true);
             GlStateManager.doPolygonOffset(0, 0);
             GlStateManager.disablePolygonOffset();
             RenderHelper.enableStandardItemLighting();
         }
         GlStateManager.disableBlend();
-        super.doRender(entity, x, y, z, yaw, delta);
+        super.doRender(entity, x, y, z, yaw, partialTicks);
     }
 
-    private void renderModel(JeepWranglerEntity entity, double x, double y, double z, float yaw, boolean windscreen, boolean destroy) {
+    private void renderModel(JeepWranglerEntity entity, double x, double y, double z, float yaw, float partialTicks, boolean windscreen, boolean destroy) {
         GlStateManager.pushMatrix();
-        GlStateManager.translate((float) x, (float) y + 1.25F, (float) z);
+        GlStateManager.translate((float) x, (float) y + 1.25F, (float) z);        
         GlStateManager.rotate(180 - yaw, 0, 1, 0);
+        CarRenderer.doCarRotations(entity, partialTicks);
         GlStateManager.scale(-1, -1, 1);
         (windscreen ? this.windscreen : destroy ? this.destroyModel : this.baseModel).render(entity, 0, 0, 0, 0, 0, 0.0625F);
         GlStateManager.popMatrix();

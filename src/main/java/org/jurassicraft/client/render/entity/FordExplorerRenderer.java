@@ -2,6 +2,7 @@ package org.jurassicraft.client.render.entity;
 
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.model.ResetControlTabulaModel;
+import org.jurassicraft.server.entity.ai.util.MathUtils;
 import org.jurassicraft.server.entity.vehicle.CarEntity;
 import org.jurassicraft.server.entity.vehicle.FordExplorerEntity;
 import org.jurassicraft.server.tabula.TabulaModelHelper;
@@ -13,6 +14,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -41,7 +43,7 @@ public class FordExplorerRenderer extends Render<FordExplorerEntity> {
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         this.bindEntityTexture(entity);
         float pitch = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks;
-        this.renderModel(entity, x, y, z, yaw, pitch);
+        this.renderModel(entity, x, y, z, yaw, pitch, partialTicks);
         int destroyStage = Math.min(10, (int) (10.0F - (entity.getHealth() / CarEntity.MAX_HEALTH) * 10.0F)) - 1;
         if (destroyStage >= 0) {
             GlStateManager.color(1, 1, 1, 0.5F);
@@ -50,7 +52,7 @@ public class FordExplorerRenderer extends Render<FordExplorerEntity> {
             GlStateManager.enablePolygonOffset();
             RenderHelper.disableStandardItemLighting();
             this.bindTexture(DESTROY_STAGES[destroyStage]);
-            this.renderModel(entity, x, y, z, yaw, pitch);
+            this.renderModel(entity, x, y, z, yaw, pitch, partialTicks);
             GlStateManager.doPolygonOffset(0, 0);
             GlStateManager.disablePolygonOffset();
             RenderHelper.enableStandardItemLighting();
@@ -59,11 +61,11 @@ public class FordExplorerRenderer extends Render<FordExplorerEntity> {
         super.doRender(entity, x, y, z, yaw, partialTicks);
     }
 
-    private void renderModel(FordExplorerEntity entity, double x, double y, double z, float yaw, float pitch) {
+    private void renderModel(FordExplorerEntity entity, double x, double y, double z, float yaw, float pitch, float partialTicks) {
         GlStateManager.pushMatrix();
         GlStateManager.translate((float) x, (float) y + 1.25F, (float) z);
-        GlStateManager.rotate(180.0F - yaw, 0.0F, 1.0F, 0.0F);
-        GlStateManager.rotate(-pitch, 1.0F, 0.0F, 0.0F);
+        GlStateManager.rotate(180 - yaw, 0, 1, 0);
+        CarRenderer.doCarRotations(entity, partialTicks);
         GlStateManager.scale(-1.0F, -1.0F, 1.0F);
         this.baseModel.render(entity, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
         GlStateManager.popMatrix();

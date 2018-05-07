@@ -621,4 +621,9 @@ public class FordExplorerEntity extends CarEntity implements IEntityAdditionalSp
             return AxisRotation.values()[index];
         }
     }
+    
+    @Override
+    protected WheelData createWheels() {
+	return new WheelData(1.3, 2, -1.3, -2.2);
+    }
 }
