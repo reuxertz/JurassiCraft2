@@ -1,33 +1,41 @@
 package org.jurassicraft.client.model.animation.entity.vehicle;
 
+import org.jurassicraft.client.model.animation.CarAnimation;
+import org.jurassicraft.server.entity.ai.util.InterpValue;
+import org.jurassicraft.server.entity.vehicle.CarEntity;
+
 import net.ilexiconn.llibrary.LLibrary;
-import net.ilexiconn.llibrary.client.model.tabula.ITabulaModelAnimator;
 import net.ilexiconn.llibrary.client.model.tabula.TabulaModel;
 import net.ilexiconn.llibrary.client.model.tools.AdvancedModelRenderer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jurassicraft.server.entity.vehicle.JeepWranglerEntity;
 
 @SideOnly(Side.CLIENT)
-public class JeepWranglerAnimator implements ITabulaModelAnimator<JeepWranglerEntity> {
+public class JeepWranglerAnimator extends CarAnimation {
+    
+    private final InterpValue steerAmount = new InterpValue(0.1D);
+    
     @Override
-    public void setRotationAngles(TabulaModel model, JeepWranglerEntity entity, float limbSwing, float limbSwingAmount, float ticks, float rotationYaw, float rotationPitch, float scale) {
-        AdvancedModelRenderer wheelHolderFront = model.getCube("wheel holder front");
+    public void setRotationAngles(TabulaModel model, CarEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float rotationYaw, float rotationPitch, float scale) {
+        super.setRotationAngles(model, entity, limbSwing, limbSwingAmount, ageInTicks, rotationYaw, rotationPitch, scale);
+	
+	AdvancedModelRenderer wheelHolderFront = model.getCube("wheel holder front");
         AdvancedModelRenderer wheelHolderBack = model.getCube("wheel holder back");
 
-        float partialTicks = LLibrary.PROXY.getPartialTicks();
         float wheelRotation = entity.prevWheelRotateAmount + (entity.wheelRotateAmount - entity.prevWheelRotateAmount) * partialTicks;
         float wheelRotationAmount = entity.wheelRotation - entity.wheelRotateAmount * (1.0F - partialTicks);
 
         if (entity.backward()) {
             wheelRotationAmount = -wheelRotationAmount;
         }
-
+        
         wheelHolderFront.rotateAngleX = wheelRotationAmount * 0.5F;
         wheelHolderBack.rotateAngleX = wheelRotationAmount * 0.5F;
 
-        float steerAmount = (float) (Math.toRadians(entity.left() ? 40.0F : entity.right() ? -40.0F : 0.0F) * wheelRotation);
-
+        steerAmount.setTarget(Math.toRadians(entity.left() ? 40.0F : entity.right() ? -40.0F : 0.0F) * wheelRotation);
+        
+        float steerAmount = (float) this.steerAmount.getValueForRendering(partialTicks);
+        
         model.getCube("steering wheel main").rotateAngleZ = steerAmount;
         wheelHolderFront.rotateAngleY = -steerAmount * 0.15F;
     }

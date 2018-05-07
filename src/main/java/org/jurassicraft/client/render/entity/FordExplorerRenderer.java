@@ -2,6 +2,7 @@ package org.jurassicraft.client.render.entity;
 
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.model.ResetControlTabulaModel;
+import org.jurassicraft.client.model.animation.CarAnimation;
 import org.jurassicraft.server.entity.ai.util.MathUtils;
 import org.jurassicraft.server.entity.vehicle.CarEntity;
 import org.jurassicraft.server.entity.vehicle.FordExplorerEntity;

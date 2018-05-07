@@ -4,8 +4,9 @@ import java.util.Map.Entry;
 
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.model.ResetControlTabulaModel;
+import org.jurassicraft.client.model.animation.CarAnimation;
+import org.jurassicraft.client.model.animation.CarAnimation.Door;
 import org.jurassicraft.client.model.animation.entity.vehicle.JeepWranglerAnimator;
-import org.jurassicraft.server.entity.ai.util.MathUtils;
 import org.jurassicraft.server.entity.vehicle.CarEntity;
 import org.jurassicraft.server.entity.vehicle.JeepWranglerEntity;
 import org.jurassicraft.server.tabula.TabulaModelHelper;
@@ -20,7 +21,6 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -31,19 +31,21 @@ public class JeepWranglerRenderer extends Render<JeepWranglerEntity> {
     private static final ResourceLocation[] DESTROY_STAGES = { new ResourceLocation("textures/blocks/destroy_stage_0.png"), new ResourceLocation("textures/blocks/destroy_stage_1.png"), new ResourceLocation("textures/blocks/destroy_stage_2.png"), new ResourceLocation("textures/blocks/destroy_stage_3.png"), new ResourceLocation("textures/blocks/destroy_stage_4.png"), new ResourceLocation("textures/blocks/destroy_stage_5.png"), new ResourceLocation("textures/blocks/destroy_stage_6.png"), new ResourceLocation("textures/blocks/destroy_stage_7.png"), new ResourceLocation("textures/blocks/destroy_stage_8.png"), new ResourceLocation("textures/blocks/destroy_stage_9.png") };
 
     private static final String WINDSCREEN = "Windscreen";
-
+    
+    private CarAnimation animator;
     private TabulaModel baseModel;
-
     private TabulaModel windscreen;
-
     private TabulaModel destroyModel;
 
+    
     public JeepWranglerRenderer(RenderManager manager) {
         super(manager);
         try {
-            JeepWranglerAnimator animator = new JeepWranglerAnimator();
+            this.animator = new JeepWranglerAnimator()
+        	    .addDoor(new Door("door left main", 0, true))
+        	    .addDoor(new Door("door right main", 1, false));
             TabulaModelContainer container = TabulaModelHelper.loadTabulaModel("/assets/jurassicraft/models/entities/jeep_wrangler/jeep_wrangler.tbl");
-            this.baseModel = new ResetControlTabulaModel(container);
+            this.baseModel = new ResetControlTabulaModel(container, animator);
             this.baseModel.getCube(WINDSCREEN).showModel = false;
             this.windscreen = new TabulaModel(container);
             for (Entry<String, AdvancedModelRenderer> entry : this.windscreen.getCubes().entrySet()) {
@@ -57,6 +59,7 @@ public class JeepWranglerRenderer extends Render<JeepWranglerEntity> {
 
     @Override
     public void doRender(JeepWranglerEntity entity, double x, double y, double z, float yaw, float partialTicks) {
+	this.animator.partialTicks = partialTicks;
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
         this.bindEntityTexture(entity);

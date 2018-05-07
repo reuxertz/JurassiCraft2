@@ -23,7 +23,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
@@ -35,7 +34,6 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -72,10 +70,12 @@ public abstract class CarEntity extends Entity {
     private double interpTargetYaw;
     private double interpTargetPitch;
 
-    public final InterpValue backValue = new InterpValue();
-    public final InterpValue frontValue = new InterpValue();
-    public final InterpValue leftValue = new InterpValue();
-    public final InterpValue rightValue = new InterpValue();
+    private static final double INTERP_AMOUNT = 0.15D; //TODO config ?
+    
+    public final InterpValue backValue = new InterpValue(INTERP_AMOUNT);
+    public final InterpValue frontValue = new InterpValue(INTERP_AMOUNT);
+    public final InterpValue leftValue = new InterpValue(INTERP_AMOUNT);
+    public final InterpValue rightValue = new InterpValue(INTERP_AMOUNT);
 
     public final CarWheel backLeftWheel = new CarWheel(wheeldata.bl); 
     public final CarWheel backRightWheel = new CarWheel(wheeldata.br);
@@ -93,6 +93,8 @@ public abstract class CarEntity extends Entity {
     
     private Vec3d previousPosition = null; //Used for speed calculations
     private long prevWorldTime = -1;//Also used for speed calculations
+    
+    public double estimatedSpeed = 0D;
     
     public CarEntity(World world) {
         super(world);
@@ -224,14 +226,17 @@ public abstract class CarEntity extends Entity {
     @Override
     public void onEntityUpdate() {
         if(!world.isRemote) {
-            if(previousPosition != null && prevWorldTime != -1) {
+            if(prevWorldTime != -1) {
                 world.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().grow(0.1f), this::canRunoverEntity).forEach(this::runOverEntity);
             }
-            previousPosition = this.getPositionVector();
-            prevWorldTime = world.getTotalWorldTime();
         }
+        if(previousPosition == null) {
+            previousPosition = this.getPositionVector();
+        }
+        estimatedSpeed = this.getPositionVector().distanceTo(previousPosition) / (world.getTotalWorldTime() - prevWorldTime);
+        previousPosition = this.getPositionVector();
+        prevWorldTime = world.getTotalWorldTime();
         
-        allInterps.forEach(InterpValue::onEntityUpdate);
         List<WheelParticleData> markedRemoved = Lists.newArrayList();
         wheelDataList.forEach(wheel -> wheel.onUpdate(markedRemoved));
         markedRemoved.forEach(wheelDataList::remove);
@@ -283,8 +288,7 @@ public abstract class CarEntity extends Entity {
     }
     
     protected void runOverEntity(Entity entity) {
-	double rawSpeed = this.getPositionVector().distanceTo(previousPosition) / (world.getTotalWorldTime() - prevWorldTime);
-	entity.attackEntityFrom(DamageSources.CAR, (float) (rawSpeed * 20D));
+	entity.attackEntityFrom(DamageSources.CAR, (float) (this.estimatedSpeed * 20D));
     }
     private void processWheel(CarWheel wheel) {
 	this.processWheel(wheel, false);
@@ -398,7 +402,6 @@ public abstract class CarEntity extends Entity {
     }
 
     private void tickInterp() {
-        allInterps.forEach(InterpValue::doInterps);
         if (this.interpProgress > 0 && !this.canPassengerSteer()) {
             double interpolatedX = this.posX + (this.interpTargetX - this.posX) / (double) this.interpProgress;
             double interpolatedY = this.posY + (this.interpTargetY - this.posY) / (double) this.interpProgress;
@@ -507,6 +510,13 @@ public abstract class CarEntity extends Entity {
             }
         }
     }
+    
+    public Entity getEntityInSeat(int seatIndex) {
+	if(seatIndex < this.seats.length) {
+	    return this.seats[seatIndex].getOccupant();
+	}
+	return null;
+    }
 
     @Override
     public boolean attackEntityFrom(DamageSource source, float amount) {
@@ -594,7 +604,7 @@ public abstract class CarEntity extends Entity {
         ClientProxy.playCarSound(this);
     }
 
-    protected final class Seat {
+    public final class Seat {
         private final int index;
 
         private float offsetX;
