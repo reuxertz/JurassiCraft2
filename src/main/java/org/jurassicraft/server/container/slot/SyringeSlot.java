@@ -12,6 +12,6 @@ public class SyringeSlot extends Slot {
 
     @Override
     public boolean isItemValid(ItemStack stack) {
-        return stack.getItem() instanceof SyringeItem;
+        return stack.getItem() instanceof SyringeItem && !SyringeItem.getDinosaur(stack).isMarineCreature();
     }
 }

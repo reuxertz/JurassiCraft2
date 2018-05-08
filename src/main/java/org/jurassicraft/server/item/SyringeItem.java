@@ -32,7 +32,7 @@ public class SyringeItem extends DNAContainerItem {
         return new LangHelper("item.syringe.name").withProperty("dino", "entity.jurassicraft." + dinoName + ".name").build();
     }
 
-    public Dinosaur getDinosaur(ItemStack stack) {
+    public static Dinosaur getDinosaur(ItemStack stack) {
         Dinosaur dinosaur = EntityHandler.getDinosaurById(stack.getItemDamage());
 
         if (dinosaur == null) {
