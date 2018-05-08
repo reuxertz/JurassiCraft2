@@ -53,6 +53,7 @@ public abstract class Dinosaur implements Comparable<Dinosaur>
     private int maximumAge;
     private String headCubeName;
     private MovementType movementType;
+    private BirthType birthType = BirthType.EGG_LAYING;
     private boolean isImprintable;
 
     private boolean randomFlock = true;
@@ -615,6 +616,14 @@ public abstract class Dinosaur implements Comparable<Dinosaur>
     {
         this.bones = bones;
     }
+    
+    public void setBirthType(BirthType birthType) {
+	this.birthType = birthType;
+    }
+    
+    public BirthType getBirthType() {
+	return birthType;
+    }
 
     @Override
     public boolean equals(Object object)
@@ -960,5 +969,11 @@ public abstract class Dinosaur implements Comparable<Dinosaur>
         {
             return name;
         }
+    }
+    
+    public enum BirthType
+    {
+	LIVE_BIRTH,
+	EGG_LAYING;
     }
 }

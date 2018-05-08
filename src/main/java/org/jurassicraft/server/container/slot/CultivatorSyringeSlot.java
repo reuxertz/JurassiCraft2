@@ -4,6 +4,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.dinosaur.Dinosaur.BirthType;
 import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.item.SyringeItem;
 
@@ -14,11 +15,7 @@ public class CultivatorSyringeSlot extends Slot {
 
     @Override
     public boolean isItemValid(ItemStack stack) {
-        if (stack.getItem() instanceof SyringeItem) {
-            Dinosaur dinosaur = EntityHandler.getDinosaurById(stack.getItemDamage());
-            return dinosaur.isMammal() || dinosaur.isMarineCreature();
-        }
-        return false;
+        return stack.getItem() instanceof SyringeItem && SyringeItem.getDinosaur(stack).getBirthType() == BirthType.EGG_LAYING;
     }
 
     @Override

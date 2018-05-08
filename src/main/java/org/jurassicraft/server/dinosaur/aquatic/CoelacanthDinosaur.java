@@ -46,6 +46,7 @@ public class CoelacanthDinosaur extends Dinosaur
         this.setOffset(0.0F, 1.1F, -0.2F);
         this.setAttackBias(100.0);
         this.setMarineAnimal(true);
+        this.setBirthType(BirthType.LIVE_BIRTH);
         this.setMovementType(MovementType.DEEP_WATER);
         this.setBreeding(true, 1, 3, 15, true, false);
         this.setRandomFlock(false);
