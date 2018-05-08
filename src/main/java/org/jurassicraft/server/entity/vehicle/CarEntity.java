@@ -510,13 +510,6 @@ public abstract class CarEntity extends Entity {
             }
         }
     }
-    
-    public Entity getEntityInSeat(int seatIndex) {
-	if(seatIndex < this.seats.length) {
-	    return this.seats[seatIndex].getOccupant();
-	}
-	return null;
-    }
 
     @Override
     public boolean attackEntityFrom(DamageSource source, float amount) {
@@ -564,6 +557,13 @@ public abstract class CarEntity extends Entity {
                 living.renderYawOffset += (living.rotationYaw - living.renderYawOffset) * 0.6F;
             }
         }
+    }
+    
+    public Seat getSeat(int id) {
+	if(id < seats.length) {
+	    return seats[id];
+	}
+	return null;
     }
     
     @Override

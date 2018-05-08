@@ -12,6 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.model.animation.entity.vehicle.HelicopterAnimator;
 import org.jurassicraft.server.entity.vehicle.HelicopterBaseEntity;
+import org.jurassicraft.server.entity.vehicle.modules.HelicopterAnimationModels;
 import org.jurassicraft.server.entity.vehicle.modules.HelicopterModule;
 import org.jurassicraft.server.entity.vehicle.modules.HelicopterModuleSpot;
 import org.jurassicraft.server.tabula.TabulaModelHelper;
@@ -41,7 +42,7 @@ public class HelicopterRenderer implements IRenderFactory<HelicopterBaseEntity> 
 
                 // Modules init.
                 for (String id : HelicopterModule.registry.keySet()) {
-                    TabulaModel model = new TabulaModel(TabulaModelHelper.loadTabulaModel("/assets/jurassicraft/models/entities/helicopter/modules/ranger_helicopter_" + id));
+                    TabulaModel model = new TabulaModel(TabulaModelHelper.loadTabulaModel("/assets/jurassicraft/models/entities/helicopter/modules/ranger_helicopter_" + id), HelicopterAnimationModels.animatorRegistry.get(HelicopterModule.registry.get(id)));
                     this.moduleMap.put(id, model);
 
                     this.moduleTextures.put(id, new ResourceLocation(JurassiCraft.MODID, "textures/entities/helicopter/modules/ranger_helicopter_" + id + "_texture.png"));
@@ -56,8 +57,8 @@ public class HelicopterRenderer implements IRenderFactory<HelicopterBaseEntity> 
             GlStateManager.pushMatrix();
             GlStateManager.translate((float) x, (float) y + 1.5F, (float) z);
             GlStateManager.rotate(180.0F - yaw, 0.0F, 1.0F, 0.0F);
-            GlStateManager.rotate(helicopter.rotationPitch, 1.0F, 0.0F, 0.0F);
-            GlStateManager.rotate(helicopter.getRoll(), 0.0F, 0.0F, 1.0F);
+            GlStateManager.rotate((float) helicopter.interpRotationPitch.getValueForRendering(partialTicks), 1.0F, 0.0F, 0.0F);
+            GlStateManager.rotate((float) helicopter.interpRotationRoll.getValueForRendering(partialTicks), 0.0F, 0.0F, 1.0F);
 
             float f4 = 1f;
             GlStateManager.scale(f4, f4, f4);

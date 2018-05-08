@@ -14,6 +14,8 @@ import net.ilexiconn.llibrary.client.model.tabula.TabulaModel;
 import net.ilexiconn.llibrary.client.model.tools.AdvancedModelRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.Vec3d;
 
 public class CarAnimation implements ITabulaModelAnimator<CarEntity> {
     private final List<CarAnimation.Door> doorList = Lists.newArrayList();
@@ -29,8 +31,17 @@ public class CarAnimation implements ITabulaModelAnimator<CarEntity> {
 	    float ageInTicks, float rotationYaw, float rotationPitch, float scale) {
 	doorList.forEach(door -> {
 	    InterpValue value = door.getInterpValue();
-	    value.setTarget(Math.toRadians(door.hasEntity(entity) || entity.estimatedSpeed >= 0.02D /*TODO: config ?*/? 0F : door.isLeft() ? 60F : -60F));
-	    model.getCube(door.getName()).rotateAngleY = (float) value.getValueForRendering(LLibrary.PROXY.getPartialTicks());
+	    CarEntity.Seat seat = door.getSeat(entity);
+	    CarEntity.Seat closestSeat = seat;
+	    EntityPlayer player = Minecraft.getMinecraft().player;
+	    Vec3d playerPos = player.getPositionVector();
+	    for(Door door1 : this.doorList) {
+		if(door1.getSeat(entity).getPos().distanceTo(playerPos) < closestSeat.getPos().distanceTo(playerPos)) {
+		    closestSeat = door1.getSeat(entity);
+		}
+	    }
+	    value.setTarget(Math.toRadians(seat.getOccupant() != null || closestSeat != seat || closestSeat.getPos().distanceTo(playerPos) > 4D ? 0F : door.isLeft() ? 60F : -60F));
+	    model.getCube(door.getName()).rotateAngleY = (float) value.getValueForRendering(partialTicks);
 	});
 	
     }
@@ -55,8 +66,8 @@ public class CarAnimation implements ITabulaModelAnimator<CarEntity> {
 	    return name;
 	}
 	
-	public boolean hasEntity(CarEntity entity) {
-	    return entity.getEntityInSeat(seatIndex) != null;
+	public CarEntity.Seat getSeat(CarEntity entity) {
+	    return entity.getSeat(seatIndex);
 	}
 	
 	public boolean isLeft() {
