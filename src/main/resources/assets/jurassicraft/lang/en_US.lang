@@ -602,6 +602,9 @@ journal.robert_muldoon.name=Robert Muldoon
 
 death.attack.shock.1=%s is now extra crispy!
 death.attack.shock.2=%s was electrocuted!
+death.attack.jurassic.car0=%s was hit by a car!
+death.attack.jurassic.car1=%s didn't watch the road!
+death.attack.jurassic.car2=%s didn't look both ways
 
 crafting.skeleton.needed=Need {bonename}
 crafting.skeleton.toomany=Need {bonename}
