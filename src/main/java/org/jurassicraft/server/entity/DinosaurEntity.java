@@ -21,6 +21,7 @@ import org.jurassicraft.server.damage.DinosaurDamageSource;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.ai.navigation.AdvancedSwimEntityAI;
 import org.jurassicraft.server.entity.ai.DinosaurAttackMeleeEntityAI;
+import org.jurassicraft.server.entity.ai.DinosaurWanderAvoidWater;
 import org.jurassicraft.server.entity.ai.core.DinosaurLookHelper;
 import org.jurassicraft.server.entity.ai.DinosaurWanderEntityAI;
 import org.jurassicraft.server.entity.ai.EscapeWireEntityAI;
@@ -216,6 +217,8 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         }
 
         this.tasks.addTask(0, new EscapeWireEntityAI(this));
+        
+        this.tasks.addTask(0, new DinosaurWanderAvoidWater(this, 0.8D));
 
         if (this.dinosaur.getDiet().canEat(this, FoodType.PLANT)) {
             this.tasks.addTask(1, new GrazeEntityAI(this));
@@ -265,7 +268,9 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         }
 
         this.ignoreFrustumCheck = true;
-        this.setSkeleton(false);        
+        this.setSkeleton(false);       
+        
+        this.setAge(0);
     }
 
     protected LegSolver createLegSolver() {
@@ -1900,37 +1905,9 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     }
     
     @Override
-    public boolean isInWater() {
-    	return world.getBlockState(this.getPosition()).getMaterial() == Material.WATER; ///TODO: revert back to original
-    }
-    
-    @Override
     protected void handleJumpWater() {
         if(this.canDinoSwim()) {
-        	super.handleJumpWater();
+            super.handleJumpWater();
         }
-    }
-
-    
-    @Override
-    public boolean handleWaterMovement() {
-    	if(this.canDinoSwim()) {
-    		if (this.getRidingEntity() instanceof EntityBoat) {
-    			return false;
-            }
-            else if (this.world.isMaterialInBB(this.getEntityBoundingBox().grow(0.0D, -0.4000000059604645D, 0.0D).shrink(0.001D), Material.WATER))
-            {
-                if (!this.isInWater() && !this.firstUpdate) {
-                    this.doWaterSplashEffect();
-                }
-                this.fallDistance = 0.0F;
-                this.extinguish();
-                return true;
-            }
-            else {
-                return false;
-            }
-    	}
-    	return super.handleWaterMovement();
     }
 }

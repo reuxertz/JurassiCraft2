@@ -8,12 +8,12 @@ import org.jurassicraft.server.entity.ai.core.Mutex;
 
 public class DinosaurWanderEntityAI extends EntityAIBase
 {
-    private DinosaurEntity entity;
+    protected DinosaurEntity entity;
     private double xPosition;
     private double yPosition;
     private double zPosition;
     private double speed;
-    private int executionChance;
+    protected int executionChance;
     private boolean mustUpdate;
 
 
@@ -30,15 +30,15 @@ public class DinosaurWanderEntityAI extends EntityAIBase
     {
         if (!this.mustUpdate)
         {
-            if (this.entity.getRNG().nextInt(this.executionChance) != 0)
+            if (innerShouldExecute())
             {
                 return false;
             }
         }
 
-        if (this.entity.getNavigator().noPath() && this.entity.getAttackTarget() == null)
+        if (this.outterShouldExecute())
         {
-            Vec3d wanderPosition = RandomPositionGenerator.getLandPos(this.entity, 10, 10);
+            Vec3d wanderPosition = getWanderPosition();
 
             if (wanderPosition != null)
             {
@@ -52,6 +52,18 @@ public class DinosaurWanderEntityAI extends EntityAIBase
         }
 
         return false;
+    }
+    
+    protected boolean innerShouldExecute() { //TODO: merge into one
+	return this.entity.getRNG().nextInt(this.executionChance) != 0;
+    }
+    
+    protected boolean outterShouldExecute() {
+	return this.entity.getNavigator().noPath() && this.entity.getAttackTarget() == null;
+    }
+    
+    protected Vec3d getWanderPosition() {
+        return RandomPositionGenerator.getLandPos(this.entity, 10, 10);
     }
 
     @Override
