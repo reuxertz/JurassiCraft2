@@ -66,7 +66,7 @@ public class HelicopterBaseEntity extends EntityLivingBase implements IEntityAdd
     public final InterpValue rotorRotationAmount = new InterpValue(0.1D);
     public final InterpValue interpRotationPitch = new InterpValue(0.25D);
     public final InterpValue interpRotationRoll = new InterpValue(0.25D);
-    public final InterpValue interpSpeed = new InterpValue(0.1F);
+    public final InterpValue interpSpeed = new InterpValue(0.01F);
 
     public HelicopterBaseEntity(World worldIn) {
         super(worldIn);
@@ -196,6 +196,7 @@ public class HelicopterBaseEntity extends EntityLivingBase implements IEntityAdd
             }
             this.modulesSynced = true;
         }
+        this.interpSpeed.setTarget(2F);
         super.onLivingUpdate();
         if (JurassiCraft.CONFIG.helicopterExplosion == true) {
             if (this.motionX * this.motionX + this.motionZ * this.motionZ > 1.1 * 1.1 && this.collidedHorizontally) {
@@ -261,6 +262,7 @@ public class HelicopterBaseEntity extends EntityLivingBase implements IEntityAdd
         this.rotationYaw += rotationDelta;;
         this.interpRotationPitch.setTarget(this.direction.zCoord * -30D);
         this.interpRotationRoll.setTarget(this.direction.xCoord * 20D);
+
         this.updateDirection(this.direction);
         if (this.engineRunning) {
             this.enginePower+= 1f;
@@ -286,8 +288,8 @@ public class HelicopterBaseEntity extends EntityLivingBase implements IEntityAdd
                 my = gravityCancellation;
             }
             this.motionY += my * 1 * (this.enginePower / MAX_POWER);
-            this.motionX += localDir.xCoord / this.interpSpeed.getCurrent();
-            this.motionZ += localDir.zCoord / this.interpSpeed.getCurrent();
+            this.motionX += localDir.xCoord * this.interpSpeed.getCurrent() * 0.001;
+            this.motionZ += localDir.zCoord * this.interpSpeed.getCurrent() * 0.001;
         }
         if (this.enginePower >= MAX_POWER) {
             this.enginePower = MAX_POWER;
