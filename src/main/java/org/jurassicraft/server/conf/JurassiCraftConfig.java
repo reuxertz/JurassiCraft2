@@ -12,6 +12,9 @@ public class JurassiCraftConfig {
     @ConfigEntry(category = "Mineral Generation", name = "Fossil Generation")
     public boolean fossilGeneration = true;
 
+    @ConfigEntry(category = "Vehicles", name = "Helicopter Explosion")
+    public boolean helicopterExplosion = true;
+
     @ConfigEntry(category = "Mineral Generation", name = "Nest Fossil Generation")
     public boolean nestFossilGeneration = true;
 

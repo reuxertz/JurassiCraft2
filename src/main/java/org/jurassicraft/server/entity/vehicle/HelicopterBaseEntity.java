@@ -3,7 +3,10 @@ package org.jurassicraft.server.entity.vehicle;
 import java.util.Locale;
 import java.util.function.Predicate;
 
+import org.apache.logging.log4j.core.jmx.Server;
 import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.client.render.entity.HelicopterRenderer;
+import org.jurassicraft.server.conf.JurassiCraftConfig;
 import org.jurassicraft.server.entity.ai.util.InterpValue;
 import org.jurassicraft.server.entity.vehicle.modules.HelicopterDoor;
 import org.jurassicraft.server.entity.vehicle.modules.HelicopterModule;
@@ -41,7 +44,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Base entity for the helicopter, also holds the {@link HelicopterSeatEntity Seat} entities and updates/handles them.
+ * Base entity for the helicopter, also holds the {@link Seat} entities and updates/handles them.
  */
 public class HelicopterBaseEntity extends EntityLivingBase implements IEntityAdditionalSpawnData {
     public static final int FRONT = ModulePosition.FRONT.ordinal();
@@ -63,6 +66,7 @@ public class HelicopterBaseEntity extends EntityLivingBase implements IEntityAdd
     public final InterpValue rotorRotationAmount = new InterpValue(0.1D);
     public final InterpValue interpRotationPitch = new InterpValue(0.25D);
     public final InterpValue interpRotationRoll = new InterpValue(0.25D);
+    public final InterpValue interpSpeed = new InterpValue(0.1F);
 
     public HelicopterBaseEntity(World worldIn) {
         super(worldIn);
@@ -193,6 +197,14 @@ public class HelicopterBaseEntity extends EntityLivingBase implements IEntityAdd
             this.modulesSynced = true;
         }
         super.onLivingUpdate();
+        if (JurassiCraft.CONFIG.helicopterExplosion == true) {
+            if (this.motionX * this.motionX + this.motionZ * this.motionZ > 1.1 * 1.1 && this.collidedHorizontally) {
+                world.createExplosion(this.getRidingEntity(), posX, posY, posZ, 12, true);
+            }
+        } else
+        {
+            return;
+        }
 
         // update rotor angle
         float time = this.enginePower / MAX_POWER; //Why is this called time ?
@@ -274,8 +286,8 @@ public class HelicopterBaseEntity extends EntityLivingBase implements IEntityAdd
                 my = gravityCancellation;
             }
             this.motionY += my * 1 * (this.enginePower / MAX_POWER);
-            this.motionX = localDir.xCoord / 2f; //TODO: interp speed
-            this.motionZ = localDir.zCoord / 2f;
+            this.motionX += localDir.xCoord / this.interpSpeed.getCurrent();
+            this.motionZ += localDir.zCoord / this.interpSpeed.getCurrent();
         }
         if (this.enginePower >= MAX_POWER) {
             this.enginePower = MAX_POWER;
@@ -289,6 +301,7 @@ public class HelicopterBaseEntity extends EntityLivingBase implements IEntityAdd
             JurassiCraft.NETWORK_WRAPPER.sendToAll(new HelicopterDirectionMessage(this.getEntityId(), direction));
         }
     }
+
 
     @SideOnly(Side.CLIENT)
     private MutableVec3 drive(MutableVec3 direction) {
