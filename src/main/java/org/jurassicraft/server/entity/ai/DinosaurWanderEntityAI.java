@@ -1,10 +1,12 @@
 package org.jurassicraft.server.entity.ai;
 
+import org.jurassicraft.server.entity.DinosaurEntity;
+
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import org.jurassicraft.server.entity.DinosaurEntity;
-import org.jurassicraft.server.entity.ai.core.Mutex;
 
 public class DinosaurWanderEntityAI extends EntityAIBase
 {
@@ -38,17 +40,22 @@ public class DinosaurWanderEntityAI extends EntityAIBase
 
         if (this.outterShouldExecute())
         {
-            Vec3d wanderPosition = getWanderPosition();
-
-            if (wanderPosition != null)
-            {
-                this.xPosition = wanderPosition.x;
-                this.yPosition = wanderPosition.y;
-                this.zPosition = wanderPosition.z;
-                this.mustUpdate = false;
-
-                return true;
-            }
+            overlist:
+                for(int i = 0; i < 100; i++) {
+                    Vec3d vec = getWanderPosition();
+                    if (vec != null) {
+                        for(BlockPos pos : BlockPos.getAllInBox(new BlockPos(vec.addVector(0, 1, 0)), new BlockPos(vec.addVector(1, 1, 1)))) {
+                            if(this.entity.world.getBlockState(pos).getMaterial() != Material.AIR) {
+                        	continue overlist;
+                            }
+                        }
+                        this.xPosition = vec.x;
+                        this.yPosition = vec.y;
+                        this.zPosition = vec.z;
+                        this.mustUpdate = false;
+                        return true;
+                    }
+                }
         }
 
         return false;
