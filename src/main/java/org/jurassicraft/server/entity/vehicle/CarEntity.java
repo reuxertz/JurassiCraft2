@@ -70,10 +70,12 @@ public abstract class CarEntity extends Entity {
     private double interpTargetYaw;
     private double interpTargetPitch;
 
-    public final InterpValue backValue = new InterpValue(0.25D);
-    public final InterpValue frontValue = new InterpValue(0.25D);
-    public final InterpValue leftValue = new InterpValue(0.25D);
-    public final InterpValue rightValue = new InterpValue(0.25D);
+    private static final double INTERP_AMOUNT = 0.15D; //TODO config ?
+    
+    public final InterpValue backValue = new InterpValue(INTERP_AMOUNT);
+    public final InterpValue frontValue = new InterpValue(INTERP_AMOUNT);
+    public final InterpValue leftValue = new InterpValue(INTERP_AMOUNT);
+    public final InterpValue rightValue = new InterpValue(INTERP_AMOUNT);
 
     public final CarWheel backLeftWheel = new CarWheel(wheeldata.bl); 
     public final CarWheel backRightWheel = new CarWheel(wheeldata.br);
@@ -82,6 +84,7 @@ public abstract class CarEntity extends Entity {
 
     public final List<WheelParticleData> wheelDataList = Lists.newArrayList(); //Entirely useless server-side. //TODO: stop adding to this on server-side.
     
+    public List<InterpValue> allInterps = Lists.newArrayList(backValue, frontValue, leftValue, rightValue);
     public List<CarWheel> allWheels = Lists.newArrayList(backLeftWheel, frontLeftWheel, backRightWheel, frontRightWheel);
 
     
@@ -90,6 +93,8 @@ public abstract class CarEntity extends Entity {
     
     private Vec3d previousPosition = null; //Used for speed calculations
     private long prevWorldTime = -1;//Also used for speed calculations
+    
+    public double estimatedSpeed = 0D;
     
     public CarEntity(World world) {
         super(world);
@@ -220,23 +225,26 @@ public abstract class CarEntity extends Entity {
 
     @Override
     public void onEntityUpdate() {
-	
-	List<WheelParticleData> markedRemoved = Lists.newArrayList();
-        wheelDataList.forEach(wheel -> wheel.onUpdate(markedRemoved));
-        markedRemoved.forEach(wheelDataList::remove);
-        markedRemoved.clear();
-	
 	if(!shouldRunUpdates()) {
 	    super.onEntityUpdate();
 	    return;
 	}
         if(!world.isRemote) {
-            if(previousPosition != null && prevWorldTime != -1) {
+            if(prevWorldTime != -1) {
                 world.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().grow(0.1f), this::canRunoverEntity).forEach(this::runOverEntity);
             }
-            previousPosition = this.getPositionVector();
-            prevWorldTime = world.getTotalWorldTime();
         }
+        if(previousPosition == null) {
+            previousPosition = this.getPositionVector();
+        }
+        estimatedSpeed = this.getPositionVector().distanceTo(previousPosition) / (world.getTotalWorldTime() - prevWorldTime);
+        previousPosition = this.getPositionVector();
+        prevWorldTime = world.getTotalWorldTime();
+        
+        List<WheelParticleData> markedRemoved = Lists.newArrayList();
+        wheelDataList.forEach(wheel -> wheel.onUpdate(markedRemoved));
+        markedRemoved.forEach(wheelDataList::remove);
+        markedRemoved.clear();
         
         super.onEntityUpdate();
         
@@ -279,18 +287,14 @@ public abstract class CarEntity extends Entity {
         
     }
     
-    protected boolean shouldRunUpdates() {
-	return true;
-    }
-    
     protected boolean canRunoverEntity(Entity entity) {
 	return EntitySelectors.NOT_SPECTATING.apply(entity) && !this.getPassengers().contains(entity);
     }
     
     protected void runOverEntity(Entity entity) {
-	double rawSpeed = this.getPositionVector().distanceTo(previousPosition) / (world.getTotalWorldTime() - prevWorldTime);
-	entity.attackEntityFrom(DamageSources.CAR, (float) (rawSpeed * 20D));
+	entity.attackEntityFrom(DamageSources.CAR, (float) (this.estimatedSpeed * 20D));
     }
+    
     protected void processWheel(CarWheel wheel) {
 	this.processWheel(wheel, false);
     }
@@ -307,7 +311,7 @@ public abstract class CarEntity extends Entity {
             this.wheelDataList.add(new WheelParticleData(new Vec3d((vec.x + oldVec.x) / 2D, (vec.y + oldVec.y) / 2D, (vec.z + oldVec.z) / 2D))); //Does this even help ?
         } else {
             wheel.setCurrentWheelPos(vec);
-            this.wheelDataList.add(new WheelParticleData(vec).setShouldRender(shouldTyresRender()));   
+            this.wheelDataList.add(new WheelParticleData(vec).setShouldRender(this.getSpeed() != Speed.SLOW /* || this.ticksExisted % 2 == 0*/));   
         }
     }
     
@@ -319,8 +323,8 @@ public abstract class CarEntity extends Entity {
     public void onUpdate() {
         super.onUpdate();
         if(!shouldRunUpdates()) {
-	    return;
-	}
+            return;
+        }
         AxisAlignedBB aabb = this.getEntityBoundingBox().shrink(0.9f);
         for(BlockPos pos : BlockPos.getAllInBoxMutable(new BlockPos(Math.floor(aabb.minX), Math.floor(aabb.minY), Math.floor(aabb.minZ)), new BlockPos(Math.ceil(aabb.maxX), Math.ceil(aabb.maxY), Math.ceil(aabb.maxZ)))) {
             IBlockState state = world.getBlockState(pos);
@@ -355,7 +359,7 @@ public abstract class CarEntity extends Entity {
         this.motionY -= 0.15F;
     }
 
-    protected void handleControl(boolean doMovement) {
+    protected void handleControl(boolean applyMovement) {
         Entity driver = this.getControllingPassenger();
         if (!(driver instanceof EntityPlayer) || !((EntityPlayer) driver).isUser()) {
             return;
@@ -374,7 +378,7 @@ public abstract class CarEntity extends Entity {
                 newSpeed = true;
             }
         }
-        if(doMovement) {
+        if(applyMovement) {
             this.applyMovement();
         }
         if (this.getControlState() != previous || newSpeed) {
@@ -569,6 +573,17 @@ public abstract class CarEntity extends Entity {
         }
     }
     
+    public Seat getSeat(int id) {
+	if(id < seats.length) {
+	    return seats[id];
+	}
+	return null;
+    }
+    
+    protected boolean shouldRunUpdates() {
+	return true;
+    }
+    
     @Override
     public void setDead() {
         super.setDead();
@@ -607,7 +622,7 @@ public abstract class CarEntity extends Entity {
         ClientProxy.playCarSound(this);
     }
 
-    protected final class Seat {
+    public final class Seat {
         private final int index;
 
         private float offsetX;
