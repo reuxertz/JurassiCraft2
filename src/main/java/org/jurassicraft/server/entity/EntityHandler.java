@@ -85,6 +85,8 @@ public class EntityHandler {
 
         registerEntity(GoatEntity.class, "Goat", 0xEFEDE7, 0x7B3E20);
 
+        registerEntity(TranquilizerDartEntity.class, "Tranquilizer Dart");
+        
         EntityRegistry.addSpawn(GoatEntity.class, 10, 1, 3, EnumCreatureType.CREATURE, BiomeDictionary.getBiomes(BiomeDictionary.Type.HILLS).toArray(new Biome[0]));
         EntityRegistry.addSpawn(GoatEntity.class, 15, 1, 3, EnumCreatureType.CREATURE, BiomeDictionary.getBiomes(BiomeDictionary.Type.PLAINS).toArray(new Biome[0]));
         EntityRegistry.addSpawn(GoatEntity.class, 15, 1, 3, EnumCreatureType.CREATURE, BiomeDictionary.getBiomes(BiomeDictionary.Type.FOREST).toArray(new Biome[0]));

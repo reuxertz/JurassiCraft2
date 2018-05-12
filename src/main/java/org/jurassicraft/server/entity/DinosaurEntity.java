@@ -140,6 +140,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     private boolean hasTracker;
     private UUID owner;
     private boolean isSleeping;
+    private int tranquilizerTicks;
     private int stayAwakeTime;
     private boolean useInertialTweens;
     private List<Class<? extends EntityLivingBase>> attackTargets = new ArrayList<>();
@@ -268,9 +269,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         }
 
         this.ignoreFrustumCheck = true;
-        this.setSkeleton(false);       
-        
-        this.setAge(0);
+        this.setSkeleton(false);  
     }
 
     protected LegSolver createLegSolver() {
@@ -1023,8 +1022,9 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
                         }
                     }
 
-                    if (!this.shouldSleep() && !this.world.isRemote) {
+                    if (!this.shouldSleep() && !this.world.isRemote && tranquilizerTicks-- <= 0) {
                         this.isSleeping = false;
+                        tranquilizerTicks = 0;
                     }
                 } else if (this.getAnimation() == EntityAnimation.SLEEPING.get()) {
                     this.setAnimation(EntityAnimation.IDLE.get());
@@ -1416,6 +1416,8 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
             }
             nbt.setTag("Children", children);
         }
+        
+        nbt.setInteger("TranquilizerTicks", tranquilizerTicks);
 
         return nbt;
     }
@@ -1475,6 +1477,8 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
                 }
             }
         }
+        
+        tranquilizerTicks = nbt.getInteger("TranquilizerTicks");
 
         this.updateAttributes();
         this.updateBounds();
@@ -1528,7 +1532,12 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
             this.dataManager.set(WATCHER_IS_SLEEPING, this.isSleeping);
         }
     }
-
+    
+    public void tranquilize(int ticks) {
+	tranquilizerTicks = 50 + ticks + this.rand.nextInt(50);
+	setSleeping(true);
+    }
+    
     public int getStayAwakeTime() {
         return this.stayAwakeTime;
     }
