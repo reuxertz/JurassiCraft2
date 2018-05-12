@@ -37,7 +37,7 @@ public class DartGun extends Item {
                 	.findFirst()
                 	.orElse(ItemStack.EMPTY));
         } else if (!worldIn.isRemote) {
-            TranquilizerDartEntity dart = new TranquilizerDartEntity(worldIn, playerIn, itemstack);
+            TranquilizerDartEntity dart = new TranquilizerDartEntity(worldIn, playerIn, dartItem);
             dart.setHeadingFromThrower(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 2.5F, 0.5F);
             worldIn.spawnEntity(dart);
             dartItem.shrink(1);

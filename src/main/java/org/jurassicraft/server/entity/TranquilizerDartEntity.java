@@ -28,7 +28,7 @@ public class TranquilizerDartEntity extends EntityThrowable implements IEntityAd
     
     public TranquilizerDartEntity(World worldIn, EntityLivingBase throwerIn, ItemStack stack) {
 	super(worldIn, throwerIn);
-	this.stack = stack;
+	this.stack = stack.copy();
     }
     
     @Override
@@ -61,6 +61,10 @@ public class TranquilizerDartEntity extends EntityThrowable implements IEntityAd
 		JurassiCraft.INSTANCE.getLogger().error("Expected Dart Item, got {} ", item.getRegistryName());
 	    }
 	}
+	if (!this.world.isRemote) {
+            this.world.setEntityState(this, (byte)3);
+            this.setDead();
+        }
     }
 
     @Override
