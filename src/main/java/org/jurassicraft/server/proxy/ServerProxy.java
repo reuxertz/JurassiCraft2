@@ -1,19 +1,7 @@
 package org.jurassicraft.server.proxy;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.network.IGuiHandler;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import java.util.List;
+
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.entity.BugCrateBlockEntity;
@@ -43,6 +31,7 @@ import org.jurassicraft.server.container.SkeletonAssemblyContainer;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.DinosaurSerializers;
 import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.entity.GoatEntity;
 import org.jurassicraft.server.event.ServerEventHandler;
 import org.jurassicraft.server.food.FoodHelper;
 import org.jurassicraft.server.food.FoodNutrients;
@@ -54,6 +43,25 @@ import org.jurassicraft.server.plant.PlantHandler;
 import org.jurassicraft.server.recipe.RecipeHandler;
 import org.jurassicraft.server.util.RegistryHandler;
 import org.jurassicraft.server.world.WorldGenerator;
+
+import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.passive.EntityPig;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.IGuiHandler;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ServerProxy implements IGuiHandler {
     public static final int GUI_CLEANING_STATION_ID = 0;
@@ -100,14 +108,23 @@ public class ServerProxy implements IGuiHandler {
     }
 
     public void onInit(FMLInitializationEvent event) {
-
+	for(Biome biome : ForgeRegistries.BIOMES.getValues()) { //Adds the goat spawning to biomes that spawn pigs. TODO: maybe add a config for biomes ?
+	    List<Biome.SpawnListEntry> list = biome.getSpawnableList(EnumCreatureType.CREATURE);
+	    boolean shouldAddGoat = false;
+	    for(Biome.SpawnListEntry entry : list) {
+		if(entry.entityClass == EntityPig.class) {
+		    shouldAddGoat = true;
+		}
+	    }
+	    list.add(new Biome.SpawnListEntry(GoatEntity.class,  10, 2, 4));
+	}
     }
 
     public EntityPlayer getPlayer() {
         return null;
     }
 
-    public EntityPlayer getPlayerEntityFromContext(MessageContext ctx) {
+    public EntityPlayer getPlayerEntityFromContext(MessageContext ctx) {	
         return ctx.getServerHandler().player;
     }
 
