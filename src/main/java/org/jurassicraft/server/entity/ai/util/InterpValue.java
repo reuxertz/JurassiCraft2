@@ -1,18 +1,38 @@
 package org.jurassicraft.server.entity.ai.util;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.common.util.INBTSerializable;
+import java.util.List;
 
+import org.jurassicraft.JurassiCraft;
+
+import com.google.common.collect.Lists;
+
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+
+@EventBusSubscriber(modid=JurassiCraft.MODID)
 public class InterpValue implements INBTSerializable<NBTTagCompound> {
     
-    protected static final double INTERP_AMOUNT = 0.25D; //TODO: Config value ?
+    private static final List<InterpValue> INSTANCES = Lists.newArrayList();
+    
+    private final double amount;
     
     private double target;
     private double current;
     private double previousCurrent;
     
     private boolean initilized;
+    
+    public InterpValue(double amount) {
+	this.amount = amount;
+	INSTANCES.add(this);
+    }
     
     public void setTarget(double target) {
         if(!initilized) {
@@ -29,21 +49,15 @@ public class InterpValue implements INBTSerializable<NBTTagCompound> {
         this.target = target;
     }
     
-    public void onEntityUpdate() {
+    private void tickInterp() {
         this.previousCurrent = current;
-    }
-    
-    public void doInterps() {
-        double add;
-        if(Math.abs(current - target) <= INTERP_AMOUNT) {
-            add = 0;
+        if(Math.abs(current - target) <= amount) {
             current = target;
         } else if(current < target) {
-            add = INTERP_AMOUNT;
+            current += amount;
         } else {
-            add = -INTERP_AMOUNT;
+            current -= amount;
         }
-        current += add;
     }
     
     public double getValueForRendering(float partialTicks) {
@@ -67,5 +81,13 @@ public class InterpValue implements INBTSerializable<NBTTagCompound> {
 	this.target = nbt.getDouble("target");
 	this.current = nbt.getDouble("current");
 	this.previousCurrent = current;
+    }
+    
+    @SubscribeEvent
+    public static void onTick(TickEvent event) {
+	Side side = FMLCommonHandler.instance().getSide();
+	if((event instanceof ClientTickEvent && side.isClient()) || (event instanceof ServerTickEvent && side.isServer())) {
+	    INSTANCES.forEach(InterpValue::tickInterp);
+	} 
     }
 }

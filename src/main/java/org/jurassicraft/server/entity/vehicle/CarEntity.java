@@ -23,7 +23,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
@@ -35,7 +34,6 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -63,7 +61,7 @@ public abstract class CarEntity extends Entity {
     public float wheelRotateAmount;
     public float prevWheelRotateAmount;
 
-    private float rotationDelta;
+    protected float rotationDelta;
 
     private int interpProgress;
     private double interpTargetX;
@@ -72,10 +70,10 @@ public abstract class CarEntity extends Entity {
     private double interpTargetYaw;
     private double interpTargetPitch;
 
-    public final InterpValue backValue = new InterpValue();
-    public final InterpValue frontValue = new InterpValue();
-    public final InterpValue leftValue = new InterpValue();
-    public final InterpValue rightValue = new InterpValue();
+    public final InterpValue backValue = new InterpValue(0.25D);
+    public final InterpValue frontValue = new InterpValue(0.25D);
+    public final InterpValue leftValue = new InterpValue(0.25D);
+    public final InterpValue rightValue = new InterpValue(0.25D);
 
     public final CarWheel backLeftWheel = new CarWheel(wheeldata.bl); 
     public final CarWheel backRightWheel = new CarWheel(wheeldata.br);
@@ -84,7 +82,6 @@ public abstract class CarEntity extends Entity {
 
     public final List<WheelParticleData> wheelDataList = Lists.newArrayList(); //Entirely useless server-side. //TODO: stop adding to this on server-side.
     
-    public List<InterpValue> allInterps = Lists.newArrayList(backValue, frontValue, leftValue, rightValue);
     public List<CarWheel> allWheels = Lists.newArrayList(backLeftWheel, frontLeftWheel, backRightWheel, frontRightWheel);
 
     
@@ -223,6 +220,16 @@ public abstract class CarEntity extends Entity {
 
     @Override
     public void onEntityUpdate() {
+	
+	List<WheelParticleData> markedRemoved = Lists.newArrayList();
+        wheelDataList.forEach(wheel -> wheel.onUpdate(markedRemoved));
+        markedRemoved.forEach(wheelDataList::remove);
+        markedRemoved.clear();
+	
+	if(!shouldRunUpdates()) {
+	    super.onEntityUpdate();
+	    return;
+	}
         if(!world.isRemote) {
             if(previousPosition != null && prevWorldTime != -1) {
                 world.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().grow(0.1f), this::canRunoverEntity).forEach(this::runOverEntity);
@@ -230,12 +237,6 @@ public abstract class CarEntity extends Entity {
             previousPosition = this.getPositionVector();
             prevWorldTime = world.getTotalWorldTime();
         }
-        
-        allInterps.forEach(InterpValue::onEntityUpdate);
-        List<WheelParticleData> markedRemoved = Lists.newArrayList();
-        wheelDataList.forEach(wheel -> wheel.onUpdate(markedRemoved));
-        markedRemoved.forEach(wheelDataList::remove);
-        markedRemoved.clear();
         
         super.onEntityUpdate();
         
@@ -269,13 +270,17 @@ public abstract class CarEntity extends Entity {
             }
             this.updateMotion();
             if (this.world.isRemote) {
-                this.handleControl();
+                this.handleControl(true);
             }
             this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
         } else {
             this.motionX = this.motionY = this.motionZ = 0;
         }
         
+    }
+    
+    protected boolean shouldRunUpdates() {
+	return true;
     }
     
     protected boolean canRunoverEntity(Entity entity) {
@@ -286,7 +291,7 @@ public abstract class CarEntity extends Entity {
 	double rawSpeed = this.getPositionVector().distanceTo(previousPosition) / (world.getTotalWorldTime() - prevWorldTime);
 	entity.attackEntityFrom(DamageSources.CAR, (float) (rawSpeed * 20D));
     }
-    private void processWheel(CarWheel wheel) {
+    protected void processWheel(CarWheel wheel) {
 	this.processWheel(wheel, false);
     }
     
@@ -302,13 +307,20 @@ public abstract class CarEntity extends Entity {
             this.wheelDataList.add(new WheelParticleData(new Vec3d((vec.x + oldVec.x) / 2D, (vec.y + oldVec.y) / 2D, (vec.z + oldVec.z) / 2D))); //Does this even help ?
         } else {
             wheel.setCurrentWheelPos(vec);
-            this.wheelDataList.add(new WheelParticleData(vec).setShouldRender(this.getSpeed() != Speed.SLOW /* || this.ticksExisted % 2 == 0*/));   
+            this.wheelDataList.add(new WheelParticleData(vec).setShouldRender(shouldTyresRender()));   
         }
+    }
+    
+    protected boolean shouldTyresRender() {
+	return this.getSpeed() != Speed.SLOW;
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
+        if(!shouldRunUpdates()) {
+	    return;
+	}
         AxisAlignedBB aabb = this.getEntityBoundingBox().shrink(0.9f);
         for(BlockPos pos : BlockPos.getAllInBoxMutable(new BlockPos(Math.floor(aabb.minX), Math.floor(aabb.minY), Math.floor(aabb.minZ)), new BlockPos(Math.ceil(aabb.maxX), Math.ceil(aabb.maxY), Math.ceil(aabb.maxZ)))) {
             IBlockState state = world.getBlockState(pos);
@@ -343,7 +355,7 @@ public abstract class CarEntity extends Entity {
         this.motionY -= 0.15F;
     }
 
-    private void handleControl() {
+    protected void handleControl(boolean doMovement) {
         Entity driver = this.getControllingPassenger();
         if (!(driver instanceof EntityPlayer) || !((EntityPlayer) driver).isUser()) {
             return;
@@ -362,7 +374,9 @@ public abstract class CarEntity extends Entity {
                 newSpeed = true;
             }
         }
-        this.applyMovement();
+        if(doMovement) {
+            this.applyMovement();
+        }
         if (this.getControlState() != previous || newSpeed) {
             JurassiCraft.NETWORK_WRAPPER.sendToServer(new UpdateVehicleControlMessage(this));
         }
@@ -398,7 +412,6 @@ public abstract class CarEntity extends Entity {
     }
 
     private void tickInterp() {
-        allInterps.forEach(InterpValue::doInterps);
         if (this.interpProgress > 0 && !this.canPassengerSteer()) {
             double interpolatedX = this.posX + (this.interpTargetX - this.posX) / (double) this.interpProgress;
             double interpolatedY = this.posY + (this.interpTargetY - this.posY) / (double) this.interpProgress;
