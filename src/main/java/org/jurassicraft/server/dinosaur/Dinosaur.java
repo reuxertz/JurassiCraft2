@@ -18,6 +18,7 @@ import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.GrowthStage;
 import org.jurassicraft.server.entity.SleepTime;
+import org.jurassicraft.server.entity.ai.util.MovementType;
 import org.jurassicraft.server.period.TimePeriod;
 import org.jurassicraft.server.tabula.TabulaModelHelper;
 
@@ -56,6 +57,7 @@ public abstract class Dinosaur implements Comparable<Dinosaur> {
     private String[] bones;
     private int maximumAge;
     private String headCubeName;
+    private MovementType movementType = MovementType.NEAR_SURFACE;
     private boolean isImprintable;
 
     private boolean randomFlock = true;
@@ -294,6 +296,14 @@ public abstract class Dinosaur implements Comparable<Dinosaur> {
 
     public void disableRegistry() {
         this.shouldRegister = false;
+    }
+    
+    public MovementType getMovementType() {
+        return movementType;
+    }
+
+    public void setMovementType(MovementType type) {
+        this.movementType = type;
     }
 
     public String getName() {

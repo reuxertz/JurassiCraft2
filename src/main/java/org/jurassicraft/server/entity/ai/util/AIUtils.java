@@ -102,6 +102,39 @@ public class AIUtils {
 
         return depth;
     }
+    
+    public static int getWaterDepth(EntityLiving entity, boolean fromEntity) {
+        if (!entity.isInWater()) {
+            return 0;
+        }
+
+        World world = entity.getEntityWorld();
+        BlockPos pos = entity.getPosition();
+
+        // Move up
+        int depth = 0;
+        while (world.getBlockState(pos).getBlock() instanceof BlockLiquid) {
+            pos = pos.up();
+            ++depth;
+        }
+
+        // We are now above the water.  Start at below water level.
+        pos = entity.getPosition().down();
+        if(fromEntity)
+            depth = 0;
+        // Move down
+        while (world.getBlockState(pos).getBlock() instanceof BlockLiquid) {
+            pos = pos.down();
+            ++depth;
+        }
+
+        return depth + 1;
+    }
+    
+    public static BlockPos getBottom(EntityLiving entity) {
+        return new BlockPos(entity.posX, getWaterDepth(entity, true), entity.posZ);
+    }
+
 
     //=============================================================================================
 
