@@ -1,28 +1,24 @@
 package org.jurassicraft.client.render;
 
-import com.google.common.collect.Maps;
-import net.ilexiconn.llibrary.client.model.tabula.TabulaModelHandler;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockDoor;
-import net.minecraft.block.BlockFenceGate;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.block.statemap.StateMap;
-import net.minecraft.client.renderer.color.BlockColors;
-import net.minecraft.client.renderer.color.ItemColors;
-import net.minecraft.item.EnumDyeColor;
-import net.minecraft.item.Item;
-import net.minecraft.world.ColorizerFoliage;
-import net.minecraft.world.biome.BiomeColorHelper;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.model.MultipartStateMap;
 import org.jurassicraft.client.model.animation.EntityAnimator;
-import org.jurassicraft.client.model.animation.entity.*;
+import org.jurassicraft.client.model.animation.entity.AlligatorGarAnimator;
+import org.jurassicraft.client.model.animation.entity.BrachiosaurusAnimator;
+import org.jurassicraft.client.model.animation.entity.CoelacanthAnimator;
+import org.jurassicraft.client.model.animation.entity.DilophosaurusAnimator;
+import org.jurassicraft.client.model.animation.entity.GallimimusAnimator;
+import org.jurassicraft.client.model.animation.entity.MicroraptorAnimator;
+import org.jurassicraft.client.model.animation.entity.MussaurusAnimator;
+import org.jurassicraft.client.model.animation.entity.ParasaurolophusAnimator;
+import org.jurassicraft.client.model.animation.entity.TriceratopsAnimator;
+import org.jurassicraft.client.model.animation.entity.TyrannosaurusAnimator;
+import org.jurassicraft.client.model.animation.entity.VelociraptorAnimator;
 import org.jurassicraft.client.render.block.CleaningStationRenderer;
 import org.jurassicraft.client.render.block.DNAExtractorRenderer;
 import org.jurassicraft.client.render.block.DNASequencerRenderer;
@@ -37,6 +33,7 @@ import org.jurassicraft.client.render.entity.GoatRenderer;
 import org.jurassicraft.client.render.entity.HelicopterRenderer;
 import org.jurassicraft.client.render.entity.JeepWranglerRenderer;
 import org.jurassicraft.client.render.entity.MuralRenderer;
+import org.jurassicraft.client.render.entity.NullRenderer;
 import org.jurassicraft.client.render.entity.PaddockSignRenderer;
 import org.jurassicraft.client.render.entity.VenomRenderer;
 import org.jurassicraft.client.render.entity.dinosaur.DinosaurRenderInfo;
@@ -58,6 +55,7 @@ import org.jurassicraft.server.block.tree.TreeType;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.entity.GoatEntity;
+import org.jurassicraft.server.entity.TranquilizerDartEntity;
 import org.jurassicraft.server.entity.VenomEntity;
 import org.jurassicraft.server.entity.item.AttractionSignEntity;
 import org.jurassicraft.server.entity.item.DinosaurEggEntity;
@@ -73,10 +71,26 @@ import org.jurassicraft.server.item.JournalItem;
 import org.jurassicraft.server.plant.Plant;
 import org.jurassicraft.server.plant.PlantHandler;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
+import com.google.common.collect.Maps;
+
+import net.ilexiconn.llibrary.client.model.tabula.TabulaModelHandler;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockDoor;
+import net.minecraft.block.BlockFenceGate;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMap;
+import net.minecraft.client.renderer.color.BlockColors;
+import net.minecraft.client.renderer.color.ItemColors;
+import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.Item;
+import net.minecraft.world.ColorizerFoliage;
+import net.minecraft.world.biome.BiomeColorHelper;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public enum RenderingHandler {
@@ -422,6 +436,9 @@ public enum RenderingHandler {
 
         this.registerItemRenderer(ItemHandler.GOAT_RAW);
         this.registerItemRenderer(ItemHandler.GOAT_COOKED);
+        
+        this.registerItemRenderer(ItemHandler.DART_GUN);
+        this.registerItemRenderer(ItemHandler.DART_TRANQUILIZER);
 
         this.registerRenderInfo(EntityHandler.BRACHIOSAURUS, new BrachiosaurusAnimator(), 1.5F);
         this.registerRenderInfo(EntityHandler.COELACANTH, new CoelacanthAnimator(), 0.0F);
@@ -445,6 +462,8 @@ public enum RenderingHandler {
         RenderingRegistry.registerEntityRenderingHandler(FordExplorerEntity.class, FordExplorerRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(MuralEntity.class, MuralRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(GoatEntity.class, GoatRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(TranquilizerDartEntity.class, NullRenderer::new);
+        
     }
 
     public void init() {

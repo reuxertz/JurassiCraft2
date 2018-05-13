@@ -355,7 +355,7 @@ public class ItemHandler {
         registerItem(INGEN_JOURNAL, "InGen Journal");
         
         registerItem(DART_GUN, "Dart Gun");
-        registerItem(DART_TRANQUILIZER, "Dart_Tranquilizer");
+        registerItem(DART_TRANQUILIZER, "Dart Tranquilizer");
         
         for (TreeType type : TreeType.values()) {
             registerTreeType(type);
