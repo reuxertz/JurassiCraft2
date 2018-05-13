@@ -225,6 +225,10 @@ public class ItemHandler {
 
     public static final BasicFoodItem GOAT_RAW = new BasicFoodItem(3, 0.3F, true, TabHandler.FOODS);
     public static final BasicFoodItem GOAT_COOKED = new BasicFoodItem(6, 1.0F, true, TabHandler.FOODS);
+    
+    public static final DartGun DART_GUN = new DartGun();
+    public static final Dart DART_TRANQUILIZER = new Dart((entity, stack) -> entity.tranquilize(200));
+    
     public static void init() {
         registerItem(FOSSILIZED_EGG, "Fossilized Egg");
 
@@ -356,6 +360,9 @@ public class ItemHandler {
         registerItem(STAMP_SET, "Stamp Set");
 
         registerItem(INGEN_JOURNAL, "InGen Journal");
+        
+        registerItem(DART_GUN, "Dart Gun");
+        registerItem(DART_TRANQUILIZER, "Dart Tranquilizer");
 
         for (TreeType type : TreeType.values()) {
             registerTreeType(type);

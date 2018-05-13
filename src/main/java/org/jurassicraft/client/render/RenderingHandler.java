@@ -32,6 +32,7 @@ import org.jurassicraft.client.render.entity.GoatRenderer;
 import org.jurassicraft.client.render.entity.HelicopterRenderer;
 import org.jurassicraft.client.render.entity.JeepWranglerRenderer;
 import org.jurassicraft.client.render.entity.MuralRenderer;
+import org.jurassicraft.client.render.entity.NullRenderer;
 import org.jurassicraft.client.render.entity.PaddockSignRenderer;
 import org.jurassicraft.client.render.entity.VenomRenderer;
 import org.jurassicraft.client.render.entity.dinosaur.DinosaurRenderInfo;
@@ -53,6 +54,7 @@ import org.jurassicraft.server.block.tree.TreeType;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.entity.GoatEntity;
+import org.jurassicraft.server.entity.TranquilizerDartEntity;
 import org.jurassicraft.server.entity.VenomEntity;
 import org.jurassicraft.server.entity.item.AttractionSignEntity;
 import org.jurassicraft.server.entity.item.DinosaurEggEntity;
@@ -93,7 +95,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid=JurassiCraft.MODID)
 public enum RenderingHandler {
     INSTANCE;
 
@@ -424,6 +426,9 @@ public enum RenderingHandler {
 
         registerItemRenderer(ItemHandler.GOAT_RAW);
         registerItemRenderer(ItemHandler.GOAT_COOKED);
+        
+        registerItemRenderer(ItemHandler.DART_GUN);
+        registerItemRenderer(ItemHandler.DART_TRANQUILIZER);
     }
 
     public void preInit() {
@@ -452,6 +457,8 @@ public enum RenderingHandler {
         RenderingRegistry.registerEntityRenderingHandler(HelicopterBaseEntity.class, new HelicopterRenderer());
         RenderingRegistry.registerEntityRenderingHandler(MuralEntity.class, MuralRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(GoatEntity.class, GoatRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(TranquilizerDartEntity.class, NullRenderer::new);
+        
     }
 
     public void init() {

@@ -98,6 +98,8 @@ public class EntityHandler {
 
         registerEntity(GoatEntity.class, "Goat", 0xEFEDE7, 0x7B3E20);
 
+        registerEntity(TranquilizerDartEntity.class, "Tranquilizer Dart");
+        
         ArrayList<Biome> biomeHills = new ArrayList<Biome>();
         	biomeHills.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.HILLS));
         ArrayList<Biome> biomePlains = new ArrayList<Biome>();
