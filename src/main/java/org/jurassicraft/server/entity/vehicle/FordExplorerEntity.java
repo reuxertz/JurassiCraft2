@@ -1,12 +1,17 @@
 package org.jurassicraft.server.entity.vehicle;
 
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import org.jurassicraft.server.block.TourRailBlock;
 import org.jurassicraft.server.entity.ai.util.InterpValue;
 import org.jurassicraft.server.entity.ai.util.MathUtils;
+import org.jurassicraft.server.entity.vehicle.util.WheelParticleData;
 import org.jurassicraft.server.item.ItemHandler;
+
+import com.google.common.collect.Lists;
 
 import net.minecraft.block.BlockRailBase;
 import net.minecraft.block.state.IBlockState;
@@ -37,7 +42,7 @@ public class FordExplorerEntity extends CarEntity {
     
     public final MinecartLogic minecart = new MinecartLogic();
     
-    private final InterpValue rotationYawInterp = new InterpValue(5f);
+    private final InterpValue rotationYawInterp = new InterpValue(3f);
     
     /* =================================== CAR START ===========================================*/
     
@@ -150,6 +155,10 @@ public class FordExplorerEntity extends CarEntity {
 	    //CAR STUFF START
 	    rotationDelta *= 0.8f;
 	    allWheels.forEach(FordExplorerEntity.this::processWheel);
+	    
+	    List<WheelParticleData> markedRemoved = Lists.newArrayList();
+	    wheelDataList.forEach(wheel -> wheel.onUpdate(markedRemoved));
+	    markedRemoved.forEach(wheelDataList::remove);
 	    //CAR STUFF END
 	    
 	    if (getRollingAmplitude() > 0) {
@@ -302,7 +311,7 @@ public class FordExplorerEntity extends CarEntity {
 	    
 	    Vec3d vec = getPositionVector();
 	    if(world.isRemote) {
-		Vec3d dirVec = new Vec3d(motionX > 0 ? -1 : motionX == 0 ? 0 : 1, 0, motionZ > 0 ? 1 : motionZ == 0 ? 0 : -1).add(vec);
+		Vec3d dirVec = new Vec3d(-d1, 0, d2).add(vec);
 		target = MathUtils.cosineFromPoints(vec.addVector(0, 0, 1), dirVec, vec);
 		if(dirVec.x < vec.x) {
 		    target = -target;
