@@ -16,8 +16,9 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
-@EventBusSubscriber(modid=JurassiCraft.MODID)
+@EventBusSubscriber(modid=JurassiCraft.MODID, value=Side.CLIENT)
 public class EventHandler {
     
     public static IBakedModel DART_GUN_GUI;
