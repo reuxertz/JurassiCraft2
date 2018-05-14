@@ -42,7 +42,7 @@ public class FordExplorerEntity extends CarEntity {
     
     public final MinecartLogic minecart = new MinecartLogic();
     
-    private final InterpValue rotationYawInterp = new InterpValue(5f);
+    private final InterpValue rotationYawInterp = new InterpValue(4f);
     
     /* =================================== CAR START ===========================================*/
     
