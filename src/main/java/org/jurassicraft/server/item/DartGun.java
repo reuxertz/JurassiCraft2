@@ -1,5 +1,7 @@
 package org.jurassicraft.server.item;
 
+import java.util.List;
+
 import org.jurassicraft.server.entity.TranquilizerDartEntity;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,7 +35,7 @@ public class DartGun extends Item {
             setDartItem(itemstack, 
         	    playerIn.inventoryContainer.inventorySlots.stream()
         	    	.map(Slot::getStack)
-                	.filter(stack -> stack.getItem() instanceof Dart)
+                	.filter(this::isDart)
                 	.findFirst()
                 	.orElse(ItemStack.EMPTY));
         } else if (!worldIn.isRemote) {
@@ -46,6 +48,21 @@ public class DartGun extends Item {
 
         playerIn.addStat(StatList.getObjectUseStats(this));
         return new ActionResult(EnumActionResult.SUCCESS, itemstack);
+    }
+    
+    public boolean isDart(ItemStack dart) {
+	return dart.getItem() instanceof Dart;
+    }
+    
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+	ItemStack dartStak = getDartItem(stack);
+	if(dartStak.isEmpty()) {
+	    tooltip.add("NO DARTS");//TODO: localize
+	} else {
+	    tooltip.add(dartStak.getCount() + "/" + MAX_CARRY_SIZE);
+	}
+        super.addInformation(stack, playerIn, tooltip, advanced);
     }
     
     public static ItemStack getDartItem(ItemStack dartGun) {

@@ -248,10 +248,10 @@ public abstract class CarEntity extends Entity {
         
         super.onEntityUpdate();
         
-        this.allWheels.forEach(this::processWheel);
         if(this.getSpeed() == Speed.FAST) {
             this.allWheels.forEach(wheel -> this.processWheel(wheel, true));
         }
+        this.allWheels.forEach(this::processWheel);
         
         Vector4d vec = wheeldata.carVector;
         this.backValue.setTarget(this.calculateWheelHeight(vec.y, false));
@@ -308,7 +308,7 @@ public abstract class CarEntity extends Entity {
         Vec3d vec = new Vec3d(posX + xRot, this.posY, posZ + zRot);
         if(runBetween) {
             Vec3d oldVec = wheel.getCurrentWheelPos();
-            this.wheelDataList.add(new WheelParticleData(new Vec3d((vec.x + oldVec.x) / 2D, (vec.y + oldVec.y) / 2D, (vec.z + oldVec.z) / 2D)).setShouldRender(shouldTyresRender())); //Does this even help ?
+            this.wheelDataList.add(new WheelParticleData(new Vec3d((vec.x + oldVec.x) / 2D, (vec.y + oldVec.y) / 2D, (vec.z + oldVec.z) / 2D)).setShouldRender(shouldTyresRender()));
         } else {
             wheel.setCurrentWheelPos(vec);
             this.wheelDataList.add(new WheelParticleData(vec).setShouldRender(shouldTyresRender()));   
