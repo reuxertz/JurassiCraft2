@@ -104,7 +104,7 @@ public class FordExplorerEntity extends CarEntity {
     
     @Override
     public float getSoundVolume() {
-        return onRails ? this.getControllingPassenger() != null ? this.getSpeed().modifier * 5f : 0f : super.getSoundVolume();
+        return onRails ? this.getControllingPassenger() != null ? this.getSpeed().modifier / 2f : 0f : super.getSoundVolume();
     }
     
     @Override
@@ -306,15 +306,20 @@ public class FordExplorerEntity extends CarEntity {
 		target += 180F;
 	    }
 	    
-	    double d22 = Math.abs(rotationYawInterp.getCurrent() - target);
-	    double d23 = Math.abs(rotationYawInterp.getCurrent() - (target + 360f));
-	    double d24 = Math.abs(rotationYawInterp.getCurrent() - (target - 360f));
+	    double d22;
 	    
-	    if(d23 < d22) {
-		target += 360f;
-	    } else if(d24 < d22) {
-		target -= 360f;
-	    }
+	    do {
+		d22 = Math.abs(rotationYawInterp.getCurrent() - target);
+		double d23 = Math.abs(rotationYawInterp.getCurrent() - (target + 360f));
+		double d24 = Math.abs(rotationYawInterp.getCurrent() - (target - 360f));
+		    
+		if(d23 < d22) {
+		    target += 360f;
+		} else if(d24 < d22) {
+		    target -= 360f;
+		}
+	    } while(d22 > 180);
+	    
 
 	    if(setTarget) {
 		if(!prevOnRails) {
