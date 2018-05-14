@@ -299,7 +299,7 @@ public abstract class CarEntity extends Entity {
 	this.processWheel(wheel, false);
     }
     
-    private void processWheel(CarWheel wheel, boolean runBetween) {
+    protected void processWheel(CarWheel wheel, boolean runBetween) {
 	float localYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw);
         double rad = Math.toRadians(localYaw);
 	Vector2d relPos = wheel.getRelativeWheelPosition();
@@ -308,10 +308,10 @@ public abstract class CarEntity extends Entity {
         Vec3d vec = new Vec3d(posX + xRot, this.posY, posZ + zRot);
         if(runBetween) {
             Vec3d oldVec = wheel.getCurrentWheelPos();
-            this.wheelDataList.add(new WheelParticleData(new Vec3d((vec.x + oldVec.x) / 2D, (vec.y + oldVec.y) / 2D, (vec.z + oldVec.z) / 2D))); //Does this even help ?
+            this.wheelDataList.add(new WheelParticleData(new Vec3d((vec.x + oldVec.x) / 2D, (vec.y + oldVec.y) / 2D, (vec.z + oldVec.z) / 2D)).setShouldRender(shouldTyresRender())); //Does this even help ?
         } else {
             wheel.setCurrentWheelPos(vec);
-            this.wheelDataList.add(new WheelParticleData(vec).setShouldRender(this.getSpeed() != Speed.SLOW /* || this.ticksExisted % 2 == 0*/));   
+            this.wheelDataList.add(new WheelParticleData(vec).setShouldRender(shouldTyresRender()));   
         }
     }
     
@@ -720,4 +720,8 @@ public abstract class CarEntity extends Entity {
     protected abstract WheelData createWheels();
     
     public abstract void dropItems();
+
+    public float getSoundVolume() {
+	return Math.abs(this.wheelRotateAmount) + 0.001F;
+    }
 }

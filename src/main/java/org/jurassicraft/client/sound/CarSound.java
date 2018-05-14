@@ -22,7 +22,7 @@ public class CarSound extends MovingSound {
 
     @Override
     public float getVolume() {
-        return Math.abs(this.entity.wheelRotateAmount) + 0.001F;
+	return this.entity.getSoundVolume();
     }
 
     @Override

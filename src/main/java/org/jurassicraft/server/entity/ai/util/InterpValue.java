@@ -67,6 +67,10 @@ public class InterpValue implements INBTSerializable<NBTTagCompound> {
     public double getCurrent() {
 	return current;
     }
+    
+    public double getTarget() {
+	return target;
+    }
 
     @Override
     public NBTTagCompound serializeNBT() {

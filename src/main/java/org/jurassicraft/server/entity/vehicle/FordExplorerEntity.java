@@ -8,16 +8,11 @@ import org.jurassicraft.server.entity.ai.util.InterpValue;
 import org.jurassicraft.server.item.ItemHandler;
 
 import net.minecraft.block.BlockRailBase;
-import net.minecraft.block.BlockRailPowered;
-import net.minecraft.block.BlockRailBase.EnumRailDirection;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -36,10 +31,11 @@ public class FordExplorerEntity extends CarEntity {
 
     public boolean prevOnRails;
     public boolean onRails;
-
+    private boolean lastDirBackwards;
+    
     public final MinecartLogic minecart = new MinecartLogic();
     
-    private final InterpValue rotationYawInterp = new InterpValue(5);
+    private final InterpValue rotationYawInterp = new InterpValue(10);
     
     /* =================================== CAR START ===========================================*/
     
@@ -74,12 +70,15 @@ public class FordExplorerEntity extends CarEntity {
 	}
 	
 	if(onRails != isRails) {
+	    if(isRails) {
+		minecart.isInReverse = lastDirBackwards;
+	    }
 	    onRails = isRails;
 	}
         noClip = onRails;
         this.getPassengers().forEach(entity -> entity.noClip = onRails);
         super.onUpdate();
-        if(onRails) {
+        if(onRails && this.getControllingPassenger() != null) {
             minecart.onUpdate();
         }   
         prevOnRails = onRails;
@@ -88,7 +87,6 @@ public class FordExplorerEntity extends CarEntity {
     @Override
     public void onEntityUpdate() {
         super.onEntityUpdate();
-        
         if(onRails) {
             if(this.canPassengerSteer()) {
         	if (this.getPassengers().isEmpty() || !(this.getPassengers().get(0) instanceof EntityPlayer)) {
@@ -101,6 +99,12 @@ public class FordExplorerEntity extends CarEntity {
         } else {
             rotationYawInterp.reset(this.rotationYaw - 180D);
         }
+        lastDirBackwards = !forward() && backward();
+    }
+    
+    @Override
+    public float getSoundVolume() {
+        return onRails ? this.getControllingPassenger() != null ? this.getSpeed().modifier * 5f : 0f : super.getSoundVolume();
     }
     
     @Override
@@ -289,17 +293,29 @@ public class FordExplorerEntity extends CarEntity {
 	    
 	    motionX = d5 * d1 / d3;
 	    motionZ = d5 * d2 / d3;
-	    
+	    	    
 	    double target = 0;
 	    boolean setTarget = Math.abs(d1) == 2 || Math.abs(d2) == 2;
 	    if(Math.abs(d1) == 2) {
 		target = motionX > 0 ? -90 : 90F;
-		target = (isInReverse ? -target : target);
 	    } else if(Math.abs(d2) == 2) {
 		target = motionZ > 0 ? -90 : 90F;
-		target = (isInReverse ? -target : target) + 90f;
+		target = target + 90f;
+	    }
+	    if(isInReverse) {
+		target += 180F;
 	    }
 	    
+	    double d22 = Math.abs(rotationYawInterp.getCurrent() - target);
+	    double d23 = Math.abs(rotationYawInterp.getCurrent() - (target + 360f));
+	    double d24 = Math.abs(rotationYawInterp.getCurrent() - (target - 360f));
+	    
+	    if(d23 < d22) {
+		target += 360f;
+	    } else if(d24 < d22) {
+		target -= 360f;
+	    }
+
 	    if(setTarget) {
 		if(!prevOnRails) {
 		    rotationYawInterp.reset(target);
@@ -374,6 +390,9 @@ public class FordExplorerEntity extends CarEntity {
 		motionZ = d5 * (double)(i - pos.getZ());
 	    }
 	    double d15 = Math.sqrt(motionX * motionX + motionZ * motionZ);
+	    if(d15 == 0) {
+		d15 = 1;
+	    }
 	    double d16 = 0.06D;
             motionX += motionX / d15 * d16;
             motionZ += motionZ / d15 * d16;
@@ -437,13 +456,11 @@ public class FordExplorerEntity extends CarEntity {
 	public void moveMinecartOnRail(BlockPos pos) {
 	    double mX = motionX;
 	    double mZ = motionZ;
-	        
-	    if (FordExplorerEntity.this.isBeingRidden())
-	    {
-		mX *= 0.75D;
-		mZ *= 0.75D;
+	    if(mX == 0 && mZ == 0 && getControllingPassenger() != null) { //Should only happen when re-logging. //TODO: make a more elegant solution
+		mX = getLook(1f).x;
+		mZ = getLook(1f).z;
 	    }
-	    
+
 	    double max = this.getMaxSpeed();
 	    mX = MathHelper.clamp(mX, -max, max);
 	    mZ = MathHelper.clamp(mZ, -max, max);
