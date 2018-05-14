@@ -431,7 +431,7 @@ public abstract class CarEntity extends Entity {
         }
     }
     
-    private double calculateWheelHeight(double distance, boolean rotate90) {
+    protected final double calculateWheelHeight(double distance, boolean rotate90) {
         float localYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw);
         double rad = Math.toRadians(localYaw);
 
@@ -682,12 +682,12 @@ public abstract class CarEntity extends Entity {
     }
     
     protected final class WheelData {
-	private final Vector2d bl;
-	private final Vector2d br;
-	private final Vector2d fl;
-	private final Vector2d fr;
+	public final Vector2d bl;
+	public final Vector2d br;
+	public final Vector2d fl;
+	public final Vector2d fr;
 
-	private final Vector4d carVector;
+	public final Vector4d carVector;
 	
 	public WheelData(double backLeftX, double backLeftZ, double frontRightX, double frontRightZ) {
 	    bl = new Vector2d(backLeftX, backLeftZ);

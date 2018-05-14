@@ -4,10 +4,12 @@ package org.jurassicraft.server.entity.vehicle;
 import java.util.List;
 
 import javax.annotation.Nullable;
+import javax.vecmath.Vector4d;
 
 import org.jurassicraft.server.block.TourRailBlock;
 import org.jurassicraft.server.entity.ai.util.InterpValue;
 import org.jurassicraft.server.entity.ai.util.MathUtils;
+import org.jurassicraft.server.entity.vehicle.CarEntity.Seat;
 import org.jurassicraft.server.entity.vehicle.util.WheelParticleData;
 import org.jurassicraft.server.item.ItemHandler;
 
@@ -24,7 +26,6 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -42,7 +43,7 @@ public class FordExplorerEntity extends CarEntity {
     
     public final MinecartLogic minecart = new MinecartLogic();
     
-    private final InterpValue rotationYawInterp = new InterpValue(4f);
+    private final InterpValue rotationYawInterp = new InterpValue(4f); //TODO: config
     
     /* =================================== CAR START ===========================================*/
     
@@ -82,18 +83,39 @@ public class FordExplorerEntity extends CarEntity {
 	    }
 	    onRails = isRails;
 	}
+        super.onUpdate();
+
         noClip = onRails;
         this.getPassengers().forEach(entity -> entity.noClip = onRails);
-        super.onUpdate();
         if(onRails && this.getControllingPassenger() != null) {
             minecart.onUpdate();
+            Vector4d vec = wheeldata.carVector;
+            this.backValue.setTarget(this.calculateWheelHeight(vec.y, false));
+            this.frontValue.setTarget(this.calculateWheelHeight(vec.w, false));
         }   
         prevOnRails = onRails;
     }
     
     @Override
+    protected void doBlockCollisions() {
+	if(!onRails) {
+	    super.doBlockCollisions();
+	}
+    }
+    
+    @Override
+    protected void removePassenger(Entity passenger) {
+        super.removePassenger(passenger);
+        for (Seat seat : this.seats) {
+            if (passenger.equals(seat.getOccupant())) {
+                passenger.noClip = false;
+        	break;
+            }
+        }
+    }
+    
+    @Override
     public void onEntityUpdate() {
-//	System.out.println(Minecraft.getMinecraft().player.getLook(1f)); 1X = +1 ////////////// 0. 0. 1
         super.onEntityUpdate();
         if(onRails) {
             if(this.canPassengerSteer()) {
