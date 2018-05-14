@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 
 import org.jurassicraft.server.block.TourRailBlock;
 import org.jurassicraft.server.entity.ai.util.InterpValue;
+import org.jurassicraft.server.entity.ai.util.MathUtils;
 import org.jurassicraft.server.item.ItemHandler;
 
 import net.minecraft.block.BlockRailBase;
@@ -18,6 +19,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -35,7 +37,7 @@ public class FordExplorerEntity extends CarEntity {
     
     public final MinecartLogic minecart = new MinecartLogic();
     
-    private final InterpValue rotationYawInterp = new InterpValue(10);
+    private final InterpValue rotationYawInterp = new InterpValue(5f);
     
     /* =================================== CAR START ===========================================*/
     
@@ -86,6 +88,7 @@ public class FordExplorerEntity extends CarEntity {
     
     @Override
     public void onEntityUpdate() {
+//	System.out.println(Minecraft.getMinecraft().player.getLook(1f)); 1X = +1 ////////////// 0. 0. 1
         super.onEntityUpdate();
         if(onRails) {
             if(this.canPassengerSteer()) {
@@ -295,37 +298,33 @@ public class FordExplorerEntity extends CarEntity {
 	    motionZ = d5 * d2 / d3;
 	    	    
 	    double target = 0;
-	    boolean setTarget = Math.abs(d1) == 2 || Math.abs(d2) == 2;
-	    if(Math.abs(d1) == 2) {
-		target = motionX > 0 ? -90 : 90F;
-	    } else if(Math.abs(d2) == 2) {
-		target = motionZ > 0 ? -90 : 90F;
-		target = target + 90f;
-	    }
-	    if(isInReverse) {
-		target += 180F;
-	    }
-	    
 	    double d22;
 	    
-	    do {
-		d22 = Math.abs(rotationYawInterp.getCurrent() - target);
-		double d23 = Math.abs(rotationYawInterp.getCurrent() - (target + 360f));
-		double d24 = Math.abs(rotationYawInterp.getCurrent() - (target - 360f));
-		    
-		if(d23 < d22) {
-		    target += 360f;
-		} else if(d24 < d22) {
-		    target -= 360f;
+	    Vec3d vec = getPositionVector();
+	    if(world.isRemote) {
+		Vec3d dirVec = new Vec3d(motionX > 0 ? -1 : motionX == 0 ? 0 : 1, 0, motionZ > 0 ? 1 : motionZ == 0 ? 0 : -1).add(vec);
+		target = MathUtils.cosineFromPoints(vec.addVector(0, 0, 1), dirVec, vec);
+		if(dirVec.x < vec.x) {
+		    target = -target;
 		}
-	    } while(d22 > 180);
-	    
-
-	    if(setTarget) {
+		if(isInReverse) {
+		    target += 180F;
+		}
+		
+		do {
+		    d22 = Math.abs(rotationYawInterp.getCurrent() - target);
+		    double d23 = Math.abs(rotationYawInterp.getCurrent() - (target + 360f));
+		    double d24 = Math.abs(rotationYawInterp.getCurrent() - (target - 360f));
+			    
+		    if(d23 < d22) {
+			target += 360f;
+		    } else if(d24 < d22) {
+			target -= 360f;
+		    }
+		} while(d22 > 180);
+		
 		if(!prevOnRails) {
 		    rotationYawInterp.reset(target);
-//		    rotationYawInterp.setTarget(target);
-
 		} else {
 		    rotationYawInterp.setTarget(target);
 		}
