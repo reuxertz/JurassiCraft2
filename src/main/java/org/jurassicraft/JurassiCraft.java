@@ -1,13 +1,11 @@
 package org.jurassicraft;
 
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegistryEvent;
 import org.apache.logging.log4j.Logger;
-import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.command.ForceAnimationCommand;
 import org.jurassicraft.server.conf.JurassiCraftConfig;
-import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.message.ChangeTemperatureMessage;
+import org.jurassicraft.server.message.FordExplorerChangeStateMessage;
+import org.jurassicraft.server.message.FordExplorerUpdatePositionStateMessage;
 import org.jurassicraft.server.message.HelicopterDirectionMessage;
 import org.jurassicraft.server.message.HelicopterEngineMessage;
 import org.jurassicraft.server.message.HelicopterModulesMessage;
@@ -16,14 +14,12 @@ import org.jurassicraft.server.message.OpenFieldGuideGuiMessage;
 import org.jurassicraft.server.message.PlacePaddockSignMessage;
 import org.jurassicraft.server.message.SetOrderMessage;
 import org.jurassicraft.server.message.SwitchHybridizerCombinatorMode;
-import org.jurassicraft.server.message.UpdateFordExplorerStateMessage;
 import org.jurassicraft.server.message.UpdateVehicleControlMessage;
 import org.jurassicraft.server.proxy.ServerProxy;
 
 import net.ilexiconn.llibrary.server.config.Config;
 import net.ilexiconn.llibrary.server.network.NetworkWrapper;
 import net.ilexiconn.llibrary.server.update.UpdateHandler;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -32,8 +28,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import org.jurassicraft.server.tab.TabHandler;
-import org.jurassicraft.server.util.RegistryHandler;
 
 @Mod(modid = JurassiCraft.MODID, name = JurassiCraft.NAME, version = JurassiCraft.VERSION, guiFactory = "org.jurassicraft.client.gui.JurassiCraftGUIFactory", dependencies = "required-after:llibrary@[" + JurassiCraft.LLIBRARY_VERSION + ",)")
 public class JurassiCraft {
@@ -53,7 +47,7 @@ public class JurassiCraft {
 
     public static long timerTicks;
 
-    @NetworkWrapper({ PlacePaddockSignMessage.class, ChangeTemperatureMessage.class, HelicopterEngineMessage.class, HelicopterDirectionMessage.class, HelicopterModulesMessage.class, SwitchHybridizerCombinatorMode.class, SetOrderMessage.class, OpenFieldGuideGuiMessage.class, UpdateVehicleControlMessage.class, MicroraptorDismountMessage.class, UpdateFordExplorerStateMessage.class })
+    @NetworkWrapper({ PlacePaddockSignMessage.class, ChangeTemperatureMessage.class, HelicopterEngineMessage.class, HelicopterDirectionMessage.class, HelicopterModulesMessage.class, SwitchHybridizerCombinatorMode.class, SetOrderMessage.class, OpenFieldGuideGuiMessage.class, UpdateVehicleControlMessage.class, MicroraptorDismountMessage.class, FordExplorerChangeStateMessage.class, FordExplorerUpdatePositionStateMessage.class})
     public static SimpleNetworkWrapper NETWORK_WRAPPER;
 
     private Logger logger;

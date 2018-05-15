@@ -1,13 +1,34 @@
 package org.jurassicraft.server.entity.vehicle;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.block.Block;
+
+import java.util.List;
+
+import javax.annotation.Nullable;
+import javax.vecmath.Vector4d;
+
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.block.TourRailBlock;
+import org.jurassicraft.server.entity.ai.util.InterpValue;
+import org.jurassicraft.server.entity.ai.util.MathUtils;
+import org.jurassicraft.server.entity.vehicle.CarEntity.Seat;
+import org.jurassicraft.server.entity.vehicle.util.WheelParticleData;
+import org.jurassicraft.server.item.ItemHandler;
+import org.jurassicraft.server.message.FordExplorerChangeStateMessage;
+import org.jurassicraft.server.message.FordExplorerUpdatePositionStateMessage;
+
+import com.google.common.collect.Lists;
+
 import net.minecraft.block.BlockRailBase;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.MoverType;
+import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -15,615 +36,528 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.block.BlockHandler;
-import org.jurassicraft.server.block.TourRailBlock;
-import org.jurassicraft.server.message.UpdateFordExplorerStateMessage;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.Locale;
-import java.util.Set;
-import java.util.function.DoubleBinaryOperator;
-import java.util.function.DoubleFunction;
-import java.util.function.Function;
+public class FordExplorerEntity extends CarEntity {
 
-public class FordExplorerEntity extends CarEntity implements IEntityAdditionalSpawnData {
-    private static final double SQRT_2 = Math.sqrt(2);
+    public static final BlockPos INACTIVE = new BlockPos(-1, -1, -1);
+    
+    public boolean prevOnRails;
+    public boolean onRails;
+    private BlockPos prevRailTracks = INACTIVE;
+    public BlockPos railTracks = INACTIVE;
+    
+    private boolean lastDirBackwards;
 
-    private static final double SQRT_2_OVER_2 = SQRT_2 / 2;
-
-    private static final float LENGTH = 4.5F;
-
-    private static final float RAIL_HEIGHT = 0.15F;
-
-    private State state = new StateOffRail(this);
-
-    private double headX, headY, headZ;
-
-    private double tailX, tailY, tailZ;
-
-    private float speed = 0.0F;
-
+    public final MinecartLogic minecart = new MinecartLogic();
+    
+    private final InterpValue rotationYawInterp = new InterpValue(4f); //TODO: config
+    
+    /* =================================== CAR START ===========================================*/
+    
     public FordExplorerEntity(World world) {
         super(world);
     }
 
-    public void setState(State state) {
-        if (state.getType() != this.state.getType()) {
-            this.state = state;
-            if (!this.world.isRemote) {
-                WorldServer worldServer = (WorldServer) this.world;
-                Set<? extends EntityPlayer> trackers = worldServer.getEntityTracker().getTrackingPlayers(this);
-                UpdateFordExplorerStateMessage message = new UpdateFordExplorerStateMessage(this);
-                for (EntityPlayer player : trackers) {
-                    JurassiCraft.NETWORK_WRAPPER.sendTo(message, (EntityPlayerMP) player);
-                }
-            }
-        }
-    }
-
-    public State getState() {
-        return this.state;
-    }
-
-    @Override
-    public Entity getControllingPassenger() {
-        return this.state.getControllingPassenger();
-    }
-
-    private Entity getActualControllingPassenger() {
-        return super.getControllingPassenger();
-    }
-
-    @Override
-    public void onEntityUpdate() {
-        super.onEntityUpdate();
-
-        if (!this.isInWater()) {
-            if (this.forward()) {
-                this.speed += 0.3F;
-            }
-        }
-        this.speed *= 0.8F;
-
-        if (!this.world.isRemote) {
-            this.state.update();
-        }
-    }
-
-    @Override
-    public void setPosition(double x, double y, double z) {
-        super.setPosition(x, y, z);
-        this.setBodyToPos();
-    }
-
-    public void pull() {
-        double deltaX = this.tailX - this.headX;
-        double deltaY = this.tailY - this.headY;
-        double deltaZ = this.tailZ - this.headZ;
-        double len = FordExplorerEntity.LENGTH / Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
-        this.tailX = this.headX + deltaX * len;
-        this.tailY = this.headY + deltaY * len;
-        this.tailZ = this.headZ + deltaZ * len;
-        this.setPosToBody();
-    }
-
-    private void setBodyToPos() {
-        Vec3d v = this.getVectorForRotation(this.rotationPitch, this.rotationYaw);
-        double dx = v.x * (FordExplorerEntity.LENGTH / 2);
-        double dy = v.y * (FordExplorerEntity.LENGTH / 2);
-        double dz = v.z * (FordExplorerEntity.LENGTH / 2);
-        this.setHead(this.posX + dx, this.posY + dy, this.posZ + dz);
-        this.tailX = this.posX - dx;
-        this.tailY = this.posY - dy;
-        this.tailZ = this.posZ - dz;
-        BlockPos.MutableBlockPos tail = new BlockPos.MutableBlockPos((int) this.tailX, (int) this.tailY, (int) this.tailZ);
-        if (this.world.isBlockLoaded(tail)) {
-            int offset = this.world.isSideSolid(tail, EnumFacing.UP) ? 1 : -1;
-            while (this.world.isSideSolid(tail.up(offset), EnumFacing.UP)) {
-                tail.setY(tail.getY() + offset);
-                this.tailY = tail.getY() + 1;
-            }
-            AxisAlignedBB bounds = this.world.getBlockState(tail).getCollisionBoundingBox(this.world, tail);
-            if (bounds != null) {
-                this.tailY = (this.tailY - 1) + bounds.maxY;
-            } else {
-                this.tailY--;
-            }
-        }
-    }
-
-    public void setHead(double headX, double headY, double headZ) {
-        this.headX = headX;
-        this.headY = headY;
-        this.headZ = headZ;
-        if (this.state != null) { // state only null during Entity#<init> setPosition
-            BlockPos pos = new BlockPos(headX, headY, headZ);
-            if (this.world.isBlockLoaded(pos)) {
-                if (this.state.isRail(this.world.getBlockState(pos.down()))) {
-                    this.headY -= 0.5;
-                } else if (!this.state.isRail(this.world.getBlockState(pos)) && this.state.isRail(this.world.getBlockState(pos.up()))) {
-                    this.headY += 0.5;
-                }
-            }
-            if (!this.world.isRemote) {
-                this.state.onMove(this.getHeadPos());
-            }
-        }
-    }
-
-    private BlockPos getHeadPos() {
-        return new BlockPos(this.headX, this.headY, this.headZ);
-    }
-
-    private void setPosToBody() {
-        double dx = this.tailX - this.headX;
-        double dy = this.tailY - this.headY;
-        double dz = this.tailZ - this.headZ;
-        float yaw = (float) Math.toDegrees(MathHelper.atan2(dz, dx)) + 90;
-        float pitch = (float) (Math.toDegrees(MathHelper.atan2(dy, MathHelper.sqrt(dx * dx + dz * dz))));
-        this.setRotation(yaw, pitch);
-        super.setPosition((this.headX + this.tailX) / 2, (this.headY + this.tailY) / 2 - FordExplorerEntity.RAIL_HEIGHT, (this.headZ + this.tailZ) / 2);
-    }
-
     @Override
     public void dropItems() {
-//        this.dropItem(ItemHandler.FORD_EXPLORER, 1); TODO
+        this.dropItem(ItemHandler.FORD_EXPLORER, 1);
     }
 
     @Override
     protected Seat[] createSeats() {
-        Seat frontLeft = new Seat(0, 0.563F, 0.35F, 0.35F, 0.5F, 0.25F);
-        Seat frontRight = new Seat(1, -0.563F, 0.35F, 0.35F, 0.5F, 0.25F);
-        Seat backLeft = new Seat(2, 0.5F, 0.35F, -0.97F, 0.4F, 0.25F);
-        Seat backRight = new Seat(3, -0.5F, 0.35F, -0.97F, 0.4F, 0.25F);
+        Seat frontLeft = new Seat(0, 0.563F, 0.45F, 0.4F, 0.5F, 0.25F);
+        Seat frontRight = new Seat(1, -0.563F, 0.45F, 0.4F, 0.5F, 0.25F);
+        Seat backLeft = new Seat(2, 0.5F, 0.7F, -2.2F, 0.4F, 0.25F);
+        Seat backRight = new Seat(3, -0.5F, 0.7F, -2.2F, 0.4F, 0.25F);
         return new Seat[] { frontLeft, frontRight, backLeft, backRight };
     }
-
+    
     @Override
-    protected void writeEntityToNBT(NBTTagCompound compound) {
-        super.writeEntityToNBT(compound);
-        if (this.state != null) {
-            NBTTagCompound state = new NBTTagCompound();
-            state.setByte("state_type", (byte) this.state.getType().ordinal());
-            this.state.serialize(state);
-            compound.setTag("state", state);
-        }
+    protected boolean shouldRunUpdates() {
+        return !onRails;
     }
-
+    
     @Override
-    protected void readEntityFromNBT(NBTTagCompound compound) {
-        super.readEntityFromNBT(compound);
-        if (compound.hasKey("state")) {
-            NBTTagCompound state = compound.getCompoundTag("state");
-            byte stateType = state.getByte("state_type");
-            if (stateType >= 0 && stateType < StateType.values().length) {
-                this.state = StateType.values()[stateType].create(this);
-                this.state.deserialize(compound);
-            }
-        }
-    }
+    public void onUpdate() {
+	if(!world.isRemote) {
+	    BlockPos rail = getPosition();
+	    boolean isRails = world.getBlockState(rail).getBlock() instanceof TourRailBlock;
+	    if(!isRails) {
+		rail = rail.down();
+		isRails = world.getBlockState(rail).getBlock() instanceof TourRailBlock;
+	    }
+			
+	    if(onRails != isRails) {
+		if(isRails) {
+		    minecart.isInReverse = lastDirBackwards;
+		}
+		onRails = isRails;
+		JurassiCraft.NETWORK_WRAPPER.sendToDimension(new FordExplorerChangeStateMessage(this), world.provider.getDimension());
+	    }
+	    this.railTracks = isRails ? rail : INACTIVE;
+	    if(!this.railTracks.equals(prevRailTracks)) {
+		JurassiCraft.NETWORK_WRAPPER.sendToDimension(new FordExplorerUpdatePositionStateMessage(this, rail), world.provider.getDimension());
+	    }
+	    this.prevRailTracks = railTracks;
+	    
+	}
+        super.onUpdate();
 
+        noClip = onRails;
+        this.getPassengers().forEach(entity -> entity.noClip = onRails);
+        if(onRails && this.getControllingPassenger() != null) {
+            minecart.onUpdate();
+            Vector4d vec = wheeldata.carVector;
+            this.backValue.setTarget(this.calculateWheelHeight(vec.y, false));
+            this.frontValue.setTarget(this.calculateWheelHeight(vec.w, false));
+            this.leftValue.setTarget(posY);
+            this.rightValue.setTarget(posY);
+        }   	        
+        prevOnRails = onRails;
+    }
+    
     @Override
-    public void writeSpawnData(ByteBuf buffer) {
-        buffer.writeByte(this.state.getType().ordinal());
+    protected void doBlockCollisions() {
+	if(!onRails) {
+	    super.doBlockCollisions();
+	}
     }
-
+    
     @Override
-    public void readSpawnData(ByteBuf additionalData) {
-        int stateTypeIndex = additionalData.readUnsignedByte();
-        FordExplorerEntity.StateType[] stateTypes = FordExplorerEntity.StateType.values();
-        StateType type = stateTypeIndex >= 0 && stateTypeIndex < stateTypes.length ? stateTypes[stateTypeIndex] : StateType.OFF_RAIL;
-        this.state = type.create(this);
-    }
-
-    public enum StateType {
-        OFF_RAIL(StateOffRail::new),
-        ON_RAIL(StateOnRail::new);
-
-        private final Function<FordExplorerEntity, ? extends State> supplier;
-
-        StateType(Function<FordExplorerEntity, ? extends State> supplier) {
-            this.supplier = supplier;
-        }
-
-        public State create(FordExplorerEntity entity) {
-            return this.supplier.apply(entity);
-        }
-    }
-
-    public static abstract class State {
-        protected FordExplorerEntity entity;
-        private BlockPos prevHead;
-
-        private State(FordExplorerEntity entity) {
-            this.entity = entity;
-        }
-
-        private void onMove(BlockPos pos) {
-            if (this.entity.world.isBlockLoaded(pos)) {
-                IBlockState state = this.entity.world.getBlockState(pos);
-                if (this.applies(this.isRail(state) && this.isPowered(state))) {
-                    if (!pos.equals(this.prevHead)) {
-                        this.onMove(pos, state);
-                    }
-                } else {
-                    this.entity.setState(this.getNextState(pos, state));
-                }
-                this.prevHead = pos;
-            } else {
-                this.prevHead = null;
+    protected void removePassenger(Entity passenger) {
+        super.removePassenger(passenger);
+        for (Seat seat : this.seats) {
+            if (passenger.equals(seat.getOccupant())) {
+                passenger.noClip = false;
+        	break;
             }
-        }
-
-        boolean isRail(IBlockState state) {
-            return state.getBlock() instanceof TourRailBlock;
-        }
-
-        boolean isPowered(IBlockState state) {
-            Block block = state.getBlock();
-            return block instanceof TourRailBlock && ((TourRailBlock) block).isPowered;
-        }
-
-        public abstract StateType getType();
-
-        protected abstract Entity getControllingPassenger();
-
-        protected abstract boolean applies(boolean isRail);
-
-        protected abstract State getNextState(BlockPos pos, IBlockState state);
-
-        protected abstract void serialize(NBTTagCompound compound);
-
-        protected abstract void deserialize(NBTTagCompound compound);
-
-        protected void onMove(BlockPos pos, IBlockState state) {
-        }
-
-        protected void update() {
-        }
-    }
-
-    public static final class StateOffRail extends State {
-        private StateOffRail(FordExplorerEntity entity) {
-            super(entity);
-        }
-
-        @Override
-        public StateType getType() {
-            return StateType.OFF_RAIL;
-        }
-
-        @Override
-        protected Entity getControllingPassenger() {
-            return null;
-        }
-
-        @Override
-        protected boolean applies(boolean isRail) {
-            return !isRail;
-        }
-
-        @Override
-        protected State getNextState(BlockPos pos, IBlockState state) {
-            return new StateOnRail(this.entity, pos, state);
-        }
-
-        @Override
-        protected void serialize(NBTTagCompound compound) {
-        }
-
-        @Override
-        protected void deserialize(NBTTagCompound compound) {
-        }
-
-        @Override
-        protected void update() {
-            this.entity.noClip = false;
-            this.entity.setBodyToPos();
-        }
-    }
-
-    public static final class StateOnRail extends State {
-        private BlockPos pos;
-
-        private OrientatedRail rail;
-
-        private Direction direction;
-
-        private float position;
-
-        private StateOnRail(FordExplorerEntity entity, BlockPos pos, IBlockState state) {
-            super(entity);
-            this.setPosition(pos, state);
-            this.direction = Direction.FORWARD;
-        }
-
-        private StateOnRail(FordExplorerEntity entity) {
-            this(entity, BlockPos.ORIGIN, BlockHandler.TOUR_RAIL.getDefaultState());
-        }
-
-        private OrientatedRail setPosition(BlockPos pos, IBlockState state) {
-            this.pos = pos;
-            this.rail = OrientatedRail.get(state);
-            return this.rail;
-        }
-
-        @Override
-        public StateType getType() {
-            return StateType.ON_RAIL;
-        }
-
-        @Override
-        protected Entity getControllingPassenger() {
-            return this.entity.getActualControllingPassenger();
-        }
-
-        @Override
-        protected boolean applies(boolean isRail) {
-            return isRail;
-        }
-
-        @Override
-        protected State getNextState(BlockPos pos, IBlockState state) {
-            return new StateOffRail(this.entity);
-        }
-
-        @Override
-        protected void serialize(NBTTagCompound compound) {
-            compound.setInteger("x", this.pos.getX());
-            compound.setInteger("y", this.pos.getY());
-            compound.setInteger("z", this.pos.getZ());
-            compound.setFloat("position", this.position);
-            compound.setByte("rail_rotation", (byte) this.rail.rotation.ordinal());
-            compound.setByte("rail_shape", (byte) this.rail.shape.ordinal());
-            compound.setByte("direction", (byte) this.direction.ordinal());
-        }
-
-        @Override
-        protected void deserialize(NBTTagCompound compound) {
-            this.pos = new BlockPos(compound.getInteger("x"), compound.getInteger("y"), compound.getInteger("z"));
-            this.position = compound.getFloat("position");
-            this.rail = new OrientatedRail(RailShape.get(compound.getByte("rail_shape")), AxisRotation.get(compound.getByte("rail_rotation")));
-            this.direction = Direction.get(compound.getByte("direction"));
-        }
-
-        @Override
-        protected void onMove(BlockPos pos, IBlockState state) {
-            OrientatedRail fromRail = this.rail;
-            OrientatedRail toRail = this.setPosition(pos, state);
-            if (this.direction == Direction.FORWARD ? fromRail.getOutputVector() != toRail.getInputVector() : fromRail.getInputVector() != toRail.getOutputVector()) {
-                this.direction = this.direction.opposite();
-            }
-            if (this.position > fromRail.getLength()) {
-                this.position -= fromRail.getLength();
-            } else {
-                this.position = 0;
-            }
-        }
-
-        @Override
-        protected void update() {
-            this.entity.noClip = true;
-            Vec3d point = this.rail.pointAt(this.direction, this.position);
-            this.position += this.entity.speed;
-            double x = this.pos.getX() + point.x;
-            double y = this.pos.getY() + point.y;
-            double z = this.pos.getZ() + point.z;
-            this.entity.setHead(x, y + FordExplorerEntity.RAIL_HEIGHT, z);
-            this.entity.pull();
-        }
-    }
-
-    public static final class OrientatedRail {
-        private static final Vec3d CENTER = new Vec3d(0.5, 0, 0.5);
-
-        private final RailShape shape;
-
-        private final AxisRotation rotation;
-
-        private OrientatedRail(RailShape shape, AxisRotation rotation) {
-            this.shape = shape;
-            this.rotation = rotation;
-        }
-
-        private EnumFacing getInputVector() {
-            return this.rotation.apply(this.shape.getInput());
-        }
-
-        public EnumFacing getOutputVector() {
-            return this.rotation.apply(this.shape.getOutput());
-        }
-
-        private Vec3d pointAt(Direction direction, double distance) {
-            double d = direction.apply(this.shape.getLength(), distance);
-            return OrientatedRail.CENTER.add(this.rotation.apply(this.shape.pointAt(d)));
-        }
-
-        public double getLength() {
-            return this.shape.getLength();
-        }
-
-        @Override
-        public String toString() {
-            return String.format("%s rail rotated %s", this.shape.name().toLowerCase(Locale.ROOT), this.rotation.name().toLowerCase(Locale.ROOT));
-        }
-
-        public static OrientatedRail get(IBlockState state) {
-            BlockRailBase.EnumRailDirection stateShape = state.getValue(TourRailBlock.SHAPE);
-            RailShape shape;
-            AxisRotation rotation;
-            switch (stateShape) {
-                case NORTH_SOUTH:
-                    shape = RailShape.STRAIGHT;
-                    rotation = AxisRotation.NONE;
-                    break;
-                case EAST_WEST:
-                    shape = RailShape.STRAIGHT;
-                    rotation = AxisRotation.COUNTERCLOCKWISE_90;
-                    break;
-                case ASCENDING_EAST:
-                    shape = RailShape.ASCENDING;
-                    rotation = AxisRotation.CLOCKWISE_90;
-                    break;
-                case ASCENDING_WEST:
-                    shape = RailShape.ASCENDING;
-                    rotation = AxisRotation.COUNTERCLOCKWISE_90;
-                    break;
-                case ASCENDING_NORTH:
-                    shape = RailShape.ASCENDING;
-                    rotation = AxisRotation.CLOCKWISE_180;
-                    break;
-                case ASCENDING_SOUTH:
-                    shape = RailShape.ASCENDING;
-                    rotation = AxisRotation.NONE;
-                    break;
-                case SOUTH_EAST:
-                    shape = RailShape.CURVE;
-                    rotation = AxisRotation.CLOCKWISE_180;
-                    break;
-                case SOUTH_WEST:
-                    shape = RailShape.CURVE;
-                    rotation = AxisRotation.CLOCKWISE_90;
-                    break;
-                case NORTH_WEST:
-                    shape = RailShape.CURVE;
-                    rotation = AxisRotation.NONE;
-                    break;
-                case NORTH_EAST:
-                    shape = RailShape.CURVE;
-                    rotation = AxisRotation.COUNTERCLOCKWISE_90;
-                    break;
-                default:
-                    throw new IllegalStateException();
-            }
-            return new OrientatedRail(shape, rotation);
-        }
-    }
-
-    public enum Direction {
-        FORWARD((l, v) -> v) {
-            @Override
-            public Direction opposite() {
-                return BACKWARD;
-            }
-        },
-        BACKWARD((l, v) -> l - v) {
-            @Override
-            public Direction opposite() {
-                return FORWARD;
-            }
-        };
-
-        private final DoubleBinaryOperator function;
-
-        Direction(DoubleBinaryOperator function) {
-            this.function = function;
-        }
-
-        public final double apply(double length, double value) {
-            return this.function.applyAsDouble(length, value);
-        }
-
-        public abstract Direction opposite();
-
-        public static Direction get(int index) {
-            if (index < 0 || index >= Direction.values().length) {
-                return Direction.FORWARD;
-            }
-            return Direction.values()[index];
-        }
-    }
-
-    private enum RailShape {
-        STRAIGHT(d -> new Vec3d(0, 0, d - 0.5), 1, EnumFacing.SOUTH),
-        ASCENDING(d -> new Vec3d(0, d * SQRT_2_OVER_2, d * SQRT_2_OVER_2 - 0.5), SQRT_2, EnumFacing.SOUTH),
-        CURVE(d -> new Vec3d(Math.cos(d) / 2 - 0.5, 0, Math.sin(d) / 2 - 0.5), Math.PI / 2, EnumFacing.SOUTH, EnumFacing.EAST);
-
-        private final DoubleFunction<Vec3d> curve;
-
-        private final double length;
-
-        private final EnumFacing input;
-
-        private final EnumFacing output;
-
-        RailShape(DoubleFunction<Vec3d> curve, double length, EnumFacing input) {
-            this(curve, length, input, input);
-        }
-
-        RailShape(DoubleFunction<Vec3d> curve, double length, EnumFacing input, EnumFacing output) {
-            this.curve = curve;
-            this.length = length;
-            this.input = input;
-            this.output = output;
-        }
-
-        public final Vec3d pointAt(double distance) {
-            return this.curve.apply(distance);
-        }
-
-        public final double getLength() {
-            return this.length;
-        }
-
-        public final EnumFacing getInput() {
-            return this.input;
-        }
-
-        public final EnumFacing getOutput() {
-            return this.output;
-        }
-
-        public static RailShape get(int index) {
-            if (index < 0 || index >= RailShape.values().length) {
-                return RailShape.STRAIGHT;
-            }
-            return RailShape.values()[index];
-        }
-    }
-
-    private enum AxisRotation {
-        NONE(1, 0, 0, 1),
-        CLOCKWISE_90(0, 1, -1, 0),
-        CLOCKWISE_180(-1, 0, 0, -1),
-        COUNTERCLOCKWISE_90(0, -1, 1, 0);
-
-        private final double xx, xz, zx, zz;
-
-        AxisRotation(double xx, double xz, double zx, double zz) {
-            this.xx = xx;
-            this.xz = xz;
-            this.zx = zx;
-            this.zz = zz;
-        }
-
-        public final double getX(double x, double z) {
-            return x * this.xx + z * this.xz;
-        }
-
-        public final double getZ(double x, double z) {
-            return x * this.zx + z * this.zz;
-        }
-
-        public final Vec3d apply(Vec3d vec) {
-            return new Vec3d(this.getX(vec.x, vec.z), vec.y, this.getZ(vec.x, vec.z));
-        }
-
-        public final EnumFacing apply(EnumFacing facing) {
-            return EnumFacing.getHorizontal(facing.getHorizontalIndex() + this.ordinal());
-        }
-
-        public static AxisRotation get(int index) {
-            if (index < 0 || index >= AxisRotation.values().length) {
-                return AxisRotation.NONE;
-            }
-            return AxisRotation.values()[index];
         }
     }
     
     @Override
+    public void onEntityUpdate() {
+        super.onEntityUpdate();
+        if(onRails) {
+            if(this.canPassengerSteer()) {
+        	if (this.getPassengers().isEmpty() || !(this.getPassengers().get(0) instanceof EntityPlayer)) {
+                    this.setControlState(0);
+                }
+                if(this.world.isRemote) {
+                    this.handleControl(false); //+Z-X
+                }
+            }
+        } else {
+            rotationYawInterp.reset(this.rotationYaw - 180D);
+        }
+        lastDirBackwards = !forward() && backward();
+    }
+    
+    @Override
+    protected void writeEntityToNBT(NBTTagCompound compound) {
+        super.writeEntityToNBT(compound);
+        compound.setBoolean("OnRails", onRails);
+        compound.setLong("BlockPosition", railTracks.toLong());
+    }
+    
+    @Override
+    protected void readEntityFromNBT(NBTTagCompound compound) {
+        super.readEntityFromNBT(compound);
+        onRails = compound.getBoolean("OnRails");
+        railTracks = BlockPos.fromLong(compound.getLong("BlockPosition"));
+    }
+    
+    @Override
+    public float getSoundVolume() {
+        return onRails ? this.getControllingPassenger() != null ? this.getSpeed().modifier / 2f : 0f : super.getSoundVolume();
+    }
+    
+    @Override
+    public EnumFacing getAdjustedHorizontalFacing() {
+        return onRails ? minecart.getAdjustedHorizontalFacing() : super.getAdjustedHorizontalFacing();
+    }
+
+    @Override
     protected WheelData createWheels() {
 	return new WheelData(1.3, 2, -1.3, -2.2);
     }
+    
+    @Override
+    protected boolean shouldTyresRender() {
+        return super.shouldTyresRender() && !onRails;
+    }
+    
+    /* =================================== CAR END ===========================================*/
+    /* ================================ MINECART START =======================================*/
+    private static final DataParameter<Integer> ROLLING_AMPLITUDE = EntityDataManager.<Integer>createKey(EntityMinecart.class, DataSerializers.VARINT);
+    private static final int[][][] MATRIX = new int[][][] {{{0, 0, -1}, {0, 0, 1}}, {{ -1, 0, 0}, {1, 0, 0}}, {{ -1, -1, 0}, {1, 0, 0}}, {{ -1, 0, 0}, {1, -1, 0}}, {{0, 0, -1}, {0, -1, 1}}, {{0, -1, -1}, {0, 0, 1}}, {{0, 0, 1}, {1, 0, 0}}, {{0, 0, 1}, { -1, 0, 0}}, {{0, 0, -1}, { -1, 0, 0}}, {{0, 0, -1}, {1, 0, 0}}};
+
+    public class MinecartLogic {
+	private boolean isInReverse;
+	private boolean prevKeyDown;
+	
+	public EnumFacing getAdjustedHorizontalFacing() {
+	    return this.isInReverse ? getHorizontalFacing().getOpposite().rotateY() : getHorizontalFacing().rotateY();
+	}
+	
+	public int getRollingAmplitude() {
+	    return FordExplorerEntity.this.dataManager.get(ROLLING_AMPLITUDE).intValue();
+	}
+	
+	public void setRollingAmplitude(int rollingAmplitude) {
+	    FordExplorerEntity.this.dataManager.set(ROLLING_AMPLITUDE, rollingAmplitude);
+	}
+	
+	public void onUpdate() {
+	    //CAR STUFF START
+	    rotationDelta *= 0.8f;
+	    allWheels.forEach(FordExplorerEntity.this::processWheel);
+	    
+	    List<WheelParticleData> markedRemoved = Lists.newArrayList();
+	    wheelDataList.forEach(wheel -> wheel.onUpdate(markedRemoved));
+	    markedRemoved.forEach(wheelDataList::remove);
+	    //CAR STUFF END
+	    
+	    if (getRollingAmplitude() > 0) {
+		setRollingAmplitude(getRollingAmplitude() - 1);
+	    }
+
+	    if (posY < -64.0D) {
+		outOfWorld();
+	    }
+
+	    if (!world.isRemote && world instanceof WorldServer) {
+		world.profiler.startSection("portal");
+		MinecraftServer minecraftserver = world.getMinecraftServer();
+		int i = getMaxInPortalTime();	
+		if (inPortal) {
+		    if (minecraftserver.getAllowNether()) {
+			if (!isRiding() && portalCounter++ >= i) {
+			    portalCounter = i;
+			    timeUntilPortal = getPortalCooldown();
+			    int j;
+			    if (world.provider.getDimensionType().getId() == -1) {
+				j = 0;
+			    } else {
+				j = -1;
+			    }
+			    
+			    changeDimension(j);
+			}
+
+			inPortal = false;
+		    }
+		} else {
+		    if (portalCounter > 0) {
+			portalCounter -= 4;
+		    }
+		    
+		    if (portalCounter < 0) {
+			portalCounter = 0;
+		    }
+		}
+
+		if (timeUntilPortal > 0) {
+		    --timeUntilPortal;
+		}
+
+		world.profiler.endSection();
+	    }
+	    
+	    prevPosX = posX;
+	    prevPosY = posY;
+	    prevPosZ = posZ;
+
+	    if (!hasNoGravity()) {
+		motionY -= 0.03999999910593033D;
+	    }
+
+//	    if(!world.isRemote) {
+//		int k = MathHelper.floor(posX);
+//		int l = MathHelper.floor(posY);
+//		int i1 = MathHelper.floor(posZ);
+//			
+//		if (world.getBlockState(new BlockPos(k, l - 1, i1)).getBlock() instanceof TourRailBlock) {
+//		    --l;
+//		}
+//			
+//		BlockPos blockpos = new BlockPos(k, l, i1);
+//		IBlockState iblockstate = world.getBlockState(blockpos);
+//		if(!(iblockstate.getBlock() instanceof TourRailBlock)) {
+//		    return;
+//		}
+//	    }
+	    if(railTracks.equals(INACTIVE)) { //Shouldn't occur
+		return;
+	    }
+	    IBlockState iblockstate = world.getBlockState(railTracks);
+	    moveAlongTrack(railTracks, iblockstate);
+		
+	    if(!world.isRemote) {
+		doBlockCollisions();
+		rotationPitch = 0.0F;
+			
+		AxisAlignedBB box = getEntityBoundingBox().grow(0.20000000298023224D, 0.0D, 0.20000000298023224D);
+
+		handleWaterMovement();
+	    }
+	    
+	}
+	
+	@SuppressWarnings("incomplete-switch")
+	protected void moveAlongTrack(BlockPos pos, IBlockState state) {
+	    fallDistance = 0.0F;
+	    Vec3d vec3d = getPos();
+	    posY = (double)pos.getY();
+
+	    double slopeAdjustment = 0.0078125D;
+	    BlockRailBase.EnumRailDirection blockrailbase$enumraildirection = state.getValue(((TourRailBlock)state.getBlock()).getShapeProperty());
+	    
+	    switch (blockrailbase$enumraildirection) {
+	    case ASCENDING_EAST:
+		motionX -= slopeAdjustment;
+		++posY;
+		break;
+	    case ASCENDING_WEST:
+		motionX += slopeAdjustment;
+		++posY;
+		break;
+	    case ASCENDING_NORTH:
+		motionZ += slopeAdjustment;
+		++posY;
+		break;
+	    case ASCENDING_SOUTH:
+		motionZ -= slopeAdjustment;
+		++posY;
+	    }
+	    
+	    int[][] aint = MATRIX[blockrailbase$enumraildirection.getMetadata()];
+	    double d1 = (double)(aint[1][0] - aint[0][0]);
+	    double d2 = (double)(aint[1][2] - aint[0][2]);
+	    double d3 = Math.sqrt(d1 * d1 + d2 * d2);
+	    double d4 = motionX * d1 + motionZ * d2;
+	    
+	    if (d4 < 0.0D) {
+		d1 = -d1;
+		d2 = -d2;
+	    }
+
+	    double d5 = Math.sqrt(motionX * motionX + motionZ * motionZ);
+	    
+	    if (d5 > 2.0D) {
+		d5 = 2.0D;
+	    }
+	    double d = 1;
+	    if(forward()) {
+		if(!prevKeyDown && isInReverse) {
+		    d = -1;
+		}
+		isInReverse = false;
+		prevKeyDown = true;
+	    } else if(backward()) {
+		if(!prevKeyDown && !isInReverse) {
+		    d = -1;
+		}
+		isInReverse = true;
+		prevKeyDown = true;
+	    } else {
+		prevKeyDown = false;
+	    }
+	    if(!world.isRemote) {
+		d5 *= d;
+	    }
+	    
+	    motionX = d5 * d1 / d3;
+	    motionZ = d5 * d2 / d3;
+	    	    
+	    double target = 0;
+	    double d22;
+	    
+	    if(world.isRemote) 
+	    {
+		Vec3d vec = getPositionVector();
+		Vec3d dirVec = new Vec3d(-d1, 0, d2).add(vec);
+		target = MathUtils.cosineFromPoints(vec.addVector(0, 0, 1), dirVec, vec);
+		if(dirVec.x < vec.x) {
+		    target = -target;
+		}
+		if(isInReverse) {
+		    target += 180F;
+		}
+		
+		do {
+		    d22 = Math.abs(rotationYawInterp.getCurrent() - target);
+		    double d23 = Math.abs(rotationYawInterp.getCurrent() - (target + 360f));
+		    double d24 = Math.abs(rotationYawInterp.getCurrent() - (target - 360f));
+			    
+		    if(d23 < d22) {
+			target += 360f;
+		    } else if(d24 < d22) {
+			target -= 360f;
+		    }
+		} while(d22 > 180);
+		
+		target = Math.round(target * 100D) / 100D;
+		
+		if(!prevOnRails) {
+		    rotationYawInterp.reset(target);
+		} else if(d != -1) {
+		    rotationYawInterp.setTarget(target);
+		}
+	    }
+	    	    
+	    setRotation((float) rotationYawInterp.getCurrent(), rotationPitch);
+	    
+	    Entity entity = getPassengers().isEmpty() ? null : (Entity)getPassengers().get(0);
+	    
+	    double d18 = (double)pos.getX() + 0.5D + (double)aint[0][0] * 0.5D;
+	    double d19 = (double)pos.getZ() + 0.5D + (double)aint[0][2] * 0.5D;
+	    double d20 = (double)pos.getX() + 0.5D + (double)aint[1][0] * 0.5D;
+	    double d21 = (double)pos.getZ() + 0.5D + (double)aint[1][2] * 0.5D;
+	    d1 = d20 - d18;
+	    d2 = d21 - d19;
+	    double d10;
+	    
+	    if (d1 == 0.0D) {
+		posX = (double)pos.getX() + 0.5D;
+		d10 = posZ - (double)pos.getZ();
+	    } else if (d2 == 0.0D) {
+		posZ = (double)pos.getZ() + 0.5D;
+		d10 = posX - (double)pos.getX();
+	    } else {
+		double d11 = posX - d18;
+		double d12 = posZ - d19;
+		d10 = (d11 * d1 + d12 * d2) * 2.0D;
+	    }
+	    
+	    posX = d18 + d1 * d10;
+	    posZ = d19 + d2 * d10;
+	    setPosition(posX, posY, posZ);
+	    moveMinecartOnRail(pos);
+	    
+	    if (aint[0][1] != 0 && MathHelper.floor(posX) - pos.getX() == aint[0][0] && MathHelper.floor(posZ) - pos.getZ() == aint[0][2]) {
+		setPosition(posX, posY + (double)aint[0][1], posZ);
+	    } else if (aint[1][1] != 0 && MathHelper.floor(posX) - pos.getX() == aint[1][0] && MathHelper.floor(posZ) - pos.getZ() == aint[1][2])  {
+		setPosition(posX, posY + (double)aint[1][1], posZ);
+	    }
+	    
+	    double drag = isBeingRidden() ? 0.9D : 0.75D;
+	    
+	    motionX *= drag;
+	    motionY *= 0.0D;
+	    motionZ *= drag;
+	    
+	    Vec3d vec3d1 = getPos();
+	    
+	    if (vec3d1 != null && vec3d != null) {
+		double d14 = (vec3d.y - vec3d1.y) * 0.05D;
+		d5 = Math.sqrt(motionX * motionX + motionZ * motionZ);
+		
+		if (d5 > 0.0D) {
+		    motionX = motionX / d5 * (d5 + d14);
+		    motionZ = motionZ / d5 * (d5 + d14);
+		}
+		
+		setPosition(posX, vec3d1.y, posZ);
+	    }
+
+	    int j = MathHelper.floor(posX);
+	    int i = MathHelper.floor(posZ);
+	    	    
+	    if (j != pos.getX() || i != pos.getZ()) {
+		d5 = Math.sqrt(motionX * motionX + motionZ * motionZ);
+		motionX = d5 * (double)(j - pos.getX());
+		motionZ = d5 * (double)(i - pos.getZ());
+	    }
+	    double d15 = Math.sqrt(motionX * motionX + motionZ * motionZ);
+	    if(d15 == 0) {
+		d15 = 1;
+	    }
+	    double d16 = 0.06D;
+            motionX += motionX / d15 * d16;
+            motionZ += motionZ / d15 * d16;
+	}
+	
+	public Vec3d getPos() {
+	    
+	    double x = railTracks.getX();
+	    double y = railTracks.getY();
+	    double z = railTracks.getZ();
+	    
+	    IBlockState iblockstate = world.getBlockState(new BlockPos(x, y, z));
+	    
+	    if (iblockstate.getBlock() instanceof TourRailBlock)
+	    {
+		BlockRailBase.EnumRailDirection blockrailbase$enumraildirection = iblockstate.getValue(((TourRailBlock) iblockstate.getBlock()).getShapeProperty());
+		int[][] aint = MATRIX[blockrailbase$enumraildirection.getMetadata()];
+		double d0 = (double)x + 0.5D + (double)aint[0][0] * 0.5D;
+		double d1 = (double)y + 0.0625D + (double)aint[0][1] * 0.5D;
+		double d2 = (double)z + 0.5D + (double)aint[0][2] * 0.5D;
+		double d3 = (double)x + 0.5D + (double)aint[1][0] * 0.5D;
+		double d4 = (double)y + 0.0625D + (double)aint[1][1] * 0.5D;
+		double d5 = (double)z + 0.5D + (double)aint[1][2] * 0.5D;
+		double d6 = d3 - d0;
+		double d7 = (d4 - d1) * 2.0D;
+		double d8 = d5 - d2;
+		double d9;
+		
+		if (d6 == 0.0D) {
+		    d9 = z - (double)z;
+		} else if (d8 == 0.0D) {
+		    d9 = x - (double)x;
+		} else {
+		    double d10 = x - d0;
+		    double d11 = z - d2;
+		    d9 = (d10 * d6 + d11 * d8) * 2.0D;
+		}
+
+		x = d0 + d6 * d9;
+		y = d1 + d7 * d9;
+		z = d2 + d8 * d9;
+		
+		if (d7 < 0.0D) {
+		    ++y;
+		}
+
+		if (d7 > 0.0D) {
+		    y += 0.5D;
+		}
+
+		return new Vec3d(x, y, z);
+	    }
+	    else {
+		return null;
+	    }
+	}
+	
+	public void moveMinecartOnRail(BlockPos pos) {
+	    double mX = motionX;
+	    double mZ = motionZ;
+	    if(mX == 0 && mZ == 0 && getControllingPassenger() != null) { //Should only happen when re-logging. //TODO: make a more elegant solution
+		mX = getLook(1f).x;
+		mZ = getLook(1f).z;
+	    }
+
+	    double max = this.getMaxSpeed();
+	    mX = MathHelper.clamp(mX, -max, max);
+	    mZ = MathHelper.clamp(mZ, -max, max);
+	    FordExplorerEntity.this.move(MoverType.SELF, mX, 0.0D, mZ);
+	}
+	
+	protected double getMaxSpeed() {
+	    return getSpeed().modifier / 4f;
+	}
+    }
+    
+    @Override
+    protected void entityInit() {
+        super.entityInit();
+        this.dataManager.register(ROLLING_AMPLITUDE, Integer.valueOf(0));
+    }
+    
+    
+    /* ================================= MINECART END ========================================*/
+
+
 }
