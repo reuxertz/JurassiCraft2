@@ -676,12 +676,15 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
                 if (--this.pregnantTime <= 0) {
                     this.getNavigator().clearPath();
                     this.setAnimation(this.dinosaur.givesDirectBirth() ? EntityAnimation.GIVING_BIRTH.get() : EntityAnimation.LAYING_EGG.get());
-                    this.family.setHome(this.getPosition(), 6000);
-                    this.children.clear();
+                    if(this.family != null) {
+                        this.family.setHome(this.getPosition(), 6000);
+                    }
+//                    this.children.clear(); //Why was this even here? 
                 }
             }
             if ((this.getAnimation() == EntityAnimation.LAYING_EGG.get() || this.getAnimation() == EntityAnimation.GIVING_BIRTH.get()) && this.animationTick == this.getAnimationLength() / 2) {
-                for (DinosaurEntity child : this.children) {
+                System.out.println(this.children);
+        	for (DinosaurEntity child : this.children) {
                     Entity entity;
                     if (this.dinosaur.givesDirectBirth()) {
                         entity = child;
@@ -691,6 +694,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
                         entity = new DinosaurEggEntity(this.world, child, this);
                     }
                     entity.setPosition(this.posX + (this.rand.nextFloat() - 0.5F), this.posY + 0.5F, this.posZ + (this.rand.nextFloat() - 0.5F));
+                    System.out.println("SPAWN");
                     this.world.spawnEntity(entity);
                 }
             }
@@ -724,6 +728,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
                                 }
                                 child.setGenetics(genetics);
                                 child.setAttributes(attributes);
+                                System.out.println(this.children.size());
                                 this.children.add(child);
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -1627,7 +1632,11 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     protected float getWaterSlowDown() {
         return 0.9F;
     }
-
+    
+    public void giveBirth() {
+	pregnantTime = 1;
+    }
+ 
     @Override
     public void collideWithEntity(Entity entity) {
         super.collideWithEntity(entity);
