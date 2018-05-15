@@ -3,6 +3,8 @@ package org.jurassicraft.client.render.entity;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.model.ResetControlTabulaModel;
 import org.jurassicraft.client.model.animation.CarAnimation;
+import org.jurassicraft.client.model.animation.CarAnimation.Door;
+import org.jurassicraft.client.model.animation.entity.vehicle.JeepWranglerAnimator;
 import org.jurassicraft.server.entity.ai.util.MathUtils;
 import org.jurassicraft.server.entity.vehicle.CarEntity;
 import org.jurassicraft.server.entity.vehicle.FordExplorerEntity;
@@ -14,6 +16,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
@@ -23,16 +26,21 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class FordExplorerRenderer extends Render<FordExplorerEntity> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JurassiCraft.MODID, "textures/entities/ford_explorer/ford_explorer.png");
     protected static final ResourceLocation[] DESTROY_STAGES = new ResourceLocation[] { new ResourceLocation("textures/blocks/destroy_stage_0.png"), new ResourceLocation("textures/blocks/destroy_stage_1.png"), new ResourceLocation("textures/blocks/destroy_stage_2.png"), new ResourceLocation("textures/blocks/destroy_stage_3.png"), new ResourceLocation("textures/blocks/destroy_stage_4.png"), new ResourceLocation("textures/blocks/destroy_stage_5.png"), new ResourceLocation("textures/blocks/destroy_stage_6.png"), new ResourceLocation("textures/blocks/destroy_stage_7.png"), new ResourceLocation("textures/blocks/destroy_stage_8.png"), new ResourceLocation("textures/blocks/destroy_stage_9.png") };
-
+    
+    private CarAnimation animator;
     private TabulaModel baseModel;
 
     public FordExplorerRenderer(RenderManager manager) {
         super(manager);
 
         try {
+            this.animator = new JeepWranglerAnimator()
+        	    .addDoor(new Door("door left main", 0, true))
+        	    .addDoor(new Door("door right main", 1, false))
+        	    .addDoor(new Door("Back door left main", 2, true))
+        	    .addDoor(new Door("Back door right main", 3, false));
             TabulaModelContainer container = TabulaModelHelper.loadTabulaModel("/assets/jurassicraft/models/entities/ford_explorer/ford_explorer.tbl");
-
-            this.baseModel = new ResetControlTabulaModel(container);
+            this.baseModel = new ResetControlTabulaModel(container, animator);
         } catch (Exception e) {
             JurassiCraft.INSTANCE.getLogger().fatal("Failed to load the models for the Ford Explorer", e);
         }
@@ -40,6 +48,7 @@ public class FordExplorerRenderer extends Render<FordExplorerEntity> {
 
     @Override
     public void doRender(FordExplorerEntity entity, double x, double y, double z, float yaw, float partialTicks) {
+	animator.partialTicks = partialTicks;
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         this.bindEntityTexture(entity);
