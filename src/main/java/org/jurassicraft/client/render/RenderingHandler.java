@@ -265,14 +265,15 @@ public enum RenderingHandler {
         registerBlockRenderer(CINNAMON_FERN);
         registerBlockRenderer(BRISTLE_FERN);
 
-//        registerBlockRenderer(TOUR_RAIL);
-//        registerBlockRenderer(TOUR_RAIL_POWERED);
+        registerBlockRenderer(TOUR_RAIL);
+        registerBlockRenderer(TOUR_RAIL_POWERED);
 
         registerItemRenderer(TRACKER);
         registerItemRenderer(PLANT_CELLS_PETRI_DISH);
         registerItemRenderer(PLANT_CELLS);
         registerItemRenderer(GROWTH_SERUM);
         registerItemRenderer(BREEDING_WAND);
+        registerItemRenderer(BIRTHING_WAND);
         registerItemRenderer(IRON_ROD);
         registerItemRenderer(IRON_BLADES);
         registerItemRenderer(PETRI_DISH);
@@ -350,7 +351,7 @@ public enum RenderingHandler {
         registerItemRenderer(CAR_WINDSCREEN, "car_windscreen");
         registerItemRenderer(UNFINISHED_CAR, "unfinished_car");
         registerItemRenderer(JEEP_WRANGLER, "jeep_wrangler");
-//        registerItemRenderer(FORD_EXPLORER, "ford_explorer");
+        registerItemRenderer(FORD_EXPLORER, "ford_explorer");
 
         registerItemRenderer(MURAL, "mural");
 
