@@ -94,6 +94,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import static org.jurassicraft.server.item.ItemHandler.*;
+import static org.jurassicraft.server.block.BlockHandler.*;
+
 @SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber(modid=JurassiCraft.MODID)
 public enum RenderingHandler {
@@ -108,28 +111,28 @@ public enum RenderingHandler {
     public static void onModelEvent(final ModelRegistryEvent event)
     {
         for (EnumDyeColor color : EnumDyeColor.values()) {
-            registerItemRenderer(Item.getItemFromBlock(BlockHandler.CULTIVATOR_BOTTOM), color.getMetadata(), "cultivate/cultivate_bottom_" + color.getName().toLowerCase(Locale.ENGLISH));
+            registerItemRenderer(Item.getItemFromBlock(CULTIVATOR_BOTTOM), color.getMetadata(), "cultivate/cultivate_bottom_" + color.getName().toLowerCase(Locale.ENGLISH));
         }
 
         for (TreeType type : TreeType.values()) {
-            ModelLoader.setCustomStateMapper(BlockHandler.ANCIENT_FENCES.get(type), new MultipartStateMap());
-            ModelLoader.setCustomStateMapper(BlockHandler.ANCIENT_FENCE_GATES.get(type), new StateMap.Builder().ignore(BlockFenceGate.POWERED).build());
+            ModelLoader.setCustomStateMapper(ANCIENT_FENCES.get(type), new MultipartStateMap());
+            ModelLoader.setCustomStateMapper(ANCIENT_FENCE_GATES.get(type), new StateMap.Builder().ignore(BlockFenceGate.POWERED).build());
             ModelLoader.setCustomStateMapper(BlockHandler.ANCIENT_DOORS.get(type), new StateMap.Builder().ignore(BlockDoor.POWERED).build());
         }
-        ModelLoader.setCustomStateMapper(BlockHandler.ENALLHELIA, new StateMap.Builder().ignore(AncientCoralBlock.LEVEL).build());
-        ModelLoader.setCustomStateMapper(BlockHandler.AULOPORA, new StateMap.Builder().ignore(AncientCoralBlock.LEVEL).build());
-        ModelLoader.setCustomStateMapper(BlockHandler.CLADOCHONUS, new StateMap.Builder().ignore(AncientCoralBlock.LEVEL).build());
-        ModelLoader.setCustomStateMapper(BlockHandler.LITHOSTROTION, new StateMap.Builder().ignore(AncientCoralBlock.LEVEL).build());
-        ModelLoader.setCustomStateMapper(BlockHandler.STYLOPHYLLOPSIS, new StateMap.Builder().ignore(AncientCoralBlock.LEVEL).build());
-        ModelLoader.setCustomStateMapper(BlockHandler.HIPPURITES_RADIOSUS, new StateMap.Builder().ignore(AncientCoralBlock.LEVEL).build());
+        ModelLoader.setCustomStateMapper(ENALLHELIA, new StateMap.Builder().ignore(AncientCoralBlock.LEVEL).build());
+        ModelLoader.setCustomStateMapper(AULOPORA, new StateMap.Builder().ignore(AncientCoralBlock.LEVEL).build());
+        ModelLoader.setCustomStateMapper(CLADOCHONUS, new StateMap.Builder().ignore(AncientCoralBlock.LEVEL).build());
+        ModelLoader.setCustomStateMapper(LITHOSTROTION, new StateMap.Builder().ignore(AncientCoralBlock.LEVEL).build());
+        ModelLoader.setCustomStateMapper(STYLOPHYLLOPSIS, new StateMap.Builder().ignore(AncientCoralBlock.LEVEL).build());
+        ModelLoader.setCustomStateMapper(HIPPURITES_RADIOSUS, new StateMap.Builder().ignore(AncientCoralBlock.LEVEL).build());
 
-        ModelLoader.setCustomStateMapper(BlockHandler.LOW_SECURITY_FENCE_BASE, new MultipartStateMap());
-        ModelLoader.setCustomStateMapper(BlockHandler.LOW_SECURITY_FENCE_POLE, new MultipartStateMap());
-        ModelLoader.setCustomStateMapper(BlockHandler.LOW_SECURITY_FENCE_WIRE, new MultipartStateMap());
+        ModelLoader.setCustomStateMapper(LOW_SECURITY_FENCE_BASE, new MultipartStateMap());
+        ModelLoader.setCustomStateMapper(LOW_SECURITY_FENCE_POLE, new MultipartStateMap());
+        ModelLoader.setCustomStateMapper(LOW_SECURITY_FENCE_WIRE, new MultipartStateMap());
 
         int i = 0;
 
-        for (EncasedFossilBlock fossil : BlockHandler.ENCASED_FOSSILS) {
+        for (EncasedFossilBlock fossil : ENCASED_FOSSILS) {
             for (int meta = 0; meta < 16; meta++) {
                 registerBlockRenderer(fossil, meta, "encased_fossil_" + i);
             }
@@ -151,204 +154,205 @@ public enum RenderingHandler {
 
         for (TreeType type : TreeType.values()) {
             String name = type.name().toLowerCase(Locale.ENGLISH);
-            registerBlockRenderer(BlockHandler.ANCIENT_LEAVES.get(type), name + "_leaves");
-            registerBlockRenderer(BlockHandler.ANCIENT_SAPLINGS.get(type), name + "_sapling");
-            registerBlockRenderer(BlockHandler.ANCIENT_PLANKS.get(type), name + "_planks");
-            registerBlockRenderer(BlockHandler.ANCIENT_LOGS.get(type), name + "_log");
-            registerBlockRenderer(BlockHandler.ANCIENT_STAIRS.get(type), name + "_stairs");
-            registerBlockRenderer(BlockHandler.ANCIENT_SLABS.get(type), name + "_slab");
-            registerBlockRenderer(BlockHandler.ANCIENT_DOUBLE_SLABS.get(type), name + "_double_slab");
-            registerBlockRenderer(BlockHandler.ANCIENT_FENCES.get(type), name + "_fence");
-            registerBlockRenderer(BlockHandler.ANCIENT_FENCE_GATES.get(type), name + "_fence_gate");
-            registerBlockRenderer(BlockHandler.PETRIFIED_LOGS.get(type), name + "_log_petrified");
+            registerBlockRenderer(ANCIENT_LEAVES.get(type), name + "_leaves");
+            registerBlockRenderer(ANCIENT_SAPLINGS.get(type), name + "_sapling");
+            registerBlockRenderer(ANCIENT_PLANKS.get(type), name + "_planks");
+            registerBlockRenderer(ANCIENT_LOGS.get(type), name + "_log");
+            registerBlockRenderer(ANCIENT_STAIRS.get(type), name + "_stairs");
+            registerBlockRenderer(ANCIENT_SLABS.get(type), name + "_slab");
+            registerBlockRenderer(ANCIENT_DOUBLE_SLABS.get(type), name + "_double_slab");
+            registerBlockRenderer(ANCIENT_FENCES.get(type), name + "_fence");
+            registerBlockRenderer(ANCIENT_FENCE_GATES.get(type), name + "_fence_gate");
+            registerBlockRenderer(PETRIFIED_LOGS.get(type), name + "_log_petrified");
         }
 
         /*for (EnumDyeColor color : EnumDyeColor.values()) {
-            registerBlockRenderer(BlockHandler.CULTIVATOR_BOTTOM, color.ordinal(), "cultivate/cultivate_bottom_" + color.getName().toLowerCase(Locale.ENGLISH));
+            registerBlockRenderer(CULTIVATOR_BOTTOM, color.ordinal(), "cultivate/cultivate_bottom_" + color.getName().toLowerCase(Locale.ENGLISH));
         }*/
 
-        registerBlockRenderer(BlockHandler.SCALY_TREE_FERN, "scaly_tree_fern");
-        registerBlockRenderer(BlockHandler.SMALL_ROYAL_FERN, "small_royal_fern");
-        registerBlockRenderer(BlockHandler.SMALL_CHAIN_FERN, "small_chain_fern");
-        registerBlockRenderer(BlockHandler.SMALL_CYCAD, "small_cycad");
-        registerBlockRenderer(BlockHandler.CYCADEOIDEA, "bennettitalean_cycadeoidea");
-        registerBlockRenderer(BlockHandler.CRY_PANSY, "cry_pansy");
-        registerBlockRenderer(BlockHandler.ZAMITES, "cycad_zamites");
-        registerBlockRenderer(BlockHandler.DICKSONIA, "dicksonia");
-        registerBlockRenderer(BlockHandler.WOOLLY_STALKED_BEGONIA, "woolly_stalked_begonia");
-        registerBlockRenderer(BlockHandler.LARGESTIPULE_LEATHER_ROOT, "largestipule_leather_root");
-        registerBlockRenderer(BlockHandler.RHACOPHYTON, "rhacophyton");
-        registerBlockRenderer(BlockHandler.GRAMINIDITES_BAMBUSOIDES, "graminidites_bambusoides");
-        registerBlockRenderer(BlockHandler.ENALLHELIA, "enallhelia");
-        registerBlockRenderer(BlockHandler.AULOPORA, "aulopora");
-        registerBlockRenderer(BlockHandler.CLADOCHONUS, "cladochonus");
-        registerBlockRenderer(BlockHandler.LITHOSTROTION, "lithostrotion");
-        registerBlockRenderer(BlockHandler.STYLOPHYLLOPSIS, "stylophyllopsis");
-        registerBlockRenderer(BlockHandler.HIPPURITES_RADIOSUS, "hippurites_radiosus");
-        registerBlockRenderer(BlockHandler.HELICONIA, "heliconia");
+        registerBlockRenderer(SCALY_TREE_FERN, "scaly_tree_fern");
+        registerBlockRenderer(SMALL_ROYAL_FERN, "small_royal_fern");
+        registerBlockRenderer(SMALL_CHAIN_FERN, "small_chain_fern");
+        registerBlockRenderer(SMALL_CYCAD, "small_cycad");
+        registerBlockRenderer(CYCADEOIDEA, "bennettitalean_cycadeoidea");
+        registerBlockRenderer(CRY_PANSY, "cry_pansy");
+        registerBlockRenderer(ZAMITES, "cycad_zamites");
+        registerBlockRenderer(DICKSONIA, "dicksonia");
+        registerBlockRenderer(WOOLLY_STALKED_BEGONIA, "woolly_stalked_begonia");
+        registerBlockRenderer(LARGESTIPULE_LEATHER_ROOT, "largestipule_leather_root");
+        registerBlockRenderer(RHACOPHYTON, "rhacophyton");
+        registerBlockRenderer(GRAMINIDITES_BAMBUSOIDES, "graminidites_bambusoides");
+        registerBlockRenderer(ENALLHELIA, "enallhelia");
+        registerBlockRenderer(AULOPORA, "aulopora");
+        registerBlockRenderer(CLADOCHONUS, "cladochonus");
+        registerBlockRenderer(LITHOSTROTION, "lithostrotion");
+        registerBlockRenderer(STYLOPHYLLOPSIS, "stylophyllopsis");
+        registerBlockRenderer(HIPPURITES_RADIOSUS, "hippurites_radiosus");
+        registerBlockRenderer(HELICONIA, "heliconia");
 
-        registerBlockRenderer(BlockHandler.REINFORCED_STONE, "reinforced_stone");
-        registerBlockRenderer(BlockHandler.REINFORCED_BRICKS, "reinforced_bricks");
+        registerBlockRenderer(REINFORCED_STONE, "reinforced_stone");
+        registerBlockRenderer(REINFORCED_BRICKS, "reinforced_bricks");
 
-        registerBlockRenderer(BlockHandler.CULTIVATOR_BOTTOM, "cultivate_bottom");
-        registerBlockRenderer(BlockHandler.CULTIVATOR_TOP, "cultivate_top");
+        registerBlockRenderer(CULTIVATOR_BOTTOM, "cultivate_bottom");
+        registerBlockRenderer(CULTIVATOR_TOP, "cultivate_top");
 
-        registerBlockRenderer(BlockHandler.AMBER_ORE, "amber_ore");
-        registerBlockRenderer(BlockHandler.ICE_SHARD, "ice_shard");
-        registerBlockRenderer(BlockHandler.CLEANING_STATION, "cleaning_station");
-        registerBlockRenderer(BlockHandler.FOSSIL_GRINDER, "fossil_grinder");
-        registerBlockRenderer(BlockHandler.DNA_SEQUENCER, "dna_sequencer");
-        registerBlockRenderer(BlockHandler.DNA_COMBINATOR_HYBRIDIZER, "dna_combinator_hybridizer");
-        registerBlockRenderer(BlockHandler.DNA_SYNTHESIZER, "dna_synthesizer");
-        registerBlockRenderer(BlockHandler.EMBRYONIC_MACHINE, "embryonic_machine");
-        registerBlockRenderer(BlockHandler.EMBRYO_CALCIFICATION_MACHINE, "embryo_calcification_machine");
-        registerBlockRenderer(BlockHandler.INCUBATOR, "incubator");
-        registerBlockRenderer(BlockHandler.DNA_EXTRACTOR, "dna_extractor");
-        registerBlockRenderer(BlockHandler.FEEDER, "feeder");
-        registerBlockRenderer(BlockHandler.SKELETON_ASSEMBLY, "skeleton_assembly");
-        registerBlockRenderer(BlockHandler.GYPSUM_STONE, "gypsum_stone");
-        registerBlockRenderer(BlockHandler.GYPSUM_COBBLESTONE, "gypsum_cobblestone");
-        registerBlockRenderer(BlockHandler.GYPSUM_BRICKS, "gypsum_bricks");
+        registerBlockRenderer(AMBER_ORE, "amber_ore");
+        registerBlockRenderer(ICE_SHARD, "ice_shard");
+        registerBlockRenderer(CLEANING_STATION, "cleaning_station");
+        registerBlockRenderer(FOSSIL_GRINDER, "fossil_grinder");
+        registerBlockRenderer(DNA_SEQUENCER, "dna_sequencer");
+        registerBlockRenderer(DNA_COMBINATOR_HYBRIDIZER, "dna_combinator_hybridizer");
+        registerBlockRenderer(DNA_SYNTHESIZER, "dna_synthesizer");
+        registerBlockRenderer(EMBRYONIC_MACHINE, "embryonic_machine");
+        registerBlockRenderer(EMBRYO_CALCIFICATION_MACHINE, "embryo_calcification_machine");
+        registerBlockRenderer(INCUBATOR, "incubator");
+        registerBlockRenderer(DNA_EXTRACTOR, "dna_extractor");
+        registerBlockRenderer(FEEDER, "feeder");
+        registerBlockRenderer(SKELETON_ASSEMBLY, "skeleton_assembly");
+        registerBlockRenderer(GYPSUM_STONE, "gypsum_stone");
+        registerBlockRenderer(GYPSUM_COBBLESTONE, "gypsum_cobblestone");
+        registerBlockRenderer(GYPSUM_BRICKS, "gypsum_bricks");
         registerBlockRenderer(BlockHandler.DISPLAY_BLOCK, "display_block");
 
-        registerBlockRenderer(BlockHandler.MOSS, "moss");
-        registerBlockRenderer(BlockHandler.CLEAR_GLASS, "clear_glass");
+        registerBlockRenderer(MOSS, "moss");
+        registerBlockRenderer(CLEAR_GLASS, "clear_glass");
 
         registerBlockRenderer(BlockHandler.WILD_ONION, "wild_onion_plant");
         registerBlockRenderer(BlockHandler.GRACILARIA, "gracilaria_seaweed");
-        registerBlockRenderer(BlockHandler.PEAT, "peat");
-        registerBlockRenderer(BlockHandler.PEAT_MOSS, "peat_moss");
-        registerBlockRenderer(BlockHandler.DICROIDIUM_ZUBERI, "dicroidium_zuberi");
-        registerBlockRenderer(BlockHandler.WEST_INDIAN_LILAC, "west_indian_lilac");
-        registerBlockRenderer(BlockHandler.DICTYOPHYLLUM, "dictyophyllum");
-        registerBlockRenderer(BlockHandler.SERENNA_VERIFORMANS, "serenna_veriformans");
-        registerBlockRenderer(BlockHandler.LADINIA_SIMPLEX, "ladinia_simplex");
-        registerBlockRenderer(BlockHandler.ORONTIUM_MACKII, "orontium_mackii");
-        registerBlockRenderer(BlockHandler.UMALTOLEPIS, "umaltolepis");
-        registerBlockRenderer(BlockHandler.LIRIODENDRITES, "liriodendrites");
-        registerBlockRenderer(BlockHandler.RAPHAELIA, "raphaelia");
-        registerBlockRenderer(BlockHandler.ENCEPHALARTOS, "encephalartos");
+        registerBlockRenderer(PEAT, "peat");
+        registerBlockRenderer(PEAT_MOSS, "peat_moss");
+        registerBlockRenderer(DICROIDIUM_ZUBERI, "dicroidium_zuberi");
+        registerBlockRenderer(WEST_INDIAN_LILAC, "west_indian_lilac");
+        registerBlockRenderer(DICTYOPHYLLUM, "dictyophyllum");
+        registerBlockRenderer(SERENNA_VERIFORMANS, "serenna_veriformans");
+        registerBlockRenderer(LADINIA_SIMPLEX, "ladinia_simplex");
+        registerBlockRenderer(ORONTIUM_MACKII, "orontium_mackii");
+        registerBlockRenderer(UMALTOLEPIS, "umaltolepis");
+        registerBlockRenderer(LIRIODENDRITES, "liriodendrites");
+        registerBlockRenderer(RAPHAELIA, "raphaelia");
+        registerBlockRenderer(ENCEPHALARTOS, "encephalartos");
 
         for (FossilizedTrackwayBlock.TrackwayType trackwayType : FossilizedTrackwayBlock.TrackwayType.values()) {
-            registerBlockRenderer(BlockHandler.FOSSILIZED_TRACKWAY, trackwayType.ordinal(), "fossilized_trackway_" + trackwayType.getName());
+            registerBlockRenderer(FOSSILIZED_TRACKWAY, trackwayType.ordinal(), "fossilized_trackway_" + trackwayType.getName());
         }
 
         for (NestFossilBlock.Variant variant : NestFossilBlock.Variant.values()) {
-            registerBlockRenderer(BlockHandler.NEST_FOSSIL, variant.ordinal(), "nest_fossil_" + (variant.ordinal() + 1));
-            registerBlockRenderer(BlockHandler.ENCASED_NEST_FOSSIL, variant.ordinal(), "encased_nest_fossil");
+            registerBlockRenderer(NEST_FOSSIL, variant.ordinal(), "nest_fossil_" + (variant.ordinal() + 1));
+            registerBlockRenderer(ENCASED_NEST_FOSSIL, variant.ordinal(), "encased_nest_fossil");
         }
 
-        registerBlockRenderer(BlockHandler.PALEO_BALE_CYCADEOIDEA, "paleo_bale_cycadeoidea");
-        registerBlockRenderer(BlockHandler.PALEO_BALE_CYCAD, "paleo_bale_cycad");
-        registerBlockRenderer(BlockHandler.PALEO_BALE_FERN, "paleo_bale_fern");
-        registerBlockRenderer(BlockHandler.PALEO_BALE_LEAVES, "paleo_bale_leaves");
-        registerBlockRenderer(BlockHandler.PALEO_BALE_OTHER, "paleo_bale_other");
+        registerBlockRenderer(PALEO_BALE_CYCADEOIDEA, "paleo_bale_cycadeoidea");
+        registerBlockRenderer(PALEO_BALE_CYCAD, "paleo_bale_cycad");
+        registerBlockRenderer(PALEO_BALE_FERN, "paleo_bale_fern");
+        registerBlockRenderer(PALEO_BALE_LEAVES, "paleo_bale_leaves");
+        registerBlockRenderer(PALEO_BALE_OTHER, "paleo_bale_other");
 
-        registerBlockRenderer(BlockHandler.AJUGINUCULA_SMITHII);
-        registerBlockRenderer(BlockHandler.BUG_CRATE);
+        registerBlockRenderer(AJUGINUCULA_SMITHII);
+        registerBlockRenderer(BUG_CRATE);
 
-        registerBlockRenderer(BlockHandler.PLANKTON_SWARM);
-        registerBlockRenderer(BlockHandler.KRILL_SWARM);
+        registerBlockRenderer(PLANKTON_SWARM);
+        registerBlockRenderer(KRILL_SWARM);
 
-        registerBlockRenderer(BlockHandler.LOW_SECURITY_FENCE_POLE);
-        registerBlockRenderer(BlockHandler.LOW_SECURITY_FENCE_BASE);
-        registerBlockRenderer(BlockHandler.LOW_SECURITY_FENCE_WIRE);
+        registerBlockRenderer(LOW_SECURITY_FENCE_POLE);
+        registerBlockRenderer(LOW_SECURITY_FENCE_BASE);
+        registerBlockRenderer(LOW_SECURITY_FENCE_WIRE);
 
-        registerBlockRenderer(BlockHandler.WILD_POTATO_PLANT);
+        registerBlockRenderer(WILD_POTATO_PLANT);
 
-        registerBlockRenderer(BlockHandler.RHAMNUS_SALICIFOLIUS_PLANT);
+        registerBlockRenderer(RHAMNUS_SALICIFOLIUS_PLANT);
 
-        registerBlockRenderer(BlockHandler.TEMPSKYA);
-        registerBlockRenderer(BlockHandler.CINNAMON_FERN);
-        registerBlockRenderer(BlockHandler.BRISTLE_FERN);
+        registerBlockRenderer(TEMPSKYA);
+        registerBlockRenderer(CINNAMON_FERN);
+        registerBlockRenderer(BRISTLE_FERN);
 
-//        registerBlockRenderer(BlockHandler.TOUR_RAIL);
-//        registerBlockRenderer(BlockHandler.TOUR_RAIL_POWERED);
+//        registerBlockRenderer(TOUR_RAIL);
+//        registerBlockRenderer(TOUR_RAIL_POWERED);
 
-        registerItemRenderer(ItemHandler.TRACKER);
-        registerItemRenderer(ItemHandler.PLANT_CELLS_PETRI_DISH);
-        registerItemRenderer(ItemHandler.PLANT_CELLS);
-        registerItemRenderer(ItemHandler.GROWTH_SERUM);
-        registerItemRenderer(ItemHandler.IRON_ROD);
-        registerItemRenderer(ItemHandler.IRON_BLADES);
-        registerItemRenderer(ItemHandler.PETRI_DISH);
-        registerItemRenderer(ItemHandler.PETRI_DISH_AGAR);
-        registerItemRenderer(ItemHandler.PLASTER_AND_BANDAGE);
+        registerItemRenderer(TRACKER);
+        registerItemRenderer(PLANT_CELLS_PETRI_DISH);
+        registerItemRenderer(PLANT_CELLS);
+        registerItemRenderer(GROWTH_SERUM);
+        registerItemRenderer(BREEDING_WAND);
+        registerItemRenderer(IRON_ROD);
+        registerItemRenderer(IRON_BLADES);
+        registerItemRenderer(PETRI_DISH);
+        registerItemRenderer(PETRI_DISH_AGAR);
+        registerItemRenderer(PLASTER_AND_BANDAGE);
 
-        registerItemRenderer(ItemHandler.FUN_FRIES);
-        registerItemRenderer(ItemHandler.OILED_POTATO_STRIPS);
-        registerItemRenderer(ItemHandler.LUNCH_BOX);
-        registerItemRenderer(ItemHandler.STAMP_SET);
+        registerItemRenderer(FUN_FRIES);
+        registerItemRenderer(OILED_POTATO_STRIPS);
+        registerItemRenderer(LUNCH_BOX);
+        registerItemRenderer(STAMP_SET);
 
-        registerItemRenderer(ItemHandler.INGEN_JOURNAL);
+        registerItemRenderer(INGEN_JOURNAL);
 
         for (Entry<Integer, Dinosaur> entry : EntityHandler.getDinosaurs().entrySet()) {
-            registerItemRenderer(ItemHandler.SPAWN_EGG, entry.getKey(), "dino_spawn_egg");
+            registerItemRenderer(SPAWN_EGG, entry.getKey(), "dino_spawn_egg");
         }
 
-        registerItemRenderer(ItemHandler.PADDOCK_SIGN);
+        registerItemRenderer(PADDOCK_SIGN);
 
         for (AttractionSignEntity.AttractionSignType type : AttractionSignEntity.AttractionSignType.values()) {
-            registerItemRenderer(ItemHandler.ATTRACTION_SIGN, type.ordinal(), "attraction_sign_" + type.name().toLowerCase(Locale.ENGLISH));
+            registerItemRenderer(ATTRACTION_SIGN, type.ordinal(), "attraction_sign_" + type.name().toLowerCase(Locale.ENGLISH));
         }
 
-        registerItemRenderer(ItemHandler.EMPTY_TEST_TUBE);
-        registerItemRenderer(ItemHandler.EMPTY_SYRINGE);
-        registerItemRenderer(ItemHandler.STORAGE_DISC);
-        registerItemRenderer(ItemHandler.DISC_DRIVE, "disc_reader");
-        registerItemRenderer(ItemHandler.LASER);
-        registerItemRenderer(ItemHandler.DNA_NUCLEOTIDES, "dna_base_material");
-        registerItemRenderer(ItemHandler.SEA_LAMPREY);
+        registerItemRenderer(EMPTY_TEST_TUBE);
+        registerItemRenderer(EMPTY_SYRINGE);
+        registerItemRenderer(STORAGE_DISC);
+        registerItemRenderer(DISC_DRIVE, "disc_reader");
+        registerItemRenderer(LASER);
+        registerItemRenderer(DNA_NUCLEOTIDES, "dna_base_material");
+        registerItemRenderer(SEA_LAMPREY);
 
-        registerItemRenderer(ItemHandler.AMBER, 0, "amber_mosquito");
-        registerItemRenderer(ItemHandler.AMBER, 1, "amber_aphid");
+        registerItemRenderer(AMBER, 0, "amber_mosquito");
+        registerItemRenderer(AMBER, 1, "amber_aphid");
 
-        registerItemRenderer(ItemHandler.HELICOPTER, "helicopter_spawner");
+        registerItemRenderer(HELICOPTER, "helicopter_spawner");
 
-        registerItemRenderer(ItemHandler.JURASSICRAFT_THEME_DISC, "disc_jurassicraft_theme");
-        registerItemRenderer(ItemHandler.DONT_MOVE_A_MUSCLE_DISC, "disc_dont_move_a_muscle");
-        registerItemRenderer(ItemHandler.TROODONS_AND_RAPTORS_DISC, "disc_troodons_and_raptors");
+        registerItemRenderer(JURASSICRAFT_THEME_DISC, "disc_jurassicraft_theme");
+        registerItemRenderer(DONT_MOVE_A_MUSCLE_DISC, "disc_dont_move_a_muscle");
+        registerItemRenderer(TROODONS_AND_RAPTORS_DISC, "disc_troodons_and_raptors");
 
-        registerItemRenderer(ItemHandler.AMBER_KEYCHAIN, "amber_keychain");
-        registerItemRenderer(ItemHandler.AMBER_CANE, "amber_cane");
-        registerItemRenderer(ItemHandler.MR_DNA_KEYCHAIN, "mr_dna_keychain");
+        registerItemRenderer(AMBER_KEYCHAIN, "amber_keychain");
+        registerItemRenderer(AMBER_CANE, "amber_cane");
+        registerItemRenderer(MR_DNA_KEYCHAIN, "mr_dna_keychain");
 
-        registerItemRenderer(ItemHandler.DINO_SCANNER, "dino_scanner");
+        registerItemRenderer(DINO_SCANNER, "dino_scanner");
 
-        registerItemRenderer(ItemHandler.BASIC_CIRCUIT, "basic_circuit");
-        registerItemRenderer(ItemHandler.ADVANCED_CIRCUIT, "advanced_circuit");
-        registerItemRenderer(ItemHandler.IRON_NUGGET, "iron_nugget");
+        registerItemRenderer(BASIC_CIRCUIT, "basic_circuit");
+        registerItemRenderer(ADVANCED_CIRCUIT, "advanced_circuit");
+        registerItemRenderer(IRON_NUGGET, "iron_nugget");
 
-        registerItemRenderer(ItemHandler.GYPSUM_POWDER, "gypsum_powder");
+        registerItemRenderer(GYPSUM_POWDER, "gypsum_powder");
 
-        registerItemRenderer(ItemHandler.AJUGINUCULA_SMITHII_SEEDS, "ajuginucula_smithii_seeds");
-        registerItemRenderer(ItemHandler.AJUGINUCULA_SMITHII_LEAVES, "ajuginucula_smithii_leaves");
-        registerItemRenderer(ItemHandler.AJUGINUCULA_SMITHII_OIL, "ajuginucula_smithii_oil");
+        registerItemRenderer(AJUGINUCULA_SMITHII_SEEDS, "ajuginucula_smithii_seeds");
+        registerItemRenderer(AJUGINUCULA_SMITHII_LEAVES, "ajuginucula_smithii_leaves");
+        registerItemRenderer(AJUGINUCULA_SMITHII_OIL, "ajuginucula_smithii_oil");
 
         registerItemRenderer(ItemHandler.WILD_ONION, "wild_onion");
         registerItemRenderer(ItemHandler.GRACILARIA);
-        registerItemRenderer(ItemHandler.LIQUID_AGAR, "liquid_agar");
+        registerItemRenderer(LIQUID_AGAR, "liquid_agar");
 
         registerItemRenderer(ItemHandler.PLANT_FOSSIL, "plant_fossil");
-        registerItemRenderer(ItemHandler.TWIG_FOSSIL, "twig_fossil");
+        registerItemRenderer(TWIG_FOSSIL, "twig_fossil");
 
-        registerItemRenderer(ItemHandler.KEYBOARD, "keyboard");
-        registerItemRenderer(ItemHandler.COMPUTER_SCREEN, "computer_screen");
-        registerItemRenderer(ItemHandler.DNA_ANALYZER, "dna_analyzer");
+        registerItemRenderer(KEYBOARD, "keyboard");
+        registerItemRenderer(COMPUTER_SCREEN, "computer_screen");
+        registerItemRenderer(DNA_ANALYZER, "dna_analyzer");
 
-        registerItemRenderer(ItemHandler.CHILEAN_SEA_BASS, "chilean_sea_bass");
-        registerItemRenderer(ItemHandler.FIELD_GUIDE, "field_guide");
+        registerItemRenderer(CHILEAN_SEA_BASS, "chilean_sea_bass");
+        registerItemRenderer(FIELD_GUIDE, "field_guide");
 
-        registerItemRenderer(ItemHandler.CAR_CHASSIS, "car_chassis");
-        registerItemRenderer(ItemHandler.CAR_ENGINE_SYSTEM, "car_engine_system");
-        registerItemRenderer(ItemHandler.CAR_SEATS, "car_seats");
-        registerItemRenderer(ItemHandler.CAR_TIRE, "car_tire");
-        registerItemRenderer(ItemHandler.CAR_WINDSCREEN, "car_windscreen");
-        registerItemRenderer(ItemHandler.UNFINISHED_CAR, "unfinished_car");
-        registerItemRenderer(ItemHandler.JEEP_WRANGLER, "jeep_wrangler");
-//        registerItemRenderer(ItemHandler.FORD_EXPLORER, "ford_explorer");
+        registerItemRenderer(CAR_CHASSIS, "car_chassis");
+        registerItemRenderer(CAR_ENGINE_SYSTEM, "car_engine_system");
+        registerItemRenderer(CAR_SEATS, "car_seats");
+        registerItemRenderer(CAR_TIRE, "car_tire");
+        registerItemRenderer(CAR_WINDSCREEN, "car_windscreen");
+        registerItemRenderer(UNFINISHED_CAR, "unfinished_car");
+        registerItemRenderer(JEEP_WRANGLER, "jeep_wrangler");
+//        registerItemRenderer(FORD_EXPLORER, "ford_explorer");
 
-        registerItemRenderer(ItemHandler.MURAL, "mural");
+        registerItemRenderer(MURAL, "mural");
 
         for (Dinosaur dinosaur : EntityHandler.getDinosaurs().values()) {
             int meta = EntityHandler.getDinosaurId(dinosaur);
@@ -362,25 +366,25 @@ public enum RenderingHandler {
                 }
             }
 
-            for (Map.Entry<String, FossilItem> entry : ItemHandler.FRESH_FOSSILS.entrySet()) {
+            for (Map.Entry<String, FossilItem> entry : FRESH_FOSSILS.entrySet()) {
                 List<Dinosaur> dinosaursForType = FossilItem.fossilDinosaurs.get(entry.getKey());
                 if (dinosaursForType.contains(dinosaur)) {
                     registerItemRenderer(entry.getValue(), meta, "fresh_bones/" + formattedName + "_" + entry.getKey());
                 }
             }
 
-            registerItemRenderer(ItemHandler.DNA, meta, "dna/dna_" + formattedName);
-            registerItemRenderer(ItemHandler.DINOSAUR_MEAT, meta, "meat/meat_" + formattedName);
-            registerItemRenderer(ItemHandler.DINOSAUR_STEAK, meta, "meat/steak_" + formattedName);
-            registerItemRenderer(ItemHandler.SOFT_TISSUE, meta, "soft_tissue/soft_tissue_" + formattedName);
-            registerItemRenderer(ItemHandler.SYRINGE, meta, "syringe/syringe_" + formattedName);
-            //registerItemRenderer(ItemHandler.ACTION_FIGURE, meta, "action_figure/action_figure_" + formattedName);
+            registerItemRenderer(DNA, meta, "dna/dna_" + formattedName);
+            registerItemRenderer(DINOSAUR_MEAT, meta, "meat/meat_" + formattedName);
+            registerItemRenderer(DINOSAUR_STEAK, meta, "meat/steak_" + formattedName);
+            registerItemRenderer(SOFT_TISSUE, meta, "soft_tissue/soft_tissue_" + formattedName);
+            registerItemRenderer(SYRINGE, meta, "syringe/syringe_" + formattedName);
+            //registerItemRenderer(ACTION_FIGURE, meta, "action_figure/action_figure_" + formattedName);
 
             if (!dinosaur.givesDirectBirth()) {
-                registerItemRenderer(ItemHandler.EGG, meta, "egg/egg_" + formattedName);
+                registerItemRenderer(EGG, meta, "egg/egg_" + formattedName);
             }
 
-            registerItemRenderer(ItemHandler.HATCHED_EGG, meta, "hatched_egg/egg_" + formattedName);
+            registerItemRenderer(HATCHED_EGG, meta, "hatched_egg/egg_" + formattedName);
         }
 
         for (Plant plant : PlantHandler.getPrehistoricPlantsAndTrees()) {
@@ -388,17 +392,17 @@ public enum RenderingHandler {
 
             String name = plant.getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
 
-            registerItemRenderer(ItemHandler.PLANT_DNA, meta, "dna/plants/dna_" + name);
-            registerItemRenderer(ItemHandler.PLANT_SOFT_TISSUE, meta, "soft_tissue/plants/soft_tissue_" + name);
-            registerItemRenderer(ItemHandler.PLANT_CALLUS, meta, "plant_callus");
+            registerItemRenderer(PLANT_DNA, meta, "dna/plants/dna_" + name);
+            registerItemRenderer(PLANT_SOFT_TISSUE, meta, "soft_tissue/plants/soft_tissue_" + name);
+            registerItemRenderer(PLANT_CALLUS, meta, "plant_callus");
         }
 
         for (JournalItem.JournalType type : JournalItem.JournalType.values()) {
-            registerItemRenderer(ItemHandler.INGEN_JOURNAL, type.getMetadata(), "ingen_journal");
+            registerItemRenderer(INGEN_JOURNAL, type.getMetadata(), "ingen_journal");
         }
 
         for (NestFossilBlock.Variant variant : NestFossilBlock.Variant.values()) {
-            registerItemRenderer(ItemHandler.FOSSILIZED_EGG, variant.ordinal(), "fossilized_egg_" + (variant.ordinal() + 1));
+            registerItemRenderer(FOSSILIZED_EGG, variant.ordinal(), "fossilized_egg_" + (variant.ordinal() + 1));
         }
 
         for (TreeType type : TreeType.values()) {
@@ -406,29 +410,29 @@ public enum RenderingHandler {
             registerItemRenderer(ItemHandler.ANCIENT_DOORS.get(type), name + "_door_item");
         }
 
-        registerItemRenderer(ItemHandler.PHOENIX_SEEDS);
-        registerItemRenderer(ItemHandler.PHOENIX_FRUIT);
+        registerItemRenderer(PHOENIX_SEEDS);
+        registerItemRenderer(PHOENIX_FRUIT);
 
-        registerItemRenderer(ItemHandler.CRICKETS);
-        registerItemRenderer(ItemHandler.COCKROACHES);
-        registerItemRenderer(ItemHandler.MEALWORM_BEETLES);
+        registerItemRenderer(CRICKETS);
+        registerItemRenderer(COCKROACHES);
+        registerItemRenderer(MEALWORM_BEETLES);
 
-        registerItemRenderer(ItemHandler.FINE_NET);
-        registerItemRenderer(ItemHandler.PLANKTON);
-        registerItemRenderer(ItemHandler.KRILL);
+        registerItemRenderer(FINE_NET);
+        registerItemRenderer(PLANKTON);
+        registerItemRenderer(KRILL);
 
-        registerItemRenderer(ItemHandler.WILD_POTATO_SEEDS);
-        registerItemRenderer(ItemHandler.WILD_POTATO);
-        registerItemRenderer(ItemHandler.WILD_POTATO_COOKED);
+        registerItemRenderer(WILD_POTATO_SEEDS);
+        registerItemRenderer(WILD_POTATO);
+        registerItemRenderer(WILD_POTATO_COOKED);
 
-        registerItemRenderer(ItemHandler.RHAMNUS_SEEDS);
-        registerItemRenderer(ItemHandler.RHAMNUS_BERRIES);
+        registerItemRenderer(RHAMNUS_SEEDS);
+        registerItemRenderer(RHAMNUS_BERRIES);
 
-        registerItemRenderer(ItemHandler.GOAT_RAW);
-        registerItemRenderer(ItemHandler.GOAT_COOKED);
+        registerItemRenderer(GOAT_RAW);
+        registerItemRenderer(GOAT_COOKED);
         
-        registerItemRenderer(ItemHandler.DART_GUN);
-        registerItemRenderer(ItemHandler.DART_TRANQUILIZER);
+        registerItemRenderer(DART_GUN);
+        registerItemRenderer(DART_TRANQUILIZER);
     }
 
     public void preInit() {
@@ -463,17 +467,17 @@ public enum RenderingHandler {
 
     public void init() {
         BlockColors blockColors = mc.getBlockColors();
-        blockColors.registerBlockColorHandler((state, access, pos, tintIndex) -> pos != null ? BiomeColorHelper.getGrassColorAtPos(access, pos) : 0xFFFFFF, BlockHandler.MOSS);
+        blockColors.registerBlockColorHandler((state, access, pos, tintIndex) -> pos != null ? BiomeColorHelper.getGrassColorAtPos(access, pos) : 0xFFFFFF, MOSS);
 
-        for (Map.Entry<TreeType, AncientLeavesBlock> entry : BlockHandler.ANCIENT_LEAVES.entrySet()) {
+        for (Map.Entry<TreeType, AncientLeavesBlock> entry : ANCIENT_LEAVES.entrySet()) {
             blockColors.registerBlockColorHandler((state, access, pos, tintIndex) -> pos == null ? ColorizerFoliage.getFoliageColorBasic() : BiomeColorHelper.getFoliageColorAtPos(access, pos), entry.getValue());
         }
 
-        blockColors.registerBlockColorHandler((state, access, pos, tintIndex) -> pos == null ? ColorizerFoliage.getFoliageColorBasic() : BiomeColorHelper.getFoliageColorAtPos(access, pos), BlockHandler.MOSS);
+        blockColors.registerBlockColorHandler((state, access, pos, tintIndex) -> pos == null ? ColorizerFoliage.getFoliageColorBasic() : BiomeColorHelper.getFoliageColorAtPos(access, pos), MOSS);
 
         ItemColors itemColors = mc.getItemColors();
 
-        for (Map.Entry<TreeType, AncientLeavesBlock> entry : BlockHandler.ANCIENT_LEAVES.entrySet()) {
+        for (Map.Entry<TreeType, AncientLeavesBlock> entry : ANCIENT_LEAVES.entrySet()) {
             itemColors.registerItemColorHandler((stack, tintIndex) -> ColorizerFoliage.getFoliageColorBasic(), entry.getValue());
         }
 
@@ -492,7 +496,7 @@ public enum RenderingHandler {
                 }
             }
             return 0xFFFFFF;
-        }, ItemHandler.SPAWN_EGG);
+        }, SPAWN_EGG);
     }
 
     public void postInit() {
