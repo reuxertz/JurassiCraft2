@@ -68,39 +68,11 @@ public class FordExplorerRenderer extends Render<FordExplorerEntity> {
         double d0 = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * (double)partialTicks;
         double d1 = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double)partialTicks;
         double d2 = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double)partialTicks;
-        Vec3d vec3d = entity.minecart.getPos(d0, d1, d2);
         float f3 = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks; //TODO: interp ?
 
-        if(Boolean.FALSE) //TODO: rewrite
-        if (vec3d != null) {
-            Vec3d vec3d1 = entity.minecart.getPosOffset(d0, d1, d2, 0.30000001192092896D);
-            Vec3d vec3d2 = entity.minecart.getPosOffset(d0, d1, d2, -0.30000001192092896D);
-
-            if (vec3d1 == null) {
-                vec3d1 = vec3d;
-            }
-
-            if (vec3d2 == null) {
-                vec3d2 = vec3d;
-            }
-
-            x += vec3d.x - d0;
-            y += (vec3d1.y + vec3d2.y) / 2.0D - d1;
-            z += vec3d.z - d2;
-            Vec3d vec3d3 = vec3d2.addVector(-vec3d1.x, -vec3d1.y, -vec3d1.z);
-
-            if (vec3d3.lengthVector() != 0.0D)
-            {
-                vec3d3 = vec3d3.normalize();
-                yaw = (float)(Math.atan2(vec3d3.z, vec3d3.x) * 180.0D / Math.PI);
-                f3 = (float)(Math.atan(vec3d3.y) * 73.0D);
-            }
-        }
-
         GlStateManager.rotate(180 - yaw, 0, 1, 0);
-//        GlStateManager.rotate(-f3, 0.0F, 0.0F, 1.0F);
-        
         CarRenderer.doCarRotations(entity, partialTicks);
+       
         GlStateManager.scale(-1.0F, -1.0F, 1.0F);
         this.baseModel.render(entity, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
         GlStateManager.popMatrix();

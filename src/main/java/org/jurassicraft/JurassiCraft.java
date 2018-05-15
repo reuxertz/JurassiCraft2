@@ -6,6 +6,8 @@ import org.jurassicraft.server.command.ForceAnimationCommand;
 import org.jurassicraft.server.conf.JurassiCraftConfig;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.message.ChangeTemperatureMessage;
+import org.jurassicraft.server.message.FordExplorerChangeStateMessage;
+import org.jurassicraft.server.message.FordExplorerUpdatePositionStateMessage;
 import org.jurassicraft.server.message.HelicopterDirectionMessage;
 import org.jurassicraft.server.message.HelicopterEngineMessage;
 import org.jurassicraft.server.message.HelicopterModulesMessage;
@@ -49,7 +51,7 @@ public class JurassiCraft {
 
     public static long timerTicks;
 
-    @NetworkWrapper({ PlacePaddockSignMessage.class, ChangeTemperatureMessage.class, HelicopterEngineMessage.class, HelicopterDirectionMessage.class, HelicopterModulesMessage.class, SwitchHybridizerCombinatorMode.class, SetOrderMessage.class, OpenFieldGuideGuiMessage.class, UpdateVehicleControlMessage.class, MicroraptorDismountMessage.class })
+    @NetworkWrapper({ PlacePaddockSignMessage.class, ChangeTemperatureMessage.class, HelicopterEngineMessage.class, HelicopterDirectionMessage.class, HelicopterModulesMessage.class, SwitchHybridizerCombinatorMode.class, SetOrderMessage.class, OpenFieldGuideGuiMessage.class, UpdateVehicleControlMessage.class, MicroraptorDismountMessage.class, FordExplorerChangeStateMessage.class, FordExplorerUpdatePositionStateMessage.class})
     public static SimpleNetworkWrapper NETWORK_WRAPPER;
 
     private Logger logger;

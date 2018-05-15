@@ -64,7 +64,7 @@ public abstract class CarEntity extends Entity {
     protected float rotationDelta;
 
     private int interpProgress;
-    private double interpTargetX;
+    double interpTargetX;
     private double interpTargetY;
     private double interpTargetZ;
     private double interpTargetYaw;
@@ -272,7 +272,7 @@ public abstract class CarEntity extends Entity {
             }
         }
         this.tickInterp();
-        if (this.canPassengerSteer()) {
+        if (this.getControllingPassenger() instanceof EntityPlayer) {
             if (this.getPassengers().isEmpty() || !(this.getPassengers().get(0) instanceof EntityPlayer)) {
                 this.setControlState(0);
             }
@@ -280,6 +280,7 @@ public abstract class CarEntity extends Entity {
             if (this.world.isRemote) {
                 this.handleControl(true);
             }
+            this.applyMovement();
             this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
         } else {
             this.motionX = this.motionY = this.motionZ = 0;
@@ -292,7 +293,10 @@ public abstract class CarEntity extends Entity {
     }
     
     protected void runOverEntity(Entity entity) {
-	entity.attackEntityFrom(DamageSources.CAR, (float) (this.estimatedSpeed * 20D));
+	double damage = this.estimatedSpeed * 20D;
+	if(damage > 0D) {
+	    entity.attackEntityFrom(DamageSources.CAR, (float) (this.estimatedSpeed * 20D));
+	}
     }
     
     protected void processWheel(CarWheel wheel) {
@@ -379,7 +383,7 @@ public abstract class CarEntity extends Entity {
             }
         }
         if(applyMovement) {
-            this.applyMovement();
+//            this.applyMovement();
         }
         if (this.getControlState() != previous || newSpeed) {
             JurassiCraft.NETWORK_WRAPPER.sendToServer(new UpdateVehicleControlMessage(this));
