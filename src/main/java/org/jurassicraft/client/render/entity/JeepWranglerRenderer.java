@@ -4,9 +4,8 @@ import java.util.Map.Entry;
 
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.model.ResetControlTabulaModel;
-import org.jurassicraft.client.model.animation.CarAnimation;
-import org.jurassicraft.client.model.animation.CarAnimation.Door;
-import org.jurassicraft.client.model.animation.entity.vehicle.JeepWranglerAnimator;
+import org.jurassicraft.client.model.animation.entity.vehicle.CarAnimator;
+import org.jurassicraft.client.model.animation.entity.vehicle.CarAnimator.Door;
 import org.jurassicraft.server.entity.vehicle.CarEntity;
 import org.jurassicraft.server.entity.vehicle.JeepWranglerEntity;
 import org.jurassicraft.server.tabula.TabulaModelHelper;
@@ -32,7 +31,7 @@ public class JeepWranglerRenderer extends Render<JeepWranglerEntity> {
 
     private static final String WINDSCREEN = "Windscreen";
     
-    private CarAnimation animator;
+    private CarAnimator animator;
     private TabulaModel baseModel;
     private TabulaModel windscreen;
     private TabulaModel destroyModel;
@@ -41,7 +40,7 @@ public class JeepWranglerRenderer extends Render<JeepWranglerEntity> {
     public JeepWranglerRenderer(RenderManager manager) {
         super(manager);
         try {
-            this.animator = new JeepWranglerAnimator()
+            this.animator = new CarAnimator()
         	    .addDoor(new Door("door left main", 0, true))
         	    .addDoor(new Door("door right main", 1, false));
             TabulaModelContainer container = TabulaModelHelper.loadTabulaModel("/assets/jurassicraft/models/entities/jeep_wrangler/jeep_wrangler.tbl");
