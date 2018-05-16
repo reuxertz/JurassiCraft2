@@ -25,6 +25,6 @@ public class JeepWranglerEntity extends CarEntity {
     
     @Override
     protected WheelData createWheels() {
-	return new WheelData(1.3, 1.5, -1.3, -2.65);
+	return new WheelData(1.2, 1.5, -1.2, -2.65);
     }
 }
