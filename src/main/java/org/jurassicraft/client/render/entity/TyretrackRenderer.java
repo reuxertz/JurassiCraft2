@@ -1,7 +1,9 @@
 package org.jurassicraft.client.render.entity;
 
+import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.entity.vehicle.CarEntity;
 import org.jurassicraft.server.entity.vehicle.util.WheelParticleData;
@@ -12,10 +14,9 @@ import com.google.common.collect.Lists;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,7 +29,6 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -38,7 +38,7 @@ public class TyretrackRenderer {
     public static final List<Material> ALLOWED_MATERIALS = Lists.newArrayList(Material.GRASS, Material.GROUND, Material.SAND);//TODO: configurable ?
     public static final ResourceLocation TYRE_TRACKS_LOCATION = new ResourceLocation(JurassiCraft.MODID, "textures/misc/tyre-tracks.png");
     
-    private static final List<List<WheelParticleData>> DEAD_CARS_LISTS = Lists.newArrayList();
+    private static final List<List<WheelParticleData>> DEAD_CARS_LISTS = Lists.newArrayList(); 
     
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
@@ -46,6 +46,7 @@ public class TyretrackRenderer {
         Minecraft mc = Minecraft.getMinecraft();
         World world = mc.world;
         EntityPlayer player = mc.player;
+        Vec3d playerPos = player.getPositionVector();
         
         GlStateManager.enableBlend();
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
@@ -62,20 +63,24 @@ public class TyretrackRenderer {
         double d2 = (player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * (double)event.getPartialTicks());
         buffer.setTranslation(-d0, -d1, -d2);
         
+        List<Pair<Long, Runnable>> runList = Lists.newArrayList();
         buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-        for(Entity entity : world.loadedEntityList) {
+        for(Entity entity : Lists.reverse(Lists.newArrayList(world.loadedEntityList))) {
             if(entity instanceof CarEntity) {
             CarEntity car = (CarEntity)entity;
-                GlStateManager.pushMatrix(); 
                 for(List<WheelParticleData> list : car.wheelDataList) {
-                    renderList(list, buffer, event.getPartialTicks());
+                    renderList(list, buffer, event.getPartialTicks(), runList);
                 }
-                GlStateManager.popMatrix();
             }
         }
+        DEAD_CARS_LISTS.forEach(list -> renderList(list, buffer, event.getPartialTicks(), runList));
+        
+        runList.sort((o1, o2) -> Comparator.<Long>naturalOrder().compare(o2.getLeft(), o1.getLeft()));
+        
         GlStateManager.pushMatrix();
-        DEAD_CARS_LISTS.forEach(list -> renderList(list, buffer, event.getPartialTicks()));
+        runList.forEach(pair -> pair.getRight().run());
         GlStateManager.popMatrix();
+        
         tess.draw();
         buffer.setTranslation(0, 0, 0);
             
@@ -85,7 +90,7 @@ public class TyretrackRenderer {
     }
     
     @SideOnly(Side.CLIENT)
-    private static void renderList(List<WheelParticleData> dataList, VertexBuffer buffer, float partialTicks) {
+    private static void renderList(List<WheelParticleData> dataList, VertexBuffer buffer, float partialTicks, List<Pair<Long, Runnable>> list) {
         World world = Minecraft.getMinecraft().world;
 	for(int i = 0; i < dataList.size() - 1; i++) {
             WheelParticleData start = dataList.get(i);
@@ -102,38 +107,47 @@ public class TyretrackRenderer {
 
             
             BlockPos position = new BlockPos(sv);
-            BlockPos downPos = position.down();
-            IBlockState downState = world.getBlockState(downPos);
-            if(world.getBlockState(position).getMaterial().isLiquid() || !downState.isSideSolid(world, downPos, EnumFacing.UP) || sv.y != ev.y || !ALLOWED_MATERIALS.contains(downState.getMaterial())) { //TODO: Dont create the particles if theyll never be rendered. 
-                continue;
+            BlockPos endPosition = new BlockPos(ev);
+            
+            if(sv.y != ev.y || !isStateAccepted(world, position) || !isStateAccepted(world, endPosition)) {
+        	continue;
             }
             
-            double d = 1D / Math.sqrt(Math.pow(sv.x - startOpposite.x, 2) + Math.pow(sv.z - startOpposite.z, 2)) / 2D;    
-            Vec3d vec = new Vec3d((sv.x - startOpposite.x) * d, 0, (sv.z - startOpposite.z) * d);
-            
-            double d1 = 1D / Math.sqrt(Math.pow(ev.x - endOpposite.x, 2) + Math.pow(ev.z - endOpposite.z, 2)) / 2D;    
-            Vec3d vec1 = new Vec3d((ev.x - endOpposite.x) * d, 0, (ev.z - endOpposite.z) * d);
-            
-            float sl = world.getLightBrightness(position);
-            float el = world.getLightBrightness(new BlockPos(ev));
-                
-                
-            float sa = start.getAlpha(partialTicks);
-            float ea = end.getAlpha(partialTicks);
-                                
-            double offset = (i + 1) * 0.00001D; //No z-fighting on my watch
-            
-            buffer.pos(sv.x + vec.x / 2D, sv.y + offset, sv.z + vec.z / 2D).tex(0, 0).color(sl, sl, sl, sa).endVertex();
-            buffer.pos(sv.x - vec.x / 2D, sv.y + offset, sv.z - vec.z / 2D).tex(0, 1).color(sl, sl, sl, sa).endVertex();
-            buffer.pos(ev.x - vec1.x / 2D, ev.y + offset, ev.z - vec1.z / 2D).tex(1, 1).color(el, el, el, ea).endVertex();
-            buffer.pos(ev.x + vec1.x / 2D, ev.y + offset, ev.z + vec1.z / 2D).tex(1, 0).color(el, el, el, ea).endVertex();
-                
-            //Flip quad to render upside down. Means when looking at tyre track from underneath, it still rendered. Needed because one set of tyres are upside down. //TODO: Fix that
-            buffer.pos(sv.x + vec.x / 2D, sv.y + offset, sv.z + vec.z / 2D).tex(0, 0).color(sl, sl, sl, sa).endVertex();
-            buffer.pos(ev.x + vec1.x / 2D, ev.y + offset, ev.z + vec1.z / 2D).tex(1, 0).color(el, el, el, ea).endVertex();
-            buffer.pos(ev.x - vec1.x / 2D, ev.y + offset, ev.z - vec1.z / 2D).tex(1, 1).color(el, el, el, ea).endVertex();
-            buffer.pos(sv.x - vec.x / 2D, sv.y + offset, sv.z - vec.z / 2D).tex(0, 1).color(sl, sl, sl, sa).endVertex();
+            final int n = i;
+            list.add(Pair.of(start.getWorldTime(), () -> {
+        	  double d = 1D / Math.sqrt(Math.pow(sv.x - startOpposite.x, 2) + Math.pow(sv.z - startOpposite.z, 2)) / 2D;    
+                  Vec3d vec = new Vec3d((sv.x - startOpposite.x) * d, 0, (sv.z - startOpposite.z) * d);
+                  
+                  double d1 = 1D / Math.sqrt(Math.pow(ev.x - endOpposite.x, 2) + Math.pow(ev.z - endOpposite.z, 2)) / 2D;    
+                  Vec3d vec1 = new Vec3d((ev.x - endOpposite.x) * d, 0, (ev.z - endOpposite.z) * d);
+                  
+                  float sl = world.getLightBrightness(position);
+                  float el = world.getLightBrightness(endPosition);
+                      
+                      
+                  float sa = start.getAlpha(partialTicks);
+                  float ea = end.getAlpha(partialTicks);
+                                      
+                  double offset = (n + 2) * 0.0001D; //No z-fighting on my watch //TODO: remove n
+                  
+                  buffer.pos(sv.x + vec.x / 2D, sv.y + offset, sv.z + vec.z / 2D).tex(0, 0).color(sl, sl, sl, sa).endVertex();
+                  buffer.pos(sv.x - vec.x / 2D, sv.y + offset, sv.z - vec.z / 2D).tex(0, 1).color(sl, sl, sl, sa).endVertex();
+                  buffer.pos(ev.x - vec1.x / 2D, ev.y + offset, ev.z - vec1.z / 2D).tex(1, 1).color(el, el, el, ea).endVertex();
+                  buffer.pos(ev.x + vec1.x / 2D, ev.y + offset, ev.z + vec1.z / 2D).tex(1, 0).color(el, el, el, ea).endVertex();
+                      
+                  //Flip quad to render upside down. Means when looking at tyre track from underneath, it still rendered. Needed because one set of tyres are upside down. //TODO: Fix that
+                  buffer.pos(sv.x + vec.x / 2D, sv.y + offset, sv.z + vec.z / 2D).tex(0, 0).color(sl, sl, sl, sa).endVertex();
+                  buffer.pos(ev.x + vec1.x / 2D, ev.y + offset, ev.z + vec1.z / 2D).tex(1, 0).color(el, el, el, ea).endVertex();
+                  buffer.pos(ev.x - vec1.x / 2D, ev.y + offset, ev.z - vec1.z / 2D).tex(1, 1).color(el, el, el, ea).endVertex();
+                  buffer.pos(sv.x - vec.x / 2D, sv.y + offset, sv.z - vec.z / 2D).tex(0, 1).color(sl, sl, sl, sa).endVertex();
+            }));
         }
+    }
+    
+    private static boolean isStateAccepted(World world, BlockPos position) {
+	BlockPos downPos = position.down();
+        IBlockState downState = world.getBlockState(downPos);
+        return !world.getBlockState(position).getMaterial().isLiquid() && downState.isSideSolid(world, downPos, EnumFacing.UP) && ALLOWED_MATERIALS.contains(downState.getMaterial());
     }
     
     @SubscribeEvent
@@ -155,7 +169,7 @@ public class TyretrackRenderer {
     public static void uploadList(CarEntity entity) {
 	if(entity.world.isRemote) {
 	    for(List<WheelParticleData> list : entity.wheelDataList) {
-		DEAD_CARS_LISTS.add(list);
+		DEAD_CARS_LISTS.add(0, list);
 	    }
 	}
     }
