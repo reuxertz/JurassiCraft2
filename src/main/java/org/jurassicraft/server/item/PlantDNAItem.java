@@ -60,7 +60,7 @@ public class PlantDNAItem extends Item {
         }
 
         Collections.sort(plants);
-        if(this.getCreativeTab().equals(tab))
+        if(this.isInCreativeTab(tab))
         for (Plant plant : plants) {
             if (plant.shouldRegister()) {
                 subtypes.add(new ItemStack(this, 1, ids.get(plant)));

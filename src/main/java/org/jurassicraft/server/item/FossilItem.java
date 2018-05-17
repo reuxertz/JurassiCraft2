@@ -83,7 +83,7 @@ public class FossilItem extends Item implements GrindableItem {
         Collections.sort(dinosaurs);
 
         List<Dinosaur> dinosaursForType = fossilDinosaurs.get(this.type);
-        if(this.getCreativeTab().equals(tab))
+        if(this.isInCreativeTab(tab))
         for (Dinosaur dinosaur : dinosaurs) {
             if (dinosaursForType.contains(dinosaur) && !(!this.fresh && dinosaur instanceof Hybrid)) {
                 subtypes.add(new ItemStack(this, 1, EntityHandler.getDinosaurId(dinosaur)));

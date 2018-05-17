@@ -58,7 +58,7 @@ public class PlantSoftTissueItem extends Item implements SequencableItem {
         }
 
         Collections.sort(plants);
-        if(this.getCreativeTab().equals(tab))
+        if(this.isInCreativeTab(tab))
         for (Plant plant : plants) {
             subtypes.add(new ItemStack(item, 1, ids.get(plant)));
         }

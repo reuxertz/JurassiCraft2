@@ -53,7 +53,7 @@ public class JournalItem extends Item {
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if(this.getCreativeTab().equals(tab))
+        if(this.isInCreativeTab(tab))
         for (JournalType type : JournalType.values()) {
             items.add(new ItemStack(this, 1, type.getMetadata()));
         }

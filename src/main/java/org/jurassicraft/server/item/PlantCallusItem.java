@@ -71,7 +71,7 @@ public class PlantCallusItem extends Item {
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
         List<Plant> plants = new LinkedList<>(PlantHandler.getPrehistoricPlantsAndTrees());
         Collections.sort(plants);
-        if(this.getCreativeTab().equals(tab))
+        if(this.isInCreativeTab(tab))
         for (Plant plant : plants) {
             if (plant.shouldRegister()) {
                 subItems.add(new ItemStack(this, 1, PlantHandler.getPlantId(plant)));
