@@ -1,7 +1,9 @@
 package org.jurassicraft.server.entity.ai;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.pathfinding.Path;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -10,6 +12,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import scala.collection.mutable.ArrayBuilder.ofShort;
+
 import org.jurassicraft.client.model.animation.EntityAnimation;
 import org.jurassicraft.server.entity.DinosaurEntity;
 
@@ -47,18 +51,18 @@ public class RaptorClimbTreeAI extends EntityAIBase {
 
     @Override
     public boolean shouldExecute() {
-        if (this.active || (this.entity.ticksExisted - this.lastActive) < CLIMB_INTERVAL) {
+        if (this.active || (this.entity.ticksExisted - this.lastActive) < 1) {
             return false;
         }
         BlockPos pos = new BlockPos(this.entity.posX, this.entity.getEntityBoundingBox().minY, this.entity.posZ);
         Random rand = this.entity.getRNG();
-        for (int i = 0; i < 2; ++i) {
-            BlockPos target = pos.add(rand.nextInt(7) - rand.nextInt(7), -5, rand.nextInt(7) - rand.nextInt(7));
+        for (int i = 0; i < 20; ++i) {
+            BlockPos target = pos.add(rand.nextInt(14) - 7, -5, rand.nextInt(14) - 7);
             for (int iteration = 0; iteration <= 15; iteration++) {
                 target = target.up();
                 IBlockState state = this.world.getBlockState(target);
                 IBlockState ground = this.world.getBlockState(target.down());
-                if (state.getBlock().isWood(this.world, target) && !ground.getBlock().isWood(this.world, target.down())) {
+                if (state.getMaterial() == Material.LEAVES || state.getMaterial() == Material.WOOD) {
                     for (EnumFacing direction : EnumFacing.HORIZONTALS) {
                         BlockPos offsetTarget = target.offset(direction);
                         if (!this.world.isSideSolid(offsetTarget, EnumFacing.DOWN)) {
@@ -119,22 +123,37 @@ public class RaptorClimbTreeAI extends EntityAIBase {
     public void updateTask() {
         if (this.reachedTarget) {
             BlockPos currentTrunk = new BlockPos(this.targetTrunk.getX(), this.entity.getEntityBoundingBox().minY, this.targetTrunk.getZ());
-            if (!this.gliding && this.world.isAirBlock(currentTrunk.up())) {
+            if (!this.gliding && (this.world.isAirBlock(currentTrunk) || this.world.isAirBlock(currentTrunk.up()))) {
                 Random random = this.entity.getRNG();
                 this.entity.addVelocity(random.nextFloat() - 0.5 * 0.2, random.nextFloat() * 0.2 + 0.1, random.nextFloat() - 0.5 * 0.2);
                 this.gliding = true;
                 this.active = false;
                 this.entity.setAnimation(EntityAnimation.GLIDING.get());
             } else {
-                this.entity.getMoveHelper().setMoveTo(this.targetX, this.entity.getEntityBoundingBox().minY, this.targetZ, this.movementSpeed);
-                this.entity.setAnimation(EntityAnimation.CLIMBING.get());
-                if (this.entity.collidedHorizontally || this.world.isSideSolid(currentTrunk, this.approachSide)) {
-                    this.entity.motionY = 0.2;
-                    this.entity.setPosition(this.targetX, this.entity.posY, this.targetZ);
-                    if (this.entity.getDistanceSqToCenter(currentTrunk) > 2.0) {
-                        this.active = false;
+        	BlockPos testTrunk = targetTrunk;
+        	boolean accepted = true;
+        	do {
+        	    if(world.isSideSolid(testTrunk.offset(approachSide).up(), EnumFacing.UP)) {
+        		accepted = false;
+        	    }
+        	    IBlockState state = world.getBlockState(testTrunk);
+        	    
+        	    if (state.getMaterial() != Material.LEAVES && state.getMaterial() != Material.WOOD) {
+        		accepted = false;
+        	    }
+        	    testTrunk = testTrunk.up();
+        	} while(world.isSideSolid(testTrunk, approachSide));
+        	if(accepted) {
+        	    this.entity.getMoveHelper().setMoveTo(this.targetX, this.entity.getEntityBoundingBox().minY, this.targetZ, this.movementSpeed);
+                    this.entity.setAnimation(EntityAnimation.CLIMBING.get());
+                    if (this.entity.collidedHorizontally || this.world.isSideSolid(currentTrunk, this.approachSide)) {
+                        this.entity.motionY = 0.3;
+                        this.entity.setPosition(this.targetX, this.entity.posY, this.targetZ);
+                        if (this.entity.getDistanceSqToCenter(currentTrunk) > 2.0) {
+                            this.active = false;
+                        }
                     }
-                }
+        	}
                 if (this.entity.collidedVertically && !this.gliding) {
                     BlockPos top = new BlockPos(this.entity.posX, this.entity.getEntityBoundingBox().maxY + 0.1, this.entity.posZ);
                     if (this.isBlockLeaves(top)) {
