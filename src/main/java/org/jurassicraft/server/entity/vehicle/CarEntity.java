@@ -331,7 +331,7 @@ public abstract class CarEntity extends Entity {
 	    opposite = wheel.getOppositeWheel().getCurrentWheelPos();
 	}
 	if(wheel.getCurrentWheelPos().distanceTo(wheel.getPrevCurrentWheelPos()) >= 0.05D) {
-	    this.wheelDataList[wheel.getID()].add(new WheelParticleData(pos, opposite).setShouldRender(shouldTyresRender()));   
+	    this.wheelDataList[wheel.getID()].add(new WheelParticleData(pos, opposite, world.getTotalWorldTime()).setShouldRender(shouldTyresRender()));   
 	}
     }
     

@@ -12,12 +12,13 @@ public class WheelParticleData {
     private final Vec3d position;
     private final Vec3d oppositePosition;
     private final int maxAge = 200;
-    
+    private final long worldTime;
     private boolean shouldRender = true;
     
-    public WheelParticleData(Vec3d position, Vec3d oppositePosition) {
+    public WheelParticleData(Vec3d position, Vec3d oppositePosition, long worldTime) {
         this.position = position;
         this.oppositePosition = oppositePosition;
+        this.worldTime = worldTime;
     }
     
     public WheelParticleData setShouldRender(boolean shouldRender) {
@@ -31,6 +32,10 @@ public class WheelParticleData {
     
     public Vec3d getOppositePosition() {
 	return oppositePosition;
+    }
+    
+    public long getWorldTime() {
+	return worldTime;
     }
     
     public void onUpdate(List<WheelParticleData> markedRemoved) {
