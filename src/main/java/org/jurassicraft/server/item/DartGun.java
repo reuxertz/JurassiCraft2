@@ -1,6 +1,11 @@
 package org.jurassicraft.server.item;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.jurassicraft.server.entity.TranquilizerDartEntity;
+
+import com.google.common.collect.Lists;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -13,6 +18,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
 public class DartGun extends Item {
@@ -26,23 +32,35 @@ public class DartGun extends Item {
             itemstack.shrink(1);
         }
 
-        worldIn.playSound((EntityPlayer)null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
-
+        SoundEvent event = null;
+        
         ItemStack dartItem = getDartItem(itemstack);
         if(dartItem.isEmpty()) {
-            setDartItem(itemstack, 
-        	    playerIn.inventoryContainer.inventorySlots.stream()
-        	    	.map(Slot::getStack)
-                	.filter(stack -> stack.getItem() instanceof Dart)
-                	.findFirst()
-                	.orElse(ItemStack.EMPTY));
+            List<Slot> list = Lists.newArrayList(playerIn.inventoryContainer.inventorySlots);
+            Collections.reverse(list);
+            if(setDartItem(itemstack, 
+        	    list.stream()
+        	    .map(Slot::getStack)
+        	    .filter(stack -> stack.getItem() instanceof Dart)
+        	    .findFirst()
+        	    .orElse(ItemStack.EMPTY))) {
+        	event = SoundEvents.ENTITY_ITEM_PICKUP;
+            } else {
+        	event = SoundEvents.BLOCK_COMPARATOR_CLICK;
+            }
         } else if (!worldIn.isRemote) {
             TranquilizerDartEntity dart = new TranquilizerDartEntity(worldIn, playerIn, dartItem);
             dart.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 2.5F, 0.5F);
             worldIn.spawnEntity(dart);
             dartItem.shrink(1);
             setDartItem(itemstack, dartItem);
+            event = SoundEvents.ENTITY_SNOWBALL_THROW;
         }
+        
+        if(event != null) {
+            worldIn.playSound((EntityPlayer)null, playerIn.posX, playerIn.posY, playerIn.posZ, event, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+        }
+
 
         playerIn.addStat(StatList.getObjectUseStats(this));
         return new ActionResult(EnumActionResult.SUCCESS, itemstack);
@@ -55,8 +73,10 @@ public class DartGun extends Item {
 	return stack;
     }
     
-    public static void setDartItem(ItemStack dartGun, ItemStack dartItem) {
+    public static boolean setDartItem(ItemStack dartGun, ItemStack dartItem) {
+	boolean hadItem = !dartItem.isEmpty();
 	ItemStack dartItem2 = dartItem.splitStack(MAX_CARRY_SIZE);
 	dartGun.getOrCreateSubCompound("dart_gun").setTag("itemstack", dartItem2.serializeNBT());
+	return hadItem;
     }
 }

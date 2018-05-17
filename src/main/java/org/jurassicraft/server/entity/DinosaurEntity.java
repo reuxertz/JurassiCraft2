@@ -95,6 +95,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.Path;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
@@ -147,6 +148,8 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
 
     private boolean deserializing;
 
+    private int ticksUntilDeath;
+    
     private int attackCooldown;
 
     @SideOnly(Side.CLIENT)
@@ -927,6 +930,14 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     @Override
     public void onUpdate() {
         super.onUpdate();
+        
+        if(this.ticksUntilDeath > 0) {
+            if(--this.ticksUntilDeath == 0) {
+        	this.playSound(this.getSoundForAnimation(EntityAnimation.DYING.get()), this.getSoundVolume(), this.getSoundPitch());
+                this.setHealth(this.getMaxHealth());
+                this.setCarcass(true);
+            }
+        }
 
         if (this.attackCooldown > 0) {
             this.attackCooldown--;
@@ -1415,7 +1426,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         }
 
         nbt.setInteger("TranquilizerTicks", tranquilizerTicks);
-        
+        nbt.setInteger("TicksUntilDeath", ticksUntilDeath);
         return nbt;
     }
 
@@ -1476,7 +1487,8 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         }
         
         tranquilizerTicks = nbt.getInteger("TranquilizerTicks");
-
+        ticksUntilDeath = nbt.getInteger("TicksUntilDeath");
+        
         this.updateAttributes();
         this.updateBounds();
 
@@ -1635,6 +1647,11 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     
     public void giveBirth() {
 	pregnantTime = 1;
+    }
+    
+    public void setDeathIn(int ticks) { // :(
+	this.ticksUntilDeath = ticks;
+	this.addPotionEffect(new PotionEffect(MobEffects.POISON, ticks));
     }
  
     @Override

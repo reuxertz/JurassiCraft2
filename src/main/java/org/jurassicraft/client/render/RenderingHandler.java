@@ -434,6 +434,10 @@ public enum RenderingHandler {
         
         registerItemRenderer(DART_GUN);
         registerItemRenderer(DART_TRANQUILIZER);
+        registerItemRenderer(DART_POISON_CYCASIN);
+        registerItemRenderer(DART_POISON_EXECUTIONER_CONCOCTION);
+        registerItemRenderer(DART_TIPPED_POTION);
+
     }
 
     public void preInit() {
