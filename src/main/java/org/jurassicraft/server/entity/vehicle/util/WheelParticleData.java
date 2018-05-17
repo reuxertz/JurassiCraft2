@@ -10,12 +10,14 @@ public class WheelParticleData {
     private int age;
     
     private final Vec3d position;
+    private final Vec3d oppositePosition;
     private final int maxAge = 200;
     
     private boolean shouldRender = true;
     
-    public WheelParticleData(Vec3d position) {
+    public WheelParticleData(Vec3d position, Vec3d oppositePosition) {
         this.position = position;
+        this.oppositePosition = oppositePosition;
     }
     
     public WheelParticleData setShouldRender(boolean shouldRender) {
@@ -25,6 +27,10 @@ public class WheelParticleData {
     
     public boolean shouldRender() {
 	return shouldRender;
+    }
+    
+    public Vec3d getOppositePosition() {
+	return oppositePosition;
     }
     
     public void onUpdate(List<WheelParticleData> markedRemoved) {

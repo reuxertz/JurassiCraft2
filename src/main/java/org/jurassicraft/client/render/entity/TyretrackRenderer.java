@@ -67,7 +67,9 @@ public class TyretrackRenderer {
             if(entity instanceof CarEntity) {
             CarEntity car = (CarEntity)entity;
                 GlStateManager.pushMatrix(); 
-                renderList(car.wheelDataList, buffer, event.getPartialTicks());
+                for(List<WheelParticleData> list : car.wheelDataList) {
+                    renderList(list, buffer, event.getPartialTicks());
+                }
                 GlStateManager.popMatrix();
             }
         }
@@ -85,18 +87,18 @@ public class TyretrackRenderer {
     @SideOnly(Side.CLIENT)
     private static void renderList(List<WheelParticleData> dataList, BufferBuilder buffer, float partialTicks) {
         World world = Minecraft.getMinecraft().world;
-	for(int i = 0; i < dataList.size() - 4; i++) {
+	for(int i = 0; i < dataList.size() - 1; i++) {
             WheelParticleData start = dataList.get(i);
             if(!start.shouldRender()) {
         	continue;
             }
-            WheelParticleData end = dataList.get(i + 4);
+            WheelParticleData end = dataList.get(i + 1);
                 
             Vec3d sv = start.getPosition();
             Vec3d ev = end.getPosition();
             
-            Vec3d startOpposite = dataList.get(i + ((i % 4) / 2 == 0 ? 2 : -2)).getPosition();
-            Vec3d endOpposite = dataList.get((i + 4) + (((i + 4) % 4) / 2 == 0 ? 2 : -2)).getPosition();
+            Vec3d startOpposite = start.getOppositePosition();
+            Vec3d endOpposite = end.getOppositePosition();
 
             
             BlockPos position = new BlockPos(sv);
@@ -119,7 +121,7 @@ public class TyretrackRenderer {
             float sa = start.getAlpha(partialTicks);
             float ea = end.getAlpha(partialTicks);
                                 
-            double offset = (i + 1) * 0.000002D; //No z-fighting on my watch
+            double offset = (i + 1) * 0.00001D; //No z-fighting on my watch
             
             buffer.pos(sv.x + vec.x / 2D, sv.y + offset, sv.z + vec.z / 2D).tex(0, 0).color(sl, sl, sl, sa).endVertex();
             buffer.pos(sv.x - vec.x / 2D, sv.y + offset, sv.z - vec.z / 2D).tex(0, 1).color(sl, sl, sl, sa).endVertex();
@@ -152,7 +154,9 @@ public class TyretrackRenderer {
     
     public static void uploadList(CarEntity entity) {
 	if(entity.world.isRemote) {
-	    DEAD_CARS_LISTS.add(entity.wheelDataList);
+	    for(List<WheelParticleData> list : entity.wheelDataList) {
+		DEAD_CARS_LISTS.add(list);
+	    }
 	}
     }
 }

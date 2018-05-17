@@ -1,5 +1,6 @@
 package org.jurassicraft.server.entity.vehicle;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -77,12 +78,12 @@ public abstract class CarEntity extends Entity {
     public final InterpValue leftValue = new InterpValue(INTERP_AMOUNT);
     public final InterpValue rightValue = new InterpValue(INTERP_AMOUNT);
 
-    public final CarWheel backLeftWheel = new CarWheel(wheeldata.bl); 
-    public final CarWheel backRightWheel = new CarWheel(wheeldata.br);
-    public final CarWheel frontLeftWheel = new CarWheel(wheeldata.fl);
-    public final CarWheel frontRightWheel = new CarWheel(wheeldata.fr);
+    public final CarWheel backLeftWheel = new CarWheel(0, wheeldata.bl); 
+    public final CarWheel backRightWheel = new CarWheel(1, wheeldata.br);
+    public final CarWheel frontLeftWheel = new CarWheel(2, wheeldata.fl);
+    public final CarWheel frontRightWheel = new CarWheel(3, wheeldata.fr);
 
-    public final List<WheelParticleData> wheelDataList = Lists.newArrayList(); //Entirely useless server-side. //TODO: stop adding to this on server-side.
+    public final List<WheelParticleData>[] wheelDataList = new List[4]; 
     
     public List<InterpValue> allInterps = Lists.newArrayList(backValue, frontValue, leftValue, rightValue);
     public List<CarWheel> allWheels = Lists.newArrayList(backLeftWheel, frontLeftWheel, backRightWheel, frontRightWheel);
@@ -103,6 +104,12 @@ public abstract class CarEntity extends Entity {
         if (world.isRemote) {
             this.startSound();
         }
+        for(int i = 0; i < 4; i++) {
+            this.wheelDataList[i] = Lists.newArrayList();
+        }
+        
+        backLeftWheel.setPair(backRightWheel);
+        frontLeftWheel.setPair(frontRightWheel);
 
     }
 
@@ -241,16 +248,20 @@ public abstract class CarEntity extends Entity {
         previousPosition = this.getPositionVector();
         prevWorldTime = world.getTotalWorldTime();
         
-        List<WheelParticleData> markedRemoved = Lists.newArrayList();
-        wheelDataList.forEach(wheel -> wheel.onUpdate(markedRemoved));
-        markedRemoved.forEach(wheelDataList::remove);
-        markedRemoved.clear();
+        for(int i = 0; i < 4; i++) {
+            List<WheelParticleData> markedRemoved = Lists.newArrayList();
+            wheelDataList[i].forEach(wheel -> wheel.onUpdate(markedRemoved));
+            markedRemoved.forEach(wheelDataList[i]::remove);
+        }
+        
         
         super.onEntityUpdate();
         
         if(this.getSpeed() == Speed.FAST) {
-            this.allWheels.forEach(wheel -> this.processWheel(wheel, true));
+            this.allWheels.forEach(wheel -> this.createWheelParticles(wheel, true));
         }
+        this.allWheels.forEach(this::createWheelParticles);
+
         this.allWheels.forEach(this::processWheel);
         
         Vector4d vec = wheeldata.carVector;
@@ -299,24 +310,40 @@ public abstract class CarEntity extends Entity {
 	}
     }
     
-    protected void processWheel(CarWheel wheel) {
-	this.processWheel(wheel, false);
+    protected void createWheelParticles(CarWheel wheel) {
+	this.createWheelParticles(wheel, false);
     }
     
-    protected void processWheel(CarWheel wheel, boolean runBetween) {
+    protected void createWheelParticles(CarWheel wheel, boolean runBetween) {
+	Vec3d pos;
+	Vec3d opposite;
+	if(runBetween) {
+	    Vec3d vec = wheel.getCurrentWheelPos();
+	    Vec3d oldVec = wheel.getCurrentWheelPos();
+	    
+	    Vec3d vec1 = wheel.getOppositeWheel().getCurrentWheelPos();
+	    Vec3d oldVec1 = wheel.getOppositeWheel().getCurrentWheelPos();
+	    
+	    pos =  new Vec3d((vec.x + oldVec.x) / 2D, (vec.y + oldVec.y) / 2D, (vec.z + oldVec.z) / 2D);
+	    opposite = new Vec3d((vec1.x + oldVec1.x) / 2D, (vec1.y + oldVec1.y) / 2D, (vec1.z + oldVec1.z) / 2D);
+	} else {
+	    pos = wheel.getCurrentWheelPos();
+	    opposite = wheel.getOppositeWheel().getCurrentWheelPos();
+	}
+	if(wheel.getCurrentWheelPos().distanceTo(wheel.getPrevCurrentWheelPos()) >= 0.05D) {
+	    this.wheelDataList[wheel.getID()].add(new WheelParticleData(pos, opposite).setShouldRender(shouldTyresRender()));   
+	}
+    }
+    
+    protected void processWheel(CarWheel wheel) {
 	float localYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw);
         double rad = Math.toRadians(localYaw);
 	Vector2d relPos = wheel.getRelativeWheelPosition();
 	double xRot = Math.sin(Math.toRadians(localYaw)) * relPos.y - Math.cos(Math.toRadians(localYaw)) * relPos.x; 
         double zRot = - Math.cos(Math.toRadians(localYaw)) * relPos.y - Math.sin(Math.toRadians(localYaw)) * relPos.x;
         Vec3d vec = new Vec3d(posX + xRot, this.posY, posZ + zRot);
-        if(runBetween) {
-            Vec3d oldVec = wheel.getCurrentWheelPos();
-            this.wheelDataList.add(new WheelParticleData(new Vec3d((vec.x + oldVec.x) / 2D, (vec.y + oldVec.y) / 2D, (vec.z + oldVec.z) / 2D)).setShouldRender(shouldTyresRender()));
-        } else {
-            wheel.setCurrentWheelPos(vec);
-            this.wheelDataList.add(new WheelParticleData(vec).setShouldRender(shouldTyresRender()));   
-        }
+        wheel.setCurrentWheelPos(vec);
+
     }
     
     protected boolean shouldTyresRender() {

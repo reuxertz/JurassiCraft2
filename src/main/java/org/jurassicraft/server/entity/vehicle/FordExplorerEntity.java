@@ -214,9 +214,11 @@ public class FordExplorerEntity extends CarEntity {
 	    rotationDelta *= 0.8f;
 	    allWheels.forEach(FordExplorerEntity.this::processWheel);
 	    
-	    List<WheelParticleData> markedRemoved = Lists.newArrayList();
-	    wheelDataList.forEach(wheel -> wheel.onUpdate(markedRemoved));
-	    markedRemoved.forEach(wheelDataList::remove);
+	    for(int i = 0; i < 4; i++) {
+		List<WheelParticleData> markedRemoved = Lists.newArrayList();
+		wheelDataList[i].forEach(wheel -> wheel.onUpdate(markedRemoved));
+		markedRemoved.forEach(wheelDataList[i]::remove);
+	    }
 	    //CAR STUFF END
 	    
 	    if (getRollingAmplitude() > 0) {
