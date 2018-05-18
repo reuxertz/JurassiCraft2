@@ -142,7 +142,7 @@ public class RaptorClimbTreeAI extends EntityAIBase {
                     }
                     
                     this.entity.setGlidingTo(pos);
-                    this.entity.world.setBlockState(new BlockPos(pos), Blocks.STONE.getDefaultState());
+//                    this.entity.world.setBlockState(new BlockPos(pos), Blocks.STONE.getDefaultState());
                     this.entity.addVelocity((pos.x - this.entity.posX) * 0.02, 0.3F, (pos.z - this.entity.posZ) * 0.02);
 
                     this.gliding = true;
