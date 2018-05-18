@@ -19,14 +19,14 @@ public class AdvancedSwimEntityAI extends EntityAIBase
     public AdvancedSwimEntityAI(DinosaurEntity entity)
     {
         this.entity = entity;
-        ((PathNavigateGround) entity.getNavigator()).setCanSwim(true);
+//        ((PathNavigateGround) entity.getNavigator()).setCanSwim(true);
         this.setMutexBits(0);
     }
 
     @Override
     public boolean shouldExecute()
     {
-        return this.entity.isSwimming() && this.entity.getNavigator().noPath() && (this.entity.getAttackTarget() == null || this.entity.getAttackTarget().isDead);
+        return this.entity.isSwimming() && this.entity.getNavigator().noPath() && (this.entity.getAttackTarget() == null || this.entity.getAttackTarget().isDead) && this.entity.canDinoSwim();
     }
 
     @Override
