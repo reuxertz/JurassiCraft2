@@ -289,7 +289,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
 
     @Override
     public EntityLookHelper getLookHelper() {
-        return super.getLookHelper();
+        return this.lookHelper;
     }
 
     private void initClient() {
