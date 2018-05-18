@@ -627,13 +627,6 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         }
     }
 
-    @Override
-    public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch,
-            int posRotationIncrements, boolean teleport) {
-	
-        super.setPositionAndRotationDirect(x, y, z, this.rotationYaw, pitch, posRotationIncrements, teleport);
-    }
-    
     public double interpolate(double baby, double adult) {
         int dinosaurAge = this.dinosaurAge;
         int maxAge = this.dinosaur.getMaximumAge();
