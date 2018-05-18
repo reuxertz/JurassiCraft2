@@ -1645,7 +1645,12 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     public ItemStack getPickedResult(RayTraceResult target) {
         return new ItemStack(ItemHandler.SPAWN_EGG, 1, EntityHandler.getDinosaurId(this.dinosaur));
     }
-
+	
+    @Override
+    protected float getWaterSlowDown() {
+        return 0.9F;
+    }
+	
     @Override
     public void moveRelative(float strafe, float up, float forward, float friction) {
         if(this.inWater() && !this.canDinoSwim()) {
