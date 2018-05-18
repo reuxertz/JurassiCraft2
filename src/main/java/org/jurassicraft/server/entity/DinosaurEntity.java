@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
@@ -19,36 +20,35 @@ import org.jurassicraft.server.block.entity.FeederBlockEntity;
 import org.jurassicraft.server.block.machine.FeederBlock;
 import org.jurassicraft.server.damage.DinosaurDamageSource;
 import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.ai.navigation.AdvancedSwimEntityAI;
 import org.jurassicraft.server.entity.ai.DinosaurAttackMeleeEntityAI;
 import org.jurassicraft.server.entity.ai.DinosaurWanderAvoidWater;
-import org.jurassicraft.server.entity.ai.core.DinosaurLookHelper;
 import org.jurassicraft.server.entity.ai.DinosaurWanderEntityAI;
 import org.jurassicraft.server.entity.ai.EscapeWireEntityAI;
-import org.jurassicraft.server.entity.ai.core.Family;
 import org.jurassicraft.server.entity.ai.FleeEntityAI;
-import org.jurassicraft.server.entity.ai.core.Herd;
 import org.jurassicraft.server.entity.ai.MateEntityAI;
 import org.jurassicraft.server.entity.ai.ProtectInfantEntityAI;
-import org.jurassicraft.server.entity.ai.core.Relationship;
 import org.jurassicraft.server.entity.ai.RespondToAttackEntityAI;
 import org.jurassicraft.server.entity.ai.SelectTargetEntityAI;
 import org.jurassicraft.server.entity.ai.SleepEntityAI;
-import org.jurassicraft.server.entity.ai.core.SmartBodyHelper;
 import org.jurassicraft.server.entity.ai.TargetCarcassEntityAI;
 import org.jurassicraft.server.entity.ai.TemptNonAdultEntityAI;
 import org.jurassicraft.server.entity.ai.animations.CallAnimationAI;
 import org.jurassicraft.server.entity.ai.animations.HeadCockAnimationAI;
 import org.jurassicraft.server.entity.ai.animations.LookAnimationAI;
 import org.jurassicraft.server.entity.ai.animations.RoarAnimationAI;
+import org.jurassicraft.server.entity.ai.core.DinosaurLookHelper;
+import org.jurassicraft.server.entity.ai.core.Family;
+import org.jurassicraft.server.entity.ai.core.Herd;
+import org.jurassicraft.server.entity.ai.core.Relationship;
+import org.jurassicraft.server.entity.ai.core.SmartBodyHelper;
 import org.jurassicraft.server.entity.ai.metabolism.DrinkEntityAI;
 import org.jurassicraft.server.entity.ai.metabolism.EatFoodItemEntityAI;
 import org.jurassicraft.server.entity.ai.metabolism.FeederEntityAI;
 import org.jurassicraft.server.entity.ai.metabolism.GrazeEntityAI;
+import org.jurassicraft.server.entity.ai.navigation.AdvancedSwimEntityAI;
 import org.jurassicraft.server.entity.ai.navigation.DinosaurJumpHelper;
 import org.jurassicraft.server.entity.ai.navigation.DinosaurMoveHelper;
 import org.jurassicraft.server.entity.ai.navigation.DinosaurPathNavigate;
-import org.jurassicraft.server.entity.ai.util.MovementType;
 import org.jurassicraft.server.entity.ai.util.OnionTraverser;
 import org.jurassicraft.server.entity.item.DinosaurEggEntity;
 import org.jurassicraft.server.food.FoodHelper;
@@ -82,7 +82,6 @@ import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.ai.EntityLookHelper;
-import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -687,7 +686,10 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         }
         
         if(!this.world.isRemote && this.dinosaur.getDiet().canEat(this, FoodType.MEAT) && this.getMetabolism().isHungry()) {
-            this.setAttackTarget(world.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().grow(10, 10, 10), this::canEatEntity).stream().findAny().get());
+            Optional<EntityLivingBase> optional = world.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().grow(10, 10, 10), this::canEatEntity).stream().findAny();
+            if(optional.isPresent()) {
+                this.setAttackTarget(optional.get());
+            }
         }
 
 
