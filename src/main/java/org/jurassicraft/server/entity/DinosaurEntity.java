@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
@@ -688,7 +689,10 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         }
         
         if(!this.world.isRemote && this.dinosaur.getDiet().canEat(this, FoodType.MEAT) && this.getMetabolism().isHungry()) {
-            this.setAttackTarget(world.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().grow(10, 10, 10), this::canEatEntity).stream().findAny().get());
+            Optional<EntityLivingBase> optional = world.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().grow(10, 10, 10), this::canEatEntity).stream().findAny();
+            if(optional.isPresent()) {
+                this.setAttackTarget(optional.get());
+            }
         }
         
         if (!this.isMale() && !this.world.isRemote) {
