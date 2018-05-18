@@ -1635,6 +1635,13 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     protected float getWaterSlowDown() {
         return 0.9F;
     }
+    
+    public void moveRelative(float strafe, float up, float friction) {
+	if(this.inWater() && !this.canDinoSwim()) {
+	    friction *= 20;//times by 5, but as friction is divided by 2 when in water do 5 * 2 instead
+	}
+	super.moveRelative(strafe, up, friction);
+    }
 
     @Override
     public void collideWithEntity(Entity entity) {
@@ -1775,6 +1782,10 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         return this.dimension == 0;
     }
 
+    public boolean shouldEscapeWaterFast() {
+	return true;
+    }
+    
     public BlockPos getClosestFeeder() {
         if (this.ticksExisted - this.feederSearchTick > 200) {
             this.feederSearchTick = this.ticksExisted;

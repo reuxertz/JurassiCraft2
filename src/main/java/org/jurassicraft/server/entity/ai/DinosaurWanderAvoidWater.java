@@ -15,18 +15,26 @@ public class DinosaurWanderAvoidWater extends DinosaurWanderEntityAI {
     }
     
     @Override
-    protected boolean innerShouldExecute() { 
-        return this.entity.canDinoSwim() && !this.entity.world.isMaterialInBB(this.entity.getEntityBoundingBox(), Material.WATER);
+    protected boolean innerShouldStopExcecuting() { 
+        return this.entity.canDinoSwim() || !this.entity.isInWater();
     }
     
     @Override
     protected boolean outterShouldExecute() {
-        return true;
+        return this.entity.shouldEscapeWaterFast();
     }
     
     @Override
     protected Vec3d getWanderPosition() {
-	Vec3d vec3d = RandomPositionGenerator.getLandPos(this.entity, 32, 7);
+	Vec3d vec3d = null;
+	for(int i = 0; i < 100; i++) {
+	    Vec3d vec = RandomPositionGenerator.getLandPos(this.entity, 32, 7);
+	    if(vec == null) {
+		continue;
+	    } else if(vec3d == null || this.entity.getPositionVector().distanceTo(vec) < this.entity.getPositionVector().distanceTo(vec3d)) {
+		vec3d = vec;
+	    }
+	}
         return vec3d == null ? super.getWanderPosition() : vec3d;
     }
 
