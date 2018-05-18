@@ -83,8 +83,8 @@ public class RaptorClimbTreeAI extends EntityAIBase {
                                 }
                             }
                             if (canTravel) {
-                                float offsetX = direction.getFrontOffsetX() * (this.entity.width + 0.25F);
-                                float offsetZ = direction.getFrontOffsetZ() * (this.entity.width + 0.25F);
+                                float offsetX = direction.getFrontOffsetX() * (this.entity.width + 0.25F) + 0.1F;
+                                float offsetZ = direction.getFrontOffsetZ() * (this.entity.width + 0.25F) + 0.1F;
                                 this.targetTrunk = target;
                                 this.targetX = target.getX() + 0.5F + offsetX;
                                 this.targetY = target.getY();
