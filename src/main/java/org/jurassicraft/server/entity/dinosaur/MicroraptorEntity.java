@@ -33,12 +33,13 @@ import org.jurassicraft.server.entity.ai.RaptorClimbTreeAI;
 import org.jurassicraft.server.entity.ai.RaptorLeapEntityAI;
 import org.jurassicraft.server.entity.ai.animations.BirdPreenAnimationAI;
 import org.jurassicraft.server.entity.ai.animations.TailDisplayAnimationAI;
+import org.jurassicraft.server.entity.ai.util.MathUtils;
 import org.jurassicraft.server.message.MicroraptorDismountMessage;
 
 public class MicroraptorEntity extends DinosaurEntity {
     private int flyTime;
     private int groundHeight;
-    private EntityLookHelper glideLookHelper = new GlideLookHelper(this);
+    private Vec3d glidingPos;
 
     public MicroraptorEntity(World world) {
         super(world);
@@ -72,10 +73,23 @@ public class MicroraptorEntity extends DinosaurEntity {
             }
         }
     }
+    
+    @Override
+    public void travel(float strafe, float vertical, float forward) {
+	float prevRot = this.rotationPitch;
+        if(this.getAnimation() == EntityAnimation.GLIDING.get() && glidingPos != null) {
+            this.rotationPitch = (float) -Math.toDegrees(Math.asin((this.glidingPos.y - this.posY) / glidingPos.distanceTo(this.getPositionVector())));
+        }
+        super.travel(strafe, vertical, forward);
+        this.rotationPitch = prevRot;
+    }
 
     @Override
     public void onLivingUpdate() {
+        
         super.onLivingUpdate();
+
+        
         if (this.world.isRemote) {
             this.updateClientControls();
         }
@@ -128,16 +142,14 @@ public class MicroraptorEntity extends DinosaurEntity {
 
     @Override
     public EntityLookHelper getLookHelper() {
-        if (this.getAnimation() == EntityAnimation.GLIDING.get()) {
-            return this.glideLookHelper;
-        }
         return super.getLookHelper();
     }
 
     @Override
     public Vec3d getLookVec() {
-        if (this.getAnimation() == EntityAnimation.GLIDING.get()) {
-            return this.getVectorForRotation(this.rotationPitch, this.rotationYaw);
+        if (this.getAnimation() == EntityAnimation.GLIDING.get() && glidingPos != null) {
+            double distance = glidingPos.distanceTo(this.getPositionVector());
+            return new Vec3d((glidingPos.x - this.posX) / distance, (this.glidingPos.y - this.posY) / distance, (this.glidingPos.z - this.posZ) / distance);
         }
         return super.getLookVec();
     }
@@ -248,21 +260,25 @@ public class MicroraptorEntity extends DinosaurEntity {
             }
         }
     }
-
-    public class GlideLookHelper extends EntityLookHelper {
-        private MicroraptorEntity entity;
-
-        public GlideLookHelper(MicroraptorEntity entity) {
-            super(entity);
-            this.entity = entity;
-        }
-
-        @Override
-        public void onUpdateLook() {
-            float radians = (float) Math.toRadians(this.entity.groundHeight);
-            float cos = MathHelper.cos(radians);
-            float sin = MathHelper.sin(radians + 0.8F);
-            this.entity.rotationPitch = (float) Math.toDegrees(((cos + 1) * sin - 1.6F) * 3.5F);
-        }
+    
+    @Override
+    public boolean canDinoSwim() {
+        return false;
+    }
+    
+    @Override
+    public boolean shouldEscapeWaterFast() {
+	int radiusXZ = 4;
+	
+	for(BlockPos pos : BlockPos.getAllInBox(MathHelper.floor(this.posX - radiusXZ), MathHelper.floor(this.posY), MathHelper.floor(this.posZ - radiusXZ), MathHelper.ceil(this.posX + radiusXZ), MathHelper.ceil(this.posY), MathHelper.ceil(this.posZ + radiusXZ))) {
+	    if(!world.getBlockState(pos).getMaterial().isLiquid()) {
+		return false;
+	    }
+	}
+        return false;
+    }
+    
+    public void setGlidingTo(Vec3d glidingPos) {
+	this.glidingPos = glidingPos;
     }
 }

@@ -32,7 +32,7 @@ public class DinosaurWanderEntityAI extends EntityAIBase
     {
         if (!this.mustUpdate)
         {
-            if (innerShouldExecute())
+            if (innerShouldStopExcecuting())
             {
                 return false;
             }
@@ -61,7 +61,7 @@ public class DinosaurWanderEntityAI extends EntityAIBase
         return false;
     }
     
-    protected boolean innerShouldExecute() { //TODO: merge into one
+    protected boolean innerShouldStopExcecuting() { //TODO: merge into one
 	return this.entity.getRNG().nextInt(this.executionChance) != 0;
     }
     
@@ -76,7 +76,7 @@ public class DinosaurWanderEntityAI extends EntityAIBase
     @Override
     public boolean shouldContinueExecuting()
     {
-        return !this.entity.getNavigator().noPath() & !this.entity.isInWater();
+        return !this.entity.getNavigator().noPath() && !this.entity.isInWater();
     }
 
     @Override

@@ -1,5 +1,11 @@
 package org.jurassicraft.server.entity.ai;
 
+import java.util.Random;
+
+import org.jurassicraft.client.model.animation.EntityAnimation;
+import org.jurassicraft.server.dinosaur.MicroraptorDinosaur;
+import org.jurassicraft.server.entity.dinosaur.MicroraptorEntity;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -12,26 +18,20 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import scala.collection.mutable.ArrayBuilder.ofShort;
-
-import org.jurassicraft.client.model.animation.EntityAnimation;
-import org.jurassicraft.server.entity.DinosaurEntity;
-
-import java.util.Random;
 
 public class RaptorClimbTreeAI extends EntityAIBase {
     private static final int CLIMB_INTERVAL = 1200;
     private static final int MAX_TREE_HEIGHT = 14;
 
-    private final DinosaurEntity entity;
+    private final MicroraptorEntity entity;
     private final double movementSpeed;
     private final World world;
-
+    
     private Path path;
 
     private BlockPos targetTrunk;
     private EnumFacing approachSide;
-
+    
     private double targetX;
     private double targetY;
     private double targetZ;
@@ -42,7 +42,7 @@ public class RaptorClimbTreeAI extends EntityAIBase {
 
     private int lastActive = -CLIMB_INTERVAL;
 
-    public RaptorClimbTreeAI(DinosaurEntity entity, double speed) {
+    public RaptorClimbTreeAI(MicroraptorEntity entity, double speed) {
         this.entity = entity;
         this.movementSpeed = speed;
         this.world = entity.world;
@@ -120,15 +120,36 @@ public class RaptorClimbTreeAI extends EntityAIBase {
     }
 
     @Override
-    public void updateTask() {
+    public void updateTask() {	
         if (this.reachedTarget) {
             BlockPos currentTrunk = new BlockPos(this.targetTrunk.getX(), this.entity.getEntityBoundingBox().minY, this.targetTrunk.getZ());
-            if (!this.gliding && (this.world.isAirBlock(currentTrunk) || this.world.isAirBlock(currentTrunk.up()))) {
+            if (!this.gliding && this.world.isAirBlock(currentTrunk)) {
                 Random random = this.entity.getRNG();
-                this.entity.addVelocity(random.nextFloat() - 0.5 * 0.2, random.nextFloat() * 0.2 + 0.1, random.nextFloat() - 0.5 * 0.2);
-                this.gliding = true;
+                if(random.nextFloat() < 0.3f) {
+                    this.entity.addVelocity(-this.approachSide.getFrontOffsetX() * 0.1F, 0.1F, -this.approachSide.getFrontOffsetZ() * 0.1F);
+
+                } else {
+                    Vec3d pos = null;
+                    for(int i = 0; i < 100; i++) {
+                        double x = (random.nextFloat() - 0.5) * 35;
+                        double z = (random.nextFloat() - 0.5) * 35;
+                        Vec3d vec = this.entity.getPositionVector().addVector(x, 0, z);
+                        vec = vec.addVector(0.5D, -vec.y + world.getTopSolidOrLiquidBlock(new BlockPos(vec)).getY() + 0.5D, 0.5D);
+                        if(this.entity.getPositionVector().distanceTo(vec) > 10D && !this.entity.world.getBlockState(new BlockPos(vec)).getMaterial().isLiquid()) {
+                    	pos = vec;
+                    	break;
+                        }                    
+                    }
+                    
+                    this.entity.setGlidingTo(pos);
+                    this.entity.world.setBlockState(new BlockPos(pos), Blocks.STONE.getDefaultState());
+                    this.entity.addVelocity((pos.x - this.entity.posX) * 0.02, 0.3F, (pos.z - this.entity.posZ) * 0.02);
+
+                    this.gliding = true;
+                    this.entity.setAnimation(EntityAnimation.GLIDING.get());
+                }
                 this.active = false;
-                this.entity.setAnimation(EntityAnimation.GLIDING.get());
+
             } else {
         	BlockPos testTrunk = targetTrunk;
         	boolean accepted = true;

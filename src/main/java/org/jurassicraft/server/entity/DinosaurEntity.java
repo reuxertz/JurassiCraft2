@@ -24,6 +24,7 @@ import org.jurassicraft.server.entity.ai.AssistOwnerEntityAI;
 import org.jurassicraft.server.entity.ai.DefendOwnerEntityAI;
 import org.jurassicraft.server.entity.ai.DinosaurAttackMeleeEntityAI;
 import org.jurassicraft.server.entity.ai.DinosaurLookHelper;
+import org.jurassicraft.server.entity.ai.DinosaurWanderAvoidWater;
 import org.jurassicraft.server.entity.ai.DinosaurWanderEntityAI;
 import org.jurassicraft.server.entity.ai.EscapeWireEntityAI;
 import org.jurassicraft.server.entity.ai.Family;
@@ -221,7 +222,9 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         }
 
         this.tasks.addTask(0, new EscapeWireEntityAI(this));
-
+        
+        this.tasks.addTask(0, new DinosaurWanderAvoidWater(this, 0.8D));
+        
         if (this.dinosaur.getDiet().canEat(this, FoodType.PLANT)) {
             this.tasks.addTask(1, new GrazeEntityAI(this));
         }
@@ -229,6 +232,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         if (this.dinosaur.getDiet().canEat(this, FoodType.MEAT)) {
             this.tasks.addTask(1, new TargetCarcassEntityAI(this));
         }
+        
 
         this.tasks.addTask(1, new RespondToAttackEntityAI(this));
 
@@ -271,6 +275,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
 
         this.ignoreFrustumCheck = true;
         this.setSkeleton(false);
+                
     }
 
     protected LegSolver createLegSolver() {
@@ -284,7 +289,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
 
     @Override
     public EntityLookHelper getLookHelper() {
-        return this.lookHelper;
+        return super.getLookHelper();
     }
 
     private void initClient() {
@@ -622,6 +627,13 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         }
     }
 
+    @Override
+    public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch,
+            int posRotationIncrements, boolean teleport) {
+	
+        super.setPositionAndRotationDirect(x, y, z, this.rotationYaw, pitch, posRotationIncrements, teleport);
+    }
+    
     public double interpolate(double baby, double adult) {
         int dinosaurAge = this.dinosaurAge;
         int maxAge = this.dinosaur.getMaximumAge();
@@ -1334,6 +1346,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         return this.isMale;
     }
 
+    
     public void setMale(boolean male) {
         this.isMale = male;
     }
@@ -1641,8 +1654,11 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     }
 
     @Override
-    protected float getWaterSlowDown() {
-        return 0.9F;
+    public void moveRelative(float strafe, float up, float forward, float friction) {
+        if(this.inWater() && !this.canDinoSwim()) {
+            friction *= 20;//times by 5, but as friction is divided by 2 when in water do 5 * 2 instead
+        }
+        super.moveRelative(strafe, up, forward, friction);
     }
     
     public void giveBirth() {
@@ -1787,6 +1803,10 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     @Override
     public boolean getCanSpawnHere() {
         return this.dimension == 0;
+    }
+    
+    public boolean shouldEscapeWaterFast() {
+	return true;
     }
 
     public BlockPos getClosestFeeder() {
