@@ -670,6 +670,14 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     public void setGenetics(String genetics) {
         this.genetics = genetics;
     }
+    
+    public boolean isEntityFreindly(Entity entity) {
+	return this.getClass().isAssignableFrom(entity.getClass());
+    }
+    
+    public boolean canEatEntity(Entity entity) {
+	return !isEntityFreindly(entity);
+    }
 
     @Override
     public void onLivingUpdate() {
@@ -678,7 +686,11 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         if (this.breedCooldown > 0) {
             this.breedCooldown--;
         }
-
+        
+        if(!this.world.isRemote && this.dinosaur.getDiet().canEat(this, FoodType.MEAT) && this.getMetabolism().isHungry()) {
+            this.setAttackTarget(world.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().grow(10, 10, 10), this::canEatEntity).stream().findAny().get());
+        }
+        
         if (!this.isMale() && !this.world.isRemote) {
             if (this.pregnantTime > 0) {
                 if (--this.pregnantTime <= 0) {
