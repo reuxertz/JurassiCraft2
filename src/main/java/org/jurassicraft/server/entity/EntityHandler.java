@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.api.Hybrid;
+import org.jurassicraft.server.dinosaur.AlligatorGarDinosaur;
 import org.jurassicraft.server.dinosaur.BrachiosaurusDinosaur;
 import org.jurassicraft.server.dinosaur.CoelacanthDinosaur;
 import org.jurassicraft.server.dinosaur.DilophosaurusDinosaur;
@@ -48,6 +49,7 @@ public class EntityHandler {
     public static final Dinosaur TRICERATOPS = new TriceratopsDinosaur();
     public static final Dinosaur TYRANNOSAURUS = new TyrannosaurusDinosaur();
     public static final Dinosaur VELOCIRAPTOR = new VelociraptorDinosaur();
+    public static final Dinosaur ALLIGATORGAR = new AlligatorGarDinosaur();
     //public static final Dinosaur STEGOSAURUS = new StegosaurusDinosaur();
 
     private static final Map<Integer, Dinosaur> DINOSAURS = new HashMap<>();
@@ -80,6 +82,7 @@ public class EntityHandler {
         registerDinosaur(13, PARASAUROLOPHUS);
         registerDinosaur(19, TRICERATOPS);
         registerDinosaur(20, TYRANNOSAURUS);
+        registerDinosaur(22, ALLIGATORGAR);
         //registerDinosaur(21, STEGOSAURUS);
 
         dinosaurProgress = ProgressManager.push("Loading dinosaurs", DINOSAURS.size());
