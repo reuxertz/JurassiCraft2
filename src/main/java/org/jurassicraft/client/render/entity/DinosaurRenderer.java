@@ -1,5 +1,13 @@
 package org.jurassicraft.client.render.entity;
 
+import java.awt.Color;
+import java.util.Random;
+
+import org.jurassicraft.client.render.entity.dinosaur.DinosaurRenderInfo;
+import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.GrowthStage;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLiving;
@@ -10,12 +18,6 @@ import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jurassicraft.client.render.entity.dinosaur.DinosaurRenderInfo;
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.DinosaurEntity;
-import org.jurassicraft.server.entity.GrowthStage;
-
-import java.util.Random;
 
 @SideOnly(Side.CLIENT)
 public class DinosaurRenderer extends RenderLiving<DinosaurEntity> {
@@ -44,7 +46,7 @@ public class DinosaurRenderer extends RenderLiving<DinosaurEntity> {
         GlStateManager.translate(this.dinosaur.getOffsetX() * scale, this.dinosaur.getOffsetY() * scale, this.dinosaur.getOffsetZ() * scale);
 
         String name = entity.getCustomNameTag();
-
+        
         switch (name) {
             case "iLexiconn":
             case "JTGhawk137":
@@ -59,6 +61,9 @@ public class DinosaurRenderer extends RenderLiving<DinosaurEntity> {
             case "jglrxavpok":
                 GlStateManager.scale(scale, scale, scale * -1);
                 break;
+            case "Wyn":
+        	Color color = new Color(Color.HSBtoRGB((entity.world.getTotalWorldTime() % 1000) / 100f, 1f, 0.5f));
+                GlStateManager.color(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f);
             default:
                 GlStateManager.scale(scale, scale, scale);
                 break;
