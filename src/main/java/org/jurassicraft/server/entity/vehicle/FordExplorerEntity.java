@@ -1,11 +1,14 @@
 package org.jurassicraft.server.entity.vehicle;
 
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Nullable;
 import javax.vecmath.Vector4d;
 
+import net.minecraft.block.BlockRail;
+import net.minecraft.client.Minecraft;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.block.TourRailBlock;
 import org.jurassicraft.server.entity.ai.util.InterpValue;
@@ -57,8 +60,8 @@ public class FordExplorerEntity extends CarEntity {
     /* =================================== CAR START ===========================================*/
     
     public FordExplorerEntity(World world) {
-        super(world);
-    }
+    	super(world);
+	}
 
     @Override
     public void dropItems() {
@@ -81,48 +84,69 @@ public class FordExplorerEntity extends CarEntity {
     
     @Override
     public void onUpdate() {
-	if(!world.isRemote) {
-	    BlockPos rail = getPosition();
-	    boolean isRails = world.getBlockState(rail).getBlock() instanceof TourRailBlock;
-	    if(!isRails) {
-		rail = rail.down();
-		isRails = world.getBlockState(rail).getBlock() instanceof TourRailBlock;
-	    }
-			
-	    if(onRails != isRails) {
-		if(isRails) {
-		    minecart.isInReverse = lastDirBackwards;
-		}
-		onRails = isRails;
-		JurassiCraft.NETWORK_WRAPPER.sendToDimension(new FordExplorerChangeStateMessage(this), world.provider.getDimension());
-	    }
-	    this.railTracks = isRails ? rail : INACTIVE;
-	    if(!this.railTracks.equals(prevRailTracks)) {
-		JurassiCraft.NETWORK_WRAPPER.sendToDimension(new FordExplorerUpdatePositionStateMessage(this, rail), world.provider.getDimension());
-	    }
-	    this.prevRailTracks = railTracks;
-	    
-	}
-        super.onUpdate();
+		if(!world.isRemote) {
+			BlockPos rail = getPosition();
+			boolean isRails = world.getBlockState(rail).getBlock() instanceof TourRailBlock;
+			if(!isRails) {
+				rail = rail.down();
+				isRails = world.getBlockState(rail).getBlock() instanceof TourRailBlock;
+			}
 
-        noClip = onRails;
-        this.getPassengers().forEach(entity -> entity.noClip = onRails);
-        if(onRails && this.getControllingPassenger() != null) {
-            minecart.onUpdate();
-            Vector4d vec = wheeldata.carVector;
-            this.backValue.setTarget(this.calculateWheelHeight(vec.y, false));
-            this.frontValue.setTarget(this.calculateWheelHeight(vec.w, false));
-            this.leftValue.setTarget(posY);
-            this.rightValue.setTarget(posY);
-        }   	        
-        prevOnRails = onRails;
+			boolean railUnder = checkForAscending(rail.down());
+			if(!isRails && (railUnder || checkForAscending(rail.down(2)))) {
+				rail = rail.down(railUnder ? 1 : 2);
+				isRails = world.getBlockState(rail).getBlock() instanceof TourRailBlock;
+			}
+
+			if(onRails != isRails) {
+				if(isRails) {
+					minecart.isInReverse = lastDirBackwards;
+				}
+				onRails = isRails;
+				JurassiCraft.NETWORK_WRAPPER.sendToDimension(new FordExplorerChangeStateMessage(this), world.provider.getDimension());
+			}
+			this.railTracks = isRails ? rail : INACTIVE;
+			if(!this.railTracks.equals(prevRailTracks)) {
+				JurassiCraft.NETWORK_WRAPPER.sendToDimension(new FordExplorerUpdatePositionStateMessage(this, rail), world.provider.getDimension());
+			}
+			this.prevRailTracks = railTracks;
+
+		}
+		if(onRails) {
+			this.setSize(0.98F, 0.7F);
+			this.stepHeight = 0F;
+		} else {
+			this.setSize(3.0F, 2.5F);
+			this.stepHeight = 1.5F;
+		}
+		this.setPosition(this.posX, this.posY, this.posZ); //Make sure that the car is in the right position. Can cause issues when changing size of car
+		super.onUpdate();
+		if(onRails) {
+			minecart.onUpdate();
+			Vector4d vec = wheeldata.carVector;
+			this.backValue.setTarget(this.calculateWheelHeight(vec.y, false));
+			this.frontValue.setTarget(this.calculateWheelHeight(vec.w, false));
+			this.leftValue.setTarget(posY);
+			this.rightValue.setTarget(posY);
+		}
+		prevOnRails = onRails;
     }
-    
-    @Override
-    protected void doBlockCollisions() {
-	if(!onRails) {
-	    super.doBlockCollisions();
+
+    private boolean checkForAscending(BlockPos pos) {
+    	return world.getBlockState(pos).getBlock() instanceof TourRailBlock && Arrays.asList(BlockRailBase.EnumRailDirection.ASCENDING_EAST, BlockRailBase.EnumRailDirection.ASCENDING_NORTH, BlockRailBase.EnumRailDirection.ASCENDING_SOUTH, BlockRailBase.EnumRailDirection.ASCENDING_WEST).contains(world.getBlockState(pos).getValue(BlockRail.SHAPE));
 	}
+
+	@Nullable
+	@Override
+	public AxisAlignedBB getCollisionBoundingBox() {
+		return super.getCollisionBoundingBox();
+	}
+
+	@Override
+    protected void doBlockCollisions() {
+		if(!onRails) {
+			super.doBlockCollisions();
+		}
     }
     
     @Override
@@ -235,20 +259,20 @@ public class FordExplorerEntity extends CarEntity {
 		int i = getMaxInPortalTime();	
 		if (inPortal) {
 		    if (minecraftserver.getAllowNether()) {
-			if (!isRiding() && portalCounter++ >= i) {
-			    portalCounter = i;
-			    timeUntilPortal = getPortalCooldown();
-			    int j;
-			    if (world.provider.getDimensionType().getId() == -1) {
-				j = 0;
-			    } else {
-				j = -1;
-			    }
-			    
-			    changeDimension(j);
-			}
+				if (!isRiding() && portalCounter++ >= i) {
+					portalCounter = i;
+					timeUntilPortal = getPortalCooldown();
+					int j;
+					if (world.provider.getDimensionType().getId() == -1) {
+					j = 0;
+					} else {
+					j = -1;
+					}
 
-			inPortal = false;
+					changeDimension(j);
+				}
+
+				inPortal = false;
 		    }
 		} else {
 		    if (portalCounter > 0) {
@@ -267,9 +291,9 @@ public class FordExplorerEntity extends CarEntity {
 		world.profiler.endSection();
 	    }
 	    
-	    prevPosX = posX;
-	    prevPosY = posY;
-	    prevPosZ = posZ;
+//	    prevPosX = posX;
+//	    prevPosY = posY;
+//	    prevPosZ = posZ;
 
 	    if (!hasNoGravity()) {
 		motionY -= 0.03999999910593033D;
@@ -291,7 +315,7 @@ public class FordExplorerEntity extends CarEntity {
 //		}
 //	    }
 	    if(railTracks.equals(INACTIVE)) { //Shouldn't occur
-		return;
+			return;
 	    }
 	    IBlockState iblockstate = world.getBlockState(railTracks);
 	    moveAlongTrack(railTracks, iblockstate);
@@ -311,29 +335,29 @@ public class FordExplorerEntity extends CarEntity {
 	protected void moveAlongTrack(BlockPos pos, IBlockState state) {
 	    fallDistance = 0.0F;
 	    Vec3d vec3d = getPos();
+	    
 	    posY = (double)pos.getY();
 
 	    double slopeAdjustment = 0.0078125D;
 	    BlockRailBase.EnumRailDirection blockrailbase$enumraildirection = state.getValue(((TourRailBlock)state.getBlock()).getShapeProperty());
 	    
 	    switch (blockrailbase$enumraildirection) {
-	    case ASCENDING_EAST:
-		motionX -= slopeAdjustment;
-		++posY;
-		break;
-	    case ASCENDING_WEST:
-		motionX += slopeAdjustment;
-		++posY;
-		break;
-	    case ASCENDING_NORTH:
-		motionZ += slopeAdjustment;
-		++posY;
-		break;
-	    case ASCENDING_SOUTH:
-		motionZ -= slopeAdjustment;
-		++posY;
+			case ASCENDING_EAST:
+				motionX -= slopeAdjustment;
+				++posY;
+				break;
+			case ASCENDING_WEST:
+				motionX += slopeAdjustment;
+				++posY;
+				break;
+			case ASCENDING_NORTH:
+				motionZ += slopeAdjustment;
+				++posY;
+				break;
+			case ASCENDING_SOUTH:
+				motionZ -= slopeAdjustment;
+				++posY;
 	    }
-	    
 	    int[][] aint = MATRIX[blockrailbase$enumraildirection.getMetadata()];
 	    double d1 = (double)(aint[1][0] - aint[0][0]);
 	    double d2 = (double)(aint[1][2] - aint[0][2]);
@@ -341,34 +365,35 @@ public class FordExplorerEntity extends CarEntity {
 	    double d4 = motionX * d1 + motionZ * d2;
 	    
 	    if (d4 < 0.0D) {
-		d1 = -d1;
-		d2 = -d2;
+			d1 = -d1;
+			d2 = -d2;
 	    }
 
 	    double d5 = Math.sqrt(motionX * motionX + motionZ * motionZ);
 	    
 	    if (d5 > 2.0D) {
-		d5 = 2.0D;
+			d5 = 2.0D;
 	    }
 	    double d = 1;
 	    if(forward()) {
-		if(!prevKeyDown && isInReverse) {
-		    d = -1;
-		}
-		isInReverse = false;
-		prevKeyDown = true;
+			if(!prevKeyDown && isInReverse) {
+				d = -1;
+			}
+			isInReverse = false;
+			prevKeyDown = true;
 	    } else if(backward()) {
-		if(!prevKeyDown && !isInReverse) {
-		    d = -1;
-		}
-		isInReverse = true;
-		prevKeyDown = true;
+			if(!prevKeyDown && !isInReverse) {
+				d = -1;
+			}
+			isInReverse = true;
+			prevKeyDown = true;
 	    } else {
-		prevKeyDown = false;
+			prevKeyDown = false;
 	    }
 	    if(!world.isRemote) {
 		d5 *= d;
 	    }
+	    
 	    
 	    motionX = d5 * d1 / d3;
 	    motionZ = d5 * d2 / d3;
@@ -378,41 +403,39 @@ public class FordExplorerEntity extends CarEntity {
 	    
 	    if(world.isRemote) 
 	    {
-		Vec3d vec = getPositionVector();
-		Vec3d dirVec = new Vec3d(-d1, 0, d2).add(vec);
-		target = MathUtils.cosineFromPoints(vec.addVector(0, 0, 1), dirVec, vec);
-		if(dirVec.x < vec.x) {
-		    target = -target;
-		}
-		if(isInReverse) {
-		    target += 180F;
-		}
-		
-		do {
-		    d22 = Math.abs(rotationYawInterp.getCurrent() - target);
-		    double d23 = Math.abs(rotationYawInterp.getCurrent() - (target + 360f));
-		    double d24 = Math.abs(rotationYawInterp.getCurrent() - (target - 360f));
-			    
-		    if(d23 < d22) {
-			target += 360f;
-		    } else if(d24 < d22) {
-			target -= 360f;
-		    }
-		} while(d22 > 180);
-		
-		target = Math.round(target * 100D) / 100D;
-		
-		if(!prevOnRails) {
-		    rotationYawInterp.reset(target);
-		} else if(d != -1) {
-		    rotationYawInterp.setTarget(target);
-		}
+			Vec3d vec = getPositionVector();
+			Vec3d dirVec = new Vec3d(-d1, 0, d2).add(vec);
+			target = MathUtils.cosineFromPoints(vec.addVector(0, 0, 1), dirVec, vec);
+			if(dirVec.x < vec.x) {
+				target = -target;
+			}
+			if(isInReverse) {
+				target += 180F;
+			}
+
+			do {
+				d22 = Math.abs(rotationYawInterp.getCurrent() - target);
+				double d23 = Math.abs(rotationYawInterp.getCurrent() - (target + 360f));
+				double d24 = Math.abs(rotationYawInterp.getCurrent() - (target - 360f));
+
+				if(d23 < d22) {
+				target += 360f;
+				} else if(d24 < d22) {
+				target -= 360f;
+				}
+			} while(d22 > 180);
+
+			target = Math.round(target * 100D) / 100D;
+
+			if(!prevOnRails) {
+					rotationYawInterp.reset(target);
+			} else if(d != -1) {
+				rotationYawInterp.setTarget(target);
+			}
 	    }
 	    	    
 	    setRotation((float) rotationYawInterp.getCurrent(), rotationPitch);
-	    
-	    Entity entity = getPassengers().isEmpty() ? null : (Entity)getPassengers().get(0);
-	    
+
 	    double d18 = (double)pos.getX() + 0.5D + (double)aint[0][0] * 0.5D;
 	    double d19 = (double)pos.getZ() + 0.5D + (double)aint[0][2] * 0.5D;
 	    double d20 = (double)pos.getX() + 0.5D + (double)aint[1][0] * 0.5D;
@@ -439,42 +462,41 @@ public class FordExplorerEntity extends CarEntity {
 	    moveMinecartOnRail(pos);
 	    
 	    if (aint[0][1] != 0 && MathHelper.floor(posX) - pos.getX() == aint[0][0] && MathHelper.floor(posZ) - pos.getZ() == aint[0][2]) {
-		setPosition(posX, posY + (double)aint[0][1], posZ);
+//			setPosition(posX, posY + (double)aint[0][1], posZ);
 	    } else if (aint[1][1] != 0 && MathHelper.floor(posX) - pos.getX() == aint[1][0] && MathHelper.floor(posZ) - pos.getZ() == aint[1][2])  {
-		setPosition(posX, posY + (double)aint[1][1], posZ);
+//			setPosition(posX, posY + (double)aint[1][1], posZ);
 	    }
 	    
 	    double drag = isBeingRidden() ? 0.9D : 0.75D;
 	    
 	    motionX *= drag;
-	    motionY *= 0.0D;
 	    motionZ *= drag;
 	    
 	    Vec3d vec3d1 = getPos();
 	    
 	    if (vec3d1 != null && vec3d != null) {
-		double d14 = (vec3d.y - vec3d1.y) * 0.05D;
-		d5 = Math.sqrt(motionX * motionX + motionZ * motionZ);
-		
-		if (d5 > 0.0D) {
-		    motionX = motionX / d5 * (d5 + d14);
-		    motionZ = motionZ / d5 * (d5 + d14);
-		}
-		
-		setPosition(posX, vec3d1.y, posZ);
+			double d14 = (vec3d.y - vec3d1.y) * 0.05D;
+			d5 = Math.sqrt(motionX * motionX + motionZ * motionZ);
+
+			if (d5 > 0.0D) {
+				motionX = motionX / d5 * (d5 + d14);
+				motionZ = motionZ / d5 * (d5 + d14);
+			}
+
+			setPosition(posX, vec3d1.y, posZ);
 	    }
 
 	    int j = MathHelper.floor(posX);
 	    int i = MathHelper.floor(posZ);
 	    	    
 	    if (j != pos.getX() || i != pos.getZ()) {
-		d5 = Math.sqrt(motionX * motionX + motionZ * motionZ);
-		motionX = d5 * (double)(j - pos.getX());
-		motionZ = d5 * (double)(i - pos.getZ());
+			d5 = Math.sqrt(motionX * motionX + motionZ * motionZ);
+			motionX = d5 * (double)(j - pos.getX());
+			motionZ = d5 * (double)(i - pos.getZ());
 	    }
 	    double d15 = Math.sqrt(motionX * motionX + motionZ * motionZ);
 	    if(d15 == 0) {
-		d15 = 1;
+			d15 = 1;
 	    }
 	    double d16 = 0.06D;
             motionX += motionX / d15 * d16;
@@ -482,69 +504,67 @@ public class FordExplorerEntity extends CarEntity {
 	}
 	
 	public Vec3d getPos() {
+	    double x = posX;
+	    double y = posY;
+	    double z = posZ;
 	    
-	    double x = railTracks.getX();
-	    double y = railTracks.getY();
-	    double z = railTracks.getZ();
-	    
-	    IBlockState iblockstate = world.getBlockState(new BlockPos(x, y, z));
+	    IBlockState iblockstate = world.getBlockState(new BlockPos(railTracks));
 	    
 	    if (iblockstate.getBlock() instanceof TourRailBlock)
 	    {
-		BlockRailBase.EnumRailDirection blockrailbase$enumraildirection = iblockstate.getValue(((TourRailBlock) iblockstate.getBlock()).getShapeProperty());
-		int[][] aint = MATRIX[blockrailbase$enumraildirection.getMetadata()];
-		double d0 = (double)x + 0.5D + (double)aint[0][0] * 0.5D;
-		double d1 = (double)y + 0.0625D + (double)aint[0][1] * 0.5D;
-		double d2 = (double)z + 0.5D + (double)aint[0][2] * 0.5D;
-		double d3 = (double)x + 0.5D + (double)aint[1][0] * 0.5D;
-		double d4 = (double)y + 0.0625D + (double)aint[1][1] * 0.5D;
-		double d5 = (double)z + 0.5D + (double)aint[1][2] * 0.5D;
-		double d6 = d3 - d0;
-		double d7 = (d4 - d1) * 2.0D;
-		double d8 = d5 - d2;
-		double d9;
-		
-		if (d6 == 0.0D) {
-		    d9 = z - (double)z;
-		} else if (d8 == 0.0D) {
-		    d9 = x - (double)x;
-		} else {
-		    double d10 = x - d0;
-		    double d11 = z - d2;
-		    d9 = (d10 * d6 + d11 * d8) * 2.0D;
-		}
+			BlockRailBase.EnumRailDirection blockrailbase$enumraildirection = iblockstate.getValue(((TourRailBlock) iblockstate.getBlock()).getShapeProperty());
+			int[][] aint = MATRIX[blockrailbase$enumraildirection.getMetadata()];
+			double d0 = (double)x + 0.5D + (double)aint[0][0] * 0.5D;
+			double d1 = (double)y + 0.0625D + (double)aint[0][1] * 0.5D;
+			double d2 = (double)z + 0.5D + (double)aint[0][2] * 0.5D;
+			double d3 = (double)x + 0.5D + (double)aint[1][0] * 0.5D;
+			double d4 = (double)y + 0.0625D + (double)aint[1][1] * 0.5D;
+			double d5 = (double)z + 0.5D + (double)aint[1][2] * 0.5D;
+			double d6 = d3 - d0;
+			double d7 = (d4 - d1) * 2.0D;
+			double d8 = d5 - d2;
+			double d9;
 
-		x = d0 + d6 * d9;
-		y = d1 + d7 * d9;
-		z = d2 + d8 * d9;
-		
-		if (d7 < 0.0D) {
-		    ++y;
-		}
+			if (d6 == 0.0D) {
+				d9 = z - (double)z;
+			} else if (d8 == 0.0D) {
+				d9 = x - (double)x;
+			} else {
+				double d10 = x - d0;
+				double d11 = z - d2;
+				d9 = (d10 * d6 + d11 * d8) * 2.0D;
+			}
 
-		if (d7 > 0.0D) {
-		    y += 0.5D;
-		}
+			x = d0 + d6 * d9;
+			y = d1 + d7 * d9;
+			z = d2 + d8 * d9;
 
-		return new Vec3d(x, y, z);
-	    }
-	    else {
-		return null;
+			if (d7 < 0.0D) {
+				++y;
+			}
+
+			if (d7 > 0.0D) {
+				y += 0.5D;
+			}
+
+			return new Vec3d(x, y, z);
+	    } else {
+			return null;
 	    }
 	}
 	
 	public void moveMinecartOnRail(BlockPos pos) {
 	    double mX = motionX;
 	    double mZ = motionZ;
-	    if(mX == 0 && mZ == 0 && getControllingPassenger() != null) { //Should only happen when re-logging. //TODO: make a more elegant solution
-		mX = getLook(1f).x;
-		mZ = getLook(1f).z;
+	    if(mX == 0 && mZ == 0) { //Should only happen when re-logging. //TODO: make a more elegant solution // && getControllingPassenger() != null
+			mX = getLook(1f).x;
+			mZ = getLook(1f).z;
 	    }
 
 	    double max = this.getMaxSpeed();
 	    mX = MathHelper.clamp(mX, -max, max);
 	    mZ = MathHelper.clamp(mZ, -max, max);
-	    FordExplorerEntity.this.move(MoverType.SELF, mX, 0.0D, mZ);
+	    FordExplorerEntity.this.move(MoverType.SELF, mX, 0D, mZ);
 	}
 	
 	protected double getMaxSpeed() {
