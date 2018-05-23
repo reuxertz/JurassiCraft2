@@ -184,52 +184,50 @@ public abstract  class MachineBaseBlockEntity extends TileEntityLockable impleme
             boolean flag = this.isProcessing(process);
             boolean dirty = false;
 
-            if (!this.world.isRemote) {
-                boolean hasInput = false;
+            boolean hasInput = false;
 
-                for (int input : this.getInputs(process)) {
-                    if (!slots.get(input).isEmpty()) {
-                        hasInput = true;
-                        break;
-                    }
+            for (int input : this.getInputs(process)) {
+                if (!slots.get(input).isEmpty()) {
+                    hasInput = true;
+                    break;
                 }
+            }
 
-                if (hasInput && this.canProcess(process)) {
-                    this.processTime[process]++;
+            if (hasInput && this.canProcess(process)) {
+                this.processTime[process]++;
 
-                    if (this.processTime[process] >= this.totalProcessTime[process]) {
-                        this.processTime[process] = 0;
-                        int total = 0;
-                        for (int input : this.getInputs()) {
-                            ItemStack stack = slots.get(input);
-                            if (!stack.isEmpty()) {
-                                total = this.getStackProcessTime(stack);
-                                break;
-                            }
+                if (this.processTime[process] >= this.totalProcessTime[process]) {
+                    this.processTime[process] = 0;
+                    int total = 0;
+                    for (int input : this.getInputs()) {
+                        ItemStack stack = slots.get(input);
+                        if (!stack.isEmpty()) {
+                            total = this.getStackProcessTime(stack);
+                            break;
                         }
-                        this.totalProcessTime[process] = total;
-                        this.processItem(process);
-                        this.onSlotUpdate();
                     }
-
-                    dirty = true;
-                } else if (this.isProcessing(process)) {
-                    if (this.shouldResetProgress()) {
-                        this.processTime[process] = 0;
-                    } else if (this.processTime[process] > 0) {
-                        this.processTime[process]--;
-                    }
-
-                    dirty = true;
+                    this.totalProcessTime[process] = total;
+                    this.processItem(process);
+                    this.onSlotUpdate();
                 }
 
-                if (flag != this.isProcessing(process)) {
-                    dirty = true;
+                dirty = true;
+            } else if (this.isProcessing(process)) {
+                if (this.shouldResetProgress()) {
+                    this.processTime[process] = 0;
+                } else if (this.processTime[process] > 0) {
+                    this.processTime[process]--;
                 }
 
-                if (dirty) {
-                    this.markDirty();
-                }
+                dirty = true;
+            }
+
+            if (flag != this.isProcessing(process)) {
+                dirty = true;
+            }
+
+            if (dirty && !this.world.isRemote) {
+                this.markDirty();
             }
         }
     }
@@ -312,7 +310,6 @@ public abstract  class MachineBaseBlockEntity extends TileEntityLockable impleme
     @Override
     public int getField(int id) {
         int processCount = this.getProcessCount();
-
         if (id < processCount) {
             return this.processTime[id];
         } else if (id < processCount * 2) {
