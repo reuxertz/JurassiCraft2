@@ -16,7 +16,7 @@ public class BugCrateBlockEntity extends MachineBaseBlockEntity {
     private static final int[] INPUTS = new int[] { 0, 1, 2, 3, 4, 5 };
     private static final int[] OUTPUTS = new int[] { 6, 7, 8 };
 
-    private NonNullList<ItemStack> slots = NonNullList.<ItemStack>withSize(9, ItemStack.EMPTY);
+    private NonNullList<ItemStack> slots = NonNullList.withSize(9, ItemStack.EMPTY);
 
     @Override
     protected int getProcess(int slot) {
@@ -144,9 +144,9 @@ public class BugCrateBlockEntity extends MachineBaseBlockEntity {
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
         NonNullList<ItemStack> slots = this.getSlots();
-        boolean stacksEqual = stack != null && stack.isItemEqual(slots.get(index)) && ItemStack.areItemStackTagsEqual(stack, slots.get(index));
+        boolean stacksEqual = !stack.isEmpty()&& stack.isItemEqual(slots.get(index)) && ItemStack.areItemStackTagsEqual(stack, slots.get(index));
         slots.set(index, stack);
-        if (stack != null && stack.getCount() > this.getInventoryStackLimit()) {
+        if (!stack.isEmpty() && stack.getCount() > this.getInventoryStackLimit()) {
             stack.setCount(this.getInventoryStackLimit());
         }
         if (!stacksEqual) {
@@ -172,9 +172,5 @@ public class BugCrateBlockEntity extends MachineBaseBlockEntity {
 	@Override
 	public boolean isEmpty() {
 		return false;
-	}
-
-	@Override
-	protected void setSlots(NonNullList[] slots) {
 	}
 }

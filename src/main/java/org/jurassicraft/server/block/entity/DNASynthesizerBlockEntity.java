@@ -16,7 +16,7 @@ public class DNASynthesizerBlockEntity extends MachineBaseBlockEntity {
     private static final int[] INPUTS = new int[] { 0, 1, 2 };
     private static final int[] OUTPUTS = new int[] { 3, 4, 5, 6 };
 
-    private NonNullList<ItemStack> slots = NonNullList.<ItemStack>withSize(7, ItemStack.EMPTY);
+    private NonNullList<ItemStack> slots = NonNullList.withSize(7, ItemStack.EMPTY);
 
     @Override
     protected int getProcess(int slot) {
@@ -31,7 +31,7 @@ public class DNASynthesizerBlockEntity extends MachineBaseBlockEntity {
 
         SynthesizableItem synthesizableItem = SynthesizableItem.getSynthesizableItem(storage);
 
-        if (synthesizableItem != null && synthesizableItem.isSynthesizable(storage) && testTube != null && testTube.getItem() == ItemHandler.EMPTY_TEST_TUBE && baseMaterial != null && baseMaterial.getItem() == ItemHandler.DNA_NUCLEOTIDES && (storage.getTagCompound() != null && storage.getTagCompound().hasKey("DNAQuality"))) {
+        if (synthesizableItem != null && synthesizableItem.isSynthesizable(storage) && !testTube.isEmpty() && testTube.getItem() == ItemHandler.EMPTY_TEST_TUBE && !baseMaterial.isEmpty() && baseMaterial.getItem() == ItemHandler.DNA_NUCLEOTIDES && (storage.getTagCompound() != null && storage.getTagCompound().hasKey("DNAQuality"))) {
             ItemStack output = synthesizableItem.getSynthesizedItem(storage, new Random(0));
 
             return output != null && this.hasOutputSlot(output);
@@ -114,9 +114,5 @@ public class DNASynthesizerBlockEntity extends MachineBaseBlockEntity {
 	@Override
 	public boolean isEmpty() {
 		return false;
-	}
-
-	@Override
-	protected void setSlots(NonNullList[] slots) {
 	}
 }

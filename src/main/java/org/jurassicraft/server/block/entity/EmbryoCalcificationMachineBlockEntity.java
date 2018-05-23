@@ -18,7 +18,7 @@ public class EmbryoCalcificationMachineBlockEntity extends MachineBaseBlockEntit
     private static final int[] INPUTS = new int[] { 0, 1 };
     private static final int[] OUTPUTS = new int[] { 2 };
 
-    private NonNullList<ItemStack> slots = NonNullList.<ItemStack>withSize(3, ItemStack.EMPTY);
+    private NonNullList<ItemStack> slots = NonNullList.withSize(3, ItemStack.EMPTY);
 
     @Override
     protected int getProcess(int slot) {
@@ -30,7 +30,7 @@ public class EmbryoCalcificationMachineBlockEntity extends MachineBaseBlockEntit
         ItemStack input = this.slots.get(0);
         ItemStack egg = this.slots.get(1);
 
-        if (input != null && input.getItem() instanceof SyringeItem && egg != null && egg.getItem() == Items.EGG) {
+        if (!input.isEmpty() && input.getItem() instanceof SyringeItem && !egg.isEmpty() && egg.getItem() == Items.EGG) {
             Dinosaur dino = EntityHandler.getDinosaurById(input.getItemDamage());
 
             if (!dino.isMammal()) {
@@ -120,9 +120,5 @@ public class EmbryoCalcificationMachineBlockEntity extends MachineBaseBlockEntit
 	@Override
 	public boolean isEmpty() {
 		return false;
-	}
-
-	@Override
-	protected void setSlots(NonNullList[] slots) {
 	}
 }

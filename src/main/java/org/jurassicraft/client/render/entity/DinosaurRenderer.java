@@ -62,7 +62,7 @@ public class DinosaurRenderer extends RenderLiving<DinosaurEntity> {
                 break;
             case "Wyn":
                 int color = Color.HSBtoRGB((entity.world.getTotalWorldTime() % 1000) / 100f, 1f, 0.5f);
-                GlStateManager.color(((color >> 0) & 0xFF) / 255f, ((color >> 8) & 0xFF) / 255f, ((color >> 16) & 0xFF) / 255f);
+                GlStateManager.color((color & 0xFF) / 255f, ((color >> 8) & 0xFF) / 255f, ((color >> 16) & 0xFF) / 255f);
             default:
                 GlStateManager.scale(scale, scale, scale);
                 break;

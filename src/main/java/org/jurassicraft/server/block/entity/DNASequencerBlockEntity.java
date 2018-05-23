@@ -20,7 +20,7 @@ public class DNASequencerBlockEntity extends MachineBaseBlockEntity {
 
     private static final int[] OUTPUTS = new int[] { 6, 7, 8 };
 
-    private NonNullList<ItemStack> slots = NonNullList.<ItemStack>withSize(9, ItemStack.EMPTY);
+    private NonNullList<ItemStack> slots = NonNullList.withSize(9, ItemStack.EMPTY);
 
     @Override
     protected int getProcess(int slot) {
@@ -37,8 +37,8 @@ public class DNASequencerBlockEntity extends MachineBaseBlockEntity {
         SequencableItem sequencableItem = SequencableItem.getSequencableItem(input);
 
         if (sequencableItem != null && sequencableItem.isSequencable(input)) {
-            if (storage != null && storage.getItem() == ItemHandler.STORAGE_DISC) {
-                if (this.slots.get(process + 6) == null) {
+            if (!storage.isEmpty() && storage.getItem() == ItemHandler.STORAGE_DISC) {
+                if (this.slots.get(process + 6).isEmpty()) {
                     return true;
                 }
             }
@@ -127,7 +127,4 @@ public class DNASequencerBlockEntity extends MachineBaseBlockEntity {
 		return false;
 	}
 
-	@Override
-	protected void setSlots(NonNullList[] slots) {
-	}
 }

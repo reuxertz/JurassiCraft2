@@ -22,10 +22,10 @@ import java.util.List;
 import java.util.Random;
 
 public class DNAExtractorBlockEntity extends MachineBaseBlockEntity {
-    private static final int[] INPUTS = new int[] { 0, 1 };
-    private static final int[] OUTPUTS = new int[] { 2, 3, 4, 5 };
+    private static final int[] INPUTS = new int[]{0, 1};
+    private static final int[] OUTPUTS = new int[]{2, 3, 4, 5};
 
-    private NonNullList<ItemStack> slots = NonNullList.<ItemStack>withSize(6, ItemStack.EMPTY);
+    private NonNullList<ItemStack> slots = NonNullList.withSize(6, ItemStack.EMPTY);
 
     @Override
     protected int getProcess(int slot) {
@@ -36,15 +36,13 @@ public class DNAExtractorBlockEntity extends MachineBaseBlockEntity {
     protected boolean canProcess(int process) {
         ItemStack extraction = this.slots.get(0);
         ItemStack storage = this.slots.get(1);
-
-        if (storage != null && storage.getItem() == ItemHandler.STORAGE_DISC && extraction != null && (extraction.getItem() == ItemHandler.AMBER || extraction.getItem() == ItemHandler.SEA_LAMPREY || extraction.getItem() == ItemHandler.DINOSAUR_MEAT) && (storage.getTagCompound() == null || !storage.getTagCompound().hasKey("Genetics"))) {
+        if (!storage.isEmpty() && storage.getItem() == ItemHandler.STORAGE_DISC && !extraction.isEmpty() && (extraction.getItem() == ItemHandler.AMBER || extraction.getItem() == ItemHandler.SEA_LAMPREY || extraction.getItem() == ItemHandler.DINOSAUR_MEAT) && (storage.getTagCompound() == null || !storage.getTagCompound().hasKey("Genetics"))) {
             for (int i = 2; i < 6; i++) {
-                if (this.slots.get(i) == null) {
+                if (this.slots.get(i).isEmpty()) {
                     return true;
                 }
             }
         }
-
         return false;
     }
 
@@ -54,7 +52,7 @@ public class DNAExtractorBlockEntity extends MachineBaseBlockEntity {
             Random rand = this.world.rand;
             ItemStack input = this.slots.get(0);
 
-            ItemStack disc = null;
+            ItemStack disc = ItemStack.EMPTY;
 
             Item item = input.getItem();
 
@@ -168,12 +166,8 @@ public class DNAExtractorBlockEntity extends MachineBaseBlockEntity {
         return this.hasCustomName() ? this.customName : "container.dna_extractor";
     }
 
-	@Override
-	public boolean isEmpty() {
-		return false;
-	}
-
-	@Override
-	protected void setSlots(NonNullList[] slots) {
-	}
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
 }
