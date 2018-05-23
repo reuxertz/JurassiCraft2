@@ -139,6 +139,7 @@ public class SelectDinoGui extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        this.drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
 
         int signsPerPage = this.columnsPerPage * this.rowsPerPage;
