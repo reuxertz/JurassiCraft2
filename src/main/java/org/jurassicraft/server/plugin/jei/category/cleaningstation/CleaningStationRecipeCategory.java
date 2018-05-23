@@ -1,7 +1,10 @@
-package org.jurassicraft.server.plugin.jei.category;
+package org.jurassicraft.server.plugin.jei.category.cleaningstation;
 
 import java.util.List;
 
+import mezz.jei.api.recipe.IRecipeCategory;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.JurassiCraft;
 
 import mezz.jei.api.IGuiHelper;
@@ -20,7 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 
-public class CleaningStationRecipeCategory extends BlankRecipeCategory<IRecipeWrapper> {
+public class CleaningStationRecipeCategory implements IRecipeCategory<CleaningStationRecipeWrapper> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JurassiCraft.MODID, "textures/gui/cleaning_station.png");
 
     private final IDrawable background;
@@ -63,14 +66,14 @@ public class CleaningStationRecipeCategory extends BlankRecipeCategory<IRecipeWr
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper, IIngredients ingredients) {
+    public void setRecipe(IRecipeLayout recipeLayout, CleaningStationRecipeWrapper recipeWrapper, IIngredients ingredients) {
         IGuiItemStackGroup stackGroup = recipeLayout.getItemStacks();
         List<List<ItemStack>> inputs = ingredients.getInputs(ItemStack.class);
         List<List<ItemStack>> outputs = ingredients.getOutputs(ItemStack.class);
-        stackGroup.init(0, true, 9, 36);
-        stackGroup.set(0, new ItemStack(Items.WATER_BUCKET));
-        stackGroup.init(1, true, 9, 0);
-        stackGroup.set(1, inputs.get(0));
+        stackGroup.init(0, true, 9, 0);
+        stackGroup.set(0, inputs.get(0));
+        stackGroup.init(1, true, 9, 36);
+        stackGroup.set(1, new ItemStack(Items.WATER_BUCKET));
         for (int row = 0; row < 2; row++) {
             for (int column = 0; column < 3; column++) {
                 int index = column + row * 2;

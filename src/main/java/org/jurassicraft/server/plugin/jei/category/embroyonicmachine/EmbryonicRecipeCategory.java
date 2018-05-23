@@ -1,8 +1,4 @@
-package org.jurassicraft.server.plugin.jei.category;
-
-import java.util.List;
-
-import org.jurassicraft.JurassiCraft;
+package org.jurassicraft.server.plugin.jei.category.embroyonicmachine;
 
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
@@ -12,23 +8,28 @@ import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeCategory;
+import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.item.ItemHandler;
 
-public class FossilGrinderRecipeCategory extends BlankRecipeCategory<IRecipeWrapper> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(JurassiCraft.MODID, "textures/gui/fossil_grinder.png");
+import java.util.List;
+
+public class EmbryonicRecipeCategory implements IRecipeCategory<EmbryonicRecipeWrapper> {
+    private static final ResourceLocation TEXTURE = new ResourceLocation(JurassiCraft.MODID, "textures/gui/embryonic_machine.png");
 
     private final IDrawable background;
     private final String title;
 
     private final IDrawableAnimated arrow;
 
-    public FossilGrinderRecipeCategory(IGuiHelper guiHelper) {
-        this.background = guiHelper.createDrawable(TEXTURE, 18, 21, 147, 43);
-        this.title = I18n.translateToLocal("tile.fossil_grinder.name");
+    public EmbryonicRecipeCategory(IGuiHelper guiHelper) {
+        this.background = guiHelper.createDrawable(TEXTURE, 23, 12, 131, 54);
+        this.title = I18n.translateToLocal("tile.embryonic_machine.name");
 
         IDrawableStatic arrowDrawable = guiHelper.createDrawable(TEXTURE, 176, 14, 24, 16);
         this.arrow = guiHelper.createAnimatedDrawable(arrowDrawable, 200, IDrawableAnimated.StartDirection.LEFT, false);
@@ -36,12 +37,12 @@ public class FossilGrinderRecipeCategory extends BlankRecipeCategory<IRecipeWrap
 
     @Override
     public void drawExtras(Minecraft minecraft) {
-        this.arrow.draw(minecraft, 61, 14);
+        this.arrow.draw(minecraft, 56, 23);
     }
 
     @Override
     public String getUid() {
-        return "jurassicraft.fossil_grinder";
+        return "jurassicraft.embryonic_machine";
     }
 
     @Override
@@ -55,28 +56,22 @@ public class FossilGrinderRecipeCategory extends BlankRecipeCategory<IRecipeWrap
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper, IIngredients ingredients) {
+    public void setRecipe(IRecipeLayout recipeLayout, EmbryonicRecipeWrapper recipeWrapper, IIngredients ingredients) {
         IGuiItemStackGroup stackGroup = recipeLayout.getItemStacks();
         List<List<ItemStack>> inputs = ingredients.getInputs(ItemStack.class);
         List<List<ItemStack>> outputs = ingredients.getOutputs(ItemStack.class);
-        for (int row = 0; row < 2; row++) {
-            for (int column = 0; column < 3; column++) {
-                int index = column + row * 2;
-                int outputIndex = index + 6;
-                stackGroup.init(index, true, 4 + column * 18, 4 + row * 18);
-                stackGroup.init(outputIndex, false, 89 + column * 18, 4 + row * 18);
-                if (index < inputs.size()) {
-                    stackGroup.set(index, inputs.get(index));
-                }
-                if (index < outputs.size()) {
-                    stackGroup.set(outputIndex, outputs.get(index));
-                }
-            }
-        }
+        stackGroup.init(0, true, 0, 36);
+        stackGroup.set(0, inputs.get(0));
+        stackGroup.init(1, true, 26, 36);
+        stackGroup.set(1, inputs.get(1));
+        stackGroup.init(2, true, 26, 0);
+        stackGroup.set(2, new ItemStack(ItemHandler.EMPTY_SYRINGE));
+        stackGroup.init(3, false, 95, 13);
+        stackGroup.set(3, outputs.get(0));
     }
 
 	@Override
 	public String getModName() {
-	    return JurassiCraft.NAME;
+		return JurassiCraft.NAME;
 	}
 }

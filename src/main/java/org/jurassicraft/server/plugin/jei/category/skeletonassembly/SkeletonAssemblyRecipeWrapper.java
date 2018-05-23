@@ -1,4 +1,4 @@
-package org.jurassicraft.server.plugin.jei.category;
+package org.jurassicraft.server.plugin.jei.category.skeletonassembly;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,7 +9,6 @@ import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.item.DisplayBlockItem;
 import org.jurassicraft.server.item.FossilItem;
 import org.jurassicraft.server.item.ItemHandler;
-import org.jurassicraft.server.plugin.jei.category.ingredient.SkeletonInput;
 
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;

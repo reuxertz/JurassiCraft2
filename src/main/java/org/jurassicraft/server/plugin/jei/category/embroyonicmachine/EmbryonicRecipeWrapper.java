@@ -1,15 +1,8 @@
-package org.jurassicraft.server.plugin.jei.category;
+package org.jurassicraft.server.plugin.jei.category.embroyonicmachine;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
-
-import org.jurassicraft.server.entity.EntityHandler;
-import org.jurassicraft.server.genetics.DinoDNA;
-import org.jurassicraft.server.genetics.GeneticsHelper;
-import org.jurassicraft.server.item.ItemHandler;
-import org.jurassicraft.server.plugin.jei.category.ingredient.CalcificationInput;
 
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -17,10 +10,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class CalcificationRecipeWrapper implements IRecipeWrapper {
-    private final CalcificationInput input;
+public class EmbryonicRecipeWrapper implements IRecipeWrapper {
+    private final EmbryoInput input;
 
-    public CalcificationRecipeWrapper(CalcificationInput input) {
+    public EmbryonicRecipeWrapper(EmbryoInput input) {
         this.input = input;
     }
 
@@ -28,22 +21,20 @@ public class CalcificationRecipeWrapper implements IRecipeWrapper {
     public void getIngredients(IIngredients ingredients) {
         List<ItemStack> inputs = new ArrayList<>();
 
-        int metadata = EntityHandler.getDinosaurId(this.input.dinosaur);
-        NBTTagCompound tag = new NBTTagCompound();
-        DinoDNA dna = new DinoDNA(this.input.dinosaur, 100, GeneticsHelper.randomGenetics(new Random()));
-        dna.writeToNBT(tag);
+        int metadata = this.input.getMetadata();
+        NBTTagCompound tag = this.input.getTag();
 
-        ItemStack inputStack = new ItemStack(ItemHandler.SYRINGE, 1, metadata);
+        ItemStack inputStack = new ItemStack(this.input.getInputItem(), 1, metadata);
         inputStack.setTagCompound(tag);
 
         inputs.add(inputStack);
+        inputs.add(new ItemStack(this.input.getPetriDishItem()));
         ingredients.setInputs(ItemStack.class, inputs);
 
-        ItemStack outputStack = new ItemStack(ItemHandler.EGG, 1, metadata);
+        ItemStack outputStack = new ItemStack(this.input.getOutputItem(), 1, metadata);
         outputStack.setTagCompound(tag);
         ingredients.setOutput(ItemStack.class, outputStack);
     }
-
 
     @Override
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {

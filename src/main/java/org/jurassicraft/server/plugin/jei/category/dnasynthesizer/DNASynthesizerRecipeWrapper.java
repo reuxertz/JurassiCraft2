@@ -1,11 +1,10 @@
-package org.jurassicraft.server.plugin.jei.category;
+package org.jurassicraft.server.plugin.jei.category.dnasynthesizer;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.jurassicraft.server.item.ItemHandler;
-import org.jurassicraft.server.plugin.jei.category.ingredient.SynthesizerInput;
 
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;

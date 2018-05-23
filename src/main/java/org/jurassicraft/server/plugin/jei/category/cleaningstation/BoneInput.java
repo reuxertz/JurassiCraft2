@@ -1,4 +1,4 @@
-package org.jurassicraft.server.plugin.jei.category.ingredient;
+package org.jurassicraft.server.plugin.jei.category.cleaningstation;
 
 import org.jurassicraft.server.dinosaur.Dinosaur;
 

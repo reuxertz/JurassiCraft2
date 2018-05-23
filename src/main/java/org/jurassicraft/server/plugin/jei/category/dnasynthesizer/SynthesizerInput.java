@@ -1,4 +1,4 @@
-package org.jurassicraft.server.plugin.jei.category.ingredient;
+package org.jurassicraft.server.plugin.jei.category.dnasynthesizer;
 
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,20 +13,16 @@ import org.jurassicraft.server.plant.PlantHandler;
 
 import java.util.Random;
 
-public interface EmbryoInput {
+public interface SynthesizerInput {
     boolean isValid();
 
     int getMetadata();
 
     NBTTagCompound getTag();
 
-    Item getInputItem();
+    Item getItem();
 
-    Item getOutputItem();
-
-    Item getPetriDishItem();
-
-    class DinosaurInput implements EmbryoInput {
+    class DinosaurInput implements SynthesizerInput {
         public final Dinosaur dinosaur;
 
         public DinosaurInput(Dinosaur dinosaur) {
@@ -52,22 +48,12 @@ public interface EmbryoInput {
         }
 
         @Override
-        public Item getInputItem() {
+        public Item getItem() {
             return ItemHandler.DNA;
-        }
-
-        @Override
-        public Item getOutputItem() {
-            return ItemHandler.SYRINGE;
-        }
-
-        @Override
-        public Item getPetriDishItem() {
-            return ItemHandler.PETRI_DISH;
         }
     }
 
-    class PlantInput implements EmbryoInput {
+    class PlantInput implements SynthesizerInput {
         public final Plant plant;
 
         public PlantInput(Plant plant) {
@@ -93,18 +79,8 @@ public interface EmbryoInput {
         }
 
         @Override
-        public Item getInputItem() {
+        public Item getItem() {
             return ItemHandler.PLANT_DNA;
-        }
-
-        @Override
-        public Item getOutputItem() {
-            return ItemHandler.PLANT_CALLUS;
-        }
-
-        @Override
-        public Item getPetriDishItem() {
-            return ItemHandler.PLANT_CELLS_PETRI_DISH;
         }
     }
 }

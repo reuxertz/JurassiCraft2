@@ -1,14 +1,9 @@
-package org.jurassicraft.server.plugin.jei.category;
+package org.jurassicraft.server.plugin.jei.category.dnasynthesizer;
 
 import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableAnimated;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.*;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeCategory;
-import mezz.jei.api.recipe.IRecipeWrapper;
+import mezz.jei.api.recipe.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -18,7 +13,7 @@ import org.jurassicraft.server.item.ItemHandler;
 
 import java.util.List;
 
-public class DNASynthesizerRecipeCategory extends BlankRecipeCategory<IRecipeWrapper> {
+public class DNASynthesizerRecipeCategory implements IRecipeCategory<DNASynthesizerRecipeWrapper> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JurassiCraft.MODID, "textures/gui/dna_synthesizer.png");
 
     private final IDrawable background;
@@ -55,7 +50,7 @@ public class DNASynthesizerRecipeCategory extends BlankRecipeCategory<IRecipeWra
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper, IIngredients ingredients) {
+    public void setRecipe(IRecipeLayout recipeLayout, DNASynthesizerRecipeWrapper recipeWrapper, IIngredients ingredients) {
         IGuiItemStackGroup stackGroup = recipeLayout.getItemStacks();
         List<List<ItemStack>> inputs = ingredients.getInputs(ItemStack.class);
         List<List<ItemStack>> outputs = ingredients.getOutputs(ItemStack.class);

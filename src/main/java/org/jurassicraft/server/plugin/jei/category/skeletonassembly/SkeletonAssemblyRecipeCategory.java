@@ -1,7 +1,8 @@
-package org.jurassicraft.server.plugin.jei.category;
+package org.jurassicraft.server.plugin.jei.category.skeletonassembly;
 
 import java.util.List;
 
+import mezz.jei.api.recipe.IRecipeCategory;
 import org.jurassicraft.JurassiCraft;
 
 import mezz.jei.api.IGuiHelper;
@@ -15,7 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 
-public class SkeletonAssemblyRecipeCategory extends BlankRecipeCategory<IRecipeWrapper> {
+public class SkeletonAssemblyRecipeCategory implements IRecipeCategory<SkeletonAssemblyRecipeWrapper> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JurassiCraft.MODID, "textures/gui/skeleton_assembler.png");
 
     private final IDrawable background;
@@ -42,7 +43,7 @@ public class SkeletonAssemblyRecipeCategory extends BlankRecipeCategory<IRecipeW
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper, IIngredients ingredients) {
+    public void setRecipe(IRecipeLayout recipeLayout, SkeletonAssemblyRecipeWrapper recipeWrapper, IIngredients ingredients) {
         IGuiItemStackGroup stackGroup = recipeLayout.getItemStacks();
         List<List<ItemStack>> inputs = ingredients.getInputs(ItemStack.class);
         for (int row = 0; row < 5; row++) {
