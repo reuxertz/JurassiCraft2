@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 
 import java.util.Random;
 
-public interface SynthesizableItem {
+public interface SynthesizableItem extends JurassicIngredientItem {
     static SynthesizableItem getSynthesizableItem(ItemStack stack) {
         if (stack != null) {
             Item item = stack.getItem();

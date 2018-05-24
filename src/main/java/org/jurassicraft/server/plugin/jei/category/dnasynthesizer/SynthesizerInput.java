@@ -1,7 +1,11 @@
 package org.jurassicraft.server.plugin.jei.category.dnasynthesizer;
 
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jurassicraft.server.api.GrindableItem;
+import org.jurassicraft.server.api.SynthesizableItem;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.genetics.DinoDNA;
@@ -13,74 +17,17 @@ import org.jurassicraft.server.plant.PlantHandler;
 
 import java.util.Random;
 
-public interface SynthesizerInput {
-    boolean isValid();
+public class SynthesizerInput {
+    public final ItemStack stack;
+    public final SynthesizableItem item;
 
-    int getMetadata();
-
-    NBTTagCompound getTag();
-
-    Item getItem();
-
-    class DinosaurInput implements SynthesizerInput {
-        public final Dinosaur dinosaur;
-
-        public DinosaurInput(Dinosaur dinosaur) {
-            this.dinosaur = dinosaur;
-        }
-
-        @Override
-        public boolean isValid() {
-            return this.dinosaur.shouldRegister();
-        }
-
-        @Override
-        public int getMetadata() {
-            return EntityHandler.getDinosaurId(this.dinosaur);
-        }
-
-        @Override
-        public NBTTagCompound getTag() {
-            DinoDNA dna = new DinoDNA(this.dinosaur, 100, GeneticsHelper.randomGenetics(new Random()));
-            NBTTagCompound tag = new NBTTagCompound();
-            dna.writeToNBT(tag);
-            return tag;
-        }
-
-        @Override
-        public Item getItem() {
-            return ItemHandler.DNA;
-        }
-    }
-
-    class PlantInput implements SynthesizerInput {
-        public final Plant plant;
-
-        public PlantInput(Plant plant) {
-            this.plant = plant;
-        }
-
-        @Override
-        public boolean isValid() {
-            return this.plant.shouldRegister();
-        }
-
-        @Override
-        public int getMetadata() {
-            return PlantHandler.getPlantId(this.plant);
-        }
-
-        @Override
-        public NBTTagCompound getTag() {
-            PlantDNA dna = new PlantDNA(this.getMetadata(), 100);
-            NBTTagCompound tag = new NBTTagCompound();
-            dna.writeToNBT(tag);
-            return tag;
-        }
-
-        @Override
-        public Item getItem() {
-            return ItemHandler.PLANT_DNA;
+    public SynthesizerInput(ItemStack stack) {
+        this.stack = stack;
+        Item item = stack.getItem();
+        if(item instanceof ItemBlock) {
+            this.item = (SynthesizableItem)((ItemBlock)stack.getItem()).getBlock();
+        } else {
+            this.item = (SynthesizableItem)stack.getItem();
         }
     }
 }

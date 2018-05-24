@@ -3,7 +3,10 @@ package org.jurassicraft.server.plugin.jei.category.dnasynthesizer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.google.common.collect.Lists;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jurassicraft.server.item.ItemHandler;
 
 import mezz.jei.api.ingredients.IIngredients;
@@ -20,14 +23,19 @@ public class DNASynthesizerRecipeWrapper implements IRecipeWrapper {
 
     @Override
     public void getIngredients(IIngredients ingredients) {
-        int metadata = this.input.getMetadata();
-        List<ItemStack> inputs = new ArrayList<>();
-        ItemStack data = new ItemStack(ItemHandler.STORAGE_DISC);
-        data.setTagCompound(this.input.getTag());
-        inputs.add(data);
-        ingredients.setInputs(ItemStack.class, inputs);
-        ItemStack output = new ItemStack(this.input.getItem(), 1, metadata);
-        ingredients.setOutput(ItemStack.class, output);
+//        int metadata = this.input.getMetadata();
+//        List<ItemStack> inputs = new ArrayList<>();
+//        ItemStack data = new ItemStack(ItemHandler.STORAGE_DISC);
+//        data.setTagCompound(this.input.getTag());
+//        inputs.add(data);
+//        ingredients.setInputs(ItemStack.class, inputs);
+//        ItemStack output = new ItemStack(this.input.getItem(), 1, metadata);
+//        ingredients.setOutput(ItemStack.class, output);
+
+        ingredients.setInput(ItemStack.class, input.stack);
+        List<List<ItemStack>> outputs = new ArrayList<>();
+        outputs.add(Lists.newArrayList(input.item.getChancedOutputs(input.stack).stream().map(Pair::getRight).collect(Collectors.toList())));
+        ingredients.setOutputLists(ItemStack.class, outputs);
     }
 
     @Override

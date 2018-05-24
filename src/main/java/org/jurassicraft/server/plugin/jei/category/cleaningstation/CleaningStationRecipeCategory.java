@@ -1,5 +1,6 @@
 package org.jurassicraft.server.plugin.jei.category.cleaningstation;
 
+import java.awt.*;
 import java.util.List;
 
 import mezz.jei.api.recipe.IRecipeCategory;
@@ -22,6 +23,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
+import org.jurassicraft.server.plugin.jei.util.RecipeLayoutOutputSupplier;
 
 public class CleaningStationRecipeCategory implements IRecipeCategory<CleaningStationRecipeWrapper> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JurassiCraft.MODID, "textures/gui/cleaning_station.png");
@@ -31,6 +33,9 @@ public class CleaningStationRecipeCategory implements IRecipeCategory<CleaningSt
 
     private final IDrawableAnimated arrow;
     private final IDrawableAnimated water;
+
+    private RecipeLayoutOutputSupplier outPutSupplier = null;
+
 
     public CleaningStationRecipeCategory(IGuiHelper guiHelper) {
         this.background = guiHelper.createDrawable(TEXTURE, 46, 16, 115, 54);
@@ -48,6 +53,16 @@ public class CleaningStationRecipeCategory implements IRecipeCategory<CleaningSt
         GlStateManager.enableBlend();
         this.arrow.draw(minecraft, 33, 18);
         this.water.draw(minecraft, 0, 2);
+
+        ItemStack stack = outPutSupplier.get();
+        if(stack != null && !stack.isEmpty()) {
+            float value = stack.getOrCreateSubCompound("jei_rendering_info").getFloat("Chance");
+            String text = value + "%";
+            if(value != 100) {
+                int width = minecraft.fontRenderer.getStringWidth(text);
+                minecraft.fontRenderer.drawString(text, 72 - width / 2, 47, Color.GRAY.getRGB());
+            }
+        }
     }
 
     @Override
@@ -67,6 +82,8 @@ public class CleaningStationRecipeCategory implements IRecipeCategory<CleaningSt
 
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, CleaningStationRecipeWrapper recipeWrapper, IIngredients ingredients) {
+        outPutSupplier = new RecipeLayoutOutputSupplier(recipeLayout, 0, false);
+
         IGuiItemStackGroup stackGroup = recipeLayout.getItemStacks();
         List<List<ItemStack>> inputs = ingredients.getInputs(ItemStack.class);
         List<List<ItemStack>> outputs = ingredients.getOutputs(ItemStack.class);

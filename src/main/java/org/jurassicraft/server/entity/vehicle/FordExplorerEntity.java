@@ -556,7 +556,7 @@ public class FordExplorerEntity extends CarEntity {
 	public void moveMinecartOnRail(BlockPos pos) {
 	    double mX = motionX;
 	    double mZ = motionZ;
-	    if(mX == 0 && mZ == 0) { //Should only happen when re-logging. //TODO: make a more elegant solution // && getControllingPassenger() != null
+	    if(mX == 0 && mZ == 0 && getControllingPassenger() != null) { //Should only happen when re-logging. //TODO: make a more elegant solution
 			mX = getLook(1f).x;
 			mZ = getLook(1f).z;
 	    }

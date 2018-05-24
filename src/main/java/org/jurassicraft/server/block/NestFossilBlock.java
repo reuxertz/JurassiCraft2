@@ -1,8 +1,11 @@
 package org.jurassicraft.server.block;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
+import com.google.common.collect.Lists;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jurassicraft.server.api.CleanableItem;
 import org.jurassicraft.server.api.SubBlocksBlock;
 import org.jurassicraft.server.item.ItemHandler;
@@ -119,15 +122,32 @@ public class NestFossilBlock extends Block implements SubBlocksBlock, CleanableI
 
     @Override
     public ItemStack getCleanedItem(ItemStack stack, Random random) {
-        if (random.nextBoolean()) {
+        if (random.nextBoolean()) { //50
             return new ItemStack(ItemHandler.FOSSILIZED_EGG, random.nextInt(7) + 1, stack.getItemDamage());
         }
 
-        if (random.nextBoolean()) {
+        if (random.nextBoolean()) { //25
             return new ItemStack(Items.FLINT);
         } else {
             return new ItemStack(Items.DYE, 1, 15);
         }
+    }
+
+    @Override
+    public List<ItemStack> getJEIRecipeTypes() {
+        return getItemSubtypes(this.getItemBlock());
+    }
+
+    @Override
+    public List<Pair<Float, ItemStack>> getChancedOutputs(ItemStack inputItem) {
+        List<Pair<Float, ItemStack>> list = Lists.newArrayList();
+        float single = 100F/4F;
+        for(int i = 0; i < 7; i++) {
+            list.add(Pair.of(50F/7F, new ItemStack(ItemHandler.FOSSILIZED_EGG, i + 1, inputItem.getItemDamage())));
+        }
+        list.add(Pair.of(single, new ItemStack(Items.FLINT)));
+        list.add(Pair.of(single, new ItemStack(Items.DYE, 1, 15)));
+        return list;
     }
 
     public enum Variant implements IStringSerializable {

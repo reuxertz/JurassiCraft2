@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 
 import java.util.Random;
 
-public interface CleanableItem {
+public interface CleanableItem extends JurassicIngredientItem {
     static CleanableItem getCleanableItem(ItemStack stack) {
         if (stack != null) {
             Item item = stack.getItem();

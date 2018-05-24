@@ -1,14 +1,21 @@
 package org.jurassicraft.server.plugin.jei;
 
 import com.google.common.collect.Lists;
-import mezz.jei.api.*;
+import mezz.jei.api.IGuiHelper;
+import mezz.jei.api.IModPlugin;
+import mezz.jei.api.IModRegistry;
+import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.ingredients.IIngredientBlacklist;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import mezz.jei.api.recipe.transfer.IRecipeTransferRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import org.jurassicraft.client.gui.*;
+import org.jurassicraft.server.api.*;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.tree.AncientDoorBlock;
 import org.jurassicraft.server.container.*;
@@ -20,7 +27,7 @@ import org.jurassicraft.server.plant.PlantHandler;
 import org.jurassicraft.server.plugin.jei.category.calcification.CalcificationInput;
 import org.jurassicraft.server.plugin.jei.category.calcification.CalcificationRecipeCategory;
 import org.jurassicraft.server.plugin.jei.category.calcification.CalcificationRecipeWrapper;
-import org.jurassicraft.server.plugin.jei.category.cleaningstation.BoneInput;
+import org.jurassicraft.server.plugin.jei.category.cleaningstation.CleanableInput;
 import org.jurassicraft.server.plugin.jei.category.cleaningstation.CleaningStationRecipeCategory;
 import org.jurassicraft.server.plugin.jei.category.cleaningstation.CleaningStationRecipeWrapper;
 import org.jurassicraft.server.plugin.jei.category.dnasynthesizer.DNASynthesizerRecipeCategory;
@@ -29,17 +36,21 @@ import org.jurassicraft.server.plugin.jei.category.dnasynthesizer.SynthesizerInp
 import org.jurassicraft.server.plugin.jei.category.embroyonicmachine.EmbryoInput;
 import org.jurassicraft.server.plugin.jei.category.embroyonicmachine.EmbryonicRecipeCategory;
 import org.jurassicraft.server.plugin.jei.category.embroyonicmachine.EmbryonicRecipeWrapper;
-import org.jurassicraft.server.plugin.jei.category.fossilgrinder.*;
+import org.jurassicraft.server.plugin.jei.category.fossilgrinder.FossilGrinderRecipeCategory;
+import org.jurassicraft.server.plugin.jei.category.fossilgrinder.FossilGrinderRecipeWrapper;
+import org.jurassicraft.server.plugin.jei.category.fossilgrinder.GrinderInput;
 import org.jurassicraft.server.plugin.jei.category.skeletonassembly.SkeletonAssemblyRecipeCategory;
 import org.jurassicraft.server.plugin.jei.category.skeletonassembly.SkeletonAssemblyRecipeWrapper;
 import org.jurassicraft.server.plugin.jei.category.skeletonassembly.SkeletonInput;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @JEIPlugin
+@SideOnly(Side.CLIENT) //TODO: add SequencableItem
 public class JurassiCraftJEIPlugin implements IModPlugin {
 
     public static final String FOSSIL_GRINDER = "jurassicraft.fossil_grinder";
@@ -74,7 +85,7 @@ public class JurassiCraftJEIPlugin implements IModPlugin {
         registry.handleRecipes(GrinderInput.class, FossilGrinderRecipeWrapper::new, FOSSIL_GRINDER);
         registry.addRecipeCatalyst(new ItemStack(BlockHandler.FOSSIL_GRINDER), FOSSIL_GRINDER);
 
-        registry.handleRecipes(BoneInput.class, CleaningStationRecipeWrapper::new, CLEANING_STATION);
+        registry.handleRecipes(CleanableInput.class, CleaningStationRecipeWrapper::new, CLEANING_STATION);
         registry.addRecipeCatalyst(new ItemStack(BlockHandler.CLEANING_STATION), CLEANING_STATION);
 
         registry.handleRecipes(SynthesizerInput.class, DNASynthesizerRecipeWrapper::new, DNA_SYNTHASIZER);
@@ -107,19 +118,23 @@ public class JurassiCraftJEIPlugin implements IModPlugin {
 
         //register recipes
 
-        registry.addRecipes(getDinos(GrinderInput::new), FOSSIL_GRINDER);
+        registry.addRecipes(getAllItems(GrindableItem::getGrindableItem, GrinderInput::new), FOSSIL_GRINDER);
+        registry.addRecipes(getAllItems(CleanableItem::getCleanableItem, CleanableInput::new), CLEANING_STATION);
+        registry.addRecipes(getAllItems(SynthesizableItem::getSynthesizableItem, SynthesizerInput::new), DNA_SYNTHASIZER);
+
+
         registry.addRecipes(getDinos(CalcificationInput::new), EMBRYO_CALCIFICATION_MACHINE);
 
-        registry.addRecipes(getDinos(SynthesizerInput.DinosaurInput::new), DNA_SYNTHASIZER);
-        registry.addRecipes(getPlants(SynthesizerInput.PlantInput::new), DNA_SYNTHASIZER);
+//        registry.addRecipes(getDinos(SynthesizerInput.DinosaurInput::new), DNA_SYNTHASIZER);
+//        registry.addRecipes(getPlants(SynthesizerInput.PlantInput::new), DNA_SYNTHASIZER);
 
         registry.addRecipes(getDinos(EmbryoInput.DinosaurInput::new), EMBRYOMIC_MACHINE);
         registry.addRecipes(getPlants(EmbryoInput.PlantInput::new), EMBRYOMIC_MACHINE);
 
         for (Dinosaur dinosaur : EntityHandler.getRegisteredDinosaurs()) {
-            for (String bone : dinosaur.getBones()) {
-                registry.addRecipes(Lists.newArrayList(new BoneInput(dinosaur, bone)), CLEANING_STATION);
-            }
+//            for (String bone : dinosaur.getBones()) {
+//                registry.addRecipes(Lists.newArrayList(new CleanableInput(dinosaur, bone)), CLEANING_STATION);
+//            }
             registry.addRecipes(Lists.newArrayList(new SkeletonInput(dinosaur, false), new SkeletonInput(dinosaur, true)), SKELETON_ASSEMBLY);
         }
     }
@@ -130,6 +145,18 @@ public class JurassiCraftJEIPlugin implements IModPlugin {
 
     private <T> List<T> getPlants(Function<Plant,T> func) {
         return PlantHandler.getPrehistoricPlantsAndTrees().stream().map(func).collect(Collectors.toList());
+    }
+
+    private <T> List<T> getAllItems(Function<ItemStack, JurassicIngredientItem> ingredientFunction, Function<ItemStack, T> tFunction) {
+        List<T> list = Lists.newArrayList();
+        ForgeRegistries.ITEMS.getValuesCollection()
+                .stream()
+                .map(ItemStack::new)
+                .map(ingredientFunction)
+                .filter(Objects::nonNull)
+                .map(JurassicIngredientItem::getJEIRecipeTypes)
+                .forEach(l -> list.addAll(l.stream().map(tFunction).collect(Collectors.toList())));
+        return list;
     }
 
     @Override

@@ -1,36 +1,39 @@
 package org.jurassicraft.server.plugin.jei.category.cleaningstation;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.jurassicraft.server.block.BlockHandler;
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.EntityHandler;
-import org.jurassicraft.server.item.ItemHandler;
-
 import com.google.common.collect.Lists;
-
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 
-public class CleaningStationRecipeWrapper implements IRecipeWrapper {
-    private final Dinosaur dinosaur;
-    private final String bone;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-    public CleaningStationRecipeWrapper(BoneInput input) {
-        this.dinosaur = input.getDinosaur();
-        this.bone = input.getBone();
+public class CleaningStationRecipeWrapper implements IRecipeWrapper {
+    private final CleanableInput input;
+
+    public CleaningStationRecipeWrapper(CleanableInput input) {
+        this.input = input;
     }
 
     @Override
     public void getIngredients(IIngredients ingredients) {
-        int metadata = EntityHandler.getDinosaurId(this.dinosaur);
-        ingredients.setInputs(ItemStack.class, Lists.newArrayList(new ItemStack(BlockHandler.getEncasedFossil(metadata), 1, BlockHandler.getMetadata(metadata))));
-        ItemStack output = new ItemStack(ItemHandler.FOSSILS.get(this.bone), 1, metadata);
-        ingredients.setOutput(ItemStack.class, output);
-    }
+//        int metadata = EntityHandler.getDinosaurId(this.dinosaur);
+//        ingredients.setInputs(ItemStack.class, Lists.newArrayList(new ItemStack(BlockHandler.getEncasedFossil(metadata), 1, BlockHandler.getMetadata(metadata))));
+//        ItemStack output = new ItemStack(ItemHandler.FOSSILS.get(this.bone), 1, metadata);
+//        ingredients.setOutput(ItemStack.class, output);
+        ingredients.setInput(ItemStack.class, input.stack);
+        List<ItemStack> list = Lists.newArrayList();
+        input.grind.getChancedOutputs(input.stack).forEach(pair -> {
+            ItemStack stack = pair.getRight();
+            stack.getOrCreateSubCompound("jei_rendering_info").setFloat("Chance", Math.round(pair.getLeft() * 10F) / 10F);
+            list.add(stack);
+        });
+
+        List<List<ItemStack>> outputs = new ArrayList<>();
+        outputs.add(list);
+        ingredients.setOutputLists(ItemStack.class, outputs);    }
 
     @Override
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {

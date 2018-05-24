@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 
 import java.util.Random;
 
-public interface SequencableItem {
+public interface SequencableItem extends JurassicIngredientItem {
     static SequencableItem getSequencableItem(ItemStack stack) {
         if (stack != null) {
             Item item = stack.getItem();

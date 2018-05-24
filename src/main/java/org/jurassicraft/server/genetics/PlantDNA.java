@@ -51,11 +51,13 @@ public class PlantDNA {
             formatting = TextFormatting.YELLOW;
         } else if (this.quality > 25) {
             formatting = TextFormatting.GOLD;
+        } else if (this.quality == -1) {
+            formatting = TextFormatting.AQUA;
         } else {
             formatting = TextFormatting.RED;
         }
 
-        tooltip.add(formatting + new LangHelper("lore.dna_quality.name").withProperty("quality", this.quality + "").build());
+        tooltip.add(formatting + new LangHelper("lore.dna_quality.name").withProperty("quality", (this.quality == -1 ? TextFormatting.OBFUSCATED.toString() : "") + this.quality + "").build());
     }
 
     public int getMetadata() {

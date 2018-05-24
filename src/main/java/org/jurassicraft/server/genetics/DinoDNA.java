@@ -55,12 +55,13 @@ public class/* Bingo! */ DinoDNA {
             colour = TextFormatting.YELLOW;
         } else if (this.quality > 25) {
             colour = TextFormatting.GOLD;
+        } else if(this.quality == -1) {
+            colour = TextFormatting.AQUA;
         } else {
             colour = TextFormatting.RED;
         }
-
-        tooltip.add(colour + new LangHelper("lore.dna_quality.name").withProperty("quality", this.quality + "").build());
-        tooltip.add(TextFormatting.BLUE + new LangHelper("lore.genetic_code.name").withProperty("code", this.genetics).build());
+        tooltip.add(colour + new LangHelper("lore.dna_quality.name").withProperty("quality", (this.quality == -1 ? TextFormatting.OBFUSCATED.toString() : "") + this.quality + "").build());
+        tooltip.add(TextFormatting.BLUE + new LangHelper("lore.genetic_code.name").withProperty("code", this.genetics.isEmpty() ? TextFormatting.OBFUSCATED.toString() + "aaa" : this.genetics).build());
     }
 
     public Dinosaur getDinosaur() {

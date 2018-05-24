@@ -1,39 +1,45 @@
 package org.jurassicraft.server.plugin.jei.category.fossilgrinder;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.EntityHandler;
-import org.jurassicraft.server.item.ItemHandler;
-import org.jurassicraft.server.plugin.jei.category.fossilgrinder.GrinderInput;
-
+import com.google.common.collect.Lists;
+import mezz.jei.api.IRecipesGui;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
+@SideOnly(Side.CLIENT)
 public class FossilGrinderRecipeWrapper implements IRecipeWrapper {
-    private final Dinosaur dinosaur;
+    private final GrinderInput input;
 
     public FossilGrinderRecipeWrapper(GrinderInput input) {
-        this.dinosaur = input.dinosaur;
+        this.input = input;
     }
 
     @Override
     public void getIngredients(IIngredients ingredients) {
-        String[] bones = this.dinosaur.getBones();
-        int metadata = EntityHandler.getDinosaurId(this.dinosaur);
-        List<ItemStack> fossilVariants = new ArrayList<>(bones.length);
-        for (String bone : bones) {
-            fossilVariants.add(new ItemStack(ItemHandler.FOSSILS.get(bone), 1, metadata));
-        }
-        List<List<ItemStack>> inputs = new ArrayList<>();
-        inputs.add(fossilVariants);
-        ingredients.setInputLists(ItemStack.class, inputs);
-        ItemStack output = new ItemStack(ItemHandler.SOFT_TISSUE, 1, metadata);
-        ingredients.setOutput(ItemStack.class, output);
+        ingredients.setInput(ItemStack.class, input.stack);
+        List<ItemStack> list = Lists.newArrayList();
+        input.grind.getChancedOutputs(input.stack).forEach(pair -> {
+            ItemStack stack = pair.getRight();
+            stack.getOrCreateSubCompound("jei_rendering_info").setFloat("Chance", Math.round(pair.getLeft() * 10F) / 10F);
+            list.add(stack);
+        });
+
+        List<List<ItemStack>> outputs = new ArrayList<>();
+        outputs.add(list);
+        ingredients.setOutputLists(ItemStack.class, outputs);
     }
 
 
