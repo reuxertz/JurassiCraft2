@@ -18,15 +18,15 @@ public class DNASequencerContainer extends MachineContainer {
         this.dnaSequencer = (DNASequencerBlockEntity) tileEntity;
 
         this.addSlotToContainer(new SequencableItemSlot(this.dnaSequencer, 0, 44, 16));
-        this.addSlotToContainer(new StorageSlot(this.dnaSequencer, 1, 66, 16, false));
+        this.addSlotToContainer(new StorageSlot(this.dnaSequencer, 1, 66, 16, false, 1));
         this.addSlotToContainer(new SequencableItemSlot(this.dnaSequencer, 2, 44, 36));
-        this.addSlotToContainer(new StorageSlot(this.dnaSequencer, 3, 66, 36, false));
+        this.addSlotToContainer(new StorageSlot(this.dnaSequencer, 3, 66, 36, false, 1));
         this.addSlotToContainer(new SequencableItemSlot(this.dnaSequencer, 4, 44, 56));
-        this.addSlotToContainer(new StorageSlot(this.dnaSequencer, 5, 66, 56, false));
+        this.addSlotToContainer(new StorageSlot(this.dnaSequencer, 5, 66, 56, false, 1));
 
-        this.addSlotToContainer(new StorageSlot(this.dnaSequencer, 6, 113, 16, true));
-        this.addSlotToContainer(new StorageSlot(this.dnaSequencer, 7, 113, 36, true));
-        this.addSlotToContainer(new StorageSlot(this.dnaSequencer, 8, 113, 56, true));
+        this.addSlotToContainer(new StorageSlot(this.dnaSequencer, 6, 113, 16, true, 1));
+        this.addSlotToContainer(new StorageSlot(this.dnaSequencer, 7, 113, 36, true, 1));
+        this.addSlotToContainer(new StorageSlot(this.dnaSequencer, 8, 113, 56, true, 1));
 
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {

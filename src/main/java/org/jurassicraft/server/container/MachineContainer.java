@@ -73,4 +73,8 @@ public abstract class MachineContainer extends Container {
 
         return transferred;
     }
+
+    public IInventory getInventoryTile() {
+        return inventory;
+    }
 }

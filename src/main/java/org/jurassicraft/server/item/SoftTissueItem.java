@@ -87,16 +87,19 @@ public class SoftTissueItem extends Item implements SequencableItem {
     }
 
     @Override
+    public List<ItemStack> getJEIRecipeTypes() {
+        return getItemSubtypes(this);
+    }
+
+    @Override
     public List<Pair<Float, ItemStack>> getChancedOutputs(ItemStack inputItem) {
         List<Pair<Float, ItemStack>> list = Lists.newArrayList();
-        for(int i = 0; i < 4; i++) {
-            NBTTagCompound nbt = new NBTTagCompound();
-            DinoDNA dna = new DinoDNA(EntityHandler.getDinosaurById(inputItem.getItemDamage()), -1, String.valueOf("ACGT".toCharArray()[i]));
-            dna.writeToNBT(nbt);
-            ItemStack output = new ItemStack(ItemHandler.STORAGE_DISC);
-            output.setTagCompound(nbt);
-            list.add(Pair.of(25F, output));
-        }
+        NBTTagCompound nbt = new NBTTagCompound();
+        DinoDNA dna = new DinoDNA(EntityHandler.getDinosaurById(inputItem.getItemDamage()), -1, "");
+        dna.writeToNBT(nbt);
+        ItemStack output = new ItemStack(ItemHandler.STORAGE_DISC);
+        output.setTagCompound(nbt);
+        list.add(Pair.of(100F, output));
         return list;
     }
 }

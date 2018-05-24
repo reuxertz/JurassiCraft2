@@ -6,12 +6,18 @@ import net.minecraft.item.ItemStack;
 import org.jurassicraft.server.item.ItemHandler;
 
 public class StorageSlot extends Slot {
+
+    private final int stackLimit;
     private boolean stored;
 
     public StorageSlot(IInventory inventory, int slotIndex, int xPosition, int yPosition, boolean stored) {
-        super(inventory, slotIndex, xPosition, yPosition);
+        this(inventory, slotIndex, xPosition, yPosition, stored, 64);
+    }
 
+    public StorageSlot(IInventory inventory, int slotIndex, int xPosition, int yPosition, boolean stored, int stackLimit) {
+        super(inventory, slotIndex, xPosition, yPosition);
         this.stored = stored;
+        this.stackLimit = stackLimit;
     }
 
     @Override

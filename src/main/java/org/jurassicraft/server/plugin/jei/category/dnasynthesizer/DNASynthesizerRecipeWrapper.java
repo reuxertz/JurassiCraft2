@@ -33,8 +33,15 @@ public class DNASynthesizerRecipeWrapper implements IRecipeWrapper {
 //        ingredients.setOutput(ItemStack.class, output);
 
         ingredients.setInput(ItemStack.class, input.stack);
+        List<ItemStack> list = Lists.newArrayList();
+        input.item.getChancedOutputs(input.stack).forEach(pair -> {
+            ItemStack stack = pair.getRight();
+            stack.getOrCreateSubCompound("jei_rendering_info").setFloat("Chance", Math.round(pair.getLeft() * 10F) / 10F);
+            list.add(stack);
+        });
+
         List<List<ItemStack>> outputs = new ArrayList<>();
-        outputs.add(Lists.newArrayList(input.item.getChancedOutputs(input.stack).stream().map(Pair::getRight).collect(Collectors.toList())));
+        outputs.add(list);
         ingredients.setOutputLists(ItemStack.class, outputs);
     }
 

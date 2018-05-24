@@ -3,18 +3,7 @@ package org.jurassicraft;
 import org.apache.logging.log4j.Logger;
 import org.jurassicraft.server.command.ForceAnimationCommand;
 import org.jurassicraft.server.conf.JurassiCraftConfig;
-import org.jurassicraft.server.message.ChangeTemperatureMessage;
-import org.jurassicraft.server.message.FordExplorerChangeStateMessage;
-import org.jurassicraft.server.message.FordExplorerUpdatePositionStateMessage;
-import org.jurassicraft.server.message.HelicopterDirectionMessage;
-import org.jurassicraft.server.message.HelicopterEngineMessage;
-import org.jurassicraft.server.message.HelicopterModulesMessage;
-import org.jurassicraft.server.message.MicroraptorDismountMessage;
-import org.jurassicraft.server.message.OpenFieldGuideGuiMessage;
-import org.jurassicraft.server.message.PlacePaddockSignMessage;
-import org.jurassicraft.server.message.SetOrderMessage;
-import org.jurassicraft.server.message.SwitchHybridizerCombinatorMode;
-import org.jurassicraft.server.message.UpdateVehicleControlMessage;
+import org.jurassicraft.server.message.*;
 import org.jurassicraft.server.proxy.ServerProxy;
 
 import net.ilexiconn.llibrary.server.config.Config;
@@ -47,7 +36,7 @@ public class JurassiCraft {
 
     public static long timerTicks;
 
-    @NetworkWrapper({ PlacePaddockSignMessage.class, ChangeTemperatureMessage.class, HelicopterEngineMessage.class, HelicopterDirectionMessage.class, HelicopterModulesMessage.class, SwitchHybridizerCombinatorMode.class, SetOrderMessage.class, OpenFieldGuideGuiMessage.class, UpdateVehicleControlMessage.class, MicroraptorDismountMessage.class, FordExplorerChangeStateMessage.class, FordExplorerUpdatePositionStateMessage.class})
+    @NetworkWrapper({ PlacePaddockSignMessage.class, ChangeTemperatureMessage.class, HelicopterEngineMessage.class, HelicopterDirectionMessage.class, HelicopterModulesMessage.class, SwitchHybridizerCombinatorMode.class, SetOrderMessage.class, OpenFieldGuideGuiMessage.class, UpdateVehicleControlMessage.class, MicroraptorDismountMessage.class, FordExplorerChangeStateMessage.class, FordExplorerUpdatePositionStateMessage.class, DNASequenceTransferClicked.class})
     public static SimpleNetworkWrapper NETWORK_WRAPPER;
 
     private Logger logger;

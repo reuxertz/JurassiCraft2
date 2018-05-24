@@ -34,6 +34,7 @@ public class PlantSoftTissueItem extends Item implements SequencableItem {
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
+        getItemSubtypes(this);
         String plantName = this.getPlant(stack).getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
 
         return new LangHelper("item.plant_soft_tissue.name").withProperty("plant", "plants." + plantName + ".name").build();
@@ -50,7 +51,8 @@ public class PlantSoftTissueItem extends Item implements SequencableItem {
     }
 
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subtypes) {
+    @Override
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subtypes) {
         List<Plant> plants = new LinkedList<>(PlantHandler.getPrehistoricPlantsAndTrees());
 
         Map<Plant, Integer> ids = new HashMap<>();
@@ -58,11 +60,11 @@ public class PlantSoftTissueItem extends Item implements SequencableItem {
         for (Plant plant : plants) {
             ids.put(plant, PlantHandler.getPlantId(plant));
         }
-
         Collections.sort(plants);
-        if(this.isInCreativeTab(tab))
-        for (Plant plant : plants) {
-            subtypes.add(new ItemStack(item, 1, ids.get(plant)));
+        if(this.isInCreativeTab(tab)) {
+            for (Plant plant : plants) {
+                subtypes.add(new ItemStack(this, 1, ids.get(plant)));
+            }
         }
     }
 
@@ -85,6 +87,11 @@ public class PlantSoftTissueItem extends Item implements SequencableItem {
         output.setTagCompound(nbt);
 
         return output;
+    }
+
+    @Override
+    public List<ItemStack> getJEIRecipeTypes() {
+        return getItemSubtypes(this);
     }
 
     @Override

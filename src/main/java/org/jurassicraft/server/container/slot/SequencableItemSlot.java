@@ -15,4 +15,9 @@ public class SequencableItemSlot extends Slot {
         SequencableItem sequencableItem = SequencableItem.getSequencableItem(stack);
         return sequencableItem != null && sequencableItem.isSequencable(stack);
     }
+
+    @Override
+    public int getSlotStackLimit() {
+        return 1;
+    }
 }
