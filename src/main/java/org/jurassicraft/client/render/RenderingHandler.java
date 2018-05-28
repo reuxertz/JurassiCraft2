@@ -439,6 +439,7 @@ public enum RenderingHandler {
         registerItemRenderer(DART_POISON_EXECUTIONER_CONCOCTION);
         registerItemRenderer(DART_TIPPED_POTION);
 
+        registerItemRenderer(WEST_INDIAN_LILAC_BERRIES);
     }
 
     public void preInit() {

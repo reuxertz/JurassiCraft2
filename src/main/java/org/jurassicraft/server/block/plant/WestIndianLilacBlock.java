@@ -16,6 +16,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
+import org.jurassicraft.server.item.ItemHandler;
 
 import java.util.Random;
 
@@ -23,33 +24,13 @@ public class WestIndianLilacBlock extends DoublePlantBlock implements IGrowable{
 
     public static final PropertyInteger AGE = PropertyInteger.create("age", 0, 2);
 
-    private ItemStack itemDrop;
-
     public WestIndianLilacBlock() {
         super(Material.VINE);
     }
 
     public boolean isMaxAge(IBlockState state)
     {
-        return state.getValue(AGE).intValue() >= 2;
-    }
-
-    public void setItemDrop(ItemStack itemIn)
-    {
-        this.itemDrop = itemIn;
-    }
-
-    @Override
-    public IBlockState getPlant(IBlockAccess world, BlockPos pos)
-    {
-        IBlockState state = world.getBlockState(pos);
-
-        if (state.getBlock() != this)
-        {
-            return this.getDefaultState();
-        }
-
-        return state;
+        return state.getValue(AGE) >= 2;
     }
 
     @Override
@@ -60,13 +41,13 @@ public class WestIndianLilacBlock extends DoublePlantBlock implements IGrowable{
     @Override
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(AGE, meta % 3).withProperty (HALF, meta >= 3 ? BlockHalf.UPPER : BlockHalf.LOWER);
+        return this.getDefaultState().withProperty(AGE, meta % 3).withProperty(HALF, meta >= 3 ? BlockHalf.UPPER : BlockHalf.LOWER);
     }
 
     @Override
     public int getMetaFromState(IBlockState state)
     {
-        return state.getValue(AGE) * (state.getValue(HALF) ==  BlockHalf.UPPER ? 2 : 1);
+        return state.getValue(AGE) + (state.getValue(HALF) ==  BlockHalf.UPPER ? 3 : 0);
     }
 
     @Override
@@ -83,10 +64,20 @@ public class WestIndianLilacBlock extends DoublePlantBlock implements IGrowable{
 
     @Override
     public void grow(World worldIn, Random rand, BlockPos pos, IBlockState state) {
-        int age = state.getValue(AGE).intValue();
-
-        if (age <= 2) {
-            worldIn.setBlockState(pos, this.getDefaultState().withProperty(AGE, MathHelper.clamp(++age, 0, 2)));
+        if(!worldIn.isRemote) {
+            if(state.getValue(HALF) == BlockHalf.UPPER) {
+                IBlockState downState = worldIn.getBlockState(pos.down());
+                if(downState.getBlock() instanceof IGrowable) {
+                    ((IGrowable)downState.getBlock()).grow(worldIn, rand, pos.down(), downState);
+                }
+                return;
+            }
+            int age = state.getValue(AGE);
+            if (age <= 2) {
+                IBlockState newState = state.withProperty(AGE, MathHelper.clamp(++age, 0, 2));
+                worldIn.setBlockState(pos, newState);
+                worldIn.setBlockState(pos.up(), newState.withProperty(HALF, BlockHalf.UPPER));
+            }
         }
     }
 
@@ -100,18 +91,26 @@ public class WestIndianLilacBlock extends DoublePlantBlock implements IGrowable{
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
     {
-        int age = state.getValue(AGE).intValue();
-
+        if(state.getValue(HALF) == BlockHalf.UPPER) {
+            IBlockState downState = worldIn.getBlockState(pos.down());
+            if(downState.getBlock() instanceof  WestIndianLilacBlock) {
+                return downState.getBlock().onBlockActivated(worldIn, pos.down(), downState, playerIn, hand, side, hitX, hitY, hitZ);
+            }
+            return false;
+        }
+        int age = state.getValue(AGE);
         if (age == 2)
         {
-            if (worldIn.isRemote)
-            {
+            if (worldIn.isRemote) {
                 return true;
             }
 
-            worldIn.setBlockState(pos, this.getDefaultState().withProperty(AGE, MathHelper.clamp(++age, 0, 2)));
+            IBlockState newState = state.withProperty(AGE, MathHelper.clamp(--age, 0, 2));
 
-            ItemStack itemDrop = new ItemStack(this.itemDrop.getItem(), 1, this.itemDrop.getItemDamage());
+            worldIn.setBlockState(pos, newState);
+            worldIn.setBlockState(pos.up(), newState.withProperty(HALF, BlockHalf.UPPER));
+
+            ItemStack itemDrop = new ItemStack(ItemHandler.WEST_INDIAN_LILAC_BERRIES);
             EntityItem entityitem = new EntityItem(worldIn, playerIn.posX, playerIn.posY - 1.0D, playerIn.posZ, itemDrop);
 
             worldIn.spawnEntity(entityitem);
