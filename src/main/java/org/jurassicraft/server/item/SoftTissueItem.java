@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
+import com.google.common.collect.Lists;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jurassicraft.server.api.SequencableItem;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
@@ -82,5 +84,22 @@ public class SoftTissueItem extends Item implements SequencableItem {
         output.setTagCompound(nbt);
 
         return output;
+    }
+
+    @Override
+    public List<ItemStack> getJEIRecipeTypes() {
+        return getItemSubtypes(this);
+    }
+
+    @Override
+    public List<Pair<Float, ItemStack>> getChancedOutputs(ItemStack inputItem) {
+        List<Pair<Float, ItemStack>> list = Lists.newArrayList();
+        NBTTagCompound nbt = new NBTTagCompound();
+        DinoDNA dna = new DinoDNA(EntityHandler.getDinosaurById(inputItem.getItemDamage()), -1, "");
+        dna.writeToNBT(nbt);
+        ItemStack output = new ItemStack(ItemHandler.STORAGE_DISC);
+        output.setTagCompound(nbt);
+        list.add(Pair.of(100F, output));
+        return list;
     }
 }

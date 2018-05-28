@@ -1,5 +1,6 @@
 package org.jurassicraft.server.block.tree;
 
+import com.google.common.collect.Lists;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -9,11 +10,13 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jurassicraft.server.api.GrindableItem;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.plant.PlantHandler;
 import org.jurassicraft.server.tab.TabHandler;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
@@ -100,5 +103,14 @@ public class AncientLogBlock extends BlockLog implements GrindableItem {
         }
 
         return new ItemStack(Items.FLINT);
+    }
+
+    @Override
+    public List<Pair<Float, ItemStack>> getChancedOutputs(ItemStack inputItem) {
+        float single = 100F/6F;
+        NBTTagCompound tag = inputItem.getTagCompound();
+        ItemStack output = new ItemStack(ItemHandler.PLANT_SOFT_TISSUE, 1, PlantHandler.getPlantId(this.type.getPlant()));
+        output.setTagCompound(tag);
+        return Lists.newArrayList(Pair.of(single, output), Pair.of(50f, new ItemStack(Items.DYE, 1, 15)), Pair.of(single*2f, new ItemStack(Items.FLINT)));
     }
 }

@@ -1,16 +1,6 @@
 package org.jurassicraft.server.block;
 
-import java.util.Map;
-import java.util.Random;
-
-import org.jurassicraft.server.api.CleanableItem;
-import org.jurassicraft.server.api.SubBlocksBlock;
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.EntityHandler;
-import org.jurassicraft.server.item.ItemHandler;
-import org.jurassicraft.server.item.block.EncasedFossilItemBlock;
-import org.jurassicraft.server.tab.TabHandler;
-
+import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -27,6 +17,19 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.world.Explosion;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.Pair;
+import org.jurassicraft.server.api.CleanableItem;
+import org.jurassicraft.server.api.SubBlocksBlock;
+import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.item.ItemHandler;
+import org.jurassicraft.server.item.block.EncasedFossilItemBlock;
+import org.jurassicraft.server.tab.TabHandler;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
 
 public class EncasedFossilBlock extends Block implements SubBlocksBlock, CleanableItem {
     public static final PropertyInteger VARIANT = PropertyInteger.create("variant", 0, 15);
@@ -139,5 +142,25 @@ public class EncasedFossilBlock extends Block implements SubBlocksBlock, Cleanab
         int dinosaurId = BlockHandler.getDinosaurId((EncasedFossilBlock) Block.getBlockFromItem(stack.getItem()), stack.getItemDamage());
         String[] bones = EntityHandler.getDinosaurById(dinosaurId).getBones();
         return new ItemStack(ItemHandler.FOSSILS.get(bones[random.nextInt(bones.length)]), 1, dinosaurId);
+    }
+
+    @Override
+    public List<ItemStack> getJEIRecipeTypes() {
+        List<ItemStack> list = Lists.newArrayList();
+        EntityHandler.getDinosaurs().values().forEach(dino -> list.add(new ItemStack(BlockHandler.getEncasedFossil(dino), 1, EntityHandler.getDinosaurId(dino)%16)));
+        return list;
+    }
+
+    @Override
+    public List<Pair<Float, ItemStack>> getChancedOutputs(ItemStack inputItem) {
+        int dinosaurId = BlockHandler.getDinosaurId((EncasedFossilBlock) Block.getBlockFromItem(inputItem.getItem()), inputItem.getItemDamage());
+        String[] bones = EntityHandler.getDinosaurById(dinosaurId).getBones();
+        float single = 100F / bones.length;
+
+        List<Pair<Float, ItemStack>> list = Lists.newArrayList();
+        for(String bone : bones) {
+            list.add(Pair.of(single, new ItemStack(ItemHandler.FOSSILS.get(bone), 1, dinosaurId)));
+        }
+        return list;
     }
 }

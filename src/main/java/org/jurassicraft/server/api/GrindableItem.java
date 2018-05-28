@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 
 import java.util.Random;
 
-public interface GrindableItem {
+public interface GrindableItem extends JurassicIngredientItem {
     static GrindableItem getGrindableItem(ItemStack stack) {
         if (stack != null) {
             Item item = stack.getItem();

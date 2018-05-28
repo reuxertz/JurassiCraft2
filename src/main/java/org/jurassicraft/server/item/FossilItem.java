@@ -8,6 +8,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
+import com.google.common.collect.Lists;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jurassicraft.server.api.GrindableItem;
 import org.jurassicraft.server.api.Hybrid;
 import org.jurassicraft.server.dinosaur.Dinosaur;
@@ -141,5 +143,24 @@ public class FossilItem extends Item implements GrindableItem {
         }
 
         return new ItemStack(Items.FLINT);
+    }
+
+    @Override
+    public List<ItemStack> getJEIRecipeTypes() {
+        List<ItemStack> list = Lists.newArrayList();
+        fossilDinosaurs.get(this.type).forEach(dino -> list.add(new ItemStack(this, 1, EntityHandler.getDinosaurId(dino))));
+        return list;
+    }
+
+    @Override
+    public List<Pair<Float, ItemStack>> getChancedOutputs(ItemStack inputItem) {
+        float single = 100F/6F;
+        NBTTagCompound tag = inputItem.getTagCompound();
+        ItemStack output = new ItemStack(ItemHandler.SOFT_TISSUE, 1, inputItem.getItemDamage());
+        output.setTagCompound(tag);
+        if(this.fresh) {
+            return Lists.newArrayList(Pair.of(100F, output));
+        }
+        return Lists.newArrayList(Pair.of(single, output), Pair.of(50f, new ItemStack(Items.DYE, 1, 15)), Pair.of(single*2f, new ItemStack(Items.FLINT)));
     }
 }

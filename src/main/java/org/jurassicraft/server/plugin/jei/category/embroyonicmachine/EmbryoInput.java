@@ -1,4 +1,4 @@
-package org.jurassicraft.server.plugin.jei.category.ingredient;
+package org.jurassicraft.server.plugin.jei.category.embroyonicmachine;
 
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;

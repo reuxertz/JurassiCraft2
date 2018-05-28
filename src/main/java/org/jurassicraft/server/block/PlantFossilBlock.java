@@ -1,5 +1,6 @@
 package org.jurassicraft.server.block;
 
+import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -9,10 +10,12 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.Explosion;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jurassicraft.server.api.CleanableItem;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.tab.TabHandler;
 
+import java.util.List;
 import java.util.Random;
 
 public class PlantFossilBlock extends Block implements CleanableItem {
@@ -59,5 +62,13 @@ public class PlantFossilBlock extends Block implements CleanableItem {
         } else {
             return Item.getItemFromBlock(Blocks.COBBLESTONE);
         }
+    }
+
+    @Override
+    public List<Pair<Float, ItemStack>> getChancedOutputs(ItemStack inputItem) {
+        List<Pair<Float, ItemStack>> list = Lists.newArrayList();
+        list.add(Pair.of(0.7F, new ItemStack(ItemHandler.PLANT_FOSSIL)));
+        list.add(Pair.of(0.3F, new ItemStack(ItemHandler.TWIG_FOSSIL)));
+        return list;
     }
 }

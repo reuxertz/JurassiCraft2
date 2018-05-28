@@ -1,30 +1,34 @@
-package org.jurassicraft.server.plugin.jei.category;
-
-import java.util.List;
-
-import org.jurassicraft.JurassiCraft;
+package org.jurassicraft.server.plugin.jei.category.fossilgrinder;
 
 import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableAnimated;
-import mezz.jei.api.gui.IDrawableStatic;
-import mezz.jei.api.gui.IGuiItemStackGroup;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.*;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeCategory;
-import mezz.jei.api.recipe.IRecipeWrapper;
+import mezz.jei.api.recipe.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.plugin.jei.util.RecipeLayoutOutputSupplier;
 
-public class FossilGrinderRecipeCategory extends BlankRecipeCategory<IRecipeWrapper> {
+import java.awt.*;
+import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+@SideOnly(Side.CLIENT)
+public class FossilGrinderRecipeCategory extends BlankRecipeCategory<FossilGrinderRecipeWrapper> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JurassiCraft.MODID, "textures/gui/fossil_grinder.png");
 
     private final IDrawable background;
     private final String title;
 
     private final IDrawableAnimated arrow;
+
+    private RecipeLayoutOutputSupplier outPutSupplier = null;
 
     public FossilGrinderRecipeCategory(IGuiHelper guiHelper) {
         this.background = guiHelper.createDrawable(TEXTURE, 18, 21, 147, 43);
@@ -37,6 +41,15 @@ public class FossilGrinderRecipeCategory extends BlankRecipeCategory<IRecipeWrap
     @Override
     public void drawExtras(Minecraft minecraft) {
         this.arrow.draw(minecraft, 61, 14);
+        ItemStack stack = outPutSupplier.get();
+        if(stack != null && !stack.isEmpty()) {
+            float value = stack.getOrCreateSubCompound("jei_rendering_info").getFloat("Chance");
+            String text = value + "%";
+            if(value != 100) {
+                int width = minecraft.fontRenderer.getStringWidth(text);
+                minecraft.fontRenderer.drawString(text, 100 - width / 2, 42, Color.GRAY.getRGB());
+            }
+        }
     }
 
     @Override
@@ -55,7 +68,9 @@ public class FossilGrinderRecipeCategory extends BlankRecipeCategory<IRecipeWrap
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper, IIngredients ingredients) {
+    public void setRecipe(IRecipeLayout recipeLayout, FossilGrinderRecipeWrapper recipeWrapper, IIngredients ingredients) {
+        outPutSupplier = new RecipeLayoutOutputSupplier(recipeLayout, 0, false);
+
         IGuiItemStackGroup stackGroup = recipeLayout.getItemStacks();
         List<List<ItemStack>> inputs = ingredients.getInputs(ItemStack.class);
         List<List<ItemStack>> outputs = ingredients.getOutputs(ItemStack.class);

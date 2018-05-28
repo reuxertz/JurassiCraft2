@@ -8,6 +8,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
+import com.google.common.collect.Lists;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jurassicraft.server.api.SequencableItem;
 import org.jurassicraft.server.genetics.PlantDNA;
 import org.jurassicraft.server.plant.Plant;
@@ -84,5 +86,20 @@ public class PlantSoftTissueItem extends Item implements SequencableItem {
         output.setTagCompound(nbt);
 
         return output;
+    }
+
+    @Override
+    public List<ItemStack> getJEIRecipeTypes() {
+        return getItemSubtypes(this);
+    }
+
+    @Override
+    public List<Pair<Float, ItemStack>> getChancedOutputs(ItemStack inputItem) {
+        NBTTagCompound nbt = new NBTTagCompound();
+        PlantDNA dna = new PlantDNA(inputItem.getItemDamage(), -1);
+        dna.writeToNBT(nbt);
+        ItemStack output = new ItemStack(ItemHandler.STORAGE_DISC);
+        output.setTagCompound(nbt);
+        return Lists.newArrayList(Pair.of(100F, output));
     }
 }

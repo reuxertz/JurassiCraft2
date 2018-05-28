@@ -1,14 +1,6 @@
 package org.jurassicraft.server.block;
 
-import java.util.Locale;
-import java.util.Random;
-
-import org.jurassicraft.server.api.CleanableItem;
-import org.jurassicraft.server.api.SubBlocksBlock;
-import org.jurassicraft.server.item.ItemHandler;
-import org.jurassicraft.server.item.block.NestFossilItemBlock;
-import org.jurassicraft.server.tab.TabHandler;
-
+import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
@@ -28,6 +20,16 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.Pair;
+import org.jurassicraft.server.api.CleanableItem;
+import org.jurassicraft.server.api.SubBlocksBlock;
+import org.jurassicraft.server.item.ItemHandler;
+import org.jurassicraft.server.item.block.NestFossilItemBlock;
+import org.jurassicraft.server.tab.TabHandler;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
 
 public class NestFossilBlock extends Block implements SubBlocksBlock, CleanableItem {
     public static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class);
@@ -128,6 +130,23 @@ public class NestFossilBlock extends Block implements SubBlocksBlock, CleanableI
         } else {
             return new ItemStack(Items.DYE, 1, 15);
         }
+    }
+
+    @Override
+    public List<ItemStack> getJEIRecipeTypes() {
+        return getItemSubtypes(this.getItemBlock());
+    }
+
+    @Override
+    public List<Pair<Float, ItemStack>> getChancedOutputs(ItemStack inputItem) {
+        List<Pair<Float, ItemStack>> list = Lists.newArrayList();
+        float single = 100F/4F;
+        for(int i = 0; i < 7; i++) {
+            list.add(Pair.of(50F/7F, new ItemStack(ItemHandler.FOSSILIZED_EGG, i + 1, inputItem.getItemDamage())));
+        }
+        list.add(Pair.of(single, new ItemStack(Items.FLINT)));
+        list.add(Pair.of(single, new ItemStack(Items.DYE, 1, 15)));
+        return list;
     }
 
     public enum Variant implements IStringSerializable {

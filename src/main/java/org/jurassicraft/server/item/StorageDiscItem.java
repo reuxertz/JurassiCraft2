@@ -1,5 +1,6 @@
 package org.jurassicraft.server.item;
 
+import com.google.common.collect.Lists;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -8,14 +9,18 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jurassicraft.server.api.SynthesizableItem;
+import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.genetics.DinoDNA;
+import org.jurassicraft.server.genetics.PlantDNA;
 import org.jurassicraft.server.genetics.StorageType;
 import org.jurassicraft.server.genetics.StorageTypeRegistry;
+import org.jurassicraft.server.plant.PlantHandler;
 import org.jurassicraft.server.tab.TabHandler;
 
 import java.util.List;
 import java.util.Random;
-
 public class StorageDiscItem extends Item implements SynthesizableItem {
     public StorageDiscItem() {
         super();
@@ -50,5 +55,38 @@ public class StorageDiscItem extends Item implements SynthesizableItem {
         StorageType type = StorageTypeRegistry.getStorageType(tag.getString("StorageId"));
         type.readFromNBT(tag);
         return type.createItem();
+    }
+
+    @Override
+    public List<Pair<Float, ItemStack>> getChancedOutputs(ItemStack inputItem) {
+        NBTTagCompound tag = inputItem.getTagCompound();
+        StorageType type = StorageTypeRegistry.getStorageType(tag.getString("StorageId"));
+        type.readFromNBT(tag);
+        return Lists.newArrayList(Pair.of(100F, type.createItem()));
+    }
+
+    @Override
+    public List<ItemStack> getJEIRecipeTypes() {
+        List<ItemStack> list = Lists.newArrayList();
+
+        EntityHandler.getRegisteredDinosaurs().forEach(dino -> {
+            DinoDNA dna = new DinoDNA(dino, -1, "");
+            ItemStack stack = new ItemStack(this);
+            NBTTagCompound nbt = new NBTTagCompound();
+            dna.writeToNBT(nbt);
+            stack.setTagCompound(nbt);
+            list.add(stack);
+        });
+
+        PlantHandler.getPlants().forEach(plant -> {
+            PlantDNA dna = new PlantDNA(PlantHandler.getPlantId(plant), -1);
+            ItemStack stack = new ItemStack(this);
+            NBTTagCompound nbt = new NBTTagCompound();
+            dna.writeToNBT(nbt);
+            stack.setTagCompound(nbt);
+            list.add(stack);
+
+        });
+        return list;
     }
 }
