@@ -103,7 +103,7 @@ public class FordExplorerEntity extends CarEntity {
 
 		}
 		if(onRails) {
-			this.setSize(1F, 0.5F);
+			this.setSize(0.75F, 0.25F);
 			this.stepHeight = 0F;
 		} else {
 			this.setSize(3.0F, 2.5F);
@@ -205,7 +205,7 @@ public class FordExplorerEntity extends CarEntity {
 
     @Override
     public float getCollisionBorderSize() {
-        return 2f;
+        return 2.25f;
     }
 
     /* =================================== CAR END ===========================================*/
