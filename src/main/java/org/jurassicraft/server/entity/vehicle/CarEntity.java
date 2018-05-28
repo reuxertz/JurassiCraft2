@@ -1,25 +1,6 @@
 package org.jurassicraft.server.entity.vehicle;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Predicate;
-
-import javax.vecmath.Vector2d;
-import javax.vecmath.Vector4d;
-
-import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.client.proxy.ClientProxy;
-import org.jurassicraft.client.render.entity.TyretrackRenderer;
-import org.jurassicraft.server.damage.DamageSources;
-import org.jurassicraft.server.entity.ai.util.InterpValue;
-import org.jurassicraft.server.entity.vehicle.util.CarWheel;
-import org.jurassicraft.server.entity.vehicle.util.WheelParticleData;
-import org.jurassicraft.server.message.UpdateVehicleControlMessage;
-import org.lwjgl.input.Keyboard;
-import org.omg.CORBA.DoubleHolder;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -43,6 +24,22 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.client.proxy.ClientProxy;
+import org.jurassicraft.client.render.entity.TyretrackRenderer;
+import org.jurassicraft.server.damage.DamageSources;
+import org.jurassicraft.server.entity.ai.util.InterpValue;
+import org.jurassicraft.server.entity.vehicle.util.CarWheel;
+import org.jurassicraft.server.entity.vehicle.util.WheelParticleData;
+import org.jurassicraft.server.message.UpdateVehicleControlMessage;
+import org.lwjgl.input.Keyboard;
+import org.omg.CORBA.DoubleHolder;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.vecmath.Vector2d;
+import javax.vecmath.Vector4d;
+import java.util.List;
+import java.util.function.Predicate;
 
 public abstract class CarEntity extends Entity {
     public static final DataParameter<Byte> WATCHER_STATE = EntityDataManager.createKey(CarEntity.class, DataSerializers.BYTE);
@@ -69,7 +66,6 @@ public abstract class CarEntity extends Entity {
     private double interpTargetY;
     private double interpTargetZ;
     private double interpTargetYaw;
-    private double interpTargetPitch;
 
     private static final double INTERP_AMOUNT = 0.15D; //TODO config ?
     
@@ -83,9 +79,9 @@ public abstract class CarEntity extends Entity {
     public final CarWheel frontLeftWheel = new CarWheel(2, wheeldata.fl);
     public final CarWheel frontRightWheel = new CarWheel(3, wheeldata.fr);
 
-    public final List<WheelParticleData>[] wheelDataList = new List[4]; 
+    @SuppressWarnings("unchecked")
+    public final List<WheelParticleData>[] wheelDataList = new List[4];
     
-    public List<InterpValue> allInterps = Lists.newArrayList(backValue, frontValue, leftValue, rightValue);
     public List<CarWheel> allWheels = Lists.newArrayList(backLeftWheel, frontLeftWheel, backRightWheel, frontRightWheel);
 
     
@@ -226,13 +222,12 @@ public abstract class CarEntity extends Entity {
         this.interpTargetY = y;
         this.interpTargetZ = z;
         this.interpTargetYaw = yaw;
-        this.interpTargetPitch = pitch;
         this.interpProgress = duration;
     }
 
     @Override
     public void onEntityUpdate() {
-	if(!shouldRunUpdates()) {
+	if(shouldStopUpdates()) {
 	    super.onEntityUpdate();
 	    return;
 	}
@@ -289,7 +284,7 @@ public abstract class CarEntity extends Entity {
             }
             this.updateMotion();
             if (this.world.isRemote) {
-                this.handleControl(true);
+                this.handleControl();
             }
             this.applyMovement();
             this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
@@ -300,14 +295,14 @@ public abstract class CarEntity extends Entity {
     }
     
     protected boolean canRunoverEntity(Entity entity) {
-	return EntitySelectors.NOT_SPECTATING.apply(entity) && !this.getPassengers().contains(entity);
+	    return EntitySelectors.NOT_SPECTATING.apply(entity) && !this.getPassengers().contains(entity);
     }
     
     protected void runOverEntity(Entity entity) {
-	double damage = this.estimatedSpeed * 20D;
-	if(damage > 0D) {
-	    entity.attackEntityFrom(DamageSources.CAR, (float) (this.estimatedSpeed * 20D));
-	}
+        double damage = this.estimatedSpeed * 20D;
+        if(damage > 0D) {
+            entity.attackEntityFrom(DamageSources.CAR, (float) (this.estimatedSpeed * 20D));
+        }
     }
     
     protected void createWheelParticles(CarWheel wheel) {
@@ -315,31 +310,30 @@ public abstract class CarEntity extends Entity {
     }
     
     protected void createWheelParticles(CarWheel wheel, boolean runBetween) {
-	Vec3d pos;
-	Vec3d opposite;
-	if(runBetween) {
-	    Vec3d vec = wheel.getCurrentWheelPos();
-	    Vec3d oldVec = wheel.getCurrentWheelPos();
-	    
-	    Vec3d vec1 = wheel.getOppositeWheel().getCurrentWheelPos();
-	    Vec3d oldVec1 = wheel.getOppositeWheel().getCurrentWheelPos();
-	    
-	    pos =  new Vec3d((vec.x + oldVec.x) / 2D, (vec.y + oldVec.y) / 2D, (vec.z + oldVec.z) / 2D);
-	    opposite = new Vec3d((vec1.x + oldVec1.x) / 2D, (vec1.y + oldVec1.y) / 2D, (vec1.z + oldVec1.z) / 2D);
-	} else {
-	    pos = wheel.getCurrentWheelPos();
-	    opposite = wheel.getOppositeWheel().getCurrentWheelPos();
-	}
-	if(wheel.getCurrentWheelPos().distanceTo(wheel.getPrevCurrentWheelPos()) >= 0.05D) {
-	    this.wheelDataList[wheel.getID()].add(new WheelParticleData(pos, opposite, world.getTotalWorldTime()).setShouldRender(shouldTyresRender()));   
-	}
+        Vec3d pos;
+        Vec3d opposite;
+        if(runBetween) {
+            Vec3d vec = wheel.getCurrentWheelPos();
+            Vec3d oldVec = wheel.getCurrentWheelPos();
+
+            Vec3d vec1 = wheel.getOppositeWheel().getCurrentWheelPos();
+            Vec3d oldVec1 = wheel.getOppositeWheel().getCurrentWheelPos();
+
+            pos =  new Vec3d((vec.x + oldVec.x) / 2D, (vec.y + oldVec.y) / 2D, (vec.z + oldVec.z) / 2D);
+            opposite = new Vec3d((vec1.x + oldVec1.x) / 2D, (vec1.y + oldVec1.y) / 2D, (vec1.z + oldVec1.z) / 2D);
+        } else {
+            pos = wheel.getCurrentWheelPos();
+            opposite = wheel.getOppositeWheel().getCurrentWheelPos();
+        }
+        if(wheel.getCurrentWheelPos().distanceTo(wheel.getPrevCurrentWheelPos()) >= 0.05D) {
+            this.wheelDataList[wheel.getID()].add(new WheelParticleData(pos, opposite, world.getTotalWorldTime()).setShouldRender(shouldTyresRender()));
+        }
     }
     
     protected void processWheel(CarWheel wheel) {
-	float localYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw);
-        double rad = Math.toRadians(localYaw);
-	Vector2d relPos = wheel.getRelativeWheelPosition();
-	double xRot = Math.sin(Math.toRadians(localYaw)) * relPos.y - Math.cos(Math.toRadians(localYaw)) * relPos.x; 
+	    float localYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw);
+	    Vector2d relPos = wheel.getRelativeWheelPosition();
+	    double xRot = Math.sin(Math.toRadians(localYaw)) * relPos.y - Math.cos(Math.toRadians(localYaw)) * relPos.x;
         double zRot = - Math.cos(Math.toRadians(localYaw)) * relPos.y - Math.sin(Math.toRadians(localYaw)) * relPos.x;
         Vec3d vec = new Vec3d(posX + xRot, this.posY, posZ + zRot);
         wheel.setCurrentWheelPos(vec);
@@ -353,7 +347,7 @@ public abstract class CarEntity extends Entity {
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if(!shouldRunUpdates()) {
+        if(shouldStopUpdates()) {
             return;
         }
         AxisAlignedBB aabb = this.getEntityBoundingBox().shrink(0.9f);
@@ -390,7 +384,7 @@ public abstract class CarEntity extends Entity {
         this.motionY -= 0.15F;
     }
 
-    protected void handleControl(boolean applyMovement) {
+    protected void handleControl() {
         Entity driver = this.getControllingPassenger();
         if (!(driver instanceof EntityPlayer) || !((EntityPlayer) driver).isUser()) {
             return;
@@ -408,9 +402,6 @@ public abstract class CarEntity extends Entity {
                 this.setSpeed(speed);
                 newSpeed = true;
             }
-        }
-        if(applyMovement) {
-//            this.applyMovement();
         }
         if (this.getControlState() != previous || newSpeed) {
             JurassiCraft.NETWORK_WRAPPER.sendToServer(new UpdateVehicleControlMessage(this));
@@ -453,9 +444,6 @@ public abstract class CarEntity extends Entity {
             double interpolatedZ = this.posZ + (this.interpTargetZ - this.posZ) / (double) this.interpProgress;
             double deltaYaw = MathHelper.wrapDegrees(this.interpTargetYaw - (double) this.rotationYaw);
             this.rotationYaw = (float) ((double) this.rotationYaw + deltaYaw / (double) this.interpProgress);
-//            double deltaPitch = MathHelper.wrapDegrees(this.interpTargetPitch - (double) this.rotationPitch);
-//            this.rotationPitch = (float) ((double) this.rotationPitch + deltaPitch  / (double) this.interpProgress);
-//            this.rotationPitch = (float) ((double) this.rotationPitch + (this.interpTargetPitch - (double) this.rotationPitch) / (double) this.interpProgress);
             this.interpProgress--;
             this.setPosition(interpolatedX, interpolatedY, interpolatedZ);
             this.setRotation(this.rotationYaw, this.rotationPitch);
@@ -464,12 +452,10 @@ public abstract class CarEntity extends Entity {
     
     protected final double calculateWheelHeight(double distance, boolean rotate90) {
         float localYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw);
-        double rad = Math.toRadians(localYaw);
+        double ret = Integer.MIN_VALUE;
 
-	double ret = Integer.MIN_VALUE;
-
-	Vector4d carVec = wheeldata.carVector;
-	double sideLength = Math.abs(rotate90 ? carVec.x - carVec.z : carVec.z - carVec.w);
+        Vector4d carVec = wheeldata.carVector;
+        double sideLength = Math.abs(rotate90 ? carVec.x - carVec.z : carVec.z - carVec.w);
         for(double d = -sideLength ; d <= sideLength; d += 0.25D/*TODO: config this ?*/) {
             double xRot = Math.sin(Math.toRadians(localYaw)) * (rotate90 ? d : distance) - Math.cos(Math.toRadians(localYaw)) * (rotate90 ? distance : d); 
             double zRot = - Math.cos(Math.toRadians(localYaw)) * (rotate90 ? d : distance) - Math.sin(Math.toRadians(localYaw)) * (rotate90 ? distance : d);
@@ -479,10 +465,10 @@ public abstract class CarEntity extends Entity {
             //world.spawnParticle(EnumParticleTypes.CRIT, vec.x, vec.y + 5, vec.z, 0, 0, 0);
             
             boolean found = false;
-            List<AxisAlignedBB> aabbList = Lists.newArrayList();;
+            List<AxisAlignedBB> aabbList = Lists.newArrayList();
             while(!found) {
                 if(pos.getY() < 0) {
-                    found = true;
+                    break;
                 }
                 aabbList.clear();
                 world.getBlockState(pos).addCollisionBoxToList(world, pos, new AxisAlignedBB(pos), aabbList, this, false);
@@ -611,7 +597,7 @@ public abstract class CarEntity extends Entity {
 	return null;
     }
     
-    protected boolean shouldRunUpdates() {
+    protected boolean shouldStopUpdates() {
 	return true;
     }
     
@@ -654,7 +640,6 @@ public abstract class CarEntity extends Entity {
     }
 
     public final class Seat {
-        private final int index;
 
         private float offsetX;
         private float offsetY;
@@ -666,12 +651,11 @@ public abstract class CarEntity extends Entity {
         
         private Entity occupant;
 
-        public Seat(int index, float offsetX, float offsetY, float offsetZ, float radius, float height) {
-            this(index, offsetX, offsetY, offsetZ, radius, height, entity -> true);
+        public Seat(float offsetX, float offsetY, float offsetZ, float radius, float height) {
+            this(offsetX, offsetY, offsetZ, radius, height, entity -> true);
         }
         
-        public Seat(int index, float offsetX, float offsetY, float offsetZ, float radius, float height, Predicate<Entity> predicate) {
-            this.index = index;
+        public Seat(float offsetX, float offsetY, float offsetZ, float radius, float height, Predicate<Entity> predicate) {
             this.offsetX = offsetX;
             this.offsetY = offsetY;
             this.offsetZ = offsetZ;
@@ -713,37 +697,36 @@ public abstract class CarEntity extends Entity {
     }
     
     protected final class WheelData {
-	public final Vector2d bl;
-	public final Vector2d br;
-	public final Vector2d fl;
-	public final Vector2d fr;
+        public final Vector2d bl;
+        public final Vector2d br;
+        public final Vector2d fl;
+        public final Vector2d fr;
 
-	public final Vector4d carVector;
-	
-	public WheelData(double backLeftX, double backLeftZ, double frontRightX, double frontRightZ) {
-	    bl = new Vector2d(backLeftX, backLeftZ);
-	    br = new Vector2d(frontRightX, backLeftZ);
-	    fl = new Vector2d(backLeftX, frontRightZ);
-	    fr = new Vector2d(frontRightX, frontRightZ);
-	    
-	    carVector = new Vector4d(backLeftX, backLeftZ, frontRightX, frontRightZ); 
-	}
+        public final Vector4d carVector;
+
+        public WheelData(double backLeftX, double backLeftZ, double frontRightX, double frontRightZ) {
+            bl = new Vector2d(backLeftX, backLeftZ);
+            br = new Vector2d(frontRightX, backLeftZ);
+            fl = new Vector2d(backLeftX, frontRightZ);
+            fr = new Vector2d(frontRightX, frontRightZ);
+
+            carVector = new Vector4d(backLeftX, backLeftZ, frontRightX, frontRightZ);
+        }
     }
     
     public enum Speed {
-	//The modifiers ARE hardcoded. If you want to change them, please talk to me first. The tyre mark code relies on the modifiers being how they are
-	SLOW(Keyboard.KEY_LMENU, 0.5f),
-	MEDIUM(Keyboard.KEY_SPACE, 1f),
-	FAST(Keyboard.KEY_RMENU, 2f);
-	;
-	public final int keyboardInput;
-	public final float modifier;
-	
-	private Speed(int keyboardInput, float modifier) {
-	    this.keyboardInput = keyboardInput;
-	    this.modifier = modifier;
-	}
-	
+        //The modifiers ARE hardcoded. If you want to change them, please talk to me first. The tyre mark code relies on the modifiers being how they are
+        SLOW(Keyboard.KEY_LMENU, 0.5f),
+        MEDIUM(Keyboard.KEY_SPACE, 1f),
+        FAST(Keyboard.KEY_RMENU, 2f);
+
+        public final int keyboardInput;
+        public final float modifier;
+
+        Speed(int keyboardInput, float modifier) {
+            this.keyboardInput = keyboardInput;
+            this.modifier = modifier;
+        }
     }
 
     protected abstract Seat[] createSeats();
