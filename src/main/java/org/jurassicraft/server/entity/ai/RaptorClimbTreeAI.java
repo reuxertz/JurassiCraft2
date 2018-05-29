@@ -61,12 +61,12 @@ public class RaptorClimbTreeAI extends EntityAIBase {
             for (int iteration = 0; iteration <= 15; iteration++) {
                 target = target.up();
                 IBlockState state = this.world.getBlockState(target);
-                IBlockState ground = this.world.getBlockState(target.down());
                 if (state.getMaterial() == Material.LEAVES || state.getMaterial() == Material.WOOD) {
                     for (EnumFacing direction : EnumFacing.HORIZONTALS) {
                         BlockPos offsetTarget = target.offset(direction);
                         if (!this.world.isSideSolid(offsetTarget, EnumFacing.DOWN)) {
                             boolean canTravel = true;
+                            boolean woodFound = false;
                             int height = 0;
                             for (; height < MAX_TREE_HEIGHT; height++) {
                                 BlockPos trunkPos = target.up(height);
@@ -80,8 +80,9 @@ public class RaptorClimbTreeAI extends EntityAIBase {
                                 if (!trunkState.getBlock().isWood(this.world, trunkPos)) {
                                     break;
                                 }
+                                woodFound = true;
                             }
-                            if (canTravel) {
+                            if (canTravel && woodFound) {
                                 float offsetX = direction.getFrontOffsetX() * (this.entity.width + 0.25F) + 0.1F;
                                 float offsetZ = direction.getFrontOffsetZ() * (this.entity.width + 0.25F) + 0.1F;
                                 this.targetTrunk = target;
@@ -120,52 +121,48 @@ public class RaptorClimbTreeAI extends EntityAIBase {
     }
 
     @Override
-    public void updateTask() {	
+    public void updateTask() {
         if (this.reachedTarget) {
             BlockPos currentTrunk = new BlockPos(this.targetTrunk.getX(), this.entity.getEntityBoundingBox().minY, this.targetTrunk.getZ());
             if (!this.gliding && this.world.isAirBlock(currentTrunk)) {
                 Random random = this.entity.getRNG();
                 if(random.nextFloat() < 0.3f) {
                     this.entity.addVelocity(-this.approachSide.getFrontOffsetX() * 0.1F, 0.1F, -this.approachSide.getFrontOffsetZ() * 0.1F);
-
                 } else {
                     Vec3d pos = null;
                     for(int i = 0; i < 100; i++) {
-                        double x = (random.nextFloat() - 0.5) * 35;
-                        double z = (random.nextFloat() - 0.5) * 35;
+                        double x = (random.nextFloat() - 0.5) * 45;
+                        double z = (random.nextFloat() - 0.5) * 45;
                         Vec3d vec = this.entity.getPositionVector().addVector(x, 0, z);
                         vec = vec.addVector(0.5D, -vec.y + world.getTopSolidOrLiquidBlock(new BlockPos(vec)).getY() + 0.5D, 0.5D);
-                        if(this.entity.getPositionVector().distanceTo(vec) > 10D && !this.entity.world.getBlockState(new BlockPos(vec)).getMaterial().isLiquid()) {
-                    	pos = vec;
-                    	break;
+                        if(this.entity.getPositionVector().distanceTo(vec) > 20D && !this.entity.world.getBlockState(new BlockPos(vec)).getMaterial().isLiquid()) {
+                    	    pos = vec;
+                    	    break;
                         }                    
                     }
                     
                     this.entity.setGlidingTo(pos);
-//                    this.entity.world.setBlockState(new BlockPos(pos), Blocks.STONE.getDefaultState());
                     this.entity.addVelocity((pos.x - this.entity.posX) * 0.02, 0.3F, (pos.z - this.entity.posZ) * 0.02);
 
                     this.gliding = true;
                     this.entity.setAnimation(EntityAnimation.GLIDING.get());
                 }
                 this.active = false;
-
             } else {
-        	BlockPos testTrunk = targetTrunk;
-        	boolean accepted = true;
-        	do {
-        	    if(world.isSideSolid(testTrunk.offset(approachSide).up(), EnumFacing.UP)) {
-        		accepted = false;
-        	    }
-        	    IBlockState state = world.getBlockState(testTrunk);
-        	    
-        	    if (state.getMaterial() != Material.LEAVES && state.getMaterial() != Material.WOOD) {
-        		accepted = false;
-        	    }
-        	    testTrunk = testTrunk.up();
-        	} while(world.isSideSolid(testTrunk, approachSide));
-        	if(accepted) {
-        	    this.entity.getMoveHelper().setMoveTo(this.targetX, this.entity.getEntityBoundingBox().minY, this.targetZ, this.movementSpeed);
+                BlockPos testTrunk = targetTrunk;
+                boolean accepted = true;
+                do {
+                    if(world.isSideSolid(testTrunk.offset(approachSide).up(), EnumFacing.DOWN)) {
+                        accepted = false;
+                    }
+                    IBlockState state = world.getBlockState(testTrunk);
+                    if (state.getMaterial() != Material.LEAVES && state.getMaterial() != Material.WOOD) {
+                        accepted = false;
+                    }
+                    testTrunk = testTrunk.up();
+                } while(world.isSideSolid(testTrunk, approachSide));
+                if(accepted) {
+                    this.entity.getMoveHelper().setMoveTo(this.targetX, this.entity.getEntityBoundingBox().minY, this.targetZ, this.movementSpeed);
                     this.entity.setAnimation(EntityAnimation.CLIMBING.get());
                     if (this.entity.collidedHorizontally || this.world.isSideSolid(currentTrunk, this.approachSide)) {
                         this.entity.motionY = 0.3;
@@ -174,7 +171,7 @@ public class RaptorClimbTreeAI extends EntityAIBase {
                             this.active = false;
                         }
                     }
-        	}
+                } 
                 if (this.entity.collidedVertically && !this.gliding) {
                     BlockPos top = new BlockPos(this.entity.posX, this.entity.getEntityBoundingBox().maxY + 0.1, this.entity.posZ);
                     if (this.isBlockLeaves(top)) {
