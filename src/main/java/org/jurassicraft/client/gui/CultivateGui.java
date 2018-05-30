@@ -72,7 +72,7 @@ public class CultivateGui extends GuiContainer {
         this.mc.renderEngine.bindTexture(TEXTURE);
         this.drawTexturedModalRect(this.width / 2 - this.xSize / 2, this.height / 2 - this.ySize / 2, 0, 0, 176, 188);
 
-        this.drawTexturedModalRect(this.guiLeft + 48, this.guiTop + 18, 0, 188, 42, 67 - this.getScaled(this.cultivator.getWaterLevel(), 3, 67));
+        this.drawTexturedModalRect(this.guiLeft + 48, this.guiTop + 18, 0, 188, 42, 67 - this.getScaled(this.cultivator.getWaterLevel(), 2, 67));
 
         this.drawTemperatureSlider();
 

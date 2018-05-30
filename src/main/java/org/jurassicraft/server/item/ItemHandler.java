@@ -433,6 +433,6 @@ public class ItemHandler {
     public static void registerItem(Item item, String name) {
         String formattedName = name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_").replaceAll("'", "");
         item.setUnlocalizedName(formattedName);
-        RegistryHandler.registerItem(item, name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_"));
+        RegistryHandler.registerItem(item, formattedName);
     }
 }

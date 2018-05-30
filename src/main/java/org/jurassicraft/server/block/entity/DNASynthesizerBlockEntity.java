@@ -31,8 +31,8 @@ public class DNASynthesizerBlockEntity extends MachineBaseBlockEntity {
 
         SynthesizableItem synthesizableItem = SynthesizableItem.getSynthesizableItem(storage);
 
-        if (synthesizableItem != null && synthesizableItem.isSynthesizable(storage) && !testTube.isEmpty() && testTube.getItem() == ItemHandler.EMPTY_TEST_TUBE && !baseMaterial.isEmpty() && baseMaterial.getItem() == ItemHandler.DNA_NUCLEOTIDES && (storage.getTagCompound() != null && storage.getTagCompound().hasKey("DNAQuality"))) {
-            ItemStack output = synthesizableItem.getSynthesizedItem(storage, new Random(0));
+        if (synthesizableItem != null && synthesizableItem.isSynthesizable(storage) && testTube.getItem() == ItemHandler.EMPTY_TEST_TUBE && baseMaterial.getItem() == ItemHandler.DNA_NUCLEOTIDES && (storage.getTagCompound() != null && storage.getTagCompound().hasKey("DNAQuality"))) {
+            ItemStack output = synthesizableItem.getSynthesizedItem(storage, new Random());
 
             return output != null && this.hasOutputSlot(output);
         }

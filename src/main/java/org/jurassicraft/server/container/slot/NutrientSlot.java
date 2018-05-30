@@ -12,6 +12,6 @@ public class NutrientSlot extends Slot {
 
     @Override
     public boolean isItemValid(ItemStack stack) {
-        return stack != null && FoodNutrients.NUTRIENTS.containsKey(stack.getItem());
+        return FoodNutrients.NUTRIENTS.containsKey(stack.getItem());
     }
 }

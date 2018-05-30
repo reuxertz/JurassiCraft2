@@ -25,10 +25,11 @@ public class BugCrateBlockEntity extends MachineBaseBlockEntity {
 
     @Override
     protected boolean canProcess(int process) {
+        System.out.println("sss");
         for (int i = 0; i < 3; i++) {
             ItemStack stack = this.getStackInSlot(i);
             BreedableBug bug = BreedableBug.getBug(stack);
-            if (bug != null && this.getBestFood(bug) != null) {
+            if (bug != null && !this.getBestFood(bug).isEmpty()) {
                 return true;
             }
         }
@@ -42,7 +43,7 @@ public class BugCrateBlockEntity extends MachineBaseBlockEntity {
             BreedableBug bug = BreedableBug.getBug(stack);
             if (bug != null) {
                 ItemStack food = this.getBestFood(bug);
-                if (food != null) {
+                if (!food.isEmpty()) {
                     ItemStack output = new ItemStack((Item) bug, bug.getBreedings(food));
                     for (int slot = 0; slot < this.slots.size(); slot++) {
                         if (this.slots.get(slot) == food) {
@@ -64,11 +65,11 @@ public class BugCrateBlockEntity extends MachineBaseBlockEntity {
     }
 
     private ItemStack getBestFood(BreedableBug bug) {
-        ItemStack best = null;
+        ItemStack best = ItemStack.EMPTY;
         int highestBreedings = Integer.MIN_VALUE;
         for (int i = 3; i < 6; i++) {
             ItemStack food = this.getStackInSlot(i);
-            if (food != null) {
+            if (!food.isEmpty()) {
                 int breedings = bug.getBreedings(food);
                 if (breedings > 0 && breedings > highestBreedings) {
                     highestBreedings = breedings;

@@ -19,13 +19,7 @@ import org.jurassicraft.client.model.animation.entity.ParasaurolophusAnimator;
 import org.jurassicraft.client.model.animation.entity.TriceratopsAnimator;
 import org.jurassicraft.client.model.animation.entity.TyrannosaurusAnimator;
 import org.jurassicraft.client.model.animation.entity.VelociraptorAnimator;
-import org.jurassicraft.client.render.block.CleaningStationRenderer;
-import org.jurassicraft.client.render.block.DNAExtractorRenderer;
-import org.jurassicraft.client.render.block.DNASequencerRenderer;
-import org.jurassicraft.client.render.block.DisplayBlockRenderer;
-import org.jurassicraft.client.render.block.ElectricFencePoleRenderer;
-import org.jurassicraft.client.render.block.FeederRenderer;
-import org.jurassicraft.client.render.block.IncubatorRenderer;
+import org.jurassicraft.client.render.block.*;
 import org.jurassicraft.client.render.entity.AttractionSignRenderer;
 import org.jurassicraft.client.render.entity.DinosaurEggRenderer;
 import org.jurassicraft.client.render.entity.FordExplorerRenderer;
@@ -42,13 +36,7 @@ import org.jurassicraft.server.block.EncasedFossilBlock;
 import org.jurassicraft.server.block.FossilBlock;
 import org.jurassicraft.server.block.FossilizedTrackwayBlock;
 import org.jurassicraft.server.block.NestFossilBlock;
-import org.jurassicraft.server.block.entity.CleaningStationBlockEntity;
-import org.jurassicraft.server.block.entity.DNAExtractorBlockEntity;
-import org.jurassicraft.server.block.entity.DNASequencerBlockEntity;
-import org.jurassicraft.server.block.entity.DisplayBlockEntity;
-import org.jurassicraft.server.block.entity.ElectricFencePoleBlockEntity;
-import org.jurassicraft.server.block.entity.FeederBlockEntity;
-import org.jurassicraft.server.block.entity.IncubatorBlockEntity;
+import org.jurassicraft.server.block.entity.*;
 import org.jurassicraft.server.block.plant.AncientCoralBlock;
 import org.jurassicraft.server.block.tree.AncientLeavesBlock;
 import org.jurassicraft.server.block.tree.TreeType;
@@ -127,9 +115,15 @@ public enum RenderingHandler {
         ModelLoader.setCustomStateMapper(STYLOPHYLLOPSIS, new StateMap.Builder().ignore(AncientCoralBlock.LEVEL).build());
         ModelLoader.setCustomStateMapper(HIPPURITES_RADIOSUS, new StateMap.Builder().ignore(AncientCoralBlock.LEVEL).build());
 
-        ModelLoader.setCustomStateMapper(LOW_SECURITY_FENCE_BASE, new MultipartStateMap());
-        ModelLoader.setCustomStateMapper(LOW_SECURITY_FENCE_POLE, new MultipartStateMap());
-        ModelLoader.setCustomStateMapper(LOW_SECURITY_FENCE_WIRE, new MultipartStateMap());
+        ModelLoader.setCustomStateMapper(BlockHandler.LOW_SECURITY_FENCE_BASE, new MultipartStateMap());
+        ModelLoader.setCustomStateMapper(BlockHandler.LOW_SECURITY_FENCE_POLE, new MultipartStateMap());
+        ModelLoader.setCustomStateMapper(BlockHandler.LOW_SECURITY_FENCE_WIRE, new MultipartStateMap());
+        ModelLoader.setCustomStateMapper(BlockHandler.MED_SECURITY_FENCE_BASE, new MultipartStateMap());
+        ModelLoader.setCustomStateMapper(BlockHandler.MED_SECURITY_FENCE_POLE, new MultipartStateMap());
+        ModelLoader.setCustomStateMapper(BlockHandler.MED_SECURITY_FENCE_WIRE, new MultipartStateMap());
+        ModelLoader.setCustomStateMapper(BlockHandler.HIGH_SECURITY_FENCE_BASE, new MultipartStateMap());
+        ModelLoader.setCustomStateMapper(BlockHandler.HIGH_SECURITY_FENCE_POLE, new MultipartStateMap());
+        ModelLoader.setCustomStateMapper(BlockHandler.HIGH_SECURITY_FENCE_WIRE, new MultipartStateMap());
 
         int i = 0;
 
@@ -254,9 +248,15 @@ public enum RenderingHandler {
         registerBlockRenderer(PLANKTON_SWARM);
         registerBlockRenderer(KRILL_SWARM);
 
-        registerBlockRenderer(LOW_SECURITY_FENCE_POLE);
-        registerBlockRenderer(LOW_SECURITY_FENCE_BASE);
-        registerBlockRenderer(LOW_SECURITY_FENCE_WIRE);
+        registerBlockRenderer(BlockHandler.LOW_SECURITY_FENCE_POLE);
+        registerBlockRenderer(BlockHandler.LOW_SECURITY_FENCE_BASE);
+        registerBlockRenderer(BlockHandler.LOW_SECURITY_FENCE_WIRE);
+        registerBlockRenderer(BlockHandler.MED_SECURITY_FENCE_POLE);
+        registerBlockRenderer(BlockHandler.MED_SECURITY_FENCE_BASE);
+        registerBlockRenderer(BlockHandler.MED_SECURITY_FENCE_WIRE);
+        registerBlockRenderer(BlockHandler.HIGH_SECURITY_FENCE_POLE);
+        registerBlockRenderer(BlockHandler.HIGH_SECURITY_FENCE_BASE);
+        registerBlockRenderer(BlockHandler.HIGH_SECURITY_FENCE_WIRE);
 
         registerBlockRenderer(WILD_POTATO_PLANT);
 
@@ -515,6 +515,7 @@ public enum RenderingHandler {
         ClientRegistry.bindTileEntitySpecialRenderer(FeederBlockEntity.class, new FeederRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(ElectricFencePoleBlockEntity.class, new ElectricFencePoleRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(CleaningStationBlockEntity.class, new CleaningStationRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(CultivatorBlockEntity.class, new CultivatorRenderer());
     }
 
     public static void registerItemRenderer(Item item) {

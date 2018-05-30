@@ -108,4 +108,8 @@ public class DinosaurAttributes {
     public float getSpeedModifier() {
         return this.speedModifier;
     }
+
+    public void setScaleModifier(float scaleModifier) {
+        this.scaleModifier = scaleModifier;
+    }
 }

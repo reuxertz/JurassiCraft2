@@ -116,6 +116,8 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.vecmath.Vector3f;
+
 public abstract class DinosaurEntity extends EntityCreature implements IEntityAdditionalSpawnData, Animatable {
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -1914,6 +1916,10 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
 
     public boolean canDinoSwim() {
     	return this.getGrowthStage() != GrowthStage.INFANT && this.getGrowthStage() != GrowthStage.JUVENILE;
+    }
+
+    public Vector3f getDinosaurCultivatorRotation() {
+        return new Vector3f();
     }
     
     @Override

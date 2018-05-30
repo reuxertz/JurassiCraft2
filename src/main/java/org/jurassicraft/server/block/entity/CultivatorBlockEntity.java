@@ -10,12 +10,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 
+import net.minecraft.world.World;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.container.CultivateContainer;
 import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.food.FoodNutrients;
 import org.jurassicraft.server.item.ItemHandler;
+import org.jurassicraft.server.message.CultivatorSyncNutrients;
 
 import java.util.Random;
 
@@ -29,8 +32,9 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
     private int proximates;
     private int minerals;
     private int vitamins;
-
     private int temperature;
+
+    private DinosaurEntity dinosaurEntity; //Used for rendering entities
 
     @Override
     protected int getProcess(int slot) {
@@ -40,7 +44,7 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
     @Override
     protected boolean canProcess(int process) {
     	ItemStack itemstack = this.slots.get(0);
-        if (itemstack.getItem() == ItemHandler.SYRINGE && this.waterLevel == 3) {
+        if (itemstack.getItem() == ItemHandler.SYRINGE && this.waterLevel == 2) {
             Dinosaur dino = EntityHandler.getDinosaurById(itemstack.getItemDamage());
             if (dino != null && (dino.isMammal() || dino.isMarineCreature())) {
                 return this.lipids >= dino.getLipids() && this.minerals >= dino.getMinerals() && this.proximates >= dino.getProximates() && this.vitamins >= dino.getVitamins();
@@ -55,13 +59,12 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
         ItemStack syringe = this.slots.get(0);
         Dinosaur dinosaur = EntityHandler.getDinosaurById(syringe.getItemDamage());
 
-        this.waterLevel = 0;
-
         if (dinosaur != null) {
             this.lipids -= dinosaur.getLipids();
             this.minerals -= dinosaur.getMinerals();
             this.vitamins -= dinosaur.getVitamins();
             this.proximates -= dinosaur.getProximates();
+            this.waterLevel--;
 
             ItemStack hatchedEgg = new ItemStack(ItemHandler.HATCHED_EGG, 1, syringe.getItemDamage());
 
@@ -75,27 +78,27 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
             }
 
             hatchedEgg.setTagCompound(compound);
+
+            this.slots.set(0, hatchedEgg);
         }
     }
 
     @Override
     public void update() {
         super.update();
-
         boolean sync = false;
-
         if (!this.world.isRemote) {
-            if (this.waterLevel < 3 && this.slots.get(2).getItem() == Items.WATER_BUCKET) {
+            if (this.waterLevel < 2 && this.slots.get(2).getItem() == Items.WATER_BUCKET) {
                 if (this.slots.get(3).getCount() < 16) {
                     this.slots.get(2).shrink(1);
 
                     this.waterLevel++;
 
                     ItemStack stack = this.slots.get(3);
-                    if (!stack.isEmpty()) {
-                    	this.slots.set(3, new ItemStack(Items.BUCKET));
-                    } else if (stack.getItem() == Items.BUCKET) {
-                    	stack.grow(1);
+                    if (stack.getItem() == Items.BUCKET) {
+                        stack.grow(1);
+                    } else {
+                        this.slots.set(3, new ItemStack(Items.BUCKET));
                     }
 
                     sync = true;
@@ -107,12 +110,14 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
                 if ((this.proximates < MAX_NUTRIENTS) || (this.minerals < MAX_NUTRIENTS) || (this.vitamins < MAX_NUTRIENTS) || (this.lipids < MAX_NUTRIENTS)) {
                     this.consumeNutrients();
                     sync = true;
+
                 }
             }
         }
 
         if (sync) {
             this.markDirty();
+            JurassiCraft.NETWORK_WRAPPER.sendToAll(new CultivatorSyncNutrients(this));
         }
     }
 
@@ -131,7 +136,6 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
             }
 
             Random random = this.world.rand;
-
             if (this.proximates < MAX_NUTRIENTS) {
                 this.proximates = (short) (this.proximates + (800 + random.nextInt(201)) * nutrients.getProximate());
                 if (this.proximates > MAX_NUTRIENTS) {
@@ -159,6 +163,14 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
                     this.lipids = (short) MAX_NUTRIENTS;
                 }
             }
+        }
+    }
+
+    @Override
+    protected void onSlotUpdate() {
+        super.onSlotUpdate();
+        if(this.getStackInSlot(0).isEmpty()) {
+            this.dinosaurEntity = null;
         }
     }
 
@@ -216,6 +228,25 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
     @Override
     protected int[] getOutputs() {
         return OUTPUTS;
+    }
+
+    public DinosaurEntity getDinosaurEntity() {
+        if(this.getStackInSlot(0).isEmpty()){
+            return null;
+        }
+        return dinosaurEntity == null ? createEntity() : dinosaurEntity;
+    }
+
+    private DinosaurEntity createEntity() {
+        try {
+            this.dinosaurEntity = EntityHandler.getDinosaurById(this.getStackInSlot(0).getMetadata()).getDinosaurClass().getDeclaredConstructor(World.class).newInstance(this.world);
+            this.dinosaurEntity.setMale(this.temperature > 50);
+            this.dinosaurEntity.setFullyGrown();
+            this.dinosaurEntity.getAttributes().setScaleModifier(1f);
+        } catch (ReflectiveOperationException e){
+            throw new RuntimeException("Unable to create dinosaur entity", e);
+        }
+        return dinosaurEntity;
     }
 
     @Override
@@ -289,8 +320,8 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
     @Override
     public void setField(int id, int value) {
         int processCount = this.getProcessCount();
-
         if (id < processCount) {
+            System.out.println(value);
             this.processTime[id] = value;
         } else if (id < processCount * 2) {
             this.totalProcessTime[id - processCount] = value;
@@ -355,14 +386,14 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
 
 	@Override
 	protected NonNullList<ItemStack> getSlots() {
-        NonNullList<ItemStack> slots = NonNullList.withSize(5, ItemStack.EMPTY);
+//        NonNullList<ItemStack> slots = NonNullList.withSize(5, ItemStack.EMPTY);
 		return slots;
 	}
 
 	@Override
 	protected void setSlots(NonNullList<ItemStack> slot) {
-		ItemStack stack = this.slots.get(1);
-		stack.grow(slot.size());
-		
+//		ItemStack stack = this.slots.get(1);
+//		stack.grow(slot.size());
+		this.slots = slot;
 	}
 }

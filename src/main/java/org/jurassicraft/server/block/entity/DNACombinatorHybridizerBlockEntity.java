@@ -82,12 +82,11 @@ public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntity {
                 }
             }
         }
-
         return hybrid;
     }
 
     private Dinosaur getDino(ItemStack disc) {
-        if (disc != null) {
+        if (!disc.isEmpty() && disc.hasTagCompound()) {
             DinoDNA data = DinoDNA.readFromNBT(disc.getTagCompound());
 
             return data.getDNAQuality() == 100 ? data.getDinosaur() : null;

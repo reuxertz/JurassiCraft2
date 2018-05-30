@@ -1,6 +1,6 @@
-	package org.jurassicraft.server.block.entity;
+package org.jurassicraft.server.block.entity;
 
-    import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayer;
     import net.minecraft.entity.player.InventoryPlayer;
     import net.minecraft.init.Items;
     import net.minecraft.inventory.Container;
@@ -48,7 +48,7 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
     }
 
     public static boolean isItemFuel(ItemStack stack) {
-        return stack != null && stack.getItem() == Items.WATER_BUCKET;
+        return !stack.isEmpty() && stack.getItem() == Items.WATER_BUCKET;
     }
 
     @Override
@@ -65,8 +65,7 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
     public ItemStack decrStackSize(int index, int count) {
         ItemStack itemstack = ItemStackHelper.getAndSplit(this.slots, index, count);
 
-        if (!itemstack.isEmpty())
-        {
+        if (!itemstack.isEmpty()) {
             this.markDirty();
         }
 
@@ -120,7 +119,6 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
-//        NonNullList[] slots = new NonNullList[this.getSizeInventory()];
         super.readFromNBT(compound);
         NBTTagList itemList = compound.getTagList("Items", 10);
 
