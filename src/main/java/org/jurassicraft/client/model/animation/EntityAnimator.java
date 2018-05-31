@@ -2,6 +2,7 @@ package org.jurassicraft.client.model.animation;
 
 import net.ilexiconn.llibrary.client.model.tabula.ITabulaModelAnimator;
 import net.ilexiconn.llibrary.client.model.tabula.TabulaModel;
+import net.ilexiconn.llibrary.client.model.tools.AdvancedModelRenderer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -39,7 +40,20 @@ public abstract class EntityAnimator<ENTITY extends EntityLivingBase & Animatabl
     @Override
     public final void setRotationAngles(TabulaModel model, ENTITY entity, float limbSwing, float limbSwingAmount, float ticks, float rotationYaw, float rotationPitch, float scale) {
         this.getAnimationHelper(entity, (AnimatableModel) model, entity.shouldUseInertia()).performAnimations(entity, limbSwing, limbSwingAmount, ticks);
+        for(int i = 0;true;i++) {
+            AdvancedModelRenderer cube = model.getCube("neck" + i++);
+            if(cube == null) {
+                cube = model.getCube("throat" + i++);
+            }
+            float j = 1 - (i * 0.00001F);
+            if(cube != null ) {
+                cube.scaleX *= j;
+                cube.scaleY *= j;
+                cube.scaleZ *= j;
 
+            }
+            break;
+        }
         this.performAnimations((AnimatableModel) model, entity, limbSwing, limbSwingAmount, ticks, rotationYaw, rotationPitch, scale);
     }
 
