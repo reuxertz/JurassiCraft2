@@ -127,25 +127,43 @@ public class RaptorClimbTreeAI extends EntityAIBase {
             if (!this.gliding && this.world.isAirBlock(currentTrunk)) {
                 Random random = this.entity.getRNG();
                 if(random.nextFloat() < 0.3f) {
-                    this.entity.addVelocity(-this.approachSide.getFrontOffsetX() * 0.1F, 0.1F, -this.approachSide.getFrontOffsetZ() * 0.1F);
+                    this.entity.addVelocity(-this.approachSide.getFrontOffsetX() * 0.1F, 0.2F, -this.approachSide.getFrontOffsetZ() * 0.1F);
                 } else {
                     Vec3d pos = null;
                     for(int i = 0; i < 100; i++) {
                         double x = (random.nextFloat() - 0.5) * 45;
                         double z = (random.nextFloat() - 0.5) * 45;
                         Vec3d vec = this.entity.getPositionVector().addVector(x, 0, z);
-                        vec = vec.addVector(0.5D, -vec.y + world.getTopSolidOrLiquidBlock(new BlockPos(vec)).getY() + 0.5D, 0.5D);
-                        if(this.entity.getPositionVector().distanceTo(vec) > 20D && !this.entity.world.getBlockState(new BlockPos(vec)).getMaterial().isLiquid()) {
+                        BlockPos position = new BlockPos(vec);
+                        vec = vec.addVector(0.5D, -vec.y + world.getTopSolidOrLiquidBlock(position).getY() + 0.5D, 0.5D);
+                        IBlockState targetState = this.entity.world.getBlockState(position);
+                        if(this.entity.getPositionVector().distanceTo(vec) > 20D && targetState.getBlock().isLeaves(targetState, world, position)) {
                     	    pos = vec;
                     	    break;
                         }                    
                     }
-                    
-                    this.entity.setGlidingTo(pos);
-                    this.entity.addVelocity((pos.x - this.entity.posX) * 0.02, 0.3F, (pos.z - this.entity.posZ) * 0.02);
+                    if(pos == null) {
+                        for(int i = 0; i < 100; i++) {
+                            double x = (random.nextFloat() - 0.5) * 45;
+                            double z = (random.nextFloat() - 0.5) * 45;
+                            Vec3d vec = this.entity.getPositionVector().addVector(x, 0, z);
+                            BlockPos position = new BlockPos(vec);
+                            vec = vec.addVector(0.5D, -vec.y + world.getTopSolidOrLiquidBlock(position).getY() + 0.5D, 0.5D);
+                            IBlockState targetState = this.entity.world.getBlockState(position);
+                            if(this.entity.getPositionVector().distanceTo(vec) > 20D && !targetState.getMaterial().isLiquid()) {
+                                pos = vec;
+                                break;
+                            }
+                        }
+                    }
+                    if(pos != null) {
+                        this.entity.setGlidingTo(pos);
+                        this.world.setBlockState(new BlockPos(pos), Blocks.STONE.getDefaultState());
+                        this.entity.addVelocity((pos.x - this.entity.posX) * 0.02, 0.2F, (pos.z - this.entity.posZ) * 0.02);
 
-                    this.gliding = true;
-                    this.entity.setAnimation(EntityAnimation.GLIDING.get());
+                        this.gliding = true;
+                        this.entity.setAnimation(EntityAnimation.GLIDING.get());
+                    }
                 }
                 this.active = false;
             } else {
