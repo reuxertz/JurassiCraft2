@@ -1,7 +1,9 @@
 package org.jurassicraft.server.block;
 
 import com.google.common.collect.Lists;
+import com.sun.istack.internal.NotNull;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockFaceShape;
@@ -20,8 +22,10 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import org.jurassicraft.server.block.entity.TourRailBlockEntity;
+import org.jurassicraft.server.entity.vehicle.CarEntity;
 import org.jurassicraft.server.tab.TabHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Locale;
@@ -33,12 +37,14 @@ public final class TourRailBlock extends Block {
 
     public static final PropertyEnum<TourRailBlock.EnumRailDirection> SHAPE = PropertyEnum.create("shape", TourRailBlock.EnumRailDirection.class);
 
-
     protected static final AxisAlignedBB FLAT_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.125D, 1.0D);
     protected static final AxisAlignedBB ASCENDING_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D);
 
-    public TourRailBlock() {
+    private final SpeedType speedType;
+
+    public TourRailBlock(SpeedType speedType) {
         super(Material.CIRCUITS);
+        this.speedType = speedType;
         this.setCreativeTab(TabHandler.BLOCKS);
         this.setHarvestLevel("pickaxe", 1);
         this.setHardness(1);
@@ -69,6 +75,10 @@ public final class TourRailBlock extends Block {
     public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
     {
         return BlockFaceShape.UNDEFINED;
+    }
+
+    public SpeedType getSpeedType() {
+        return speedType;
     }
 
     public boolean isFullCube(IBlockState state)
@@ -166,13 +176,18 @@ public final class TourRailBlock extends Block {
     }
 
     @Override
+    public EnumPushReaction getMobilityFlag(IBlockState state) {
+        return EnumPushReaction.DESTROY;
+    }
+
+    @Override
     protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, SHAPE);
     }
 
     @Override
     public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
-        return new ItemStack(BlockHandler.TOUR_RAIL);
+        return new ItemStack(this);
     }
 
     @Override
@@ -182,7 +197,7 @@ public final class TourRailBlock extends Block {
 
     @Override
     public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-        return Item.getItemFromBlock(BlockHandler.TOUR_RAIL);
+        return Item.getItemFromBlock(this);
     }
 
     public static boolean isRailBlock(World worldIn, BlockPos pos)
@@ -639,44 +654,44 @@ public final class TourRailBlock extends Block {
             }
 
             boolean connectDiag = false;
-            StringBuilder connectionName = new StringBuilder();
+            String connectionName = "";
 
             if(railDirection == EnumRailDirection.NORTH_SOUTH) {
-                connectionName.append("VERTICAL_");
+                connectionName += "VERTICAL_";
                 boolean connectedNorth = this.isConnectedTo(pos.north());
                 boolean connectedSouth = this.isConnectedTo(pos.south());
                 if(!connectedNorth || !connectedSouth) {
-                    connectionName.append(connectedNorth ? "S" : "N");
+                    connectionName += connectedNorth ? "S" : "N";
                     BlockPos connectPos = pos.north(connectedNorth ? -1 : 1);
                     if(this.isConnectedTo(connectPos.east())) {
-                        connectionName.append("E");
+                        connectionName += "E";
                         connectDiag = true;
                     } else if(this.isConnectedTo(connectPos.west())) {
-                        connectionName.append("W");
+                        connectionName += "W";
                         connectDiag = true;
                     }
 
                 }
             } else if(railDirection == EnumRailDirection.EAST_WEST) {
-                connectionName.append("HORIZONTAL_");
+                connectionName += "HORIZONTAL_";
                 boolean connectedEast = this.isConnectedTo(pos.east());
                 boolean connectedWest = this.isConnectedTo(pos.west());
                 if(!connectedEast || !connectedWest) {
                     String suffix = connectedEast ? "W" : "E";
                     BlockPos connectPos = pos.east(connectedEast ? -1 : 1);
                     if(this.isConnectedTo(connectPos.north())) {
-                        connectionName.append("N");
+                        connectionName += "N";
                         connectDiag = true;
                     } else if(this.isConnectedTo(connectPos.south())) {
-                        connectionName.append("S");
+                        connectionName += "S";
                         connectDiag = true;
                     }
-                    connectionName.append(suffix);
+                    connectionName += suffix;
                 }
             }
 
             if(connectDiag) {
-                railDirection = EnumRailDirection.valueOf(connectionName.toString());
+                railDirection = EnumRailDirection.valueOf(connectionName);
             }
 
 
@@ -869,6 +884,24 @@ public final class TourRailBlock extends Block {
         public IBlockState getBlockState()
         {
             return this.state;
+        }
+    }
+
+    public enum SpeedType {
+        NONE(null),
+        SLOW(CarEntity.Speed.SLOW),
+        MEDIUM(CarEntity.Speed.MEDIUM),
+        FAST(CarEntity.Speed.FAST);
+
+        private final CarEntity.Speed speed;
+
+        SpeedType(CarEntity.Speed speed) {
+            this.speed = speed;
+        }
+
+        @Nonnull
+        public CarEntity.Speed getSpeed(CarEntity.Speed defaultSpeed) {
+            return speed == null ? defaultSpeed : speed;
         }
     }
 }

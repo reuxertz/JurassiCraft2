@@ -267,6 +267,9 @@ public enum RenderingHandler {
         registerBlockRenderer(BRISTLE_FERN);
 
         registerBlockRenderer(TOUR_RAIL);
+        registerBlockRenderer(TOUR_RAIL_SLOW);
+        registerBlockRenderer(TOUR_RAIL_MEDIUM);
+        registerBlockRenderer(TOUR_RAIL_FAST);
 
         registerItemRenderer(TRACKER);
         registerItemRenderer(PLANT_CELLS_PETRI_DISH);
@@ -481,7 +484,6 @@ public enum RenderingHandler {
         }
 
         blockColors.registerBlockColorHandler((state, access, pos, tintIndex) -> pos == null ? ColorizerFoliage.getFoliageColorBasic() : BiomeColorHelper.getFoliageColorAtPos(access, pos), MOSS);
-
         ItemColors itemColors = mc.getItemColors();
 
         for (Map.Entry<TreeType, AncientLeavesBlock> entry : ANCIENT_LEAVES.entrySet()) {

@@ -123,7 +123,11 @@ public class BlockHandler
 
     public static final SwarmBlock PLANKTON_SWARM = new SwarmBlock(() -> ItemHandler.PLANKTON);
     public static final SwarmBlock KRILL_SWARM = new SwarmBlock(() -> ItemHandler.KRILL);
-    public static final TourRailBlock TOUR_RAIL = new TourRailBlock();
+    public static final TourRailBlock TOUR_RAIL = new TourRailBlock(TourRailBlock.SpeedType.NONE);
+    public static final TourRailBlock TOUR_RAIL_SLOW = new TourRailBlock(TourRailBlock.SpeedType.SLOW);
+    public static final TourRailBlock TOUR_RAIL_MEDIUM = new TourRailBlock(TourRailBlock.SpeedType.MEDIUM);
+    public static final TourRailBlock TOUR_RAIL_FAST = new TourRailBlock(TourRailBlock.SpeedType.FAST);
+
     public static final SkeletonAssemblyBlock SKELETON_ASSEMBLY = new SkeletonAssemblyBlock();
 
     public static ElectricFencePoleBlock LOW_SECURITY_FENCE_POLE;
@@ -224,6 +228,9 @@ public class BlockHandler
         registerBlock(PLANKTON_SWARM, "Plankton Swarm");
         registerBlock(KRILL_SWARM, "Krill Swarm");
         registerBlock(TourRailBlockEntity.class, TOUR_RAIL, "Tour Rail");
+        registerBlock(TOUR_RAIL_SLOW, "Tour Rail Slow");
+        registerBlock(TOUR_RAIL_MEDIUM, "Tour Rail Medium");
+        registerBlock(TOUR_RAIL_FAST, "Tour Rail Fast");
 
         registerBlock(SKELETON_ASSEMBLY, "Skeleton Assembly");
 //        registerBlock(JP_MAIN_GATE_BLOCK, "Jurassic Park Gate");

@@ -532,7 +532,8 @@ public class FordExplorerEntity extends CarEntity {
                 mZ = getLook(1f).z;
             }
 
-            double max = getSpeed().modifier / 4f;
+            IBlockState state = world.getBlockState(railTracks);
+            double max = (((TourRailBlock)state.getBlock()).getSpeedType().getSpeed(getSpeed())).modifier / 4f;
             mX = MathHelper.clamp(mX, -max, max);
             mZ = MathHelper.clamp(mZ, -max, max);
             FordExplorerEntity.this.move(MoverType.SELF, mX, 0D, mZ);
