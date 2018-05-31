@@ -11,7 +11,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -27,7 +26,6 @@ import org.jurassicraft.server.message.FordExplorerChangeStateMessage;
 import org.jurassicraft.server.message.FordExplorerUpdatePositionStateMessage;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector4d;
 import java.util.Arrays;
@@ -40,6 +38,7 @@ public class FordExplorerEntity extends CarEntity {
     public boolean prevOnRails;
     public boolean onRails;
     private BlockPos prevRailTracks = INACTIVE;
+    public BlockPos prevRailStateTracks = INACTIVE;
     public BlockPos railTracks = INACTIVE;
     
     private boolean lastDirBackwards;
@@ -75,6 +74,7 @@ public class FordExplorerEntity extends CarEntity {
     
     @Override
     public void onUpdate() {
+        BlockPos startRailTracks = railTracks;
 		if(!world.isRemote) {
 			BlockPos rail = getPosition();
 			boolean isRails = world.getBlockState(rail).getBlock() instanceof TourRailBlock;
@@ -98,10 +98,9 @@ public class FordExplorerEntity extends CarEntity {
 			this.railTracks = isRails ? rail : INACTIVE;
 			if(!this.railTracks.equals(prevRailTracks)) {
 				JurassiCraft.NETWORK_WRAPPER.sendToDimension(new FordExplorerUpdatePositionStateMessage(this, rail), world.provider.getDimension());
-			}
-			this.prevRailTracks = railTracks;
-
-		}
+            }
+            this.prevRailTracks = railTracks;
+        }
 		if(onRails) {
 			this.setSize(0.75F, 0.25F);
 			this.stepHeight = 0F;
@@ -120,6 +119,9 @@ public class FordExplorerEntity extends CarEntity {
 			this.rightValue.setTarget(posY);
 		}
 		prevOnRails = onRails;
+		if(!startRailTracks.equals(railTracks)) {
+            prevRailStateTracks = startRailTracks;
+        }
     }
 
 	@Override
@@ -167,6 +169,7 @@ public class FordExplorerEntity extends CarEntity {
         super.writeEntityToNBT(compound);
         compound.setBoolean("OnRails", onRails);
         compound.setLong("BlockPosition", railTracks.toLong());
+        compound.setLong("PrevBlockPosition", this.prevRailStateTracks.toLong());
     }
     
     @Override
@@ -174,6 +177,7 @@ public class FordExplorerEntity extends CarEntity {
         super.readEntityFromNBT(compound);
         onRails = compound.getBoolean("OnRails");
         railTracks = BlockPos.fromLong(compound.getLong("BlockPosition"));
+        this.prevRailStateTracks = BlockPos.fromLong(compound.getLong("PrevBlockPosition"));
     }
     
     @Override
@@ -210,7 +214,7 @@ public class FordExplorerEntity extends CarEntity {
 
     /* =================================== CAR END ===========================================*/
     /* ================================ MINECART START =======================================*/
-    private static final int[][][] MATRIX = new int[][][] {{{0, 0, -1}, {0, 0, 1}}, {{ -1, 0, 0}, {1, 0, 0}}, {{ -1, -1, 0}, {1, 0, 0}}, {{ -1, 0, 0}, {1, -1, 0}}, {{0, 0, -1}, {0, -1, 1}}, {{0, -1, -1}, {0, 0, 1}}, {{0, 0, 1}, {1, 0, 0}}, {{0, 0, 1}, { -1, 0, 0}}, {{0, 0, -1}, { -1, 0, 0}}, {{0, 0, -1}, {1, 0, 0}}};
+
 
     public class MinecartLogic {
         private boolean isInReverse;
@@ -283,8 +287,7 @@ public class FordExplorerEntity extends CarEntity {
             if(getControllingPassenger() == null) {
                 return;
             }
-            IBlockState iblockstate = world.getBlockState(railTracks);
-            moveAlongTrack(iblockstate);
+            moveAlongTrack();
 
             if(!world.isRemote) {
                 doBlockCollisions();
@@ -295,16 +298,23 @@ public class FordExplorerEntity extends CarEntity {
 
         }
 
-        protected void moveAlongTrack(IBlockState state) {
+        protected void moveAlongTrack() {
             fallDistance = 0.0F;
             Vec3d vec3d = getPos();
 
             posY = (double)railTracks.getY();
 
             double slopeAdjustment = 0.0078125D;
-            BlockRailBase.EnumRailDirection blockrailbase$enumraildirection = state.getValue(((TourRailBlock)state.getBlock()).getShapeProperty());
+            TourRailBlock.EnumRailDirection dir = TourRailBlock.getRailDirection(world, railTracks);
+            EnumFacing facing = null;
 
-            switch (blockrailbase$enumraildirection) {
+            for(EnumFacing face : EnumFacing.values()) {
+                if(prevRailStateTracks.offset(face).equals(railTracks)) {
+                    facing = face;
+                }
+            }
+
+            switch (dir) {
                 case ASCENDING_EAST:
                     motionX -= slopeAdjustment;
                     ++posY;
@@ -321,12 +331,10 @@ public class FordExplorerEntity extends CarEntity {
                     motionZ -= slopeAdjustment;
                     ++posY;
             }
-            int[][] aint = MATRIX[blockrailbase$enumraildirection.getMetadata()];
-            double d1 = (double)(aint[1][0] - aint[0][0]);
-            double d2 = (double)(aint[1][2] - aint[0][2]);
+            double d1 = (double)(dir.getBackwardsX(facing) - dir.getForwardX(facing)); //TODO: rework method calling to include correct context
+            double d2 = (double)(dir.getBackwardsZ(facing) - dir.getForwardZ(facing));
             double d3 = Math.sqrt(d1 * d1 + d2 * d2);
             double d4 = motionX * d1 + motionZ * d2;
-
             if (d4 < 0.0D) {
                 d1 = -d1;
                 d2 = -d2;
@@ -399,10 +407,10 @@ public class FordExplorerEntity extends CarEntity {
 
             setRotation((float) rotationYawInterp.getCurrent(), rotationPitch);
 
-            double d18 = (double)railTracks.getX() + 0.5D + (double)aint[0][0] * 0.5D;
-            double d19 = (double)railTracks.getZ() + 0.5D + (double)aint[0][2] * 0.5D;
-            double d20 = (double)railTracks.getX() + 0.5D + (double)aint[1][0] * 0.5D;
-            double d21 = (double)railTracks.getZ() + 0.5D + (double)aint[1][2] * 0.5D;
+            double d18 = (double)railTracks.getX() + 0.5D + (double)dir.getForwardX(facing) * 0.5D;
+            double d19 = (double)railTracks.getZ() + 0.5D + (double)dir.getForwardZ(facing) * 0.5D;
+            double d20 = (double)railTracks.getX() + 0.5D + (double)dir.getBackwardsX(facing) * 0.5D;
+            double d21 = (double)railTracks.getZ() + 0.5D + (double)dir.getBackwardsZ(facing) * 0.5D;
             d1 = d20 - d18;
             d2 = d21 - d19;
             double d10;
@@ -454,8 +462,8 @@ public class FordExplorerEntity extends CarEntity {
                 d15 = 1;
             }
             double d16 = 0.06D;
-                motionX += motionX / d15 * d16;
-                motionZ += motionZ / d15 * d16;
+            motionX += motionX / d15 * d16;
+            motionZ += motionZ / d15 * d16;
         }
 
         public Vec3d getPos() {
@@ -467,14 +475,22 @@ public class FordExplorerEntity extends CarEntity {
 
             if (iblockstate.getBlock() instanceof TourRailBlock)
             {
-                BlockRailBase.EnumRailDirection blockrailbase$enumraildirection = iblockstate.getValue(((TourRailBlock) iblockstate.getBlock()).getShapeProperty());
-                int[][] aint = MATRIX[blockrailbase$enumraildirection.getMetadata()];
-                double d0 = x + 0.5D + (double)aint[0][0] * 0.5D;
-                double d1 = y + 0.0625D + (double)aint[0][1] * 0.5D;
-                double d2 = z + 0.5D + (double)aint[0][2] * 0.5D;
-                double d3 = x + 0.5D + (double)aint[1][0] * 0.5D;
-                double d4 = y + 0.0625D + (double)aint[1][1] * 0.5D;
-                double d5 = z + 0.5D + (double)aint[1][2] * 0.5D;
+                TourRailBlock.EnumRailDirection dir = TourRailBlock.getRailDirection(world, railTracks);
+
+                EnumFacing facing = null;
+
+                for(EnumFacing face : EnumFacing.values()) {
+                    if(prevRailStateTracks.offset(face).equals(railTracks)) {
+                        facing = face;
+                    }
+                }
+
+                double d0 = x + 0.5D + (double)dir.getForwardX(facing) * 0.5D;
+                double d1 = y + 0.0625D + (double)dir.getForwardY(facing) * 0.5D;
+                double d2 = z + 0.5D + (double)dir.getForwardZ(facing) * 0.5D;
+                double d3 = x + 0.5D + (double)dir.getBackwardsX(facing) * 0.5D;
+                double d4 = y + 0.0625D + (double)dir.getBackwardsY(facing) * 0.5D;
+                double d5 = z + 0.5D + (double)dir.getBackwardsZ(facing) * 0.5D;
                 double d6 = d3 - d0;
                 double d7 = (d4 - d1) * 2.0D;
                 double d8 = d5 - d2;

@@ -227,10 +227,15 @@ public abstract class CarEntity extends Entity {
 
     @Override
     public void onEntityUpdate() {
-	if(shouldStopUpdates()) {
-	    super.onEntityUpdate();
-	    return;
-	}
+        if(this.getSpeed() == Speed.FAST) {
+            this.allWheels.forEach(wheel -> this.createWheelParticles(wheel, true));
+        }
+        this.allWheels.forEach(this::createWheelParticles);
+
+        if(shouldStopUpdates()) {
+            super.onEntityUpdate();
+            return;
+        }
         if(!world.isRemote) {
             if(prevWorldTime != -1) {
                 world.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().grow(0.1f), this::canRunoverEntity).forEach(this::runOverEntity);
@@ -251,11 +256,6 @@ public abstract class CarEntity extends Entity {
         
         
         super.onEntityUpdate();
-        
-        if(this.getSpeed() == Speed.FAST) {
-            this.allWheels.forEach(wheel -> this.createWheelParticles(wheel, true));
-        }
-        this.allWheels.forEach(this::createWheelParticles);
 
         this.allWheels.forEach(this::processWheel);
         

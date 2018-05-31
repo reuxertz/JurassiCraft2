@@ -267,7 +267,6 @@ public enum RenderingHandler {
         registerBlockRenderer(BRISTLE_FERN);
 
         registerBlockRenderer(TOUR_RAIL);
-        registerBlockRenderer(TOUR_RAIL_POWERED);
 
         registerItemRenderer(TRACKER);
         registerItemRenderer(PLANT_CELLS_PETRI_DISH);

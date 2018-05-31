@@ -33,7 +33,9 @@ public class FordExplorerUpdatePositionStateMessage extends AbstractMessage<Ford
         if (entity instanceof FordExplorerEntity)
         {
             FordExplorerEntity car = (FordExplorerEntity) entity;
+            BlockPos prevRails = car.railTracks;
             car.railTracks = BlockPos.fromLong(message.position);
+            car.prevRailStateTracks = prevRails;
         }
     }
 
