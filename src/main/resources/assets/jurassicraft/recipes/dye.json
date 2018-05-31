@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "group": "items",
+  "group": "minecraft:dye",
   "ingredients": [
     {
       "item": "jurassicraft:rhamnus_salicifolius_berries",

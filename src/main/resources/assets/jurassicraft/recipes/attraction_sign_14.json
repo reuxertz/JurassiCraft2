@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "group": "items",
+  "group": "jurassicraft:attraction_sign",
   "ingredients": [
     {
       "item": "jurassicraft:attraction_sign",

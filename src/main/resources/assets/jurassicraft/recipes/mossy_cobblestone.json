@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
-  "group": "items",
+  "group": "minecraft:mossy_cobblestone",
   "pattern": [
     "ABA",
     "BAB",

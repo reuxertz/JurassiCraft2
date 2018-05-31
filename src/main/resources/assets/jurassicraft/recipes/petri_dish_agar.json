@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "group": "items",
+  "group": "jurassicraft:petri_dish_agar",
   "ingredients": [
     {
       "item": "jurassicraft:petri_dish",

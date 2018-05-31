@@ -1,6 +1,6 @@
 {
   "type": "forge:ore_shaped",
-  "group": "items",
+  "group": "jurassicraft:bug_crate",
   "pattern": [
     "AAA",
     "BCB",

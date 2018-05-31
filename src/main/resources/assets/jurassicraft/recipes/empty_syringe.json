@@ -1,6 +1,6 @@
 {
   "type": "forge:ore_shaped",
-  "group": "items",
+  "group": "jurassicraft:empty_syringe",
   "pattern": [
     " A ",
     " B ",

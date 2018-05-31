@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "group": "items",
+  "group": "jurassicraft:psaronius_planks",
   "ingredients": [
     {
       "item": "jurassicraft:psaronius_log",

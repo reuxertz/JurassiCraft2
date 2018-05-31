@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "group": "items",
+  "group": "jurassicraft:ajuginucula_smithii_oil",
   "ingredients": [
     {
       "item": "jurassicraft:ajuginucula_smithii_leaves",

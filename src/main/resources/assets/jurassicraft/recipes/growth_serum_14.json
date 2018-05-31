@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "group": "items",
+  "group": "jurassicraft:growth_serum",
   "ingredients": [
     {
       "item": "minecraft:golden_carrot",

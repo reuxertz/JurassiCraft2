@@ -1,6 +1,6 @@
 {
   "type": "forge:ore_shapeless",
-  "group": "items",
+  "group": "jurassicraft:advanced_circuit",
   "ingredients": [
     {
       "item": "jurassicraft:basic_circuit",

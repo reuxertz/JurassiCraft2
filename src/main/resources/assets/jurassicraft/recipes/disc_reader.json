@@ -1,6 +1,6 @@
 {
   "type": "forge:ore_shaped",
-  "group": "items",
+  "group": "jurassicraft:disc_reader",
   "pattern": [
     "ABC",
     "D  ",

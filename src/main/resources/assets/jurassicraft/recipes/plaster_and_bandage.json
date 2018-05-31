@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
-  "group": "items",
+  "group": "jurassicraft:plaster_and_bandage",
   "pattern": [
     "ABA",
     "BCB",

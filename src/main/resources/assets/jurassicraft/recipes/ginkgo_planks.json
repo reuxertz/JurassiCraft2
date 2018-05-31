@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "group": "items",
+  "group": "jurassicraft:ginkgo_planks",
   "ingredients": [
     {
       "item": "jurassicraft:ginkgo_log",

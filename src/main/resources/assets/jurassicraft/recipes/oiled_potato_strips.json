@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "group": "items",
+  "group": "jurassicraft:oiled_potato_strips",
   "ingredients": [
     {
       "item": "jurassicraft:wild_potato",

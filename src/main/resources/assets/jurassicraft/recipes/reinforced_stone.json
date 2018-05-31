@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
-  "group": "items",
+  "group": "jurassicraft:reinforced_stone",
   "pattern": [
     "AAA",
     "ABA",

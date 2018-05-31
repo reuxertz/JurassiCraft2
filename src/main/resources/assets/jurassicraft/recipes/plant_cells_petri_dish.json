@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "group": "items",
+  "group": "jurassicraft:plant_cells_petri_dish",
   "ingredients": [
     {
       "item": "jurassicraft:plant_cells",

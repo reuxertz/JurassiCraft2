@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "group": "items",
+  "group": "jurassicraft:chilean_sea_bass",
   "ingredients": [
     {
       "item": "minecraft:cooked_fish",

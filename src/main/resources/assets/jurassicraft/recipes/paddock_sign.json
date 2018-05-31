@@ -1,6 +1,6 @@
 {
   "type": "forge:ore_shaped",
-  "group": "items",
+  "group": "jurassicraft:paddock_sign",
   "pattern": [
     "AAA",
     "BBB",

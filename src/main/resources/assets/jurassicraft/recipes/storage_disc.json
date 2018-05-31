@@ -1,6 +1,6 @@
 {
   "type": "forge:ore_shaped",
-  "group": "items",
+  "group": "jurassicraft:storage_disc",
   "pattern": [
     " A ",
     "ABA",

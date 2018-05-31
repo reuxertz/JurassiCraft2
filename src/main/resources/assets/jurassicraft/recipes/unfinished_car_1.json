@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
-  "group": "items",
+  "group": "jurassicraft:unfinished_car",
   "pattern": [
     "ABC",
     "DEF",
