@@ -4,26 +4,33 @@ import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.client.util.ClientUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.proxy.ClientProxy;
+import org.jurassicraft.server.item.DartGun;
+import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.util.RegistryHandler;
 import org.lwjgl.opengl.GL11;
+
+import javax.annotation.Nullable;
 
 public class ClientEventHandler {
     private static final Minecraft MC = Minecraft.getMinecraft();
@@ -45,6 +52,34 @@ public class ClientEventHandler {
     public void onRenderTick(TickEvent.RenderTickEvent event) {
         if (event.phase == TickEvent.Phase.START) {
             this.isGUI = false;
+        }
+    }
+
+    @SubscribeEvent
+    public void onGameOverlay(RenderGameOverlayEvent.Post event) {
+        Minecraft mc = Minecraft.getMinecraft();
+        EntityPlayer player = mc.player;
+
+        for(EnumHand hand : EnumHand.values()) {
+            ItemStack stack = player.getHeldItem(hand);
+            if(stack.getItem() == ItemHandler.DART_GUN) {
+                ItemStack dartItem = DartGun.getDartItem(stack);
+                if(!dartItem.isEmpty()) {
+                    RenderItem renderItem = mc.getRenderItem();
+                    FontRenderer fontRenderer = mc.fontRenderer;
+                    ScaledResolution scaledResolution = new ScaledResolution(mc);
+
+                    int xPosition = scaledResolution.getScaledWidth() - 18;
+                    int yPosition = scaledResolution.getScaledHeight() - 18;
+
+                    renderItem.renderItemAndEffectIntoGUI(dartItem, xPosition, yPosition);
+                    String s = String.valueOf(dartItem.getCount());
+                    GlStateManager.disableDepth();
+                    fontRenderer.drawStringWithShadow(s, xPosition + 17 - fontRenderer.getStringWidth(s), yPosition + 9, 0xFFFFFFFF);
+                    GlStateManager.enableDepth();
+                }
+                break;
+            }
         }
     }
 
