@@ -1,6 +1,7 @@
 package org.jurassicraft.server.entity.dinosaur;
 
 import net.ilexiconn.llibrary.server.animation.Animation;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityVillager;
@@ -32,6 +33,12 @@ public class VelociraptorEntity extends DinosaurEntity {
             super.fall(distance, damageMultiplier);
         }
     }
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
+    }
+
 
     @Override
     public SoundEvent getSoundForAnimation(Animation animation) {

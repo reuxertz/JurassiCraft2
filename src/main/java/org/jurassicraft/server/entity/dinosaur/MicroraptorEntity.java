@@ -3,6 +3,7 @@ package org.jurassicraft.server.entity.dinosaur;
 import net.ilexiconn.llibrary.server.animation.Animation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityLookHelper;
 import net.minecraft.entity.passive.EntityChicken;
@@ -54,6 +55,13 @@ public class MicroraptorEntity extends DinosaurEntity {
     public boolean attackEntityFrom(DamageSource damageSource, float amount) {
         return damageSource != DamageSource.FLY_INTO_WALL && super.attackEntityFrom(damageSource, amount);
     }
+
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
+    }
+
 
     @Override
     public void onUpdate() {
