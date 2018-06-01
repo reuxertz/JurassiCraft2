@@ -1,17 +1,24 @@
 package org.jurassicraft.client.proxy;
 
 import net.ilexiconn.llibrary.client.lang.LanguageHandler;
+import net.ilexiconn.llibrary.client.model.tabula.TabulaModelHandler;
 import net.ilexiconn.llibrary.server.util.WebUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -38,6 +45,7 @@ import org.jurassicraft.client.gui.JournalGui;
 import org.jurassicraft.client.gui.OrderDinosaurGui;
 import org.jurassicraft.client.gui.SelectDinoGui;
 import org.jurassicraft.client.gui.SkeletonAssemblyGui;
+import org.jurassicraft.client.model.JurassicraftTabulaModelHandler;
 import org.jurassicraft.client.render.RenderingHandler;
 import org.jurassicraft.client.sound.CarSound;
 import org.jurassicraft.server.block.entity.BugCrateBlockEntity;
@@ -60,6 +68,7 @@ import org.jurassicraft.server.entity.vehicle.CarEntity;
 import org.jurassicraft.server.item.JournalItem;
 import org.jurassicraft.server.proxy.ServerProxy;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -70,7 +79,8 @@ public class ClientProxy extends ServerProxy {
 
     public static final List<UUID> PATRONS = new ArrayList<>();
 
-    @Override
+    @Override        @SuppressWarnings("unchecked")
+
     public void onPreInit(FMLPreInitializationEvent event) {
         super.onPreInit(event);
 
@@ -86,12 +96,13 @@ public class ClientProxy extends ServerProxy {
         MinecraftForge.EVENT_BUS.register(eventHandler);
         MinecraftForge.EVENT_BUS.register(RenderingHandler.INSTANCE);
         RenderingHandler.INSTANCE.preInit();
+        ModelLoaderRegistry.registerLoader(JurassicraftTabulaModelHandler.INSTANCE);
+        JurassicraftTabulaModelHandler.INSTANCE.addDomain(JurassiCraft.MODID);
     }
 
     @Override
     public void onInit(FMLInitializationEvent event) {
         super.onInit(event);
-
         RenderingHandler.INSTANCE.init();
     }
 

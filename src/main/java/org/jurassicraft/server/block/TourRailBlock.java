@@ -1,7 +1,6 @@
 package org.jurassicraft.server.block;
 
 import com.google.common.collect.Lists;
-import com.sun.istack.internal.NotNull;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
@@ -14,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -214,6 +214,11 @@ public final class TourRailBlock extends Block {
     private IBlockState updateDir(World worldIn, BlockPos pos, IBlockState state, boolean initialPlacement)
     {
         return (new TourRailBlock.Rail(worldIn, pos, state)).place(worldIn.isBlockPowered(pos), initialPlacement).getBlockState();
+    }
+
+    @Override
+    public BlockRenderLayer getBlockLayer() {
+        return BlockRenderLayer.TRANSLUCENT;
     }
 
     public enum EnumRailDirection implements IStringSerializable {
@@ -888,20 +893,27 @@ public final class TourRailBlock extends Block {
     }
 
     public enum SpeedType {
-        NONE(null),
-        SLOW(CarEntity.Speed.SLOW),
-        MEDIUM(CarEntity.Speed.MEDIUM),
-        FAST(CarEntity.Speed.FAST);
+        NONE(null, -1),
+        SLOW(CarEntity.Speed.SLOW, 0xff0000),
+        MEDIUM(CarEntity.Speed.MEDIUM, 0xff6600),
+        FAST(CarEntity.Speed.FAST, 0x00ff33);
 
         private final CarEntity.Speed speed;
+        private final int color;
 
-        SpeedType(CarEntity.Speed speed) {
+        SpeedType(CarEntity.Speed speed, int color) {
             this.speed = speed;
+            this.color = color;
         }
 
         @Nonnull
         public CarEntity.Speed getSpeed(CarEntity.Speed defaultSpeed) {
             return speed == null ? defaultSpeed : speed;
+        }
+
+        @Nonnull
+        public int getColor() {
+            return color;
         }
     }
 }

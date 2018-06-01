@@ -1,8 +1,0 @@
-{
-  "parent": "block/cube_all",
-  "textures": {
-    "layer0": "jurassicraft:blocks/tour_rail_slow",
-    "particle": "blocks/iron_block"
-  },
-  "tabula": "jurassicraft:models/block/tour_rail_slow"
-}

@@ -1,10 +1,12 @@
 package org.jurassicraft.client.render;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.minecraft.util.math.MathHelper;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.model.MultipartStateMap;
 import org.jurassicraft.client.model.animation.EntityAnimator;
@@ -31,11 +33,7 @@ import org.jurassicraft.client.render.entity.NullRenderer;
 import org.jurassicraft.client.render.entity.PaddockSignRenderer;
 import org.jurassicraft.client.render.entity.VenomRenderer;
 import org.jurassicraft.client.render.entity.dinosaur.DinosaurRenderInfo;
-import org.jurassicraft.server.block.BlockHandler;
-import org.jurassicraft.server.block.EncasedFossilBlock;
-import org.jurassicraft.server.block.FossilBlock;
-import org.jurassicraft.server.block.FossilizedTrackwayBlock;
-import org.jurassicraft.server.block.NestFossilBlock;
+import org.jurassicraft.server.block.*;
 import org.jurassicraft.server.block.entity.*;
 import org.jurassicraft.server.block.plant.AncientCoralBlock;
 import org.jurassicraft.server.block.tree.AncientLeavesBlock;
@@ -484,6 +482,8 @@ public enum RenderingHandler {
         }
 
         blockColors.registerBlockColorHandler((state, access, pos, tintIndex) -> pos == null ? ColorizerFoliage.getFoliageColorBasic() : BiomeColorHelper.getFoliageColorAtPos(access, pos), MOSS);
+        blockColors.registerBlockColorHandler((state, access, pos, tintIndex) -> tintIndex == 1 ? ((TourRailBlock)state.getBlock()).getSpeedType().getColor() : -1, BlockHandler.TOUR_RAIL_SLOW, BlockHandler.TOUR_RAIL_MEDIUM, BlockHandler.TOUR_RAIL_FAST);
+
         ItemColors itemColors = mc.getItemColors();
 
         for (Map.Entry<TreeType, AncientLeavesBlock> entry : ANCIENT_LEAVES.entrySet()) {
