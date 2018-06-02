@@ -20,7 +20,7 @@ public class VelociraptorDinosaur extends Dinosaur {
         this.setTimePeriod(TimePeriod.CRETACEOUS);
         this.setEggColorMale(0xA06238, 0x632D11);
         this.setEggColorFemale(0x91765D, 0x5A4739);
-        this.setSpeed(0.35, 0.40);
+        this.setSpeed(0.2, 0.3);
         this.setAttackSpeed(1.25);
         this.setHealth(10, 35);
         this.setStrength(1, 8);
@@ -37,7 +37,7 @@ public class VelociraptorDinosaur extends Dinosaur {
         this.setImprintable(true);
         this.setDefendOwner(true);
         this.setMaxHerdSize(18);
-        this.setAttackBias(800.0);
+        this.setAttackBias(600.0);
         this.setCanClimb(true);
         this.setBreeding(false,1, 7, 28, false, true);
         this.setJumpHeight(3);
