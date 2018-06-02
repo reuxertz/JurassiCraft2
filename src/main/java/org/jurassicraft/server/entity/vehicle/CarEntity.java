@@ -263,8 +263,7 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
             wheelDataList[i].forEach(wheel -> wheel.onUpdate(markedRemoved));
             markedRemoved.forEach(wheelDataList[i]::remove);
         }
-        
-        
+
         super.onEntityUpdate();
 
         this.allWheels.forEach(this::processWheel);
@@ -289,23 +288,15 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
         }
 
         this.tickInterp();
-        boolean controllingPassenger = this.getControllingPassenger() instanceof EntityPlayer;
         this.updateMotion();
-        if(controllingPassenger) {
-            if (this.getPassengers().isEmpty() || !(this.getPassengers().get(0) instanceof EntityPlayer)) {
-                this.setControlState(0);
-            }
-            if (this.world.isRemote) {
-                this.handleControl();
-            }
+        if (this.getPassengers().isEmpty() || !(this.getPassengers().get(0) instanceof EntityPlayer)) {
+            this.setControlState(0);
+        }
+        if (this.world.isRemote) {
+            this.handleControl();
         }
         this.applyMovement();
-        if (controllingPassenger) {
-            this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
-        } else {
-            this.motionX = this.motionY = this.motionZ = 0;
-        }
-        
+        this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
     }
     
     protected boolean canRunoverEntity(Entity entity) {
