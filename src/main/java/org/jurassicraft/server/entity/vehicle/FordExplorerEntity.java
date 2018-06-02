@@ -38,14 +38,14 @@ public class FordExplorerEntity extends CarEntity {
     public boolean prevOnRails;
     public boolean onRails;
     private BlockPos prevRailTracks = INACTIVE;
-    public BlockPos prevRailStateTracks = INACTIVE;
+    public BlockPos prevPos = INACTIVE;
     public BlockPos railTracks = INACTIVE;
     
     private boolean lastDirBackwards;
 
     public final MinecartLogic minecart = new MinecartLogic();
     
-    private final InterpValue rotationYawInterp = new InterpValue(4f); //TODO: config
+    private final InterpValue rotationYawInterp = new InterpValue(this, 4f);
     
     /* =================================== CAR START ===========================================*/
     
@@ -74,7 +74,7 @@ public class FordExplorerEntity extends CarEntity {
     
     @Override
     public void onUpdate() {
-        BlockPos startRailTracks = railTracks;
+        BlockPos startPos = this.getPosition();
 		if(!world.isRemote) {
 			BlockPos rail = getPosition();
 			boolean isRails = world.getBlockState(rail).getBlock() instanceof TourRailBlock;
@@ -119,8 +119,8 @@ public class FordExplorerEntity extends CarEntity {
 			this.rightValue.setTarget(posY);
 		}
 		prevOnRails = onRails;
-		if(!startRailTracks.equals(railTracks)) {
-            prevRailStateTracks = startRailTracks;
+		if(!startPos.equals(this.getPosition())) {
+            prevPos = this.getPosition();
         }
     }
 
@@ -169,7 +169,7 @@ public class FordExplorerEntity extends CarEntity {
         super.writeEntityToNBT(compound);
         compound.setBoolean("OnRails", onRails);
         compound.setLong("BlockPosition", railTracks.toLong());
-        compound.setLong("PrevBlockPosition", this.prevRailStateTracks.toLong());
+        compound.setLong("PrevBlockPosition", this.prevPos.toLong());
     }
     
     @Override
@@ -177,7 +177,7 @@ public class FordExplorerEntity extends CarEntity {
         super.readEntityFromNBT(compound);
         onRails = compound.getBoolean("OnRails");
         railTracks = BlockPos.fromLong(compound.getLong("BlockPosition"));
-        this.prevRailStateTracks = BlockPos.fromLong(compound.getLong("PrevBlockPosition"));
+        this.prevPos = BlockPos.fromLong(compound.getLong("PrevBlockPosition"));
     }
     
     @Override
@@ -239,10 +239,9 @@ public class FordExplorerEntity extends CarEntity {
             if (posY < -64.0D) {
                 outOfWorld();
             }
-
-            if (!world.isRemote && world instanceof WorldServer) {
+            MinecraftServer minecraftserver = world.getMinecraftServer();
+            if (!world.isRemote && world instanceof WorldServer && minecraftserver != null) {
                 world.profiler.startSection("portal");
-                MinecraftServer minecraftserver = world.getMinecraftServer();
                 int i = getMaxInPortalTime();
                 if (inPortal) {
                     if (minecraftserver.getAllowNether()) {
@@ -306,12 +305,11 @@ public class FordExplorerEntity extends CarEntity {
 
             double slopeAdjustment = 0.0078125D;
             TourRailBlock.EnumRailDirection dir = TourRailBlock.getRailDirection(world, railTracks);
-            EnumFacing facing = null;
 
-            for(EnumFacing face : EnumFacing.values()) {
-                if(prevRailStateTracks.offset(face).equals(railTracks)) {
-                    facing = face;
-                }
+            EnumFacing facing = getHorizontalFacing();
+
+            if(this.isInReverse) {
+                facing = facing.getOpposite();
             }
 
             switch (dir) {
@@ -331,7 +329,7 @@ public class FordExplorerEntity extends CarEntity {
                     motionZ -= slopeAdjustment;
                     ++posY;
             }
-            double d1 = (double)(dir.getBackwardsX(facing) - dir.getForwardX(facing)); //TODO: rework method calling to include correct context
+            double d1 = (double)(dir.getBackwardsX(facing) - dir.getForwardX(facing));
             double d2 = (double)(dir.getBackwardsZ(facing) - dir.getForwardZ(facing));
             double d3 = Math.sqrt(d1 * d1 + d2 * d2);
             double d4 = motionX * d1 + motionZ * d2;
@@ -390,16 +388,18 @@ public class FordExplorerEntity extends CarEntity {
                     double d24 = Math.abs(rotationYawInterp.getCurrent() - (target - 360f));
 
                     if(d23 < d22) {
-                    target += 360f;
+                        target += 360f;
                     } else if(d24 < d22) {
-                    target -= 360f;
+                        target -= 360f;
                     }
                 } while(d22 > 180);
 
                 target = Math.round(target * 100D) / 100D;
 
+                rotationYawInterp.setSpeed(this.getSpeedType().modifier * 4f);
+
                 if(!prevOnRails) {
-                        rotationYawInterp.reset(target);
+                    rotationYawInterp.reset(target);
                 } else if(d != -1) {
                     rotationYawInterp.setTarget(target);
                 }
@@ -466,7 +466,7 @@ public class FordExplorerEntity extends CarEntity {
             motionZ += motionZ / d15 * d16;
         }
 
-        public Vec3d getPos() {
+        private Vec3d getPos() {
             double x = posX;
             double y = posY;
             double z = posZ;
@@ -477,12 +477,9 @@ public class FordExplorerEntity extends CarEntity {
             {
                 TourRailBlock.EnumRailDirection dir = TourRailBlock.getRailDirection(world, railTracks);
 
-                EnumFacing facing = null;
-
-                for(EnumFacing face : EnumFacing.values()) {
-                    if(prevRailStateTracks.offset(face).equals(railTracks)) {
-                        facing = face;
-                    }
+                EnumFacing facing = getHorizontalFacing();
+                if(this.isInReverse) {
+                    facing = facing.getOpposite();
                 }
 
                 double d0 = x + 0.5D + (double)dir.getForwardX(facing) * 0.5D;
@@ -524,7 +521,7 @@ public class FordExplorerEntity extends CarEntity {
             }
         }
 
-        public void moveMinecartOnRail() {
+        private void moveMinecartOnRail() {
             double mX = motionX;
             double mZ = motionZ;
             if(mX == 0 && mZ == 0 && !getPassengers().isEmpty()) { //Should only happen when re-logging. //TODO: make a more elegant solution
@@ -532,11 +529,14 @@ public class FordExplorerEntity extends CarEntity {
                 mZ = getLook(1f).z;
             }
 
-            IBlockState state = world.getBlockState(railTracks);
-            double max = (((TourRailBlock)state.getBlock()).getSpeedType().getSpeed(getSpeed())).modifier / 4f;
+            double max = getSpeedType().modifier / 4f;
             mX = MathHelper.clamp(mX, -max, max);
             mZ = MathHelper.clamp(mZ, -max, max);
             FordExplorerEntity.this.move(MoverType.SELF, mX, 0D, mZ);
+        }
+
+        private Speed getSpeedType() {
+            return ((TourRailBlock)world.getBlockState(railTracks).getBlock()).getSpeedType().getSpeed(getSpeed());
         }
     }
     /* ================================= MINECART END ========================================*/

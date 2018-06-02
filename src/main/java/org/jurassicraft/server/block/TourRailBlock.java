@@ -111,6 +111,7 @@ public final class TourRailBlock extends Block {
         return enumRailDirection != null && enumRailDirection.isAscending() ? ASCENDING_AABB : FLAT_AABB;
     }
 
+    @Override
     public boolean isOpaqueCube(IBlockState state)
     {
         return false;
@@ -124,6 +125,7 @@ public final class TourRailBlock extends Block {
         }
     }
 
+    @Override
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
     {
         if (!worldIn.isRemote)
@@ -171,7 +173,7 @@ public final class TourRailBlock extends Block {
 
     protected void updateState(IBlockState state, World world, BlockPos pos, Block blockIn) {
         if (blockIn.getDefaultState().canProvidePower() && (new TourRailBlock.Rail(world, pos, state)).countAdjacentRails() == 3) {
-            this.updateDir(world, pos, state, false);
+//            this.updateDir(world, pos, state, false);
         }
     }
 
@@ -213,7 +215,7 @@ public final class TourRailBlock extends Block {
 
     private IBlockState updateDir(World worldIn, BlockPos pos, IBlockState state, boolean initialPlacement)
     {
-        return (new TourRailBlock.Rail(worldIn, pos, state)).place(worldIn.isBlockPowered(pos), initialPlacement).getBlockState();
+        return (new TourRailBlock.Rail(worldIn, pos, state)).place(initialPlacement).getBlockState();
     }
 
     @Override
@@ -719,7 +721,7 @@ public final class TourRailBlock extends Block {
             }
         }
 
-        public TourRailBlock.Rail place(boolean powered, boolean initialPlacement)
+        public TourRailBlock.Rail place(boolean initialPlacement)
         {
             BlockPos blockpos = this.pos.north();
             BlockPos blockpos1 = this.pos.south();

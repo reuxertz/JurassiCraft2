@@ -63,10 +63,10 @@ public class HelicopterBaseEntity extends EntityLivingBase implements IEntityAdd
     private boolean modulesSynced;
     private float rotationDelta;    
     
-    public final InterpValue rotorRotationAmount = new InterpValue(0.1D);
-    public final InterpValue interpRotationPitch = new InterpValue(0.25D);
-    public final InterpValue interpRotationRoll = new InterpValue(0.25D);
-    public final InterpValue interpSpeed = new InterpValue(0.01F);
+    public final InterpValue rotorRotationAmount = new InterpValue(this, 0.1D);
+    public final InterpValue interpRotationPitch = new InterpValue(this, 0.25D);
+    public final InterpValue interpRotationRoll = new InterpValue(this, 0.25D);
+    public final InterpValue interpSpeed = new InterpValue(this, 0.01F);
 
     public HelicopterBaseEntity(World worldIn) {
         super(worldIn);

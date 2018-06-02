@@ -15,12 +15,10 @@ import net.minecraft.entity.Entity;
 
 public class HelicopterAnimationModels {
     public static final Map<Class<? extends HelicopterModule>, ITabulaModelAnimator<? extends HelicopterBaseEntity>> animatorRegistry;
-    
-    private static final InterpValue doorOpen = new InterpValue(0.1D);
-    
+
     static {
-	animatorRegistry = Maps.newHashMap();
-	animatorRegistry.put(HelicopterDoor.class, (model, entity, imbSwing, limbSwingAmount, ageInTicks, rotationYaw, rotationPitch, scale) -> {
+        animatorRegistry = Maps.newHashMap();
+        animatorRegistry.put(HelicopterDoor.class, (model, entity, imbSwing, limbSwingAmount, ageInTicks, rotationYaw, rotationPitch, scale) -> {
 //	    doorOpen.setTarget(entity.getSeat(0).getPos().distanceTo(Minecraft.getMinecraft().player.getPositionVector()) > 25D ? 0D : Math.toRadians(70));
 //	    model.getCube("gunnerdoor2").rotateAngleY = (float) doorOpen.getValueForRendering(LLibrary.PROXY.getPartialTicks());
 	});

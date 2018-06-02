@@ -73,10 +73,10 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
 
     private static final double INTERP_AMOUNT = 0.15D; //TODO config ?
     
-    public final InterpValue backValue = new InterpValue(INTERP_AMOUNT);
-    public final InterpValue frontValue = new InterpValue(INTERP_AMOUNT);
-    public final InterpValue leftValue = new InterpValue(INTERP_AMOUNT);
-    public final InterpValue rightValue = new InterpValue(INTERP_AMOUNT);
+    public final InterpValue backValue = new InterpValue(this, INTERP_AMOUNT);
+    public final InterpValue frontValue = new InterpValue(this, INTERP_AMOUNT);
+    public final InterpValue leftValue = new InterpValue(this, INTERP_AMOUNT);
+    public final InterpValue rightValue = new InterpValue(this, INTERP_AMOUNT);
 
     public final CarWheel backLeftWheel = new CarWheel(0, wheeldata.bl); 
     public final CarWheel backRightWheel = new CarWheel(1, wheeldata.br);
@@ -177,7 +177,7 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
     }
     
     public Speed getSpeed() {
-	return Speed.values()[this.dataManager.get(WATCHER_SPEED)];
+	    return Speed.values()[this.dataManager.get(WATCHER_SPEED)];
     }
 
     public void setHealth(float health) {

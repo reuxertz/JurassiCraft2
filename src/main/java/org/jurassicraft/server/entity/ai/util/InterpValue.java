@@ -1,11 +1,7 @@
 package org.jurassicraft.server.entity.ai.util;
 
-import java.util.List;
-
-import org.jurassicraft.JurassiCraft;
-
 import com.google.common.collect.Lists;
-
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -15,23 +11,37 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import org.jurassicraft.JurassiCraft;
+
+import java.util.List;
+import java.util.function.Supplier;
 
 @EventBusSubscriber(modid=JurassiCraft.MODID)
 public class InterpValue implements INBTSerializable<NBTTagCompound> {
     
     private static final List<InterpValue> INSTANCES = Lists.newArrayList();
-    
-    private final double amount;
-    
+    private static final List<InterpValue> MARKED_REMOVE = Lists.newArrayList();
+
+    private final Supplier<Boolean> supplier;
+
+    private double speed;
     private double target;
     private double current;
     private double previousCurrent;
-    
     private boolean initilized;
-    
-    public InterpValue(double amount) {
-	this.amount = amount;
-	INSTANCES.add(this);
+
+    public InterpValue(double speed) {
+        this(() -> true, speed);
+    }
+
+    public InterpValue(Entity entity, double speed) {
+        this(entity::isEntityAlive, speed);
+    }
+
+    public InterpValue(Supplier<Boolean> supplier, double speed) {
+        this.speed = speed;
+        this.supplier = supplier;
+        INSTANCES.add(this);
     }
     
     public void setTarget(double target) {
@@ -44,19 +54,23 @@ public class InterpValue implements INBTSerializable<NBTTagCompound> {
     }
     
     public void reset(double target) {
-	this.previousCurrent = target;
+	    this.previousCurrent = target;
         this.current = target;
         this.target = target;
     }
-    
+
     private void tickInterp() {
+        if(!supplier.get()) {
+            MARKED_REMOVE.add(this);
+            return;
+        }
         this.previousCurrent = current;
-        if(Math.abs(current - target) <= amount) {
+        if(Math.abs(current - target) <= speed) {
             current = target;
         } else if(current < target) {
-            current += amount;
+            current += speed;
         } else {
-            current -= amount;
+            current -= speed;
         }
     }
     
@@ -68,26 +82,32 @@ public class InterpValue implements INBTSerializable<NBTTagCompound> {
 	return current;
     }
 
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+
     @Override
     public NBTTagCompound serializeNBT() {
-	NBTTagCompound tag = new NBTTagCompound();
-	tag.setDouble("target", target);
-	tag.setDouble("current", current);
-	return tag;
+        NBTTagCompound tag = new NBTTagCompound();
+        tag.setDouble("target", target);
+        tag.setDouble("current", current);
+        return tag;
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
-	this.target = nbt.getDouble("target");
-	this.current = nbt.getDouble("current");
-	this.previousCurrent = current;
+        this.target = nbt.getDouble("target");
+        this.current = nbt.getDouble("current");
+        this.previousCurrent = current;
     }
     
     @SubscribeEvent
     public static void onTick(TickEvent event) {
-	Side side = FMLCommonHandler.instance().getSide();
-	if((event instanceof ClientTickEvent && side.isClient()) || (event instanceof ServerTickEvent && side.isServer())) {
-	    INSTANCES.forEach(InterpValue::tickInterp);
-	} 
+        Side side = FMLCommonHandler.instance().getSide();
+        if((event instanceof ClientTickEvent && side.isClient()) || (event instanceof ServerTickEvent && side.isServer())) {
+            INSTANCES.forEach(InterpValue::tickInterp);
+            MARKED_REMOVE.forEach(INSTANCES::remove);
+            MARKED_REMOVE.clear();
+        }
     }
 }
