@@ -30,6 +30,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import java.util.function.Predicate;
 
 import static net.minecraft.util.EnumFacing.*;
 
@@ -238,15 +239,15 @@ public final class TourRailBlock extends Block {
         DIAGONAL_NE_SW      ( 0.5F, 0, -0.5F, -0.5F, 0,  0.5F),
         DIAGONAL_NW_SE      ( 0.5F, 0, 0.5F,  -0.5F, 0, -0.5F),
 
-        HORIZONTAL_NE       (EAST, EAST_WEST, DIAGONAL_NE_SW),
-        HORIZONTAL_NW       (WEST, EAST_WEST, DIAGONAL_NW_SE),
-        HORIZONTAL_SE       (EAST, EAST_WEST, DIAGONAL_NW_SE),
-        HORIZONTAL_SW       (WEST, EAST_WEST, DIAGONAL_NE_SW),
+        HORIZONTAL_NE       (NORTH, EAST, DIAGONAL_NE_SW, EAST_WEST),
+        HORIZONTAL_NW       (NORTH, WEST, DIAGONAL_NW_SE, EAST_WEST),
+        HORIZONTAL_SE       (SOUTH, EAST, DIAGONAL_NW_SE, EAST_WEST),
+        HORIZONTAL_SW       (SOUTH, WEST, DIAGONAL_NE_SW, EAST_WEST),
 
-        VERTICAL_NE         (NORTH, NORTH_SOUTH, DIAGONAL_NE_SW),
-        VERTICAL_NW         (NORTH, NORTH_SOUTH, DIAGONAL_NW_SE),
-        VERTICAL_SE         (SOUTH, NORTH_SOUTH, DIAGONAL_NW_SE),
-        VERTICAL_SW         (SOUTH, NORTH_SOUTH, DIAGONAL_NE_SW);
+        VERTICAL_NE         (NORTH, EAST, DIAGONAL_NE_SW, NORTH_SOUTH),
+        VERTICAL_NW         (NORTH, WEST, DIAGONAL_NW_SE, NORTH_SOUTH),
+        VERTICAL_SE         (SOUTH, EAST, DIAGONAL_NW_SE, NORTH_SOUTH),
+        VERTICAL_SW         (SOUTH, WEST, DIAGONAL_NE_SW, NORTH_SOUTH);
 
         private final Type type;
 
@@ -257,8 +258,9 @@ public final class TourRailBlock extends Block {
         private float backwardsY;
         private float backwardsZ;
 
-        private LinkedObjectRotation direction;
-        private EnumRailDirection fallbackdirection;
+        private Predicate<EnumFacing> facingPredicate; //Dosnt really need to be a predicate
+        private EnumRailDirection diagonalDirection;
+        private EnumRailDirection straightDirection;
 
         EnumRailDirection(float forwardX, float forward_y, float forward_z, float backwards_x, float backwards_y, float backwards_z) {
             this.forwardX = forwardX;
@@ -270,10 +272,11 @@ public final class TourRailBlock extends Block {
             this.type = Type.VALUE;
         }
 
-        EnumRailDirection(EnumFacing facing, EnumRailDirection direction, EnumRailDirection fallbackdirection) {
+        EnumRailDirection(EnumFacing facing, EnumFacing facing2, EnumRailDirection diagonalDirection, EnumRailDirection straightDirection) {
             type = Type.COPYCAT;
-            this.direction = new LinkedObjectRotation(facing, direction);
-            this.fallbackdirection = fallbackdirection;
+            this.facingPredicate = face -> face == facing || face == facing2;
+            this.diagonalDirection = diagonalDirection;
+            this.straightDirection = straightDirection;
         }
 
         public boolean isAscending() {
@@ -287,7 +290,7 @@ public final class TourRailBlock extends Block {
 
         public float getForwardX(EnumFacing face) {
             if(type == Type.COPYCAT) {
-                return (direction.getFacing() != face ? direction.getCopied() : fallbackdirection).getForwardX(null);
+                return (facingPredicate.test(face) ? this.diagonalDirection : this.straightDirection).getForwardX(null);
             }
             return forwardX;
         }
@@ -295,7 +298,7 @@ public final class TourRailBlock extends Block {
         public float getForwardY(EnumFacing face) {
             if(type == Type.COPYCAT) {
                 if(type == Type.COPYCAT) {
-                    return (direction.getFacing() != face ? direction.getCopied() : fallbackdirection).getForwardY(null);
+                    return (facingPredicate.test(face) ? this.diagonalDirection : this.straightDirection).getForwardY(null);
                 }
             }
             return forwardY;
@@ -304,7 +307,7 @@ public final class TourRailBlock extends Block {
         public float getForwardZ(EnumFacing face) {
             if(type == Type.COPYCAT) {
                 if(type == Type.COPYCAT) {
-                    return (direction.getFacing() != face ? direction.getCopied() : fallbackdirection).getForwardZ(null);
+                    return (facingPredicate.test(face) ? this.diagonalDirection : this.straightDirection).getForwardZ(null);
                 }
             }
             return forwardZ;
@@ -313,7 +316,7 @@ public final class TourRailBlock extends Block {
         public float getBackwardsX(EnumFacing face) {
             if(type == Type.COPYCAT) {
                 if(type == Type.COPYCAT) {
-                    return (direction.getFacing() != face ? direction.getCopied() : fallbackdirection).getBackwardsX(null);
+                    return (facingPredicate.test(face) ? this.diagonalDirection : this.straightDirection).getBackwardsX(null);
                 }
             }
             return backwardsX;
@@ -322,7 +325,7 @@ public final class TourRailBlock extends Block {
         public float getBackwardsY(EnumFacing face) {
             if(type == Type.COPYCAT) {
                 if(type == Type.COPYCAT) {
-                    return (direction.getFacing() != face ? direction.getCopied() : fallbackdirection).getBackwardsY(null);
+                    return (facingPredicate.test(face) ? this.diagonalDirection : this.straightDirection).getBackwardsY(null);
                 }
             }
             return backwardsY;
@@ -331,7 +334,7 @@ public final class TourRailBlock extends Block {
         public float getBackwardsZ(EnumFacing face) {
             if(type == Type.COPYCAT) {
                 if(type == Type.COPYCAT) {
-                    return (direction.getFacing() != face ? direction.getCopied() : fallbackdirection).getBackwardsZ(null);
+                    return (facingPredicate.test(face) ? this.diagonalDirection : this.straightDirection).getBackwardsZ(null);
                 }
             }
             return backwardsZ;
@@ -339,25 +342,6 @@ public final class TourRailBlock extends Block {
 
         private enum Type {
             VALUE, COPYCAT
-        }
-
-        private class LinkedObjectRotation {
-
-            private final EnumFacing facing;
-            private final EnumRailDirection copied;
-
-            LinkedObjectRotation(EnumFacing facing, EnumRailDirection copied) {
-                this.facing = facing;
-                this.copied = copied;
-            }
-
-            public EnumFacing getFacing() {
-                return facing;
-            }
-
-            public EnumRailDirection getCopied() {
-                return copied;
-            }
         }
     }
 

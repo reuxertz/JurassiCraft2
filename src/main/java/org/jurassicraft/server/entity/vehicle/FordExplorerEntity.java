@@ -219,6 +219,8 @@ public class FordExplorerEntity extends CarEntity {
     public class MinecartLogic {
         private boolean isInReverse;
         private boolean prevKeyDown;
+        private double adjustedRotationYaw;
+
 
         public EnumFacing getAdjustedHorizontalFacing() {
             return this.isInReverse ? getHorizontalFacing().getOpposite().rotateY() : getHorizontalFacing().rotateY();
@@ -306,11 +308,7 @@ public class FordExplorerEntity extends CarEntity {
             double slopeAdjustment = 0.0078125D;
             TourRailBlock.EnumRailDirection dir = TourRailBlock.getRailDirection(world, railTracks);
 
-            EnumFacing facing = getHorizontalFacing();
-
-            if(this.isInReverse) {
-                facing = facing.getOpposite();
-            }
+            EnumFacing facing = getFacingDir();
 
             switch (dir) {
                 case ASCENDING_EAST:
@@ -367,42 +365,47 @@ public class FordExplorerEntity extends CarEntity {
             motionX = d5 * d1 / d3;
             motionZ = d5 * d2 / d3;
 
-            double target;
+
+
+
+            Vec3d vec = getPositionVector();
+            Vec3d dirVec = new Vec3d(-d1, 0, d2).add(vec);
+            double target = MathUtils.cosineFromPoints(vec.addVector(0, 0, 1), dirVec, vec);
+
+            if(dirVec.x < vec.x) {
+                target = -target;
+            }
+
+            this.adjustedRotationYaw = target;
+
+            if(isInReverse) {
+                target += 180F;
+            }
+
             double d22;
+            do {
+                d22 = Math.abs(rotationYawInterp.getCurrent() - target);
+                double d23 = Math.abs(rotationYawInterp.getCurrent() - (target + 360f));
+                double d24 = Math.abs(rotationYawInterp.getCurrent() - (target - 360f));
 
-            if(world.isRemote)
-            {
-                Vec3d vec = getPositionVector();
-                Vec3d dirVec = new Vec3d(-d1, 0, d2).add(vec);
-                target = MathUtils.cosineFromPoints(vec.addVector(0, 0, 1), dirVec, vec);
-                if(dirVec.x < vec.x) {
-                    target = -target;
+                if(d23 < d22) {
+                    target += 360f;
+                } else if(d24 < d22) {
+                    target -= 360f;
                 }
-                if(isInReverse) {
-                    target += 180F;
-                }
+            } while(d22 > 180);
 
-                do {
-                    d22 = Math.abs(rotationYawInterp.getCurrent() - target);
-                    double d23 = Math.abs(rotationYawInterp.getCurrent() - (target + 360f));
-                    double d24 = Math.abs(rotationYawInterp.getCurrent() - (target - 360f));
+            target = Math.round(target * 100D) / 100D;
 
-                    if(d23 < d22) {
-                        target += 360f;
-                    } else if(d24 < d22) {
-                        target -= 360f;
-                    }
-                } while(d22 > 180);
 
-                target = Math.round(target * 100D) / 100D;
 
-                rotationYawInterp.setSpeed(this.getSpeedType().modifier * 4f);
 
-                if(!prevOnRails) {
-                    rotationYawInterp.reset(target);
-                } else if(d != -1) {
-                    rotationYawInterp.setTarget(target);
-                }
+            rotationYawInterp.setSpeed(this.getSpeedType().modifier * 4f);
+
+            if(!prevOnRails) {
+                rotationYawInterp.reset(target);
+            } else if(d != -1) {
+                rotationYawInterp.setTarget(target);
             }
 
             setRotation((float) rotationYawInterp.getCurrent(), rotationPitch);
@@ -477,10 +480,7 @@ public class FordExplorerEntity extends CarEntity {
             {
                 TourRailBlock.EnumRailDirection dir = TourRailBlock.getRailDirection(world, railTracks);
 
-                EnumFacing facing = getHorizontalFacing();
-                if(this.isInReverse) {
-                    facing = facing.getOpposite();
-                }
+                EnumFacing facing = getFacingDir();
 
                 double d0 = x + 0.5D + (double)dir.getForwardX(facing) * 0.5D;
                 double d1 = y + 0.0625D + (double)dir.getForwardY(facing) * 0.5D;
@@ -537,6 +537,14 @@ public class FordExplorerEntity extends CarEntity {
 
         private Speed getSpeedType() {
             return ((TourRailBlock)world.getBlockState(railTracks).getBlock()).getSpeedType().getSpeed(getSpeed());
+        }
+
+        private EnumFacing getFacingDir() {
+            EnumFacing facing = EnumFacing.getHorizontal(MathHelper.floor(this.adjustedRotationYaw * 4.0D / 360.0D + 0.5D) & 3);
+            if(this.isInReverse) {
+                facing = facing.getOpposite();
+            }
+            return facing;
         }
     }
     /* ================================= MINECART END ========================================*/
