@@ -84,17 +84,19 @@ public class DinosaurSpawnEggItem extends Item {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
     	ItemStack stack = player.getHeldItem(hand);
-        int mode = this.changeMode(stack);
-        if (world.isRemote) {
-            String modeString = "";
-            if (mode == 0) {
-                modeString = "random";
-            } else if (mode == 1) {
-                modeString = "male";
-            } else if (mode == 2) {
-                modeString = "female";
+    	if(player.isSneaking()) {
+            int mode = this.changeMode(stack);
+            if (world.isRemote) {
+                String modeString = "";
+                if (mode == 0) {
+                    modeString = "random";
+                } else if (mode == 1) {
+                    modeString = "male";
+                } else if (mode == 2) {
+                    modeString = "female";
+                }
+                player.sendMessage(new TextComponentString(new LangHelper("spawnegg.genderchange.name").withProperty("mode", I18n.format("gender." + modeString + ".name")).build()));
             }
-            player.sendMessage(new TextComponentString(new LangHelper("spawnegg.genderchange.name").withProperty("mode", I18n.format("gender." + modeString + ".name")).build()));
         }
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);
     }

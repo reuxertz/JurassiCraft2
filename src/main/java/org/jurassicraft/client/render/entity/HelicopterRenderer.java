@@ -48,7 +48,7 @@ public class HelicopterRenderer implements IRenderFactory<HelicopterBaseEntity> 
                     this.moduleTextures.put(id, new ResourceLocation(JurassiCraft.MODID, "textures/entities/helicopter/modules/ranger_helicopter_" + id + "_texture.png"));
                 }
             } catch (Exception e) {
-                JurassiCraft.INSTANCE.getLogger().fatal("Failed to load the models for the Helicopter", e);
+                JurassiCraft.getLogger().fatal("Failed to load the models for the Helicopter", e);
             }
         }
 

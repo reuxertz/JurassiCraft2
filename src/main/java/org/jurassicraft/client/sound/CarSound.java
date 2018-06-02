@@ -7,12 +7,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.server.entity.vehicle.CarEntity;
 
 @SideOnly(Side.CLIENT)
-public class CarSound extends MovingSound {
-    private CarEntity entity;
-
+public class CarSound extends EntitySound<CarEntity> {
     public CarSound(CarEntity entity) {
-        super(SoundHandler.CAR_MOVE, SoundCategory.BLOCKS);
-        this.entity = entity;
+        super(entity, SoundHandler.CAR_MOVE, SoundCategory.BLOCKS);
     }
 
     @Override
@@ -22,12 +19,12 @@ public class CarSound extends MovingSound {
 
     @Override
     public float getVolume() {
-        return Math.abs(this.entity.wheelRotateAmount) + 0.001F;
+        return (Math.abs(this.entity.wheelRotateAmount) + 0.001F) / (entity.sound == null || entity.sound.isDonePlaying() ? 2f : 4f);
     }
 
     @Override
     public float getPitch() {
-        return Math.min(1.0F, this.getVolume()) * 0.5F + 0.5F;
+        return Math.min(1.0F, this.getVolume()) * 0.5F + 0.7F;
     }
 
     @Override

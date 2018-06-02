@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.minecraft.item.ItemBlock;
 import net.minecraft.util.math.MathHelper;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.model.MultipartStateMap;
@@ -264,10 +265,10 @@ public enum RenderingHandler {
         registerBlockRenderer(CINNAMON_FERN);
         registerBlockRenderer(BRISTLE_FERN);
 
-        registerBlockRenderer(TOUR_RAIL);
-        registerBlockRenderer(TOUR_RAIL_SLOW);
-        registerBlockRenderer(TOUR_RAIL_MEDIUM);
-        registerBlockRenderer(TOUR_RAIL_FAST);
+        registerBlockRenderer(TOUR_RAIL, "tour_rail.tbl_jurassicraft");
+        registerBlockRenderer(TOUR_RAIL_SLOW, "tour_rail_stripe.tbl_jurassicraft");
+        registerBlockRenderer(TOUR_RAIL_MEDIUM, "tour_rail_stripe.tbl_jurassicraft");
+        registerBlockRenderer(TOUR_RAIL_FAST, "tour_rail_stripe.tbl_jurassicraft");
 
         registerItemRenderer(TRACKER);
         registerItemRenderer(PLANT_CELLS_PETRI_DISH);
@@ -485,6 +486,8 @@ public enum RenderingHandler {
         blockColors.registerBlockColorHandler((state, access, pos, tintIndex) -> tintIndex == 1 ? ((TourRailBlock)state.getBlock()).getSpeedType().getColor() : -1, BlockHandler.TOUR_RAIL_SLOW, BlockHandler.TOUR_RAIL_MEDIUM, BlockHandler.TOUR_RAIL_FAST);
 
         ItemColors itemColors = mc.getItemColors();
+
+        itemColors.registerItemColorHandler((stack, tintIndex) -> tintIndex == 1 ? ((TourRailBlock)((ItemBlock)stack.getItem()).getBlock()).getSpeedType().getColor() : -1, BlockHandler.TOUR_RAIL_SLOW, BlockHandler.TOUR_RAIL_MEDIUM, BlockHandler.TOUR_RAIL_FAST);
 
         for (Map.Entry<TreeType, AncientLeavesBlock> entry : ANCIENT_LEAVES.entrySet()) {
             itemColors.registerItemColorHandler((stack, tintIndex) -> ColorizerFoliage.getFoliageColorBasic(), entry.getValue());

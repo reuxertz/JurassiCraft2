@@ -38,7 +38,7 @@ public class FordExplorerRenderer extends Render<FordExplorerEntity> {
             TabulaModelContainer container = TabulaModelHelper.loadTabulaModel("/assets/jurassicraft/models/entities/ford_explorer/ford_explorer.tbl");
             this.baseModel = new ResetControlTabulaModel(container, animator);
         } catch (Exception e) {
-            JurassiCraft.INSTANCE.getLogger().fatal("Failed to load the models for the Ford Explorer", e);
+            JurassiCraft.getLogger().fatal("Failed to load the models for the Ford Explorer", e);
         }
     }
 

@@ -28,6 +28,7 @@ import org.jurassicraft.server.container.FeederContainer;
 import org.jurassicraft.server.container.FossilGrinderContainer;
 import org.jurassicraft.server.container.IncubatorContainer;
 import org.jurassicraft.server.container.SkeletonAssemblyContainer;
+import org.jurassicraft.server.datafixers.JurassiCraftDataFixers;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.DinosaurSerializers;
 import org.jurassicraft.server.entity.EntityHandler;
@@ -104,7 +105,7 @@ public class ServerProxy implements IGuiHandler {
         FoodHelper.init();
         BlockHandler.registerOres();
         ItemHandler.registerOres();
-        
+        JurassiCraftDataFixers.init();
         SmeltingRecipeHandler.init();
 
     }

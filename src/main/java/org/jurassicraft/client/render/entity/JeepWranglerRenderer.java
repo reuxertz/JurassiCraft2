@@ -52,7 +52,7 @@ public class JeepWranglerRenderer extends Render<JeepWranglerEntity> {
             }
             this.destroyModel = new TabulaModel(TabulaModelHelper.loadTabulaModel("/assets/jurassicraft/models/entities/jeep_wrangler/jeep_wrangler_break.tbl"), animator);
         } catch (Exception e) {
-            JurassiCraft.INSTANCE.getLogger().fatal("Failed to load the models for the Jeep Wrangler", e);
+            JurassiCraft.getLogger().fatal("Failed to load the models for the Jeep Wrangler", e);
         }
     }
 

@@ -4,8 +4,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.api.SubBlocksBlock;
 import org.jurassicraft.server.block.entity.*;
 import org.jurassicraft.server.block.fence.ElectricFenceBaseBlock;
@@ -249,9 +251,6 @@ public class BlockHandler
         registerBlock(DisplayBlockEntity.class, DISPLAY_BLOCK, "Display Block");
         registerBlock(FeederBlockEntity.class, FEEDER, "Feeder");
         registerBlock(BugCrateBlockEntity.class, BUG_CRATE, "Bug Crate");
-        GameRegistry.registerTileEntity(ElectricFenceWireBlockEntity.class, "tileEntityElectricFence");
-        GameRegistry.registerTileEntity(ElectricFencePoleBlockEntity.class, "tileEntityElectricPole");
-        GameRegistry.registerTileEntity(ElectricFenceBaseBlockEntity.class, "tileEntityElectricBase");
 
         PALEO_BALE_CYCADEOIDEA = new PaleoBaleBlock(PaleoBaleBlock.Variant.CYCADEOIDEA);
         PALEO_BALE_CYCAD = new PaleoBaleBlock(PaleoBaleBlock.Variant.CYCAD);
@@ -271,21 +270,18 @@ public class BlockHandler
         MED_SECURITY_FENCE_BASE = new ElectricFenceBaseBlock(FenceType.MED);
         HIGH_SECURITY_FENCE_BASE = new ElectricFenceBaseBlock(FenceType.HIGH);
 
-        registerBlock(LOW_SECURITY_FENCE_WIRE, "Low Security Fence Wire");
+        registerBlock(ElectricFenceWireBlockEntity.class, "tileEntityElectricFence", LOW_SECURITY_FENCE_WIRE, "Low Security Fence Wire");
         registerBlock(MED_SECURITY_FENCE_WIRE, "Med Security Fence Wire");
         registerBlock(HIGH_SECURITY_FENCE_WIRE, "High Security Fence Wire");
 
-        registerBlock(LOW_SECURITY_FENCE_POLE, "Low Security Fence Pole");
+        registerBlock(ElectricFencePoleBlockEntity.class, "tileEntityElectricPole", LOW_SECURITY_FENCE_POLE, "Low Security Fence Pole");
         registerBlock(MED_SECURITY_FENCE_POLE, "Med Security Fence Pole");
         registerBlock(HIGH_SECURITY_FENCE_POLE, "High Security Fence Pole");
 
-        registerBlock(LOW_SECURITY_FENCE_BASE, "Low Security Fence Base");
+        registerBlock(ElectricFenceBaseBlockEntity.class, "tileEntityElectricBase", LOW_SECURITY_FENCE_BASE, "Low Security Fence Base");
         registerBlock(MED_SECURITY_FENCE_BASE, "Med Security Fence Base");
         registerBlock(HIGH_SECURITY_FENCE_BASE, "High Security Fence Base");
 
-        GameRegistry.registerTileEntity(ElectricFenceWireBlockEntity.class, "tileEntityElectricFence");
-        GameRegistry.registerTileEntity(ElectricFencePoleBlockEntity.class, "tileEntityElectricPole");
-        GameRegistry.registerTileEntity(ElectricFenceBaseBlockEntity.class, "tileEntityElectricBase");
 
         registerBlock(PALEO_BALE_OTHER, "Paleo Bale Other");
         registerBlock(PALEO_BALE_CYCADEOIDEA, "Paleo Bale Cycadeoidea");
@@ -417,8 +413,13 @@ public class BlockHandler
 
     public static void registerBlock(Class<? extends TileEntity> tileEntity, Block block, String name)
     {
+        registerBlock(tileEntity, name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_"), block, name);
+    }
+
+    public static void registerBlock(Class<? extends TileEntity> tileEntity, String tileEntityName,  Block block, String name)
+    {
         registerBlock(block, name);
-        GameRegistry.registerTileEntity(tileEntity, name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_"));
+        GameRegistry.registerTileEntity(tileEntity, new ResourceLocation(JurassiCraft.MODID, tileEntityName));
     }
 
     public static void registerBlock(Block block, String name)

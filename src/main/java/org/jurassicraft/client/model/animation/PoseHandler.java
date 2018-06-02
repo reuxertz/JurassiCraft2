@@ -50,7 +50,7 @@ public class PoseHandler<ENTITY extends EntityLivingBase & Animatable> {
         try {
             entityResource = new URI("/assets/jurassicraft/models/entities/" + name + "/");
         } catch (URISyntaxException e) {
-            JurassiCraft.INSTANCE.getLogger().fatal("Illegal URI /assets/jurassicraft/models/entities/" + name + "/", e);
+            JurassiCraft.getLogger().fatal("Illegal URI /assets/jurassicraft/models/entities/" + name + "/", e);
             return;
         }
         for (GrowthStage growth : GrowthStage.values()) {
@@ -87,7 +87,7 @@ public class PoseHandler<ENTITY extends EntityLivingBase & Animatable> {
             Reader reader = new InputStreamReader(modelStream);
             AnimationsDTO rawAnimations = GSON.fromJson(reader, AnimationsDTO.class);
             ModelData data = this.loadModelData(growthSensitiveDir, rawAnimations);
-            JurassiCraft.INSTANCE.getLogger().debug("Successfully loaded " + name + "(" + growth + ") from " + definitionFile);
+            JurassiCraft.getLogger().debug("Successfully loaded " + name + "(" + growth + ") from " + definitionFile);
             reader.close();
             return data;
         } catch (IOException e) {
@@ -166,7 +166,7 @@ public class PoseHandler<ENTITY extends EntityLivingBase & Animatable> {
                 AdvancedModelRenderer cube = model.getCubeByIdentifier(identifier);
                 if (cube == null) {
                     AdvancedModelRenderer mainCube = mainModel.getCubeByIdentifier(identifier);
-                    JurassiCraft.INSTANCE.getLogger().error("Could not retrieve cube " + identifier + " (" + mainCube.boxName + ", " + partIndex + ") from the model " + resource);
+                    JurassiCraft.getLogger().error("Could not retrieve cube " + identifier + " (" + mainCube.boxName + ", " + partIndex + ") from the model " + resource);
                     pose[partIndex] = new PosedCuboid(mainCube);
                 } else {
                     pose[partIndex] = new PosedCuboid(cube);

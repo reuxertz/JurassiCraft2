@@ -36,10 +36,10 @@ public class JurassiCraft {
 
     public static long timerTicks;
 
-    @NetworkWrapper({ PlacePaddockSignMessage.class, ChangeTemperatureMessage.class, HelicopterEngineMessage.class, HelicopterDirectionMessage.class, HelicopterModulesMessage.class, SwitchHybridizerCombinatorMode.class, SetOrderMessage.class, OpenFieldGuideGuiMessage.class, UpdateVehicleControlMessage.class, MicroraptorDismountMessage.class, FordExplorerChangeStateMessage.class, FordExplorerUpdatePositionStateMessage.class, DNASequenceTransferClicked.class, CultivatorSyncNutrients.class})
+    @NetworkWrapper({ PlacePaddockSignMessage.class, ChangeTemperatureMessage.class, HelicopterEngineMessage.class, HelicopterDirectionMessage.class, HelicopterModulesMessage.class, SwitchHybridizerCombinatorMode.class, SetOrderMessage.class, OpenFieldGuideGuiMessage.class, UpdateVehicleControlMessage.class, MicroraptorDismountMessage.class, FordExplorerChangeStateMessage.class, FordExplorerUpdatePositionStateMessage.class, DNASequenceTransferClicked.class, CultivatorSyncNutrients.class, CarEntityPlayRecord.class, AttemptMoveToSeatMessage.class})
     public static SimpleNetworkWrapper NETWORK_WRAPPER;
 
-    private Logger logger;
+    private static Logger logger;
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
         this.logger = event.getModLog();
@@ -62,7 +62,7 @@ public class JurassiCraft {
         event.registerServerCommand(new ForceAnimationCommand());
     }
 
-    public Logger getLogger() {
-        return this.logger;
+    public static Logger getLogger() {
+        return logger;
     }
 }

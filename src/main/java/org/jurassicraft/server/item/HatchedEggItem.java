@@ -95,7 +95,7 @@ public class HatchedEggItem extends DNAContainerItem {
                         stack.shrink(1);
                     }
                 } catch (ReflectiveOperationException e) {
-                    JurassiCraft.INSTANCE.getLogger().warn("Failed to spawn dinosaur from hatched egg", e);
+                    JurassiCraft.getLogger().warn("Failed to spawn dinosaur from hatched egg", e);
                 }
             }
 

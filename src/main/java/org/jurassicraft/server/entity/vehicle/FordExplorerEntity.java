@@ -284,7 +284,7 @@ public class FordExplorerEntity extends CarEntity {
             if(railTracks.equals(INACTIVE)) { //Shouldn't occur
                 return;
             }
-            if(getControllingPassenger() == null) {
+            if(getPassengers().isEmpty()) {
                 return;
             }
             moveAlongTrack();
@@ -527,7 +527,7 @@ public class FordExplorerEntity extends CarEntity {
         public void moveMinecartOnRail() {
             double mX = motionX;
             double mZ = motionZ;
-            if(mX == 0 && mZ == 0 && getControllingPassenger() != null) { //Should only happen when re-logging. //TODO: make a more elegant solution
+            if(mX == 0 && mZ == 0 && !getPassengers().isEmpty()) { //Should only happen when re-logging. //TODO: make a more elegant solution
                 mX = getLook(1f).x;
                 mZ = getLook(1f).z;
             }

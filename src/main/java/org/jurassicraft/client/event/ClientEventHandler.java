@@ -2,35 +2,32 @@ package org.jurassicraft.client.event;
 
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.client.util.ClientUtils;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.proxy.ClientProxy;
+import org.jurassicraft.server.command.KeyBindingHandler;
+import org.jurassicraft.server.entity.vehicle.MultiSeatedEntity;
 import org.jurassicraft.server.item.DartGun;
 import org.jurassicraft.server.item.ItemHandler;
-import org.jurassicraft.server.util.RegistryHandler;
+import org.jurassicraft.server.message.AttemptMoveToSeatMessage;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
-
-import javax.annotation.Nullable;
 
 public class ClientEventHandler {
     private static final Minecraft MC = Minecraft.getMinecraft();
@@ -82,6 +79,24 @@ public class ClientEventHandler {
             }
         }
     }
+
+    @SubscribeEvent
+    public void keyInputEvent(InputEvent.KeyInputEvent event) {
+        KeyBindingHandler.VEHICLE_SWITCH_SEAT_CONTROL.isKeyDown();
+        for (int i = 0; i < 9; i++) {
+            int key = Keyboard.KEY_1 + i;
+            if (Keyboard.isKeyDown(key)) {
+                JurassiCraft.NETWORK_WRAPPER.sendToServer(new AttemptMoveToSeatMessage(i));
+                EntityPlayer player = Minecraft.getMinecraft().player;
+                Entity entity = player.getRidingEntity();
+                if (entity instanceof MultiSeatedEntity) {
+                    ((MultiSeatedEntity) entity).tryPutInSeat(player, i);
+                }
+                break;
+            }
+        }
+    }
+
 
     @SubscribeEvent
     public void onPlayerRender(RenderPlayerEvent.Post event) {

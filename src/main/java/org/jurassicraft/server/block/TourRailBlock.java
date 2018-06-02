@@ -218,7 +218,7 @@ public final class TourRailBlock extends Block {
 
     @Override
     public BlockRenderLayer getBlockLayer() {
-        return BlockRenderLayer.TRANSLUCENT;
+        return BlockRenderLayer.CUTOUT;
     }
 
     public enum EnumRailDirection implements IStringSerializable {
@@ -894,9 +894,9 @@ public final class TourRailBlock extends Block {
 
     public enum SpeedType {
         NONE(null, -1),
-        SLOW(CarEntity.Speed.SLOW, 0xff0000),
-        MEDIUM(CarEntity.Speed.MEDIUM, 0xff6600),
-        FAST(CarEntity.Speed.FAST, 0x00ff33);
+        SLOW(CarEntity.Speed.SLOW, 0xa80000), //RED
+        MEDIUM(CarEntity.Speed.MEDIUM, 0xff7600), //ORANGE
+        FAST(CarEntity.Speed.FAST, 0x00a800); //GREEN
 
         private final CarEntity.Speed speed;
         private final int color;
@@ -913,7 +913,7 @@ public final class TourRailBlock extends Block {
 
         @Nonnull
         public int getColor() {
-            return color;
+            return this.color;
         }
     }
 }

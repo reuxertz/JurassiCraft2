@@ -79,8 +79,8 @@ public class ClientProxy extends ServerProxy {
 
     public static final List<UUID> PATRONS = new ArrayList<>();
 
-    @Override        @SuppressWarnings("unchecked")
-
+    @Override
+    @SuppressWarnings("unchecked")
     public void onPreInit(FMLPreInitializationEvent event) {
         super.onPreInit(event);
 
@@ -89,7 +89,7 @@ public class ClientProxy extends ServerProxy {
         try {
             LanguageHandler.INSTANCE.loadRemoteLocalization(JurassiCraft.MODID);
         } catch (Exception e) {
-            JurassiCraft.INSTANCE.getLogger().error("Failed to load remote localizations", e);
+            JurassiCraft.getLogger().error("Failed to load remote localizations", e);
         }
 
         ClientEventHandler eventHandler = new ClientEventHandler();

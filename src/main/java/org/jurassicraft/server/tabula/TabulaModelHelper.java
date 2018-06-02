@@ -51,7 +51,7 @@ public class TabulaModelHelper {
                 cubes.addAll(traverse(cube));
             }
         } catch (Exception e) {
-            JurassiCraft.INSTANCE.getLogger().error("Failed to load all cubes for model {} by {}", model.getName(), model.getAuthor(), e);
+            JurassiCraft.getLogger().error("Failed to load all cubes for model {} by {}", model.getName(), model.getAuthor(), e);
         }
 
         return cubes;

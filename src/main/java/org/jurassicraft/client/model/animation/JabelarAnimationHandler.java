@@ -37,7 +37,7 @@ public class JabelarAnimationHandler<ENTITY extends EntityLivingBase & Animatabl
         try {
             return new AnimatableModel(TabulaModelHelper.loadTabulaModel(model), null);
         } catch (Exception e) {
-            JurassiCraft.INSTANCE.getLogger().error("Could not load Tabula model " + model, e);
+            JurassiCraft.getLogger().error("Could not load Tabula model " + model, e);
         }
         return null;
     }

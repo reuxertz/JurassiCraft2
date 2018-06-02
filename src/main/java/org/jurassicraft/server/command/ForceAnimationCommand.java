@@ -72,9 +72,9 @@ public class ForceAnimationCommand implements ICommand {
         World world = sender.getEntityWorld();
 
         if (world.isRemote) {
-            JurassiCraft.INSTANCE.getLogger().debug("Not processing on Client side");
+            JurassiCraft.getLogger().debug("Not processing on Client side");
         } else {
-            JurassiCraft.INSTANCE.getLogger().debug("Processing on Server side");
+            JurassiCraft.getLogger().debug("Processing on Server side");
             if (args.length < 1) {
                 throw new WrongUsageException("Missing the animation to set");
             }

@@ -9,6 +9,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemRecord;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -27,24 +29,26 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.proxy.ClientProxy;
 import org.jurassicraft.client.render.entity.TyretrackRenderer;
+import org.jurassicraft.client.sound.EntitySound;
 import org.jurassicraft.server.damage.DamageSources;
 import org.jurassicraft.server.entity.ai.util.InterpValue;
 import org.jurassicraft.server.entity.vehicle.util.CarWheel;
 import org.jurassicraft.server.entity.vehicle.util.WheelParticleData;
+import org.jurassicraft.server.message.CarEntityPlayRecord;
 import org.jurassicraft.server.message.UpdateVehicleControlMessage;
 import org.lwjgl.input.Keyboard;
 import org.omg.CORBA.DoubleHolder;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector4d;
 import java.util.List;
 import java.util.function.Predicate;
 
-public abstract class CarEntity extends Entity {
+public abstract class CarEntity extends Entity implements MultiSeatedEntity {
     public static final DataParameter<Byte> WATCHER_STATE = EntityDataManager.createKey(CarEntity.class, DataSerializers.BYTE);
     public static final DataParameter<Float> WATCHER_HEALTH = EntityDataManager.createKey(CarEntity.class, DataSerializers.FLOAT);
     public static final DataParameter<Integer> WATCHER_SPEED = EntityDataManager.createKey(CarEntity.class, DataSerializers.VARINT);
+    public static final DataParameter<ItemStack> RECORD_ITEM = EntityDataManager.createKey(CarEntity.class, DataSerializers.ITEM_STACK);
 
     public static final float MAX_HEALTH = 40;
     private static final int LEFT     = 0b0001;
@@ -84,7 +88,9 @@ public abstract class CarEntity extends Entity {
     
     public List<CarWheel> allWheels = Lists.newArrayList(backLeftWheel, frontLeftWheel, backRightWheel, frontRightWheel);
 
-    
+    @SideOnly(Side.CLIENT)
+    public EntitySound<CarEntity> sound;
+
     private float healAmount;
     private int healCooldown = 40;
     
@@ -114,6 +120,7 @@ public abstract class CarEntity extends Entity {
         this.dataManager.register(WATCHER_STATE, (byte) 0);
         this.dataManager.register(WATCHER_HEALTH, MAX_HEALTH);
         this.dataManager.register(WATCHER_SPEED, 1);
+        this.dataManager.register(RECORD_ITEM, ItemStack.EMPTY);
     }
 
     public boolean left() {
@@ -181,6 +188,10 @@ public abstract class CarEntity extends Entity {
         return this.dataManager.get(WATCHER_HEALTH);
     }
 
+    public ItemStack getItem() {
+        return this.dataManager.get(RECORD_ITEM);
+    }
+
     @Override
     public boolean isInRangeToRenderDist(double dist) {
         return true;
@@ -193,8 +204,7 @@ public abstract class CarEntity extends Entity {
 
     @Override
     public Entity getControllingPassenger() {
-        List<Entity> passengers = this.getPassengers();
-        return passengers.isEmpty() ? null : passengers.get(0);
+        return this.seats[0].occupant;
     }
     
     @Override
@@ -277,16 +287,20 @@ public abstract class CarEntity extends Entity {
                 }
             }
         }
+
         this.tickInterp();
-        if (this.getControllingPassenger() instanceof EntityPlayer) {
+        boolean controllingPassenger = this.getControllingPassenger() instanceof EntityPlayer;
+        this.updateMotion();
+        if(controllingPassenger) {
             if (this.getPassengers().isEmpty() || !(this.getPassengers().get(0) instanceof EntityPlayer)) {
                 this.setControlState(0);
             }
-            this.updateMotion();
             if (this.world.isRemote) {
                 this.handleControl();
             }
-            this.applyMovement();
+        }
+        this.applyMovement();
+        if (controllingPassenger) {
             this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
         } else {
             this.motionX = this.motionY = this.motionZ = 0;
@@ -409,8 +423,7 @@ public abstract class CarEntity extends Entity {
     }
 
     protected void applyMovement() {
-	Speed speed = this.getSpeed();
-
+	    Speed speed = this.getSpeed();
         
         float moveAmount = 0.0F;
         if ((this.left() || this.right()) && !(this.forward() || this.backward())) {
@@ -503,8 +516,20 @@ public abstract class CarEntity extends Entity {
 
     @Override
     public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
-        if (!this.world.isRemote && !player.isSneaking()) {
-            player.startRiding(this);
+        if(!world.isRemote) {
+            if(player.getRidingEntity() == this) {
+                ItemStack currentStack = this.dataManager.get(RECORD_ITEM);
+                ItemStack stack = player.getHeldItem(hand);
+                if(stack.getItem() instanceof ItemRecord || stack.isEmpty()) {
+                    this.dataManager.set(RECORD_ITEM, stack);
+                    player.setHeldItem(hand, currentStack);
+                    if(!stack.isEmpty()) {
+                        JurassiCraft.NETWORK_WRAPPER.sendToAll(new CarEntityPlayRecord(this, (ItemRecord)stack.getItem()));
+                    }
+                }
+            } else if (!player.isSneaking()) {
+                player.startRiding(this);
+            }
         }
         return true;
     }
@@ -512,7 +537,7 @@ public abstract class CarEntity extends Entity {
     @Override
     protected void addPassenger(Entity passenger) {
         super.addPassenger(passenger);
-        if (!this.world.isRemote && passenger instanceof EntityPlayer && !(this.getControllingPassenger() instanceof EntityPlayer)) {
+        if (passenger instanceof EntityPlayer && !(this.getControllingPassenger() instanceof EntityPlayer)) {
             Entity existing = this.seats[0].occupant;
             this.seats[0].occupant = passenger;
             this.usherPassenger(existing, 1);
@@ -523,12 +548,27 @@ public abstract class CarEntity extends Entity {
 
     private void usherPassenger(Entity passenger, int start) {
         for (int i = start; i < this.seats.length; i++) {
-            Seat seat = this.seats[i];
-            if (seat.occupant == null && seat.predicate.test(passenger)) {
-                seat.occupant = passenger;
+            if(this.tryPutInSeat(passenger, i)) {
                 return;
             }
         }
+    }
+
+    @Override
+    public boolean tryPutInSeat(Entity passenger, int seatID) {
+        if(seatID < this.seats.length && seatID >= 0) {
+            Seat seat = this.seats[seatID];
+            if (seat.occupant == null && seat.predicate.test(passenger)) {
+                for(Seat seat1 : this.seats) {
+                    if(seat1.occupant == passenger) {
+                        seat1.occupant = null;
+                    }
+                }
+                seat.occupant = passenger;
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -558,6 +598,10 @@ public abstract class CarEntity extends Entity {
                 this.setDead();
                 if (this.world.getGameRules().getBoolean("doEntityDrops")) {
                     this.dropItems();
+                    ItemStack recordItem = this.dataManager.get(RECORD_ITEM);
+                    if(!recordItem.isEmpty()) {
+                        this.entityDropItem(recordItem, 0);
+                    }
                 }
             }
         }
@@ -591,14 +635,14 @@ public abstract class CarEntity extends Entity {
     }
     
     public Seat getSeat(int id) {
-	if(id < seats.length) {
-	    return seats[id];
-	}
-	return null;
+        if(id < seats.length) {
+            return seats[id];
+        }
+        return null;
     }
     
     protected boolean shouldStopUpdates() {
-	return true;
+	    return false;
     }
     
     @Override
@@ -618,8 +662,8 @@ public abstract class CarEntity extends Entity {
         this.frontValue.deserializeNBT(tag.getCompoundTag("Front"));
         this.leftValue.deserializeNBT(tag.getCompoundTag("Left"));
         this.rightValue.deserializeNBT(tag.getCompoundTag("Right"));
+        this.dataManager.set(RECORD_ITEM, new ItemStack(compound.getCompoundTag("RecordItem")));
 
-        
     }
 
     @Override
@@ -633,6 +677,7 @@ public abstract class CarEntity extends Entity {
         tag.setTag("Left", this.leftValue.serializeNBT());
         tag.setTag("Right", this.rightValue.serializeNBT());        
         compound.setTag("InterpValues", tag);
+        compound.setTag("RecordItem", this.dataManager.get(RECORD_ITEM).serializeNBT());
     }
 
     private void startSound() {

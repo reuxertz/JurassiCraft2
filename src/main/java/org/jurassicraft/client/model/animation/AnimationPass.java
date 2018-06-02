@@ -121,11 +121,11 @@ public class AnimationPass {
         this.inertiaFactor = this.calculateInertiaFactor();
 
         if (this.pose == null) {
-            JurassiCraft.INSTANCE.getLogger().error("Trying to animate to a null pose array");
+            JurassiCraft.getLogger().error("Trying to animate to a null pose array");
         } else {
             for (int partIndex = 0; partIndex < Math.min(this.parts.length, this.pose.length); partIndex++) {
                 if (this.pose[partIndex] == null) {
-                    JurassiCraft.INSTANCE.getLogger().error("Part " + partIndex + " in pose is null");
+                    JurassiCraft.getLogger().error("Part " + partIndex + " in pose is null");
                 } else {
                     this.applyRotations(partIndex);
                     this.applyTranslations(partIndex);
