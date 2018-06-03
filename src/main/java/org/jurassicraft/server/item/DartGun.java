@@ -1,12 +1,6 @@
 package org.jurassicraft.server.item;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.jurassicraft.server.entity.TranquilizerDartEntity;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Slot;
@@ -14,23 +8,25 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
+import org.jurassicraft.server.entity.TranquilizerDartEntity;
+import org.jurassicraft.server.tab.TabHandler;
+
+import java.util.Collections;
+import java.util.List;
 
 public class DartGun extends Item {
-    
+
+    public DartGun() {
+        this.setCreativeTab(TabHandler.ITEMS);
+        this.setMaxStackSize(1);
+    }
+
     private static final int MAX_CARRY_SIZE = 12; //TODO config ?
     
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
-
-        if (!playerIn.capabilities.isCreativeMode) {
-            itemstack.shrink(1);
-        }
 
         SoundEvent event = null;
         
@@ -58,7 +54,7 @@ public class DartGun extends Item {
         }
         
         if(event != null) {
-            worldIn.playSound((EntityPlayer)null, playerIn.posX, playerIn.posY, playerIn.posZ, event, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+            worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, event, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
         }
 
 
@@ -67,16 +63,16 @@ public class DartGun extends Item {
     }
     
     public static ItemStack getDartItem(ItemStack dartGun) {
-	NBTTagCompound nbt = dartGun.getOrCreateSubCompound("dart_gun");
-	ItemStack stack = new ItemStack(nbt.getCompoundTag("itemstack"));
-	stack.setCount(Math.min(stack.getCount(), MAX_CARRY_SIZE));
-	return stack;
+        NBTTagCompound nbt = dartGun.getOrCreateSubCompound("dart_gun");
+        ItemStack stack = new ItemStack(nbt.getCompoundTag("itemstack"));
+        stack.setCount(Math.min(stack.getCount(), MAX_CARRY_SIZE));
+        return stack;
     }
     
     public static boolean setDartItem(ItemStack dartGun, ItemStack dartItem) {
-	boolean hadItem = !dartItem.isEmpty();
-	ItemStack dartItem2 = dartItem.splitStack(MAX_CARRY_SIZE);
-	dartGun.getOrCreateSubCompound("dart_gun").setTag("itemstack", dartItem2.serializeNBT());
-	return hadItem;
+        boolean hadItem = !dartItem.isEmpty();
+        ItemStack dartItem2 = dartItem.splitStack(MAX_CARRY_SIZE);
+        dartGun.getOrCreateSubCompound("dart_gun").setTag("itemstack", dartItem2.serializeNBT());
+        return hadItem;
     }
 }

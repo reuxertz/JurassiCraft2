@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.model.MultipartStateMap;
 import org.jurassicraft.client.model.animation.EntityAnimator;
@@ -51,10 +52,7 @@ import org.jurassicraft.server.entity.item.PaddockSignEntity;
 import org.jurassicraft.server.entity.vehicle.FordExplorerEntity;
 import org.jurassicraft.server.entity.vehicle.HelicopterBaseEntity;
 import org.jurassicraft.server.entity.vehicle.JeepWranglerEntity;
-import org.jurassicraft.server.item.DinosaurSpawnEggItem;
-import org.jurassicraft.server.item.FossilItem;
-import org.jurassicraft.server.item.ItemHandler;
-import org.jurassicraft.server.item.JournalItem;
+import org.jurassicraft.server.item.*;
 import org.jurassicraft.server.plant.Plant;
 import org.jurassicraft.server.plant.PlantHandler;
 
@@ -435,10 +433,10 @@ public enum RenderingHandler {
         registerItemRenderer(GOAT_COOKED);
         
         registerItemRenderer(DART_GUN);
-        registerItemRenderer(DART_TRANQUILIZER);
-        registerItemRenderer(DART_POISON_CYCASIN);
-        registerItemRenderer(DART_POISON_EXECUTIONER_CONCOCTION);
-        registerItemRenderer(DART_TIPPED_POTION);
+        registerItemRenderer(DART_TRANQUILIZER, "dart_colored");
+        registerItemRenderer(DART_POISON_CYCASIN, "dart_colored");
+        registerItemRenderer(DART_POISON_EXECUTIONER_CONCOCTION, "dart_colored");
+        registerItemRenderer(DART_TIPPED_POTION, "dart_colored");
 
         registerItemRenderer(WEST_INDIAN_LILAC_BERRIES);
     }
@@ -509,6 +507,8 @@ public enum RenderingHandler {
             }
             return 0xFFFFFF;
         }, SPAWN_EGG);
+
+        itemColors.registerItemColorHandler(((stack, tintIndex) -> tintIndex == 1 ? ((Dart)stack.getItem()).getDartColor(stack) : -1), DART_POISON_CYCASIN, DART_POISON_EXECUTIONER_CONCOCTION, DART_TIPPED_POTION, DART_TRANQUILIZER);
     }
 
     public void postInit() {
