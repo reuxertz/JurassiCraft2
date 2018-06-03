@@ -97,6 +97,10 @@ public class DinosaurAttributes {
         return this.scaleModifier;
     }
 
+    public void setScaleModifier(float scaleModifier) {
+        this.scaleModifier = scaleModifier;
+    }
+
     public float getHealthModifier() {
         return this.healthModifier;
     }

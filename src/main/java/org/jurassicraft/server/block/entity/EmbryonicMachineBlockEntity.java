@@ -3,9 +3,7 @@ package org.jurassicraft.server.block.entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.container.EmbryonicMachineContainer;
@@ -22,22 +20,6 @@ public class EmbryonicMachineBlockEntity extends MachineBaseBlockEntity {
     @Override
     protected int getProcess(int slot) {
         return 0;
-    }
-
-    @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
-
-        ItemStackHelper.loadAllItems(compound, this.slots);
-    }
-
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        compound = super.writeToNBT(compound);
-
-        ItemStackHelper.saveAllItems(compound, this.slots);
-
-        return compound;
     }
 
     @Override

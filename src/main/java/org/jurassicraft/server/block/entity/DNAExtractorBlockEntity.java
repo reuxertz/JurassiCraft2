@@ -3,7 +3,6 @@ package org.jurassicraft.server.block.entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,8 +22,8 @@ import java.util.List;
 import java.util.Random;
 
 public class DNAExtractorBlockEntity extends MachineBaseBlockEntity {
-    private static final int[] INPUTS = new int[] { 0, 1 };
-    private static final int[] OUTPUTS = new int[] { 2, 3, 4, 5 };
+    private static final int[] INPUTS = new int[]{0, 1};
+    private static final int[] OUTPUTS = new int[]{2, 3, 4, 5};
 
     private NonNullList<ItemStack> slots = NonNullList.withSize(6, ItemStack.EMPTY);
 
@@ -34,34 +33,16 @@ public class DNAExtractorBlockEntity extends MachineBaseBlockEntity {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
-
-        ItemStackHelper.loadAllItems(compound, this.slots);
-    }
-
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        compound = super.writeToNBT(compound);
-
-        ItemStackHelper.saveAllItems(compound, this.slots);
-
-        return compound;
-    }
-
-    @Override
     protected boolean canProcess(int process) {
         ItemStack extraction = this.slots.get(0);
         ItemStack storage = this.slots.get(1);
-
-        if (!storage.isEmpty() && storage.getItem() == ItemHandler.STORAGE_DISC && !extraction.isEmpty() && (extraction.getItem() == ItemHandler.AMBER || extraction.getItem() == ItemHandler.SEA_LAMPREY || extraction.getItem() == ItemHandler.DINOSAUR_MEAT) && (storage.getTagCompound() == null || !storage.getTagCompound().hasKey("Genetics"))) {
+        if (storage.getItem() == ItemHandler.STORAGE_DISC && (extraction.getItem() == ItemHandler.AMBER || extraction.getItem() == ItemHandler.SEA_LAMPREY || extraction.getItem() == ItemHandler.DINOSAUR_MEAT) && (storage.getTagCompound() == null || !storage.getTagCompound().hasKey("Genetics"))) {
             for (int i = 2; i < 6; i++) {
                 if (this.slots.get(i).isEmpty()) {
                     return true;
                 }
             }
         }
-
         return false;
     }
 
@@ -188,9 +169,5 @@ public class DNAExtractorBlockEntity extends MachineBaseBlockEntity {
     @Override
     public boolean isEmpty() {
         return false;
-    }
-
-    @Override
-    protected void setSlots(NonNullList[] slots) {
     }
 }

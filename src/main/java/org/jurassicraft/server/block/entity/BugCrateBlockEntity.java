@@ -1,23 +1,22 @@
 package org.jurassicraft.server.block.entity;
 
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.api.BreedableBug;
+import org.jurassicraft.server.container.BugCrateContainer;
+
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
-import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.api.BreedableBug;
-import org.jurassicraft.server.container.BugCrateContainer;
 
 public class BugCrateBlockEntity extends MachineBaseBlockEntity {
     private static final int[] INPUTS = new int[] { 0, 1, 2, 3, 4, 5 };
     private static final int[] OUTPUTS = new int[] { 6, 7, 8 };
 
-    private NonNullList<ItemStack> slots = NonNullList.<ItemStack>withSize(9, ItemStack.EMPTY);
+    private NonNullList<ItemStack> slots = NonNullList.withSize(9, ItemStack.EMPTY);
 
     @Override
     protected int getProcess(int slot) {
@@ -25,27 +24,12 @@ public class BugCrateBlockEntity extends MachineBaseBlockEntity {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
-
-        ItemStackHelper.loadAllItems(compound, this.slots);
-    }
-
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        compound = super.writeToNBT(compound);
-
-        ItemStackHelper.saveAllItems(compound, this.slots);
-
-        return compound;
-    }
-
-    @Override
     protected boolean canProcess(int process) {
+        System.out.println("sss");
         for (int i = 0; i < 3; i++) {
             ItemStack stack = this.getStackInSlot(i);
             BreedableBug bug = BreedableBug.getBug(stack);
-            if (bug != null && this.getBestFood(bug) != null) {
+            if (bug != null && !this.getBestFood(bug).isEmpty()) {
                 return true;
             }
         }
@@ -59,7 +43,7 @@ public class BugCrateBlockEntity extends MachineBaseBlockEntity {
             BreedableBug bug = BreedableBug.getBug(stack);
             if (bug != null) {
                 ItemStack food = this.getBestFood(bug);
-                if (food != null) {
+                if (!food.isEmpty()) {
                     ItemStack output = new ItemStack((Item) bug, bug.getBreedings(food));
                     for (int slot = 0; slot < this.slots.size(); slot++) {
                         if (this.slots.get(slot) == food) {
@@ -81,11 +65,11 @@ public class BugCrateBlockEntity extends MachineBaseBlockEntity {
     }
 
     private ItemStack getBestFood(BreedableBug bug) {
-        ItemStack best = null;
+        ItemStack best = ItemStack.EMPTY;
         int highestBreedings = Integer.MIN_VALUE;
         for (int i = 3; i < 6; i++) {
             ItemStack food = this.getStackInSlot(i);
-            if (food != null) {
+            if (!food.isEmpty()) {
                 int breedings = bug.getBreedings(food);
                 if (breedings > 0 && breedings > highestBreedings) {
                     highestBreedings = breedings;
@@ -161,9 +145,9 @@ public class BugCrateBlockEntity extends MachineBaseBlockEntity {
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
         NonNullList<ItemStack> slots = this.getSlots();
-        boolean stacksEqual = stack != null && stack.isItemEqual(slots.get(index)) && ItemStack.areItemStackTagsEqual(stack, slots.get(index));
+        boolean stacksEqual = !stack.isEmpty()&& stack.isItemEqual(slots.get(index)) && ItemStack.areItemStackTagsEqual(stack, slots.get(index));
         slots.set(index, stack);
-        if (stack != null && stack.getCount() > this.getInventoryStackLimit()) {
+        if (!stack.isEmpty() && stack.getCount() > this.getInventoryStackLimit()) {
             stack.setCount(this.getInventoryStackLimit());
         }
         if (!stacksEqual) {
@@ -189,9 +173,5 @@ public class BugCrateBlockEntity extends MachineBaseBlockEntity {
     @Override
     public boolean isEmpty() {
         return false;
-    }
-
-    @Override
-    protected void setSlots(NonNullList[] slots) {
     }
 }

@@ -18,12 +18,7 @@ import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.message.PlacePaddockSignMessage;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 public class SelectDinoGui extends GuiScreen {
     private final Map<Integer, ResourceLocation> TEXTURES = new HashMap<>();
@@ -139,6 +134,7 @@ public class SelectDinoGui extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        this.drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
 
         int signsPerPage = this.columnsPerPage * this.rowsPerPage;

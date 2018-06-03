@@ -1,13 +1,5 @@
 package org.jurassicraft.server.block.entity;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.NonNullList;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.container.EmbryoCalcificationMachineContainer;
 import org.jurassicraft.server.dinosaur.Dinosaur;
@@ -15,11 +7,18 @@ import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.item.SyringeItem;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+
 public class EmbryoCalcificationMachineBlockEntity extends MachineBaseBlockEntity {
     private static final int[] INPUTS = new int[] { 0, 1 };
     private static final int[] OUTPUTS = new int[] { 2 };
 
-    private NonNullList<ItemStack> slots = NonNullList.<ItemStack>withSize(3, ItemStack.EMPTY);
+    private NonNullList<ItemStack> slots = NonNullList.withSize(3, ItemStack.EMPTY);
 
     @Override
     protected int getProcess(int slot) {
@@ -27,27 +26,11 @@ public class EmbryoCalcificationMachineBlockEntity extends MachineBaseBlockEntit
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
-
-        ItemStackHelper.loadAllItems(compound, this.slots);
-    }
-
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        compound = super.writeToNBT(compound);
-
-        ItemStackHelper.saveAllItems(compound, this.slots);
-
-        return compound;
-    }
-
-    @Override
     protected boolean canProcess(int process) {
         ItemStack input = this.slots.get(0);
         ItemStack egg = this.slots.get(1);
 
-        if (input != null && input.getItem() instanceof SyringeItem && egg != null && egg.getItem() == Items.EGG) {
+        if (!input.isEmpty() && input.getItem() instanceof SyringeItem && !egg.isEmpty() && egg.getItem() == Items.EGG) {
             Dinosaur dino = EntityHandler.getDinosaurById(input.getItemDamage());
 
             if (!dino.isMammal()) {
@@ -137,9 +120,5 @@ public class EmbryoCalcificationMachineBlockEntity extends MachineBaseBlockEntit
     @Override
     public boolean isEmpty() {
         return false;
-    }
-
-    @Override
-    protected void setSlots(NonNullList[] slots) {
     }
 }

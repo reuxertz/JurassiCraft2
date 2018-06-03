@@ -622,7 +622,7 @@ public abstract class Dinosaur implements Comparable<Dinosaur>
     }
     
     public BirthType getBirthType() {
-	return birthType;
+	    return birthType;
     }
 
     @Override

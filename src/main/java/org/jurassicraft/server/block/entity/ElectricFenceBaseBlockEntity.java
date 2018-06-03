@@ -1,8 +1,8 @@
 package org.jurassicraft.server.block.entity;
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+        import net.minecraft.tileentity.TileEntity;
+        import net.minecraftforge.fml.relauncher.Side;
+        import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ElectricFenceBaseBlockEntity extends TileEntity {
     @Override

@@ -3,7 +3,6 @@ package org.jurassicraft.server.block.entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
@@ -83,12 +82,11 @@ public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntity {
                 }
             }
         }
-
         return hybrid;
     }
 
     private Dinosaur getDino(ItemStack disc) {
-        if (!disc.isEmpty()) {
+        if (!disc.isEmpty() && disc.hasTagCompound()) {
             DinoDNA data = DinoDNA.readFromNBT(disc.getTagCompound());
 
             return data.getDNAQuality() == 100 ? data.getDinosaur() : null;
@@ -237,7 +235,6 @@ public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntity {
         super.readFromNBT(nbt);
 
         this.hybridizerMode = nbt.getBoolean("HybridizerMode");
-        ItemStackHelper.loadAllItems(nbt, this.slots);
     }
 
     @Override
@@ -245,8 +242,6 @@ public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntity {
         nbt = super.writeToNBT(nbt);
 
         nbt.setBoolean("HybridizerMode", this.hybridizerMode);
-
-        ItemStackHelper.saveAllItems(nbt, this.slots);
 
         return nbt;
     }
@@ -271,7 +266,4 @@ public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntity {
         return false;
     }
 
-    @Override
-    protected void setSlots(NonNullList[] slots) {
-    }
 }

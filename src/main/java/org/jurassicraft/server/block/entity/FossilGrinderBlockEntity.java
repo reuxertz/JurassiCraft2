@@ -1,17 +1,16 @@
 package org.jurassicraft.server.block.entity;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.NonNullList;
+import java.util.Random;
+
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.api.GrindableItem;
 import org.jurassicraft.server.container.FossilGrinderContainer;
 
-import java.util.Random;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 
 public class FossilGrinderBlockEntity extends MachineBaseBlockEntity {
     private static final int[] INPUTS = new int[] { 0, 1, 2, 3, 4, 5 };
@@ -25,22 +24,6 @@ public class FossilGrinderBlockEntity extends MachineBaseBlockEntity {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
-
-        ItemStackHelper.loadAllItems(compound, this.slots);
-    }
-
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        compound = super.writeToNBT(compound);
-
-        ItemStackHelper.saveAllItems(compound, this.slots);
-
-        return compound;
-    }
-
-    @Override
     protected boolean canProcess(int process) {
         for (int inputIndex = 0; inputIndex < 6; inputIndex++) {
             ItemStack input = this.slots.get(inputIndex);
@@ -49,7 +32,7 @@ public class FossilGrinderBlockEntity extends MachineBaseBlockEntity {
 
             if (grindableItem != null && grindableItem.isGrindable(input)) {
                 for (int outputIndex = 6; outputIndex < 12; outputIndex++) {
-                    if( this.slots.get(outputIndex).isEmpty() ) {
+                    if (this.slots.get(outputIndex).isEmpty()) {
                         return true;
                     }
                 }
@@ -149,7 +132,4 @@ public class FossilGrinderBlockEntity extends MachineBaseBlockEntity {
         return false;
     }
 
-    @Override
-    protected void setSlots(NonNullList[] slots) {
-    }
 }

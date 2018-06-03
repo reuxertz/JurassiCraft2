@@ -15,10 +15,15 @@ import net.minecraft.tileentity.TileEntityLockable;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
-public class MachineBaseBlockEntity extends TileEntityLockable implements ITickable, ISidedInventory {
+import javax.annotation.Nullable;
+
+public abstract  class MachineBaseBlockEntity extends TileEntityLockable implements ITickable, ISidedInventory {
     protected String customName;
 
     protected int[] processTime = new int[this.getProcessCount()];
@@ -34,16 +39,16 @@ public class MachineBaseBlockEntity extends TileEntityLockable implements ITicka
         super.readFromNBT(compound);
 
         NBTTagList itemList = compound.getTagList("Items", 10);
-        NonNullList[] slots = new NonNullList[this.getSlots().size()];
-
+        NonNullList<ItemStack> slots = NonNullList.create();
+        for(int i = 0; i < this.getSizeInventory(); i++) {
+            slots.add(ItemStack.EMPTY);
+        }
         for (int i = 0; i < itemList.tagCount(); ++i) {
             NBTTagCompound item = itemList.getCompoundTagAt(i);
-            NonNullList<?> stack = NonNullList.create();
-
             byte slot = item.getByte("Slot");
 
-            if (slot >= 0 && slot < slots.length) {
-                slots[slot] = stack;
+            if (slot >= 0 && slot < this.getSizeInventory()) {
+                slots.set(slot, new ItemStack(item));
             }
         }
 
@@ -55,7 +60,6 @@ public class MachineBaseBlockEntity extends TileEntityLockable implements ITicka
         if (compound.hasKey("CustomName", 8)) {
             this.customName = compound.getString("CustomName");
         }
-
         this.setSlots(slots);
     }
 
@@ -103,17 +107,7 @@ public class MachineBaseBlockEntity extends TileEntityLockable implements ITicka
 
     @Override
     public ItemStack removeStackFromSlot(int index) {
-        ItemStack itemstack = this.getSlots().get(index);
-
-        if (itemstack.isEmpty())
-        {
-            return ItemStack.EMPTY;
-        }
-        else
-        {
-            this.getSlots().set(index, ItemStack.EMPTY);
-            return itemstack;
-        }
+        return removeStackFromSlot(index);
     }
 
     @Override
@@ -190,60 +184,57 @@ public class MachineBaseBlockEntity extends TileEntityLockable implements ITicka
             boolean flag = this.isProcessing(process);
             boolean dirty = false;
 
-            if (!this.world.isRemote) {
-                boolean hasInput = false;
+            boolean hasInput = false;
 
-                for (int input : this.getInputs(process)) {
-                    if (!slots.get(input).isEmpty()) {
-                        hasInput = true;
-                        break;
-                    }
+            for (int input : this.getInputs(process)) {
+                if (!slots.get(input).isEmpty()) {
+                    hasInput = true;
+                    break;
                 }
+            }
 
-                if (hasInput && this.canProcess(process)) {
-                    this.processTime[process]++;
+            if (hasInput && this.canProcess(process)) {
+                this.processTime[process]++;
 
-                    if (this.processTime[process] >= this.totalProcessTime[process]) {
-                        this.processTime[process] = 0;
-                        int total = 0;
-                        for (int input : this.getInputs()) {
-                            ItemStack stack = slots.get(input);
-                            if (!stack.isEmpty()) {
-                                total = this.getStackProcessTime(stack);
-                                break;
-                            }
+                if (this.processTime[process] >= this.totalProcessTime[process]) {
+                    this.processTime[process] = 0;
+                    int total = 0;
+                    for (int input : this.getInputs()) {
+                        ItemStack stack = slots.get(input);
+                        if (!stack.isEmpty()) {
+                            total = this.getStackProcessTime(stack);
+                            break;
                         }
-                        this.totalProcessTime[process] = total;
-                        this.processItem(process);
-                        this.onSlotUpdate();
                     }
-
-                    dirty = true;
-                } else if (this.isProcessing(process)) {
-                    if (this.shouldResetProgress()) {
-                        this.processTime[process] = 0;
-                    } else if (this.processTime[process] > 0) {
-                        this.processTime[process]--;
-                    }
-
-                    dirty = true;
+                    this.totalProcessTime[process] = total;
+                    this.processItem(process);
+                    this.onSlotUpdate();
                 }
 
-                if (flag != this.isProcessing(process)) {
-                    dirty = true;
+                dirty = true;
+            } else if (this.isProcessing(process)) {
+                if (this.shouldResetProgress()) {
+                    this.processTime[process] = 0;
+                } else if (this.processTime[process] > 0) {
+                    this.processTime[process]--;
                 }
 
-                if (dirty) {
-                    this.markDirty();
-                    this.world.notifyBlockUpdate(this.pos, this.world.getBlockState(this.pos), this.world.getBlockState(this.pos), 3);
-                }
+                dirty = true;
+            }
+
+            if (flag != this.isProcessing(process)) {
+                dirty = true;
+            }
+
+            if (dirty && !this.world.isRemote) {
+                this.markDirty();
             }
         }
     }
 
     @Override
     public boolean isUsableByPlayer(EntityPlayer player) {
-        return this.world.getTileEntity(this.pos) == this && player.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64.0D;
+        return this.world.getTileEntity(this.pos) == this && player.getDistanceSq((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D) <= 64.0D;
     }
 
     @Override
@@ -292,23 +283,13 @@ public class MachineBaseBlockEntity extends TileEntityLockable implements ITicka
         return 0;
     }
 
-    protected int[] getInputs() {
-        return null;
-    }
+    protected abstract int[] getInputs();
 
-    protected int[] getInputs(int process) {
-        return null;
-    }
+    protected abstract int[] getInputs(int process);
 
-    protected int[] getOutputs() {
-        return null;
-    }
+    protected abstract int[] getOutputs();
 
-    protected NonNullList<ItemStack> getSlots() {
-        return null;
-    }
-
-    protected void setSlots(NonNullList[] slots) {}
+    protected abstract NonNullList<ItemStack> getSlots();
 
     public boolean hasOutputSlot(ItemStack output) {
         return this.getOutputSlot(output) != -1;
@@ -329,7 +310,6 @@ public class MachineBaseBlockEntity extends TileEntityLockable implements ITicka
     @Override
     public int getField(int id) {
         int processCount = this.getProcessCount();
-
         if (id < processCount) {
             return this.processTime[id];
         } else if (id < processCount * 2) {
@@ -369,21 +349,15 @@ public class MachineBaseBlockEntity extends TileEntityLockable implements ITicka
         return true;
     }
 
-    protected boolean isStackable(ItemStack slotStack, ItemStack insertingStack) {
-        return slotStack.isEmpty() || (ItemStack.areItemsEqual(slotStack, insertingStack)
-                && ItemStack.areItemStackTagsEqual(slotStack, insertingStack)
-                && slotStack.getItemDamage() == insertingStack.getItemDamage()
-                && slotStack.getMaxStackSize() - slotStack.getCount() >= insertingStack.getCount());
-    }
-
     protected void mergeStack(int slot, ItemStack stack) {
         NonNullList<ItemStack> slots = this.getSlots();
 
         ItemStack previous = slots.get(slot);
         if (previous.isEmpty()) {
             slots.set(slot, stack);
-        } else if (isStackable(previous, stack)) {
-            previous.grow(stack.getCount());
+        } else if (ItemStack.areItemsEqual(previous, stack) && ItemStack.areItemStackTagsEqual(previous, stack)) {
+            int sizePrevious = previous.getCount();
+            sizePrevious += stack.getCount();
         }
     }
 
@@ -443,5 +417,23 @@ public class MachineBaseBlockEntity extends TileEntityLockable implements ITicka
     @Override
     public String getGuiID() {
         return null;
+    }
+
+    net.minecraftforge.items.IItemHandler handler = new SidedInvWrapper(this, net.minecraft.util.EnumFacing.UP);
+    net.minecraftforge.items.IItemHandler handlerBottom = new SidedInvWrapper(this, net.minecraft.util.EnumFacing.DOWN);
+
+    @SuppressWarnings("unchecked")
+    @Override
+    @javax.annotation.Nullable
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+    {
+        if (facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+            if (facing == EnumFacing.DOWN) {
+                return (T) handlerBottom;
+            }
+            else {
+                return (T) handler;
+            }
+        return super.getCapability(capability, facing);
     }
 }

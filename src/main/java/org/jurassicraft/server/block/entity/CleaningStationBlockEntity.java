@@ -10,6 +10,7 @@ import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntityLockable;
@@ -46,10 +47,8 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
         return inventory.getField(0) > 0;
     }
 
-
-
     public static boolean isItemFuel(ItemStack stack) {
-        return stack != null && stack.getItem() == Items.WATER_BUCKET;
+        return !stack.isEmpty() && stack.getItem() == Items.WATER_BUCKET;
     }
 
     @Override
@@ -66,8 +65,7 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
     public ItemStack decrStackSize(int index, int count) {
         ItemStack itemstack = ItemStackHelper.getAndSplit(this.slots, index, count);
 
-        if (!itemstack.isEmpty())
-        {
+        if (!itemstack.isEmpty()) {
             this.markDirty();
         }
 
@@ -122,7 +120,18 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        ItemStackHelper.loadAllItems(compound, this.slots);
+        NBTTagList itemList = compound.getTagList("Items", 10);
+
+        for (int i = 0; i < itemList.tagCount(); ++i) {
+            NBTTagCompound item = itemList.getCompoundTagAt(i);
+            ItemStack stack = new ItemStack(item);
+
+            byte slot = item.getByte("Slot");
+
+            if (slot >= 0 && slot < this.slots.size()) {
+                this.slots.set(slot, stack);
+            }
+        }
 
         this.cleaningStationWaterTime = compound.getShort("WaterTime");
         this.cleanTime = compound.getShort("CleanTime");
@@ -140,8 +149,19 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
         compound.setShort("WaterTime", (short) this.cleaningStationWaterTime);
         compound.setShort("CleanTime", (short) this.cleanTime);
         compound.setShort("CleanTimeTotal", (short) this.totalCleanTime);
+        NBTTagList itemList = new NBTTagList();
 
-        ItemStackHelper.saveAllItems(compound, this.slots);
+        for (int slot = 0; slot < this.slots.size(); ++slot) {
+            if (!this.slots.get(slot).isEmpty()) {
+                NBTTagCompound itemTag = new NBTTagCompound();
+                itemTag.setByte("Slot", (byte) slot);
+
+                this.slots.get(slot).writeToNBT(itemTag);
+                itemList.appendTag(itemTag);
+            }
+        }
+
+        compound.setTag("Items", itemList);
 
         if (this.hasCustomName()) {
             compound.setString("CustomName", this.customName);
@@ -232,7 +252,6 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
 
     private boolean canClean() {
         CleanableItem cleanableItem = CleanableItem.getCleanableItem(this.slots.get(0));
-
         if (cleanableItem != null && cleanableItem.isCleanable(this.slots.get(0))) {
             if( this.cleanedItemResult.isEmpty() ) {
                 this.cleanedItemResult = cleanableItem.getCleanedItem(this.slots.get(0), this.world.rand);

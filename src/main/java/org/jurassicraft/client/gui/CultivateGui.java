@@ -49,6 +49,12 @@ public class CultivateGui extends GuiContainer {
     }
 
     @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        this.drawDefaultBackground();
+        super.drawScreen(mouseX, mouseY, partialTicks);
+    }
+
+    @Override
     protected void drawGuiContainerForegroundLayer(int i, int j) {
         String name = this.cultivator.getDisplayName().getUnformattedText();
         this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2 - 45, 10, 4210752);
@@ -65,7 +71,7 @@ public class CultivateGui extends GuiContainer {
         this.mc.renderEngine.bindTexture(TEXTURE);
         this.drawTexturedModalRect(this.width / 2 - this.xSize / 2, this.height / 2 - this.ySize / 2, 0, 0, 176, 188);
 
-        this.drawTexturedModalRect(this.guiLeft + 48, this.guiTop + 18, 0, 188, 42, 67 - this.getScaled(this.cultivator.getWaterLevel(), 3, 67));
+        this.drawTexturedModalRect(this.guiLeft + 48, this.guiTop + 18, 0, 188, 42, 67 - this.getScaled(this.cultivator.getWaterLevel(), 2, 67));
 
         this.drawTemperatureSlider();
 

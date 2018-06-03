@@ -2,7 +2,11 @@ package org.jurassicraft.server.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.*;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryCraftResult;
+import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -82,7 +86,7 @@ public class SkeletonAssemblyContainer extends Container {
     }
 
     private String identify(ItemStack stack) {
-        if (!stack.isEmpty() && stack.getItem() instanceof FossilItem) {
+        if (stack != ItemStack.EMPTY && stack.getItem() instanceof FossilItem) {
             return ((FossilItem) stack.getItem()).getBoneType();
         }
         return "";
@@ -107,7 +111,7 @@ public class SkeletonAssemblyContainer extends Container {
     }
 
     private AssemblyData getAssemblyData(ItemStack stack) {
-        if (!stack.isEmpty() && stack.getItem() instanceof FossilItem) {
+        if (stack != ItemStack.EMPTY && stack.getItem() instanceof FossilItem) {
             FossilItem item = (FossilItem) stack.getItem();
             return new AssemblyData(item.getDinosaur(stack), item.isFresh());
         }
@@ -149,7 +153,7 @@ public class SkeletonAssemblyContainer extends Container {
             for (int i = 0; i < 25; ++i) {
                 ItemStack stack = this.craftMatrix.removeStackFromSlot(i);
 
-                if (!stack.isEmpty()) {
+                if (stack != ItemStack.EMPTY) {
                     player.dropItem(stack, false);
                 }
             }

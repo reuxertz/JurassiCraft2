@@ -8,6 +8,7 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntityLockable;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -81,7 +82,7 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
         this.slots.set(index, stack);
-        if (!stack.isEmpty() && stack.getCount() > this.getInventoryStackLimit()) {
+        if (stack != ItemStack.EMPTY && stack.getCount() > this.getInventoryStackLimit()) {
             stack.setCount(this.getInventoryStackLimit());
         }
     }
@@ -162,18 +163,43 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
 
+        NBTTagList itemList = compound.getTagList("Items", 10);
+        ItemStack[] slots = new ItemStack[this.slots.size()];
+
+        for (int i = 0; i < itemList.tagCount(); ++i) {
+            NBTTagCompound item = itemList.getCompoundTagAt(i);
+            ItemStack stack = new ItemStack(item);
+
+            byte slot = item.getByte("Slot");
+
+            if (slot >= 0 && slot < slots.length) {
+                slots[slot] = stack;
+            }
+        }
+
         if (compound.hasKey("CustomName", 8)) {
             this.customName = compound.getString("CustomName");
         }
 
-        ItemStackHelper.loadAllItems(compound, this.slots);
+        this.slots = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         compound = super.writeToNBT(compound);
 
-        ItemStackHelper.saveAllItems(compound, this.slots);
+
+        NBTTagList itemList = new NBTTagList();
+
+        for (int slot = 0; slot < this.getSizeInventory(); ++slot) {
+            if (!this.slots.isEmpty()) {
+                NBTTagCompound itemTag = new NBTTagCompound();
+                itemTag.setByte("Slot", (byte) slot);
+                super.writeToNBT(compound);
+                itemList.appendTag(itemTag);
+            }
+        }
+        compound.setTag("Items", itemList);
 
         if (this.hasCustomName()) {
             compound.setString("CustomName", this.customName);
@@ -255,7 +281,7 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
 
                         ItemStack stack = (ItemStack)this.slots.get(feedSlot);
 
-                        if (!stack.isEmpty()) {
+                        if (stack != ItemStack.EMPTY) {
                             EntityItem itemEntity = new EntityItem(this.world, this.pos.getX() + offsetX, this.pos.getY() + offsetY, this.pos.getZ() + offsetZ, new ItemStack(stack.getItem(), 1, stack.getItemDamage()));
                             itemEntity.setDefaultPickupDelay();
                             itemEntity.motionX = motionX * 0.3F;
@@ -295,7 +321,7 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
     private int getFoodForDinosaur(DinosaurEntity dinosaur) {
         int i = 0;
         for (ItemStack stack : this.slots) {
-            if (!stack.isEmpty() && stack.getCount() > 0 && FoodHelper.isEdible(dinosaur, dinosaur.getDinosaur().getDiet(), stack.getItem())) {
+            if (stack != ItemStack.EMPTY && stack.getCount() > 0 && FoodHelper.isEdible(dinosaur, dinosaur.getDinosaur().getDiet(), stack.getItem())) {
                 return i;
             }
             i++;

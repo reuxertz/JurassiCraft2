@@ -3,9 +3,7 @@ package org.jurassicraft.server.block.entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.api.SynthesizableItem;
@@ -26,22 +24,6 @@ public class DNASynthesizerBlockEntity extends MachineBaseBlockEntity {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
-
-        ItemStackHelper.loadAllItems(compound, this.slots);
-    }
-
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        compound = super.writeToNBT(compound);
-
-        ItemStackHelper.saveAllItems(compound, this.slots);
-
-        return compound;
-    }
-
-    @Override
     protected boolean canProcess(int process) {
         ItemStack storage = this.slots.get(0);
         ItemStack testTube = this.slots.get(1);
@@ -49,10 +31,10 @@ public class DNASynthesizerBlockEntity extends MachineBaseBlockEntity {
 
         SynthesizableItem synthesizableItem = SynthesizableItem.getSynthesizableItem(storage);
 
-        if (synthesizableItem != null && synthesizableItem.isSynthesizable(storage) && !testTube.isEmpty() && testTube.getItem() == ItemHandler.EMPTY_TEST_TUBE && !baseMaterial.isEmpty() && baseMaterial.getItem() == ItemHandler.DNA_NUCLEOTIDES && (storage.getTagCompound() != null && storage.getTagCompound().hasKey("DNAQuality"))) {
-            ItemStack output = synthesizableItem.getSynthesizedItem(storage, new Random(0));
+        if (synthesizableItem != null && synthesizableItem.isSynthesizable(storage) && testTube.getItem() == ItemHandler.EMPTY_TEST_TUBE && baseMaterial.getItem() == ItemHandler.DNA_NUCLEOTIDES && (storage.getTagCompound() != null && storage.getTagCompound().hasKey("DNAQuality"))) {
+            ItemStack output = synthesizableItem.getSynthesizedItem(storage, new Random());
 
-            return !output.isEmpty() && this.hasOutputSlot(output);
+            return output != null && this.hasOutputSlot(output);
         }
 
         return false;
@@ -132,9 +114,5 @@ public class DNASynthesizerBlockEntity extends MachineBaseBlockEntity {
     @Override
     public boolean isEmpty() {
         return false;
-    }
-
-    @Override
-    protected void setSlots(NonNullList[] slots) {
     }
 }
