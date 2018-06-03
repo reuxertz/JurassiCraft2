@@ -10,6 +10,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
+import mcp.MethodsReturnNonnullByDefault;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jurassicraft.JurassiCraft;
@@ -116,8 +117,13 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.vecmath.Vector3f;
 
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public abstract class DinosaurEntity extends EntityCreature implements IEntityAdditionalSpawnData, Animatable {
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -281,6 +287,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
                 
     }
 
+    @Nullable
     protected LegSolver createLegSolver() {
         return null;
     }
@@ -308,7 +315,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     }
 
     private boolean hasPredators() {
-        for (EntityLiving predator : this.getEntitiesWithinDistance(EntityLiving.class, 10.0F, 5.0F)) {
+        for (EntityLiving predator : this.world.getEntitiesWithinAABB(EntityLiving.class, new AxisAlignedBB(this.posX - 10F, this.posY - 5F, this.posZ - 10F, this.posX + 10F, this.posY + 5F, this.posZ + 10F), e -> e != DinosaurEntity.this)) {
             boolean hasDinosaurPredator = false;
 
             if (predator instanceof DinosaurEntity) {
@@ -332,12 +339,6 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         return false;
     }
 
-    private <T extends Entity> List<T> getEntitiesWithinDistance(Class<T> entity, double width, double height) {
-        List<T> entities = this.world.getEntitiesWithinAABB(entity, new AxisAlignedBB(this.posX - width, this.posY - height, this.posZ - width, this.posX + width, this.posY + height, this.posZ + width));
-        entities.remove(this);
-        return entities;
-    }
-
     public int getDinosaurTime() {
         SleepTime sleepTime = this.getDinosaur().getSleepTime();
 
@@ -350,10 +351,12 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         return (int) time;
     }
 
+    @SuppressWarnings("unused")
     public boolean hasTracker() {
         return this.hasTracker;
     }
 
+    @SuppressWarnings("unused")
     public void setHasTracker(boolean hasTracker) {
         this.hasTracker = hasTracker;
     }
@@ -602,7 +605,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         double prevHealth = this.getMaxHealth();
         double newHealth = Math.max(1.0F, this.interpolate(this.dinosaur.getBabyHealth(), this.dinosaur.getAdultHealth()) * this.attributes.getHealthModifier());
         double speed = this.interpolate(this.dinosaur.getBabySpeed(), this.dinosaur.getAdultSpeed()) * this.attributes.getSpeedModifier();
-        double strength = this.interpolate(this.dinosaur.getBabyStrength(), this.dinosaur.getAdultStrength()) * this.attributes.getDamageModifier();
+        double strength = this.getAttackDamage() * this.attributes.getDamageModifier();
 
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(newHealth);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(speed);
