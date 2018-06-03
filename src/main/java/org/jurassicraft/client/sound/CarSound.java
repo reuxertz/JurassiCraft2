@@ -26,15 +26,4 @@ public class CarSound extends EntitySound<CarEntity> {
     public float getPitch() {
         return Math.min(1.0F, this.getVolume()) * 0.5F + 0.7F;
     }
-
-    @Override
-    public void update() {
-        if (this.entity.isDead) {
-            this.donePlaying = true;
-        } else {
-            this.xPosF = (float) this.entity.posX;
-            this.yPosF = (float) this.entity.posY;
-            this.zPosF = (float) this.entity.posZ;
-        }
-    }
 }

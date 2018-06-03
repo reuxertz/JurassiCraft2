@@ -1677,7 +1677,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     @Override
     public void moveRelative(float strafe, float up, float forward, float friction) {
         if(this.inWater() && !this.canDinoSwim()) {
-            friction *= 20;//times by 5, but as friction is divided by 2 when in water do 5 * 2 instead
+            friction *= 10;//times by 5, but as friction is divided by 2 when in water do 5 * 2 instead
         }
         super.moveRelative(strafe, up, forward, friction);
     }

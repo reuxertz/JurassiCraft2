@@ -46,7 +46,6 @@ public class CarEntityPlayRecord extends AbstractMessage<CarEntityPlayRecord> {
     public void onClientReceived(Minecraft client, CarEntityPlayRecord message, EntityPlayer player, MessageContext messageContext) {
         Entity entity = player.world.getEntityByID(message.entityId);
         if(entity instanceof CarEntity) {
-            System.out.println("a");
             CarEntity carEntity = (CarEntity)entity;
             if(carEntity.sound != null) {
                 carEntity.sound.setFinished();
