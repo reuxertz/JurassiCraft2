@@ -3,20 +3,30 @@ package org.jurassicraft.client.event;
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.client.util.ClientUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.proxy.ClientProxy;
+import org.jurassicraft.server.command.KeyBindingHandler;
+import org.jurassicraft.server.entity.vehicle.MultiSeatedEntity;
+import org.jurassicraft.server.item.DartGun;
+import org.jurassicraft.server.item.ItemHandler;
+import org.jurassicraft.server.message.AttemptMoveToSeatMessage;
 import org.lwjgl.opengl.GL11;
 
 public class ClientEventHandler {
@@ -41,6 +51,53 @@ public class ClientEventHandler {
             this.isGUI = false;
         }
     }
+
+
+    @SubscribeEvent
+    public void onGameOverlay(RenderGameOverlayEvent.Post event) {
+        Minecraft mc = Minecraft.getMinecraft();
+        EntityPlayer player = mc.player;
+
+        for(EnumHand hand : EnumHand.values()) {
+            ItemStack stack = player.getHeldItem(hand);
+            if(stack.getItem() == ItemHandler.DART_GUN) {
+                ItemStack dartItem = DartGun.getDartItem(stack);
+                if(!dartItem.isEmpty()) {
+                    RenderItem renderItem = mc.getRenderItem();
+                    FontRenderer fontRenderer = mc.fontRenderer;
+                    ScaledResolution scaledResolution = new ScaledResolution(mc);
+
+                    int xPosition = scaledResolution.getScaledWidth() - 18;
+                    int yPosition = scaledResolution.getScaledHeight() - 18;
+
+                    renderItem.renderItemAndEffectIntoGUI(dartItem, xPosition, yPosition);
+                    String s = String.valueOf(dartItem.getCount());
+                    GlStateManager.disableDepth();
+                    fontRenderer.drawStringWithShadow(s, xPosition + 17 - fontRenderer.getStringWidth(s), yPosition + 9, 0xFFFFFFFF);
+                    GlStateManager.enableDepth();
+                }
+                break;
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void keyInputEvent(InputEvent.KeyInputEvent event) {
+        int i = 0;
+        for(KeyBinding binding : KeyBindingHandler.VEHICLE_KEY_BINDINGS) {
+            if(binding.isPressed()) {
+                JurassiCraft.NETWORK_WRAPPER.sendToServer(new AttemptMoveToSeatMessage(i));
+                EntityPlayer player = Minecraft.getMinecraft().player;
+                Entity entity = player.getRidingEntity();
+                if (entity instanceof MultiSeatedEntity) {
+                    ((MultiSeatedEntity) entity).tryPutInSeat(player, i);
+                }
+                break;
+            }
+            ++i;
+        }
+    }
+
 
     @SubscribeEvent
     public void onPlayerRender(RenderPlayerEvent.Post event) {
