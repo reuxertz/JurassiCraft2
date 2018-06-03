@@ -6,11 +6,23 @@ import org.jurassicraft.server.entity.DinosaurEntity;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import org.jurassicraft.server.tab.TabHandler;
 
 public class Dart extends Item {
-    public final BiConsumer<DinosaurEntity, ItemStack> consumer;
-    
-    public Dart(BiConsumer<DinosaurEntity, ItemStack> consumer) {
-	this.consumer = consumer;
+    private final BiConsumer<DinosaurEntity, ItemStack> consumer;
+    private final int dartColor;
+
+    public Dart(BiConsumer<DinosaurEntity, ItemStack> consumer, int dartColor) {
+        this.consumer = consumer;
+        this.dartColor = dartColor;
+        this.setCreativeTab(TabHandler.ITEMS);
+    }
+
+    public int getDartColor(ItemStack stack) {
+        return dartColor;
+    }
+
+    public BiConsumer<DinosaurEntity, ItemStack> getConsumer() {
+        return consumer;
     }
 }

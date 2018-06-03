@@ -3,10 +3,12 @@ package org.jurassicraft.server.item;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemSeedFood;
 import net.minecraft.item.ItemSeeds;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
@@ -220,7 +222,10 @@ public class ItemHandler {
     public static final BasicFoodItem GOAT_COOKED = new BasicFoodItem(6, 1.0F, true, TabHandler.FOODS);
 
     public static final DartGun DART_GUN = new DartGun();
-    public static final Dart DART_TRANQUILIZER = new Dart((entity, stack) -> entity.tranquilize(200));
+    public static final Dart DART_TRANQUILIZER = new Dart((entity, stack) -> entity.tranquilize(2000), 0xFFFFFF);
+    public static final Dart DART_POISON_CYCASIN = new Dart((entity, stack) -> entity.addPotionEffect(new PotionEffect(MobEffects.POISON, 2000)), 0xE2E1B8);
+    public static final Dart DART_POISON_EXECUTIONER_CONCOCTION = new Dart((entity, stack) -> entity.setDeathIn(200), 0x000000);
+    public static final Dart DART_TIPPED_POTION = new PotionDart();
     
     public static void init() {
         registerItem(FOSSILIZED_EGG, "Fossilized Egg");
@@ -353,9 +358,12 @@ public class ItemHandler {
         registerItem(STAMP_SET, "Stamp Set");
 
         registerItem(INGEN_JOURNAL, "InGen Journal");
-        
+
         registerItem(DART_GUN, "Dart Gun");
         registerItem(DART_TRANQUILIZER, "Dart Tranquilizer");
+        registerItem(DART_POISON_CYCASIN, "Dart Poision Cycasin");
+        registerItem(DART_POISON_EXECUTIONER_CONCOCTION, "Dart Poison Executioner Concoction");
+        registerItem(DART_TIPPED_POTION, "Dart Tipped Potion");
         
         for (TreeType type : TreeType.values()) {
             registerTreeType(type);

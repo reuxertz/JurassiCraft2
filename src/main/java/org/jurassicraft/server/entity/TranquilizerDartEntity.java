@@ -53,15 +53,15 @@ public class TranquilizerDartEntity extends EntityThrowable implements IEntityAd
 
     @Override
     protected void onImpact(RayTraceResult result) {
-	Item item = stack.getItem();
-	if(result.entityHit instanceof DinosaurEntity) {
-	    if(item instanceof Dart) {
-		((Dart)item).consumer.accept((DinosaurEntity)result.entityHit, stack);
-	    } else {
-		JurassiCraft.INSTANCE.getLogger().error("Expected Dart Item, got {} ", item.getRegistryName());
-	    }
-	}
-	if (!this.world.isRemote) {
+		Item item = stack.getItem();
+		if(result.entityHit instanceof DinosaurEntity) {
+			if(item instanceof Dart) {
+			((Dart)item).getConsumer().accept((DinosaurEntity)result.entityHit, stack);
+			} else {
+			JurassiCraft.INSTANCE.getLogger().error("Expected Dart Item, got {} ", item.getRegistryName());
+			}
+		}
+		if (!this.world.isRemote) {
             this.world.setEntityState(this, (byte)3);
             this.setDead();
         }

@@ -1,12 +1,6 @@
 package org.jurassicraft.server.item;
 
-import java.util.Collections;
-import java.util.List;
-
 import com.google.common.collect.Lists;
-import net.minecraft.util.*;
-import org.jurassicraft.server.entity.TranquilizerDartEntity;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Slot;
@@ -14,18 +8,25 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
+import org.jurassicraft.server.entity.TranquilizerDartEntity;
+import org.jurassicraft.server.tab.TabHandler;
+
+import java.util.Collections;
+import java.util.List;
 
 public class DartGun extends Item {
+
+    public DartGun() {
+        this.setCreativeTab(TabHandler.ITEMS);
+        this.setMaxStackSize(1);
+    }
 
     private static final int MAX_CARRY_SIZE = 12; //TODO config ?
 
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
-
-        if (!playerIn.capabilities.isCreativeMode) {
-            itemstack.shrink(1);
-        }
 
         SoundEvent event = null;
 

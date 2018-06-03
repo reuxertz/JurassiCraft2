@@ -9,6 +9,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemRecord;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -27,10 +29,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.proxy.ClientProxy;
 import org.jurassicraft.client.render.entity.TyretrackRenderer;
+import org.jurassicraft.client.sound.EntitySound;
 import org.jurassicraft.server.damage.DamageSources;
 import org.jurassicraft.server.entity.ai.util.InterpValue;
 import org.jurassicraft.server.entity.vehicle.util.CarWheel;
 import org.jurassicraft.server.entity.vehicle.util.WheelParticleData;
+import org.jurassicraft.server.message.CarEntityPlayRecord;
 import org.jurassicraft.server.message.UpdateVehicleControlMessage;
 import org.lwjgl.input.Keyboard;
 import org.omg.CORBA.DoubleHolder;
@@ -44,6 +48,7 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
     public static final DataParameter<Byte> WATCHER_STATE = EntityDataManager.createKey(CarEntity.class, DataSerializers.BYTE);
     public static final DataParameter<Float> WATCHER_HEALTH = EntityDataManager.createKey(CarEntity.class, DataSerializers.FLOAT);
     public static final DataParameter<Integer> WATCHER_SPEED = EntityDataManager.createKey(CarEntity.class, DataSerializers.VARINT);
+    public static final DataParameter<ItemStack> RECORD_ITEM = EntityDataManager.createKey(CarEntity.class, DataSerializers.OPTIONAL_ITEM_STACK);
 
     public static final float MAX_HEALTH = 40;
     private static final int LEFT     = 0b0001;
@@ -53,7 +58,7 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
 
     protected final Seat[] seats = createSeats();
     protected final WheelData wheeldata = createWheels();
-    
+
     public float wheelRotation;
     public float wheelRotateAmount;
     public float prevWheelRotateAmount;
@@ -65,34 +70,35 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
     private double interpTargetY;
     private double interpTargetZ;
     private double interpTargetYaw;
-    private double interpTargetPitch;
 
     private static final double INTERP_AMOUNT = 0.15D; //TODO config ?
-    
-    public final InterpValue backValue = new InterpValue(INTERP_AMOUNT);
-    public final InterpValue frontValue = new InterpValue(INTERP_AMOUNT);
-    public final InterpValue leftValue = new InterpValue(INTERP_AMOUNT);
-    public final InterpValue rightValue = new InterpValue(INTERP_AMOUNT);
 
-    public final CarWheel backLeftWheel = new CarWheel(0, wheeldata.bl); 
+    public final InterpValue backValue = new InterpValue(this, INTERP_AMOUNT);
+    public final InterpValue frontValue = new InterpValue(this, INTERP_AMOUNT);
+    public final InterpValue leftValue = new InterpValue(this, INTERP_AMOUNT);
+    public final InterpValue rightValue = new InterpValue(this, INTERP_AMOUNT);
+
+    public final CarWheel backLeftWheel = new CarWheel(0, wheeldata.bl);
     public final CarWheel backRightWheel = new CarWheel(1, wheeldata.br);
     public final CarWheel frontLeftWheel = new CarWheel(2, wheeldata.fl);
     public final CarWheel frontRightWheel = new CarWheel(3, wheeldata.fr);
 
-    public final List<WheelParticleData>[] wheelDataList = new List[4]; 
-    
-    public List<InterpValue> allInterps = Lists.newArrayList(backValue, frontValue, leftValue, rightValue);
+    @SuppressWarnings("unchecked")
+    public final List<WheelParticleData>[] wheelDataList = new List[4];
+
     public List<CarWheel> allWheels = Lists.newArrayList(backLeftWheel, frontLeftWheel, backRightWheel, frontRightWheel);
 
-    
+    @SideOnly(Side.CLIENT)
+    public EntitySound<CarEntity> sound;
+
     private float healAmount;
     private int healCooldown = 40;
-    
+
     private Vec3d previousPosition = null; //Used for speed calculations
     private long prevWorldTime = -1;//Also used for speed calculations
-    
+
     public double estimatedSpeed = 0D;
-    
+
     public CarEntity(World world) {
         super(world);
         this.setSize(3.0F, 2.5F);
@@ -103,7 +109,7 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
         for(int i = 0; i < 4; i++) {
             this.wheelDataList[i] = Lists.newArrayList();
         }
-        
+
         backLeftWheel.setPair(backRightWheel);
         frontLeftWheel.setPair(frontRightWheel);
 
@@ -114,6 +120,7 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
         this.dataManager.register(WATCHER_STATE, (byte) 0);
         this.dataManager.register(WATCHER_HEALTH, MAX_HEALTH);
         this.dataManager.register(WATCHER_SPEED, 1);
+        this.dataManager.register(RECORD_ITEM, ItemStack.EMPTY);
     }
 
     public boolean left() {
@@ -164,13 +171,13 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
     public void setControlState(int state) {
         this.dataManager.set(WATCHER_STATE, (byte) state);
     }
-    
+
     public void setSpeed(Speed speed) {
-	this.dataManager.set(WATCHER_SPEED, speed.ordinal());
+        this.dataManager.set(WATCHER_SPEED, speed.ordinal());
     }
-    
+
     public Speed getSpeed() {
-	return Speed.values()[this.dataManager.get(WATCHER_SPEED)];
+        return Speed.values()[this.dataManager.get(WATCHER_SPEED)];
     }
 
     public void setHealth(float health) {
@@ -179,6 +186,10 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
 
     public float getHealth() {
         return this.dataManager.get(WATCHER_HEALTH);
+    }
+
+    public ItemStack getItem() {
+        return this.dataManager.get(RECORD_ITEM);
     }
 
     @Override
@@ -193,10 +204,9 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
 
     @Override
     public Entity getControllingPassenger() {
-        List<Entity> passengers = this.getPassengers();
-        return passengers.isEmpty() ? null : passengers.get(0);
+        return this.seats[0].occupant;
     }
-    
+
     @Override
     public boolean canBeCollidedWith() {
         return true;
@@ -206,13 +216,13 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
     protected boolean canTriggerWalking() {
         return false;
     }
-    
+
     public Vector4d getCarDimensions() {
-	return this.wheeldata.carVector;
+        return this.wheeldata.carVector;
     }
-    
+
     public Vector2d getBackWheelRotationPoint() {
-	return new Vector2d(-0.5, 1.4);
+        return new Vector2d(-0.5, 1.4);
     }
 
     @Override
@@ -222,16 +232,20 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
         this.interpTargetY = y;
         this.interpTargetZ = z;
         this.interpTargetYaw = yaw;
-        this.interpTargetPitch = pitch;
         this.interpProgress = duration;
     }
 
     @Override
     public void onEntityUpdate() {
-	if(!shouldRunUpdates()) {
-	    super.onEntityUpdate();
-	    return;
-	}
+        if(this.getSpeed() == Speed.FAST) {
+            this.allWheels.forEach(wheel -> this.createWheelParticles(wheel, true));
+        }
+        this.allWheels.forEach(this::createWheelParticles);
+
+        if(shouldStopUpdates()) {
+            super.onEntityUpdate();
+            return;
+        }
         if(!world.isRemote) {
             if(prevWorldTime != -1) {
                 world.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().grow(0.1f), this::canRunoverEntity).forEach(this::runOverEntity);
@@ -243,23 +257,17 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
         estimatedSpeed = this.getPositionVector().distanceTo(previousPosition) / (world.getTotalWorldTime() - prevWorldTime);
         previousPosition = this.getPositionVector();
         prevWorldTime = world.getTotalWorldTime();
-        
+
         for(int i = 0; i < 4; i++) {
             List<WheelParticleData> markedRemoved = Lists.newArrayList();
             wheelDataList[i].forEach(wheel -> wheel.onUpdate(markedRemoved));
             markedRemoved.forEach(wheelDataList[i]::remove);
         }
-        
-        
+
         super.onEntityUpdate();
-        
-        if(this.getSpeed() == Speed.FAST) {
-            this.allWheels.forEach(wheel -> this.createWheelParticles(wheel, true));
-        }
-        this.allWheels.forEach(this::createWheelParticles);
 
         this.allWheels.forEach(this::processWheel);
-        
+
         Vector4d vec = wheeldata.carVector;
         this.backValue.setTarget(this.calculateWheelHeight(vec.y, false));
         this.frontValue.setTarget(this.calculateWheelHeight(vec.w, false));
@@ -278,78 +286,73 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
                 }
             }
         }
+
         this.tickInterp();
-        if (this.getControllingPassenger() instanceof EntityPlayer) {
-            if (this.getPassengers().isEmpty() || !(this.getPassengers().get(0) instanceof EntityPlayer)) {
-                this.setControlState(0);
-            }
-            this.updateMotion();
-            if (this.world.isRemote) {
-                this.handleControl(true);
-            }
-            this.applyMovement();
-            this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
-        } else {
-            this.motionX = this.motionY = this.motionZ = 0;
+        this.updateMotion();
+        if (this.getPassengers().isEmpty() || !(this.getPassengers().get(0) instanceof EntityPlayer)) {
+            this.setControlState(0);
         }
-        
+        if (this.world.isRemote) {
+            this.handleControl();
+        }
+        this.applyMovement();
+        this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
     }
-    
+
     protected boolean canRunoverEntity(Entity entity) {
-	return EntitySelectors.NOT_SPECTATING.apply(entity) && !this.getPassengers().contains(entity);
+        return EntitySelectors.NOT_SPECTATING.apply(entity) && !this.getPassengers().contains(entity);
     }
-    
+
     protected void runOverEntity(Entity entity) {
-	double damage = this.estimatedSpeed * 20D;
-	if(damage > 0D) {
-	    entity.attackEntityFrom(DamageSources.CAR, (float) (this.estimatedSpeed * 20D));
-	}
+        double damage = this.estimatedSpeed * 20D;
+        if(damage > 0D) {
+            entity.attackEntityFrom(DamageSources.CAR, (float) (this.estimatedSpeed * 20D));
+        }
     }
-    
+
     protected void createWheelParticles(CarWheel wheel) {
-	this.createWheelParticles(wheel, false);
+        this.createWheelParticles(wheel, false);
     }
-    
+
     protected void createWheelParticles(CarWheel wheel, boolean runBetween) {
-	Vec3d pos;
-	Vec3d opposite;
-	if(runBetween) {
-	    Vec3d vec = wheel.getCurrentWheelPos();
-	    Vec3d oldVec = wheel.getCurrentWheelPos();
-	    
-	    Vec3d vec1 = wheel.getOppositeWheel().getCurrentWheelPos();
-	    Vec3d oldVec1 = wheel.getOppositeWheel().getCurrentWheelPos();
-	    
-	    pos =  new Vec3d((vec.x + oldVec.x) / 2D, (vec.y + oldVec.y) / 2D, (vec.z + oldVec.z) / 2D);
-	    opposite = new Vec3d((vec1.x + oldVec1.x) / 2D, (vec1.y + oldVec1.y) / 2D, (vec1.z + oldVec1.z) / 2D);
-	} else {
-	    pos = wheel.getCurrentWheelPos();
-	    opposite = wheel.getOppositeWheel().getCurrentWheelPos();
-	}
-	if(wheel.getCurrentWheelPos().distanceTo(wheel.getPrevCurrentWheelPos()) >= 0.05D) {
-	    this.wheelDataList[wheel.getID()].add(new WheelParticleData(pos, opposite, world.getTotalWorldTime()).setShouldRender(shouldTyresRender()));   
-	}
+        Vec3d pos;
+        Vec3d opposite;
+        if(runBetween) {
+            Vec3d vec = wheel.getCurrentWheelPos();
+            Vec3d oldVec = wheel.getCurrentWheelPos();
+
+            Vec3d vec1 = wheel.getOppositeWheel().getCurrentWheelPos();
+            Vec3d oldVec1 = wheel.getOppositeWheel().getCurrentWheelPos();
+
+            pos =  new Vec3d((vec.x + oldVec.x) / 2D, (vec.y + oldVec.y) / 2D, (vec.z + oldVec.z) / 2D);
+            opposite = new Vec3d((vec1.x + oldVec1.x) / 2D, (vec1.y + oldVec1.y) / 2D, (vec1.z + oldVec1.z) / 2D);
+        } else {
+            pos = wheel.getCurrentWheelPos();
+            opposite = wheel.getOppositeWheel().getCurrentWheelPos();
+        }
+        if(wheel.getCurrentWheelPos().distanceTo(wheel.getPrevCurrentWheelPos()) >= 0.05D) {
+            this.wheelDataList[wheel.getID()].add(new WheelParticleData(pos, opposite, world.getTotalWorldTime()).setShouldRender(shouldTyresRender()));
+        }
     }
-    
+
     protected void processWheel(CarWheel wheel) {
-	float localYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw);
-        double rad = Math.toRadians(localYaw);
-	Vector2d relPos = wheel.getRelativeWheelPosition();
-	double xRot = Math.sin(Math.toRadians(localYaw)) * relPos.y - Math.cos(Math.toRadians(localYaw)) * relPos.x; 
+        float localYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw);
+        Vector2d relPos = wheel.getRelativeWheelPosition();
+        double xRot = Math.sin(Math.toRadians(localYaw)) * relPos.y - Math.cos(Math.toRadians(localYaw)) * relPos.x;
         double zRot = - Math.cos(Math.toRadians(localYaw)) * relPos.y - Math.sin(Math.toRadians(localYaw)) * relPos.x;
         Vec3d vec = new Vec3d(posX + xRot, this.posY, posZ + zRot);
         wheel.setCurrentWheelPos(vec);
 
     }
-    
+
     protected boolean shouldTyresRender() {
-	return this.getSpeed() != Speed.SLOW;
+        return this.getSpeed() != Speed.SLOW;
     }
 
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if(!shouldRunUpdates()) {
+        if(shouldStopUpdates()) {
             return;
         }
         AxisAlignedBB aabb = this.getEntityBoundingBox().shrink(0.9f);
@@ -364,7 +367,7 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
                 world.setBlockToAir(pos);
             }
         }
-        
+
         this.prevWheelRotateAmount = this.wheelRotateAmount;
         double deltaX = this.posX - this.prevPosX;
         double deltaZ = this.posZ - this.prevPosZ;
@@ -386,7 +389,7 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
         this.motionY -= 0.15F;
     }
 
-    protected void handleControl(boolean applyMovement) {
+    protected void handleControl() {
         Entity driver = this.getControllingPassenger();
         if (!(driver instanceof EntityPlayer) || !((EntityPlayer) driver).isUser()) {
             return;
@@ -405,18 +408,14 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
                 newSpeed = true;
             }
         }
-        if(applyMovement) {
-//            this.applyMovement();
-        }
         if (this.getControlState() != previous || newSpeed) {
             JurassiCraft.NETWORK_WRAPPER.sendToServer(new UpdateVehicleControlMessage(this));
         }
     }
 
     protected void applyMovement() {
-	Speed speed = this.getSpeed();
+        Speed speed = this.getSpeed();
 
-        
         float moveAmount = 0.0F;
         if ((this.left() || this.right()) && !(this.forward() || this.backward())) {
             moveAmount += 0.05F;
@@ -435,7 +434,7 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
         } else if (this.right()) {
             this.rotationDelta += 20.0F * moveAmount;
         }
-        
+
         this.rotationDelta = MathHelper.clamp(this.rotationDelta, -30 * 0.1F, 30 * 0.1F);
         this.rotationYaw += this.rotationDelta;
         this.motionX += MathHelper.sin(-this.rotationYaw * 0.017453292F) * moveAmount;
@@ -449,36 +448,31 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
             double interpolatedZ = this.posZ + (this.interpTargetZ - this.posZ) / (double) this.interpProgress;
             double deltaYaw = MathHelper.wrapDegrees(this.interpTargetYaw - (double) this.rotationYaw);
             this.rotationYaw = (float) ((double) this.rotationYaw + deltaYaw / (double) this.interpProgress);
-//            double deltaPitch = MathHelper.wrapDegrees(this.interpTargetPitch - (double) this.rotationPitch);
-//            this.rotationPitch = (float) ((double) this.rotationPitch + deltaPitch  / (double) this.interpProgress);
-//            this.rotationPitch = (float) ((double) this.rotationPitch + (this.interpTargetPitch - (double) this.rotationPitch) / (double) this.interpProgress);
             this.interpProgress--;
             this.setPosition(interpolatedX, interpolatedY, interpolatedZ);
             this.setRotation(this.rotationYaw, this.rotationPitch);
         }
     }
-    
+
     protected final double calculateWheelHeight(double distance, boolean rotate90) {
         float localYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw);
-        double rad = Math.toRadians(localYaw);
+        double ret = Integer.MIN_VALUE;
 
-	double ret = Integer.MIN_VALUE;
-
-	Vector4d carVec = wheeldata.carVector;
-	double sideLength = Math.abs(rotate90 ? carVec.x - carVec.z : carVec.z - carVec.w);
+        Vector4d carVec = wheeldata.carVector;
+        double sideLength = Math.abs(rotate90 ? carVec.x - carVec.z : carVec.z - carVec.w);
         for(double d = -sideLength ; d <= sideLength; d += 0.25D/*TODO: config this ?*/) {
-            double xRot = Math.sin(Math.toRadians(localYaw)) * (rotate90 ? d : distance) - Math.cos(Math.toRadians(localYaw)) * (rotate90 ? distance : d); 
+            double xRot = Math.sin(Math.toRadians(localYaw)) * (rotate90 ? d : distance) - Math.cos(Math.toRadians(localYaw)) * (rotate90 ? distance : d);
             double zRot = - Math.cos(Math.toRadians(localYaw)) * (rotate90 ? d : distance) - Math.sin(Math.toRadians(localYaw)) * (rotate90 ? distance : d);
             Vec3d vec = new Vec3d(posX + xRot, this.posY, posZ + zRot);
             BlockPos pos = new BlockPos(vec);
-            
+
             //world.spawnParticle(EnumParticleTypes.CRIT, vec.x, vec.y + 5, vec.z, 0, 0, 0);
-            
+
             boolean found = false;
-            List<AxisAlignedBB> aabbList = Lists.newArrayList();;
+            List<AxisAlignedBB> aabbList = Lists.newArrayList();
             while(!found) {
                 if(pos.getY() < 0) {
-                    found = true;
+                    break;
                 }
                 aabbList.clear();
                 world.getBlockState(pos).addCollisionBoxToList(world, pos, new AxisAlignedBB(pos), aabbList, this, false);
@@ -513,8 +507,20 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
 
     @Override
     public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
-        if (!this.world.isRemote && !player.isSneaking()) {
-            player.startRiding(this);
+        if(!world.isRemote) {
+            if(player.getRidingEntity() == this) {
+                ItemStack currentStack = this.dataManager.get(RECORD_ITEM);
+                ItemStack stack = player.getHeldItem(hand);
+                if(stack.getItem() instanceof ItemRecord || stack.isEmpty()) {
+                    this.dataManager.set(RECORD_ITEM, stack);
+                    player.setHeldItem(hand, currentStack);
+                    if(!stack.isEmpty()) {
+                        JurassiCraft.NETWORK_WRAPPER.sendToAll(new CarEntityPlayRecord(this, (ItemRecord)stack.getItem()));
+                    }
+                }
+            } else if (!player.isSneaking()) {
+                player.startRiding(this);
+            }
         }
         return true;
     }
@@ -583,6 +589,10 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
                 this.setDead();
                 if (this.world.getGameRules().getBoolean("doEntityDrops")) {
                     this.dropItems();
+                    ItemStack recordItem = this.dataManager.get(RECORD_ITEM);
+                    if(!recordItem.isEmpty()) {
+                        this.entityDropItem(recordItem, 0);
+                    }
                 }
             }
         }
@@ -614,18 +624,18 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
             }
         }
     }
-    
+
     public Seat getSeat(int id) {
-	if(id < seats.length) {
-	    return seats[id];
-	}
-	return null;
+        if(id < seats.length) {
+            return seats[id];
+        }
+        return null;
     }
-    
-    protected boolean shouldRunUpdates() {
-	return true;
+
+    protected boolean shouldStopUpdates() {
+        return false;
     }
-    
+
     @Override
     public void setDead() {
         super.setDead();
@@ -636,15 +646,15 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
     protected void readEntityFromNBT(NBTTagCompound compound) {
         this.setHealth(compound.getFloat("Health"));
         this.healAmount = compound.getFloat("HealAmount");
-        this.setSpeed(Speed.values()[compound.getInteger("Speed")]); 
+        this.setSpeed(Speed.values()[compound.getInteger("Speed")]);
         NBTTagCompound tag = compound.getCompoundTag("InterpValues");
-        
+
         this.backValue.deserializeNBT(tag.getCompoundTag("Back"));
         this.frontValue.deserializeNBT(tag.getCompoundTag("Front"));
         this.leftValue.deserializeNBT(tag.getCompoundTag("Left"));
         this.rightValue.deserializeNBT(tag.getCompoundTag("Right"));
+        this.dataManager.set(RECORD_ITEM, new ItemStack(compound.getCompoundTag("RecordItem")));
 
-        
     }
 
     @Override
@@ -656,8 +666,9 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
         tag.setTag("Back", this.backValue.serializeNBT());
         tag.setTag("Front", this.frontValue.serializeNBT());
         tag.setTag("Left", this.leftValue.serializeNBT());
-        tag.setTag("Right", this.rightValue.serializeNBT());        
+        tag.setTag("Right", this.rightValue.serializeNBT());
         compound.setTag("InterpValues", tag);
+        compound.setTag("RecordItem", this.dataManager.get(RECORD_ITEM).serializeNBT());
     }
 
     private void startSound() {
@@ -665,7 +676,6 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
     }
 
     public final class Seat {
-        private final int index;
 
         private float offsetX;
         private float offsetY;
@@ -674,15 +684,14 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
         private final float radius;
         private final float height;
         private final Predicate<Entity> predicate;
-        
+
         private Entity occupant;
 
-        public Seat(int index, float offsetX, float offsetY, float offsetZ, float radius, float height) {
-            this(index, offsetX, offsetY, offsetZ, radius, height, entity -> true);
+        public Seat(float offsetX, float offsetY, float offsetZ, float radius, float height) {
+            this(offsetX, offsetY, offsetZ, radius, height, entity -> true);
         }
-        
-        public Seat(int index, float offsetX, float offsetY, float offsetZ, float radius, float height, Predicate<Entity> predicate) {
-            this.index = index;
+
+        public Seat(float offsetX, float offsetY, float offsetZ, float radius, float height, Predicate<Entity> predicate) {
             this.offsetX = offsetX;
             this.offsetY = offsetY;
             this.offsetZ = offsetZ;
@@ -722,48 +731,47 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
             return new AxisAlignedBB(x - this.radius, y, z - this.radius, x + this.radius, y + this.offsetY + this.height, z + this.radius);
         }
     }
-    
-    protected final class WheelData {
-	public final Vector2d bl;
-	public final Vector2d br;
-	public final Vector2d fl;
-	public final Vector2d fr;
 
-	public final Vector4d carVector;
-	
-	public WheelData(double backLeftX, double backLeftZ, double frontRightX, double frontRightZ) {
-	    bl = new Vector2d(backLeftX, backLeftZ);
-	    br = new Vector2d(frontRightX, backLeftZ);
-	    fl = new Vector2d(backLeftX, frontRightZ);
-	    fr = new Vector2d(frontRightX, frontRightZ);
-	    
-	    carVector = new Vector4d(backLeftX, backLeftZ, frontRightX, frontRightZ); 
-	}
+    protected final class WheelData {
+        public final Vector2d bl;
+        public final Vector2d br;
+        public final Vector2d fl;
+        public final Vector2d fr;
+
+        public final Vector4d carVector;
+
+        public WheelData(double backLeftX, double backLeftZ, double frontRightX, double frontRightZ) {
+            bl = new Vector2d(backLeftX, backLeftZ);
+            br = new Vector2d(frontRightX, backLeftZ);
+            fl = new Vector2d(backLeftX, frontRightZ);
+            fr = new Vector2d(frontRightX, frontRightZ);
+
+            carVector = new Vector4d(backLeftX, backLeftZ, frontRightX, frontRightZ);
+        }
     }
-    
+
     public enum Speed {
-	//The modifiers ARE hardcoded. If you want to change them, please talk to me first. The tyre mark code relies on the modifiers being how they are
-	SLOW(Keyboard.KEY_LMENU, 0.5f),
-	MEDIUM(Keyboard.KEY_SPACE, 1f),
-	FAST(Keyboard.KEY_RMENU, 2f);
-	;
-	public final int keyboardInput;
-	public final float modifier;
-	
-	private Speed(int keyboardInput, float modifier) {
-	    this.keyboardInput = keyboardInput;
-	    this.modifier = modifier;
-	}
-	
+        //The modifiers ARE hardcoded. If you want to change them, please talk to me first. The tyre mark code relies on the modifiers being how they are
+        SLOW(Keyboard.KEY_LMENU, 0.5f),
+        MEDIUM(Keyboard.KEY_SPACE, 1f),
+        FAST(Keyboard.KEY_RMENU, 2f);
+
+        public final int keyboardInput;
+        public final float modifier;
+
+        Speed(int keyboardInput, float modifier) {
+            this.keyboardInput = keyboardInput;
+            this.modifier = modifier;
+        }
     }
 
     protected abstract Seat[] createSeats();
 
     protected abstract WheelData createWheels();
-    
+
     public abstract void dropItems();
 
     public float getSoundVolume() {
-	return Math.abs(this.wheelRotateAmount) + 0.001F;
+        return Math.abs(this.wheelRotateAmount) + 0.001F;
     }
 }

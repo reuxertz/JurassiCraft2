@@ -10,22 +10,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.api.SubBlocksBlock;
-import org.jurassicraft.server.block.entity.BugCrateBlockEntity;
-import org.jurassicraft.server.block.entity.CleaningStationBlockEntity;
-import org.jurassicraft.server.block.entity.CultivatorBlockEntity;
-import org.jurassicraft.server.block.entity.DNACombinatorHybridizerBlockEntity;
-import org.jurassicraft.server.block.entity.DNAExtractorBlockEntity;
-import org.jurassicraft.server.block.entity.DNASequencerBlockEntity;
-import org.jurassicraft.server.block.entity.DNASynthesizerBlockEntity;
-import org.jurassicraft.server.block.entity.DisplayBlockEntity;
-import org.jurassicraft.server.block.entity.ElectricFenceBaseBlockEntity;
-import org.jurassicraft.server.block.entity.ElectricFencePoleBlockEntity;
-import org.jurassicraft.server.block.entity.ElectricFenceWireBlockEntity;
-import org.jurassicraft.server.block.entity.EmbryoCalcificationMachineBlockEntity;
-import org.jurassicraft.server.block.entity.EmbryonicMachineBlockEntity;
-import org.jurassicraft.server.block.entity.FeederBlockEntity;
-import org.jurassicraft.server.block.entity.FossilGrinderBlockEntity;
-import org.jurassicraft.server.block.entity.IncubatorBlockEntity;
+import org.jurassicraft.server.block.entity.*;
 import org.jurassicraft.server.block.fence.ElectricFenceBaseBlock;
 import org.jurassicraft.server.block.fence.ElectricFencePoleBlock;
 import org.jurassicraft.server.block.fence.ElectricFenceWireBlock;
@@ -204,8 +189,10 @@ public class BlockHandler {
     public static ElectricFenceWireBlock HIGH_SECURITY_FENCE_WIRE;
 
     public static final JPMainGateBlock JP_MAIN_GATE_BLOCK = new JPMainGateBlock();
-    public static final TourRailBlock TOUR_RAIL = new TourRailBlock(false);
-    public static final TourRailBlock TOUR_RAIL_POWERED = new TourRailBlock(true);
+    public static final TourRailBlock TOUR_RAIL = new TourRailBlock(TourRailBlock.SpeedType.NONE);
+    public static final TourRailBlock TOUR_RAIL_SLOW = new TourRailBlock(TourRailBlock.SpeedType.SLOW);
+    public static final TourRailBlock TOUR_RAIL_MEDIUM = new TourRailBlock(TourRailBlock.SpeedType.MEDIUM);
+    public static final TourRailBlock TOUR_RAIL_FAST = new TourRailBlock(TourRailBlock.SpeedType.FAST);
     
     public static final SkeletonAssemblyBlock SKELETON_ASSEMBLY = new SkeletonAssemblyBlock();
 
@@ -293,8 +280,11 @@ public class BlockHandler {
 
         registerBlock(PLANKTON_SWARM, "Plankton Swarm");
         registerBlock(KRILL_SWARM, "Krill Swarm");
-        registerBlock(TOUR_RAIL, "Tour Rail");
-        registerBlock(TOUR_RAIL_POWERED, "Powered Tour Rail");
+
+        registerBlock(TourRailBlockEntity.class, TOUR_RAIL, "Tour Rail");
+        registerBlock(TOUR_RAIL_SLOW, "Tour Rail Slow");
+        registerBlock(TOUR_RAIL_MEDIUM, "Tour Rail Medium");
+        registerBlock(TOUR_RAIL_FAST, "Tour Rail Fast");
 
         registerBlock(SKELETON_ASSEMBLY, "Skeleton Assembly");
 //        registerBlock(JP_MAIN_GATE_BLOCK, "Jurassic Park Gate");

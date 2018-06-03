@@ -10,6 +10,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
+import net.minecraft.potion.PotionEffect;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jurassicraft.JurassiCraft;
@@ -145,6 +146,8 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     private List<Class<? extends EntityLivingBase>> attackTargets = new ArrayList<>();
 
     private boolean deserializing;
+
+    private int ticksUntilDeath;
 
     private int attackCooldown;
 
@@ -592,7 +595,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         double prevHealth = this.getMaxHealth();
         double newHealth = Math.max(1.0F, this.interpolate(this.dinosaur.getBabyHealth(), this.dinosaur.getAdultHealth()) * this.attributes.getHealthModifier());
         double speed = this.interpolate(this.dinosaur.getBabySpeed(), this.dinosaur.getAdultSpeed()) * this.attributes.getSpeedModifier();
-        double strength = this.interpolate(this.dinosaur.getBabyStrength(), this.dinosaur.getAdultStrength()) * this.attributes.getDamageModifier();
+        double strength = this.getAttackDamage() * this.attributes.getDamageModifier();
 
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(newHealth);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(speed);
@@ -944,6 +947,14 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     @Override
     public void onUpdate() {
         super.onUpdate();
+
+        if(this.ticksUntilDeath > 0) {
+            if(--this.ticksUntilDeath == 0) {
+                this.playSound(this.getSoundForAnimation(EntityAnimation.DYING.get()), this.getSoundVolume(), this.getSoundPitch());
+                this.setHealth(this.getMaxHealth());
+                this.setCarcass(true);
+            }
+        }
 
         if (this.attackCooldown > 0) {
             this.attackCooldown--;
@@ -1433,7 +1444,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         }
         
         nbt.setInteger("TranquilizerTicks", tranquilizerTicks);
-
+        nbt.setInteger("TicksUntilDeath", ticksUntilDeath);
         return nbt;
     }
 
@@ -1494,6 +1505,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         }
         
         tranquilizerTicks = nbt.getInteger("TranquilizerTicks");
+        ticksUntilDeath = nbt.getInteger("TicksUntilDeath");
 
         this.updateAttributes();
         this.updateBounds();
@@ -1652,11 +1664,16 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     }
     
     public void moveRelative(float strafe, float up, float friction) {
-	if(this.inWater() && !this.canDinoSwim()) {
-	    friction *= 20;//times by 5, but as friction is divided by 2 when in water do 5 * 2 instead
-	}
-	super.moveRelative(strafe, up, friction);
+        if(this.inWater() && !this.canDinoSwim()) {
+            friction *= 10;//times by 5, but as friction is divided by 2 when in water do 5 * 2 instead
+        }
+        super.moveRelative(strafe, up, friction);
     }
+    public void setDeathIn(int ticks) { // :(
+        this.ticksUntilDeath = ticks;
+        this.addPotionEffect(new PotionEffect(MobEffects.POISON, ticks));
+    }
+
 
     @Override
     public void collideWithEntity(Entity entity) {

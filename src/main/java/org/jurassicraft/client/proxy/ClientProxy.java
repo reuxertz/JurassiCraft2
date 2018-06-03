@@ -11,6 +11,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -38,6 +39,7 @@ import org.jurassicraft.client.gui.JournalGui;
 import org.jurassicraft.client.gui.OrderDinosaurGui;
 import org.jurassicraft.client.gui.SelectDinoGui;
 import org.jurassicraft.client.gui.SkeletonAssemblyGui;
+import org.jurassicraft.client.model.JurassicraftTabulaModelHandler;
 import org.jurassicraft.client.render.RenderingHandler;
 import org.jurassicraft.client.sound.CarSound;
 import org.jurassicraft.server.block.entity.BugCrateBlockEntity;
@@ -52,7 +54,7 @@ import org.jurassicraft.server.block.entity.EmbryonicMachineBlockEntity;
 import org.jurassicraft.server.block.entity.FeederBlockEntity;
 import org.jurassicraft.server.block.entity.FossilGrinderBlockEntity;
 import org.jurassicraft.server.block.entity.IncubatorBlockEntity;
-import org.jurassicraft.server.command.KeyBindingHandler;
+import org.jurassicraft.server.event.KeyBindingHandler;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.VenomEntity;
 import org.jurassicraft.server.entity.particle.VenomParticle;
@@ -86,6 +88,9 @@ public class ClientProxy extends ServerProxy {
         MinecraftForge.EVENT_BUS.register(eventHandler);
 
         RenderingHandler.INSTANCE.preInit();
+
+        ModelLoaderRegistry.registerLoader(JurassicraftTabulaModelHandler.INSTANCE);
+        JurassicraftTabulaModelHandler.INSTANCE.addDomain(JurassiCraft.MODID);
     }
 
     @Override

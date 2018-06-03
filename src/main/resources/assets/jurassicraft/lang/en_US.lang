@@ -256,6 +256,9 @@ tile.dna_combinator_hybridizer.name=DNA Combinator-Hybridizer
 tile.skeleton_assembly.name=Skeleton Assembly Table
 
 tile.tour_rail.name=Tour Vehicle Track
+tile.tour_rail_slow.name=Slow Tour Vehicle Track
+tile.tour_rail_medium.name=Medium Tour Vehicle Track
+tile.tour_rail_fast.name=Fast Tour Vehicle Track
 
 tile.gypsum_stone.name=Gypsum Stone
 tile.gypsum_cobblestone.name=Gypsum Cobblestone

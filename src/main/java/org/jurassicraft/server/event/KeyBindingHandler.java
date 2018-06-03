@@ -1,4 +1,4 @@
-package org.jurassicraft.server.command;
+package org.jurassicraft.server.event;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;

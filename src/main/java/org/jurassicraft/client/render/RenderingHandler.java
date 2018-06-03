@@ -5,6 +5,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.minecraft.item.ItemBlock;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.model.MultipartStateMap;
 import org.jurassicraft.client.model.animation.EntityAnimator;
@@ -37,11 +38,7 @@ import org.jurassicraft.client.render.entity.NullRenderer;
 import org.jurassicraft.client.render.entity.PaddockSignRenderer;
 import org.jurassicraft.client.render.entity.VenomRenderer;
 import org.jurassicraft.client.render.entity.dinosaur.DinosaurRenderInfo;
-import org.jurassicraft.server.block.BlockHandler;
-import org.jurassicraft.server.block.EncasedFossilBlock;
-import org.jurassicraft.server.block.FossilBlock;
-import org.jurassicraft.server.block.FossilizedTrackwayBlock;
-import org.jurassicraft.server.block.NestFossilBlock;
+import org.jurassicraft.server.block.*;
 import org.jurassicraft.server.block.entity.CleaningStationBlockEntity;
 import org.jurassicraft.server.block.entity.DNAExtractorBlockEntity;
 import org.jurassicraft.server.block.entity.DNASequencerBlockEntity;
@@ -64,10 +61,7 @@ import org.jurassicraft.server.entity.item.PaddockSignEntity;
 import org.jurassicraft.server.entity.vehicle.FordExplorerEntity;
 import org.jurassicraft.server.entity.vehicle.HelicopterBaseEntity;
 import org.jurassicraft.server.entity.vehicle.JeepWranglerEntity;
-import org.jurassicraft.server.item.DinosaurSpawnEggItem;
-import org.jurassicraft.server.item.FossilItem;
-import org.jurassicraft.server.item.ItemHandler;
-import org.jurassicraft.server.item.JournalItem;
+import org.jurassicraft.server.item.*;
 import org.jurassicraft.server.plant.Plant;
 import org.jurassicraft.server.plant.PlantHandler;
 
@@ -272,8 +266,10 @@ public enum RenderingHandler {
         this.registerBlockRenderer(BlockHandler.CINNAMON_FERN);
         this.registerBlockRenderer(BlockHandler.BRISTLE_FERN);
 
-        this.registerBlockRenderer(BlockHandler.TOUR_RAIL);
-        this.registerBlockRenderer(BlockHandler.TOUR_RAIL_POWERED);
+        this.registerBlockRenderer(BlockHandler.TOUR_RAIL, "tour_rail.tbl_jurassicraft");
+        this.registerBlockRenderer(BlockHandler.TOUR_RAIL_SLOW, "tour_rail_stripe.tbl_jurassicraft");
+        this.registerBlockRenderer(BlockHandler.TOUR_RAIL_MEDIUM, "tour_rail_stripe.tbl_jurassicraft");
+        this.registerBlockRenderer(BlockHandler.TOUR_RAIL_FAST, "tour_rail_stripe.tbl_jurassicraft");
 
         this.registerItemRenderer(ItemHandler.TRACKER);
         this.registerItemRenderer(ItemHandler.PLANT_CELLS_PETRI_DISH);
@@ -436,13 +432,16 @@ public enum RenderingHandler {
 
         this.registerItemRenderer(ItemHandler.GOAT_RAW);
         this.registerItemRenderer(ItemHandler.GOAT_COOKED);
-        
+
         this.registerItemRenderer(ItemHandler.DART_GUN);
-        this.registerItemRenderer(ItemHandler.DART_TRANQUILIZER);
+        this.registerItemRenderer(ItemHandler.DART_TRANQUILIZER, "dart_colored");
+        this.registerItemRenderer(ItemHandler.DART_POISON_CYCASIN, "dart_colored");
+        this.registerItemRenderer(ItemHandler.DART_POISON_EXECUTIONER_CONCOCTION, "dart_colored");
+        this.registerItemRenderer(ItemHandler.DART_TIPPED_POTION, "dart_colored");
 
         this.registerRenderInfo(EntityHandler.BRACHIOSAURUS, new BrachiosaurusAnimator(), 1.5F);
         this.registerRenderInfo(EntityHandler.COELACANTH, new CoelacanthAnimator(), 0.0F);
-        this.registerRenderInfo(EntityHandler.ALLIGATORGAR, new AlligatorGarAnimator(), 0.0F);
+//        this.registerRenderInfo(EntityHandler.ALLIGATORGAR, new AlligatorGarAnimator(), 0.0F);
         this.registerRenderInfo(EntityHandler.DILOPHOSAURUS, new DilophosaurusAnimator(), 0.65F);
         this.registerRenderInfo(EntityHandler.GALLIMIMUS, new GallimimusAnimator(), 0.65F);
         this.registerRenderInfo(EntityHandler.PARASAUROLOPHUS, new ParasaurolophusAnimator(), 0.65F);
@@ -475,8 +474,11 @@ public enum RenderingHandler {
         }
 
         blockColors.registerBlockColorHandler((state, access, pos, tintIndex) -> pos == null ? ColorizerFoliage.getFoliageColorBasic() : BiomeColorHelper.getFoliageColorAtPos(access, pos), BlockHandler.MOSS);
+        blockColors.registerBlockColorHandler((state, access, pos, tintIndex) -> tintIndex == 1 ? ((TourRailBlock)state.getBlock()).getSpeedType().getColor() : -1, BlockHandler.TOUR_RAIL_SLOW, BlockHandler.TOUR_RAIL_MEDIUM, BlockHandler.TOUR_RAIL_FAST);
 
         ItemColors itemColors = this.mc.getItemColors();
+
+        itemColors.registerItemColorHandler((stack, tintIndex) -> tintIndex == 1 ? ((TourRailBlock)((ItemBlock)stack.getItem()).getBlock()).getSpeedType().getColor() : -1, BlockHandler.TOUR_RAIL_SLOW, BlockHandler.TOUR_RAIL_MEDIUM, BlockHandler.TOUR_RAIL_FAST);
 
         for (Map.Entry<TreeType, AncientLeavesBlock> entry : BlockHandler.ANCIENT_LEAVES.entrySet()) {
             itemColors.registerItemColorHandler((stack, tintIndex) -> ColorizerFoliage.getFoliageColorBasic(), entry.getValue());
@@ -498,6 +500,8 @@ public enum RenderingHandler {
             }
             return 0xFFFFFF;
         }, ItemHandler.SPAWN_EGG);
+
+        itemColors.registerItemColorHandler(((stack, tintIndex) -> tintIndex == 1 ? ((Dart)stack.getItem()).getDartColor(stack) : -1), ItemHandler.DART_POISON_CYCASIN, ItemHandler.DART_POISON_EXECUTIONER_CONCOCTION, ItemHandler.DART_TIPPED_POTION, ItemHandler.DART_TRANQUILIZER);
     }
 
     public void postInit() {
