@@ -1,25 +1,6 @@
 package org.jurassicraft.server.entity.vehicle;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Predicate;
-
-import javax.vecmath.Vector2d;
-import javax.vecmath.Vector4d;
-
-import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.client.proxy.ClientProxy;
-import org.jurassicraft.client.render.entity.TyretrackRenderer;
-import org.jurassicraft.server.damage.DamageSources;
-import org.jurassicraft.server.entity.ai.util.InterpValue;
-import org.jurassicraft.server.entity.vehicle.util.CarWheel;
-import org.jurassicraft.server.entity.vehicle.util.WheelParticleData;
-import org.jurassicraft.server.message.UpdateVehicleControlMessage;
-import org.lwjgl.input.Keyboard;
-import org.omg.CORBA.DoubleHolder;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -43,8 +24,23 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.client.proxy.ClientProxy;
+import org.jurassicraft.client.render.entity.TyretrackRenderer;
+import org.jurassicraft.server.damage.DamageSources;
+import org.jurassicraft.server.entity.ai.util.InterpValue;
+import org.jurassicraft.server.entity.vehicle.util.CarWheel;
+import org.jurassicraft.server.entity.vehicle.util.WheelParticleData;
+import org.jurassicraft.server.message.UpdateVehicleControlMessage;
+import org.lwjgl.input.Keyboard;
+import org.omg.CORBA.DoubleHolder;
 
-public abstract class CarEntity extends Entity {
+import javax.vecmath.Vector2d;
+import javax.vecmath.Vector4d;
+import java.util.List;
+import java.util.function.Predicate;
+
+public abstract class CarEntity extends Entity implements MultiSeatedEntity {
     public static final DataParameter<Byte> WATCHER_STATE = EntityDataManager.createKey(CarEntity.class, DataSerializers.BYTE);
     public static final DataParameter<Float> WATCHER_HEALTH = EntityDataManager.createKey(CarEntity.class, DataSerializers.FLOAT);
     public static final DataParameter<Integer> WATCHER_SPEED = EntityDataManager.createKey(CarEntity.class, DataSerializers.VARINT);
@@ -522,11 +518,11 @@ public abstract class CarEntity extends Entity {
         }
         return true;
     }
-    
+
     @Override
     protected void addPassenger(Entity passenger) {
         super.addPassenger(passenger);
-        if (!this.world.isRemote && passenger instanceof EntityPlayer && !(this.getControllingPassenger() instanceof EntityPlayer)) {
+        if (passenger instanceof EntityPlayer && !(this.getControllingPassenger() instanceof EntityPlayer)) {
             Entity existing = this.seats[0].occupant;
             this.seats[0].occupant = passenger;
             this.usherPassenger(existing, 1);
@@ -537,12 +533,27 @@ public abstract class CarEntity extends Entity {
 
     private void usherPassenger(Entity passenger, int start) {
         for (int i = start; i < this.seats.length; i++) {
-            Seat seat = this.seats[i];
-            if (seat.occupant == null && seat.predicate.test(passenger)) {
-                seat.occupant = passenger;
+            if(this.tryPutInSeat(passenger, i)) {
                 return;
             }
         }
+    }
+
+    @Override
+    public boolean tryPutInSeat(Entity passenger, int seatID) {
+        if(seatID < this.seats.length && seatID >= 0) {
+            Seat seat = this.seats[seatID];
+            if (seat.occupant == null && seat.predicate.test(passenger)) {
+                for(Seat seat1 : this.seats) {
+                    if(seat1.occupant == passenger) {
+                        seat1.occupant = null;
+                    }
+                }
+                seat.occupant = passenger;
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
