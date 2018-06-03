@@ -25,4 +25,8 @@ public interface JurassicIngredientItem {
         item.getSubItems(CreativeTabs.SEARCH, list);
         return Lists.newArrayList(list);
     }
+
+    default List<ItemStack> getItemSubtypes(Block block) {
+        return getItemSubtypes(Item.getItemFromBlock(block));
+    }
 }

@@ -135,7 +135,7 @@ public class NestFossilBlock extends Block implements SubBlocksBlock, CleanableI
 
     @Override
     public List<ItemStack> getJEIRecipeTypes() {
-        return getItemSubtypes(this.getItemBlock());
+        return getItemSubtypes(this);
     }
 
     @Override
