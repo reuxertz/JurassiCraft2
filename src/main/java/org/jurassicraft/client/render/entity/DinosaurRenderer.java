@@ -12,6 +12,7 @@ import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.GrowthStage;
 
+import java.awt.*;
 import java.util.Random;
 
 @SideOnly(Side.CLIENT)
@@ -60,6 +61,7 @@ public class DinosaurRenderer extends RenderLiving<DinosaurEntity> {
         String name = entity.getCustomNameTag();
 
         switch (name) {
+            case "kashmoney360":
             case "JTGhawk137":
                 GlStateManager.scale(0.1F, scale, scale);
                 break;
@@ -72,6 +74,9 @@ public class DinosaurRenderer extends RenderLiving<DinosaurEntity> {
             case "jglrxavpok":
                 GlStateManager.scale(scale, scale, scale * -1);
                 break;
+            case "Wyn":
+                int color = Color.HSBtoRGB((entity.world.getTotalWorldTime() % 1000) / 100f, 1f, 1f);
+                GlStateManager.color((color & 0xFF) / 255f, ((color >> 8) & 0xFF) / 255f, ((color >> 16) & 0xFF) / 255f);
             default:
                 GlStateManager.scale(scale, scale, scale);
                 break;
