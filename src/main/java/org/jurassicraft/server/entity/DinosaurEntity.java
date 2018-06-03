@@ -1332,7 +1332,9 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         return this.getSoundForAnimation(EntityAnimation.SPEAK.get());
     }
 
-    public SoundEvent getHurtSound() {
+
+    @Override
+    public SoundEvent getHurtSound(DamageSource damageSourceIn) {
         return this.getSoundForAnimation(EntityAnimation.INJURED.get());
     }
 
