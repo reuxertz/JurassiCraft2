@@ -8,6 +8,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -21,7 +22,7 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.proxy.ClientProxy;
-import org.jurassicraft.server.command.KeyBindingHandler;
+import org.jurassicraft.server.event.KeyBindingHandler;
 import org.jurassicraft.server.entity.vehicle.MultiSeatedEntity;
 import org.jurassicraft.server.item.DartGun;
 import org.jurassicraft.server.item.ItemHandler;
@@ -82,10 +83,9 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public void keyInputEvent(InputEvent.KeyInputEvent event) {
-        KeyBindingHandler.VEHICLE_SWITCH_SEAT_CONTROL.isKeyDown();
-        for (int i = 0; i < 9; i++) {
-            int key = Keyboard.KEY_1 + i;
-            if (Keyboard.isKeyDown(key)) {
+        int i = 0;
+        for(KeyBinding binding : KeyBindingHandler.VEHICLE_KEY_BINDINGS) {
+            if(binding.isPressed()) {
                 JurassiCraft.NETWORK_WRAPPER.sendToServer(new AttemptMoveToSeatMessage(i));
                 EntityPlayer player = Minecraft.getMinecraft().player;
                 Entity entity = player.getRidingEntity();
@@ -94,6 +94,7 @@ public class ClientEventHandler {
                 }
                 break;
             }
+            ++i;
         }
     }
 
