@@ -7,6 +7,7 @@ import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.ingredients.IIngredientBlacklist;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
+import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
 import mezz.jei.api.recipe.transfer.IRecipeTransferRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
@@ -46,6 +47,7 @@ import org.jurassicraft.server.plugin.jei.category.fossilgrinder.GrinderInput;
 import org.jurassicraft.server.plugin.jei.category.skeletonassembly.SkeletonAssemblyRecipeCategory;
 import org.jurassicraft.server.plugin.jei.category.skeletonassembly.SkeletonAssemblyRecipeWrapper;
 import org.jurassicraft.server.plugin.jei.category.skeletonassembly.SkeletonInput;
+import org.jurassicraft.server.plugin.jei.vanilla.TippedDartRecipeWrapper;
 
 import java.util.Collection;
 import java.util.List;
@@ -124,10 +126,9 @@ public class JurassiCraftJEIPlugin implements IModPlugin {
         recipeTransferRegistry.addRecipeTransferHandler(EmbryonicMachineContainer.class, EMBRYOMIC_MACHINE, 0, 3, 7, 36);
         recipeTransferRegistry.addRecipeTransferHandler(EmbryoCalcificationMachineContainer.class, EMBRYO_CALCIFICATION_MACHINE, 0, 2, 3, 36);
         recipeTransferRegistry.addRecipeTransferHandler(SkeletonAssemblyContainer.class, SKELETON_ASSEMBLY, 1, 25, 26, 36);
-//        recipeTransferRegistry.addRecipeTransferHandler(DNASequencerContainer.class, DNA_SEQUENCER, 0, 6, 9, 9);
         recipeTransferRegistry.addRecipeTransferHandler(new DNASequencerTransferHandler(registry.getJeiHelpers().recipeTransferHandlerHelper()), DNA_SEQUENCER);
-        //register recipes
 
+        //register recipes
         registry.addRecipes(getAllItems(GrindableItem::getGrindableItem, GrinderInput::new), FOSSIL_GRINDER);
         registry.addRecipes(getAllItems(CleanableItem::getCleanableItem, CleanableInput::new), CLEANING_STATION);
         registry.addRecipes(getAllItems(SynthesizableItem::getSynthesizableItem, SynthesizerInput::new), DNA_SYNTHASIZER);
@@ -140,6 +141,8 @@ public class JurassiCraftJEIPlugin implements IModPlugin {
         for (Dinosaur dinosaur : EntityHandler.getRegisteredDinosaurs()) {
             registry.addRecipes(Lists.newArrayList(new SkeletonInput(dinosaur, false), new SkeletonInput(dinosaur, true)), SKELETON_ASSEMBLY);
         }
+
+        registry.addRecipes(ForgeRegistries.POTION_TYPES.getValuesCollection().stream().map(TippedDartRecipeWrapper::new).collect(Collectors.toList()), VanillaRecipeCategoryUid.CRAFTING);
     }
 
     private <T> List<T> getDinos(Function<Dinosaur,T> func) {
