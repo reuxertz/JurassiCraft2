@@ -46,7 +46,7 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
     	ItemStack itemstack = this.slots.get(0);
         if (itemstack.getItem() == ItemHandler.SYRINGE && this.waterLevel == 2) {
             Dinosaur dino = EntityHandler.getDinosaurById(itemstack.getItemDamage());
-            if (dino != null && (dino.isMammal() || dino.isMarineCreature())) {
+            if (dino != null && dino.getBirthType() == Dinosaur.BirthType.LIVE_BIRTH) {
                 return this.lipids >= dino.getLipids() && this.minerals >= dino.getMinerals() && this.proximates >= dino.getProximates() && this.vitamins >= dino.getVitamins();
             }
         }
@@ -321,7 +321,6 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
     public void setField(int id, int value) {
         int processCount = this.getProcessCount();
         if (id < processCount) {
-            System.out.println(value);
             this.processTime[id] = value;
         } else if (id < processCount * 2) {
             this.totalProcessTime[id - processCount] = value;

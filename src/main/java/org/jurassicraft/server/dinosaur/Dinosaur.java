@@ -58,6 +58,7 @@ public abstract class Dinosaur implements Comparable<Dinosaur> {
     private int maximumAge;
     private String headCubeName;
     private MovementType movementType = MovementType.NEAR_SURFACE;
+    private BirthType birthType = BirthType.EGG_LAYING;
     private boolean isImprintable;
 
     private boolean randomFlock = true;
@@ -443,6 +444,14 @@ public abstract class Dinosaur implements Comparable<Dinosaur> {
         return texture + ".png";
     }
 
+    public void setBirthType(BirthType birthType) {
+        this.birthType = birthType;
+    }
+
+    public BirthType getBirthType() {
+        return birthType;
+    }
+
     @Override
     public int hashCode() {
         return this.getName().hashCode();
@@ -784,5 +793,10 @@ public abstract class Dinosaur implements Comparable<Dinosaur> {
         NEUTRAL,
         PASSIVE,
         SCARED
+    }
+
+    public enum BirthType {
+        LIVE_BIRTH,
+        EGG_LAYING
     }
 }

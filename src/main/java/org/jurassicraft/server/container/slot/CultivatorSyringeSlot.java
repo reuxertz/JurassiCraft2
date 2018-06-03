@@ -14,11 +14,7 @@ public class CultivatorSyringeSlot extends Slot {
 
     @Override
     public boolean isItemValid(ItemStack stack) {
-        if (stack.getItem() instanceof SyringeItem) {
-            Dinosaur dinosaur = EntityHandler.getDinosaurById(stack.getItemDamage());
-            return dinosaur.isMammal() || dinosaur.isMarineCreature();
-        }
-        return false;
+        return stack.getItem() instanceof SyringeItem && SyringeItem.getDinosaur(stack).getBirthType() == Dinosaur.BirthType.LIVE_BIRTH;
     }
 
     @Override
