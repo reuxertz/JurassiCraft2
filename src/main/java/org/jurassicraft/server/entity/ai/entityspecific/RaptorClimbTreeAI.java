@@ -27,12 +27,12 @@ public class RaptorClimbTreeAI extends EntityAIBase {
     private final MicroraptorEntity entity;
     private final double movementSpeed;
     private final World world;
-    
+
     private Path path;
 
     private BlockPos targetTrunk;
     private EnumFacing approachSide;
-    
+
     private double targetX;
     private double targetY;
     private double targetZ;
@@ -62,12 +62,12 @@ public class RaptorClimbTreeAI extends EntityAIBase {
             for (int iteration = 0; iteration <= 15; iteration++) {
                 target = target.up();
                 IBlockState state = this.world.getBlockState(target);
-                IBlockState ground = this.world.getBlockState(target.down());
                 if (state.getMaterial() == Material.LEAVES || state.getMaterial() == Material.WOOD) {
                     for (EnumFacing direction : EnumFacing.HORIZONTALS) {
                         BlockPos offsetTarget = target.offset(direction);
                         if (!this.world.isSideSolid(offsetTarget, EnumFacing.DOWN)) {
                             boolean canTravel = true;
+                            boolean woodFound = false;
                             int height = 0;
                             for (; height < MAX_TREE_HEIGHT; height++) {
                                 BlockPos trunkPos = target.up(height);
@@ -81,8 +81,9 @@ public class RaptorClimbTreeAI extends EntityAIBase {
                                 if (!trunkState.getBlock().isWood(this.world, trunkPos)) {
                                     break;
                                 }
+                                woodFound = true;
                             }
-                            if (canTravel) {
+                            if (canTravel && woodFound) {
                                 float offsetX = direction.getFrontOffsetX() * (this.entity.width + 0.25F) + 0.1F;
                                 float offsetZ = direction.getFrontOffsetZ() * (this.entity.width + 0.25F) + 0.1F;
                                 this.targetTrunk = target;
@@ -94,6 +95,7 @@ public class RaptorClimbTreeAI extends EntityAIBase {
                                 if (!this.entity.world.collidesWithAnyBlock(bounds)) {
                                     this.path = this.entity.getNavigator().getPathToXYZ(this.targetX, this.targetY, this.targetZ);
                                     if (this.path != null) {
+//                                        this.entity.world.setBlockState(new BlockPos(this.targetX, this.targetY, this.targetZ), Blocks.STONE.getDefaultState());
                                         return true;
                                     }
                                 }
@@ -121,7 +123,7 @@ public class RaptorClimbTreeAI extends EntityAIBase {
     }
 
     @Override
-    public void updateTask() {	
+    public void updateTask() {
         if (this.reachedTarget) {
             BlockPos currentTrunk = new BlockPos(this.targetTrunk.getX(), this.entity.getEntityBoundingBox().minY, this.targetTrunk.getZ());
             if (!this.gliding && this.world.isAirBlock(currentTrunk)) {
@@ -132,16 +134,16 @@ public class RaptorClimbTreeAI extends EntityAIBase {
                 } else {
                     Vec3d pos = null;
                     for(int i = 0; i < 100; i++) {
-                        double x = (random.nextFloat() - 0.5) * 35;
-                        double z = (random.nextFloat() - 0.5) * 35;
+                        double x = (random.nextFloat() - 0.5) * 45;
+                        double z = (random.nextFloat() - 0.5) * 45;
                         Vec3d vec = this.entity.getPositionVector().addVector(x, 0, z);
                         vec = vec.addVector(0.5D, -vec.y + world.getTopSolidOrLiquidBlock(new BlockPos(vec)).getY() + 0.5D, 0.5D);
-                        if(this.entity.getPositionVector().distanceTo(vec) > 10D && !this.entity.world.getBlockState(new BlockPos(vec)).getMaterial().isLiquid()) {
-                    	pos = vec;
+                        if(this.entity.getPositionVector().distanceTo(vec) > 20D && !this.entity.world.getBlockState(new BlockPos(vec)).getMaterial().isLiquid()) {
+                    	    pos = vec;
                     	break;
-                        }                    
+                        }
                     }
-                    
+
                     this.entity.setGlidingTo(pos);
 //                    this.entity.world.setBlockState(new BlockPos(pos), Blocks.STONE.getDefaultState());
                     this.entity.addVelocity((pos.x - this.entity.posX) * 0.02, 0.3F, (pos.z - this.entity.posZ) * 0.02);
@@ -159,7 +161,7 @@ public class RaptorClimbTreeAI extends EntityAIBase {
         		accepted = false;
         	    }
         	    IBlockState state = world.getBlockState(testTrunk);
-        	    
+
         	    if (state.getMaterial() != Material.LEAVES && state.getMaterial() != Material.WOOD) {
         		accepted = false;
         	    }
