@@ -36,7 +36,7 @@ public class CarAnimator implements ITabulaModelAnimator<CarEntity> {
 					closestSeat = door1.getSeat(entity);
 				}
 			}
-			value.setTarget(Math.toRadians(seat.getOccupant() != null || closestSeat != seat || closestSeat.getPos().distanceTo(playerPos) > 4D ? 0F : door.isLeft() ? 60F : -60F));
+			value.setTarget(Math.toRadians(entity.getPassengers().contains(player) || seat.getOccupant() != null || closestSeat != seat || closestSeat.getPos().distanceTo(playerPos) > 4D ? 0F : door.isLeft() ? 60F : -60F));
 			model.getCube(door.getName()).rotateAngleY = (float) value.getValueForRendering(partialTicks);
 		});
 
