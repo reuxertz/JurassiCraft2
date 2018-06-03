@@ -15,6 +15,8 @@ import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.item.ItemHandler;
 
+import javax.annotation.Nullable;
+import java.util.Optional;
 import java.util.UUID;
 
 public class DinosaurEggEntity extends Entity implements IEntityAdditionalSpawnData {
@@ -39,6 +41,13 @@ public class DinosaurEggEntity extends Entity implements IEntityAdditionalSpawnD
     @Override
     public void onUpdate() {
         super.onUpdate();
+
+        if(dinosaur == null) {
+            Optional<Entity> parentEntity =  world.loadedEntityList.stream().filter(entity -> entity.getUniqueID().equals(this.parent)).findFirst();
+            if(parentEntity.isPresent() && parentEntity.get() instanceof DinosaurEntity) {
+                this.dinosaur = ((DinosaurEntity)parentEntity.get()).getDinosaur();
+            }
+        }
 
         if (!this.world.isRemote) {
             if (this.entity == null) {
@@ -93,24 +102,26 @@ public class DinosaurEggEntity extends Entity implements IEntityAdditionalSpawnD
     }
 
     public void hatch() {
-        try {
-            DinosaurEntity entity = this.dinosaur.getDinosaurClass().getConstructor(World.class).newInstance(this.world);
-            entity.setPosition(this.posX, this.posY, this.posZ);
-            entity.setAge(0);
-            this.world.spawnEntity(entity);
-            entity.playLivingSound();
-            this.setDead();
-            for (Entity loadedEntity : this.world.loadedEntityList) {
-                if (loadedEntity instanceof DinosaurEntity && loadedEntity.getUniqueID().equals(this.parent)) {
-                    DinosaurEntity parent = (DinosaurEntity) loadedEntity;
-                    if (parent.family != null && this.dinosaur.shouldDefendOffspring()) {
-                        parent.family.addChild(entity.getUniqueID());
+        if(dinosaur != null) {
+            try {
+                DinosaurEntity entity = this.dinosaur.getDinosaurClass().getConstructor(World.class).newInstance(this.world);
+                entity.setPosition(this.posX, this.posY, this.posZ);
+                entity.setAge(0);
+                this.world.spawnEntity(entity);
+                entity.playLivingSound();
+                this.setDead();
+                for (Entity loadedEntity : this.world.loadedEntityList) {
+                    if (loadedEntity instanceof DinosaurEntity && loadedEntity.getUniqueID().equals(this.parent)) {
+                        DinosaurEntity parent = (DinosaurEntity) loadedEntity;
+                        if (parent.family != null && this.dinosaur.shouldDefendOffspring()) {
+                            parent.family.addChild(entity.getUniqueID());
+                        }
+                        break;
                     }
-                    break;
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -125,6 +136,7 @@ public class DinosaurEggEntity extends Entity implements IEntityAdditionalSpawnD
         NBTTagCompound entityTag = compound.getCompoundTag("Hatchling");
         this.entity = (DinosaurEntity) EntityList.createEntityFromNBT(entityTag, this.world);
         this.parent = compound.getUniqueId("Parent");
+        this.dinosaur = EntityHandler.getDinosaurById(compound.getInteger("DinosaurID"));
     }
 
     @Override
@@ -134,6 +146,7 @@ public class DinosaurEggEntity extends Entity implements IEntityAdditionalSpawnD
             compound.setTag("Hatchling", this.entity.serializeNBT());
         }
         compound.setUniqueId("Parent", this.parent);
+        compound.setInteger("DinosaurID", EntityHandler.getDinosaurId(dinosaur));
     }
 
     @Override
@@ -146,6 +159,7 @@ public class DinosaurEggEntity extends Entity implements IEntityAdditionalSpawnD
         this.dinosaur = EntityHandler.getDinosaurById(additionalData.readInt());
     }
 
+    @Nullable
     public Dinosaur getDinosaur() {
         return this.dinosaur;
     }
