@@ -132,24 +132,24 @@ public class BlockHandler
 
     public static final SkeletonAssemblyBlock SKELETON_ASSEMBLY = new SkeletonAssemblyBlock();
 
-    public static ElectricFencePoleBlock LOW_SECURITY_FENCE_POLE;
-    public static ElectricFencePoleBlock MED_SECURITY_FENCE_POLE;
-    public static ElectricFencePoleBlock HIGH_SECURITY_FENCE_POLE;
+    public static ElectricFencePoleBlock LOW_SECURITY_FENCE_POLE = new ElectricFencePoleBlock(FenceType.LOW);
+    public static ElectricFencePoleBlock MED_SECURITY_FENCE_POLE = new ElectricFencePoleBlock(FenceType.MED);
+    public static ElectricFencePoleBlock HIGH_SECURITY_FENCE_POLE = new ElectricFencePoleBlock(FenceType.HIGH);
 
-    public static ElectricFenceBaseBlock LOW_SECURITY_FENCE_BASE;
-    public static ElectricFenceBaseBlock MED_SECURITY_FENCE_BASE;
-    public static ElectricFenceBaseBlock HIGH_SECURITY_FENCE_BASE;
+    public static ElectricFenceBaseBlock LOW_SECURITY_FENCE_BASE = new ElectricFenceBaseBlock(FenceType.LOW);
+    public static ElectricFenceBaseBlock MED_SECURITY_FENCE_BASE = new ElectricFenceBaseBlock(FenceType.MED);
+    public static ElectricFenceBaseBlock HIGH_SECURITY_FENCE_BASE = new ElectricFenceBaseBlock(FenceType.HIGH);
 
-    public static ElectricFenceWireBlock LOW_SECURITY_FENCE_WIRE;
-    public static ElectricFenceWireBlock MED_SECURITY_FENCE_WIRE;
-    public static ElectricFenceWireBlock HIGH_SECURITY_FENCE_WIRE;
+    public static ElectricFenceWireBlock LOW_SECURITY_FENCE_WIRE = new ElectricFenceWireBlock(FenceType.LOW);
+    public static ElectricFenceWireBlock MED_SECURITY_FENCE_WIRE = new ElectricFenceWireBlock(FenceType.MED);
+    public static ElectricFenceWireBlock HIGH_SECURITY_FENCE_WIRE = new ElectricFenceWireBlock(FenceType.HIGH);
 
-    public static PaleoBaleBlock PALEO_BALE_CYCADEOIDEA;
-    public static PaleoBaleBlock PALEO_BALE_CYCAD;
-    public static PaleoBaleBlock PALEO_BALE_FERN;
-    public static PaleoBaleBlock PALEO_BALE_LEAVES;
+    public static PaleoBaleBlock PALEO_BALE_CYCADEOIDEA = new PaleoBaleBlock(PaleoBaleBlock.Variant.CYCADEOIDEA);
+    public static PaleoBaleBlock PALEO_BALE_CYCAD = new PaleoBaleBlock(PaleoBaleBlock.Variant.CYCAD);
+    public static PaleoBaleBlock PALEO_BALE_FERN = new PaleoBaleBlock(PaleoBaleBlock.Variant.FERN);
+    public static PaleoBaleBlock PALEO_BALE_LEAVES = new PaleoBaleBlock(PaleoBaleBlock.Variant.LEAVES);
 
-    public static PaleoBaleBlock PALEO_BALE_OTHER;
+    public static PaleoBaleBlock PALEO_BALE_OTHER = new PaleoBaleBlock(PaleoBaleBlock.Variant.OTHER);
 
     public static void init()
     {
@@ -251,24 +251,6 @@ public class BlockHandler
         registerBlock(DisplayBlockEntity.class, DISPLAY_BLOCK, "Display Block");
         registerBlock(FeederBlockEntity.class, FEEDER, "Feeder");
         registerBlock(BugCrateBlockEntity.class, BUG_CRATE, "Bug Crate");
-
-        PALEO_BALE_CYCADEOIDEA = new PaleoBaleBlock(PaleoBaleBlock.Variant.CYCADEOIDEA);
-        PALEO_BALE_CYCAD = new PaleoBaleBlock(PaleoBaleBlock.Variant.CYCAD);
-        PALEO_BALE_FERN = new PaleoBaleBlock(PaleoBaleBlock.Variant.FERN);
-        PALEO_BALE_LEAVES = new PaleoBaleBlock(PaleoBaleBlock.Variant.LEAVES);
-        PALEO_BALE_OTHER = new PaleoBaleBlock(PaleoBaleBlock.Variant.OTHER);
-
-        LOW_SECURITY_FENCE_WIRE = new ElectricFenceWireBlock(FenceType.LOW);
-        MED_SECURITY_FENCE_WIRE = new ElectricFenceWireBlock(FenceType.MED);
-        HIGH_SECURITY_FENCE_WIRE = new ElectricFenceWireBlock(FenceType.HIGH);
-
-        LOW_SECURITY_FENCE_POLE = new ElectricFencePoleBlock(FenceType.LOW);
-        MED_SECURITY_FENCE_POLE = new ElectricFencePoleBlock(FenceType.MED);
-        HIGH_SECURITY_FENCE_POLE = new ElectricFencePoleBlock(FenceType.HIGH);
-
-        LOW_SECURITY_FENCE_BASE = new ElectricFenceBaseBlock(FenceType.LOW);
-        MED_SECURITY_FENCE_BASE = new ElectricFenceBaseBlock(FenceType.MED);
-        HIGH_SECURITY_FENCE_BASE = new ElectricFenceBaseBlock(FenceType.HIGH);
 
         registerBlock(ElectricFenceWireBlockEntity.class, "tileEntityElectricFence", LOW_SECURITY_FENCE_WIRE, "Low Security Fence Wire");
         registerBlock(MED_SECURITY_FENCE_WIRE, "Med Security Fence Wire");

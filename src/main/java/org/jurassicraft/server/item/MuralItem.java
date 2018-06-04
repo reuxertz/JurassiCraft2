@@ -24,7 +24,6 @@ public class MuralItem extends Item {
 
             if (player.canPlayerEdit(offset, side, stack)) {
                 MuralEntity mural = new MuralEntity(world, offset, side);
-
                 if (mural.onValidSurface()) {
                     if (!world.isRemote) {
                         world.spawnEntity(mural);

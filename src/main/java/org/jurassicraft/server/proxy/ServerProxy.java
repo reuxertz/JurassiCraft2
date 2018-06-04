@@ -43,6 +43,7 @@ import org.jurassicraft.server.item.JournalItem;
 import org.jurassicraft.server.plant.PlantHandler;
 import org.jurassicraft.server.recipe.SmeltingRecipeHandler;
 import org.jurassicraft.server.util.RegistryHandler;
+import org.jurassicraft.server.maps.VillagerTradeHandler;
 import org.jurassicraft.server.world.WorldGenerator;
 
 import net.minecraft.entity.EnumCreatureType;
@@ -63,6 +64,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import org.jurassicraft.server.world.structure.StructureGenerationHandler;
 
 public class ServerProxy implements IGuiHandler {
     public static final int GUI_CLEANING_STATION_ID = 0;
@@ -89,6 +91,7 @@ public class ServerProxy implements IGuiHandler {
         BlockHandler.init();
         ItemHandler.init();
         StorageTypeRegistry.init();
+        StructureGenerationHandler.register();
 
         FoodNutrients.register();
 
@@ -107,7 +110,7 @@ public class ServerProxy implements IGuiHandler {
         ItemHandler.registerOres();
         JurassiCraftDataFixers.init();
         SmeltingRecipeHandler.init();
-
+        VillagerTradeHandler.init();
     }
 
     public void onInit(FMLInitializationEvent event) {
