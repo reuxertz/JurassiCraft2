@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "forge:ore_shaped",
   "group": "jurassicraft:tour_rail",
   "pattern": [
     "BRB",
@@ -11,7 +11,8 @@
       "item": "minecraft:iron_bars"
     },
     "T": {
-      "item": "minecraft:redstone"
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
     },
     "R": {
       "item": "minecraft:rail"
