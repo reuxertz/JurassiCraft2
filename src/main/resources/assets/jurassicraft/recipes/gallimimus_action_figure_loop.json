@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "jurassicraft:action_figure_cycle",
+  "pattern": [
+    "#"
+  ],
+  "key": {
+    "#": [
+      {
+        "item": "jurassicraft:display_block_item",
+        "data": 144
+      },
+      {
+        "item": "jurassicraft:display_block_item",
+        "data": 146
+      },
+      {
+        "item": "jurassicraft:display_block_item",
+        "data": 148
+      }
+    ]
+  },
+  "result": {
+    "item": "jurassicraft:display_block_item",
+    "data": 32
+  }
+}
+    
