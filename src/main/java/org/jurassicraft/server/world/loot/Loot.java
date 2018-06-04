@@ -86,11 +86,14 @@ public class Loot {
         if (name == LootTableList.GAMEPLAY_FISHING) {
             LootEntry gracilaria = Loot.entry(ItemHandler.GRACILARIA).weight(25).build();
             table.addPool(Loot.pool("gracilaria").rolls(1, 1).chance(0.1F).entry(gracilaria).build());
+        } else if (name == LootTableList.CHESTS_VILLAGE_BLACKSMITH || name == LootTableList.CHESTS_NETHER_BRIDGE || name == LootTableList.CHESTS_SIMPLE_DUNGEON || name == LootTableList.CHESTS_STRONGHOLD_CORRIDOR || name == LootTableList.CHESTS_DESERT_PYRAMID || name == LootTableList.CHESTS_ABANDONED_MINESHAFT) {
             LootEntry plantFossil = Loot.entry(ItemHandler.PLANT_FOSSIL).weight(5).count(1, 3).build();
             LootEntry twig = Loot.entry(ItemHandler.TWIG_FOSSIL).weight(5).count(1, 3).build();
             LootEntry amber = Loot.entry(ItemHandler.AMBER).weight(2).count(0, 1).data(0, 1).build();
             LootEntry skull = Loot.entry(ItemHandler.FOSSILS.get("skull")).weight(2).function(DINOSAUR_DATA).count(1, 2).build();
+
             table.addPool(Loot.pool("fossils").rolls(1, 2).entries(plantFossil, twig, amber, skull).build());
+
             LootEntry[] records = Loot.entries(ItemHandler.JURASSICRAFT_THEME_DISC, ItemHandler.DONT_MOVE_A_MUSCLE_DISC, ItemHandler.TROODONS_AND_RAPTORS_DISC).buildEntries();
             table.addPool(Loot.pool("records").rolls(0, 2).entries(records).build());
         } else if (name == Loot.VISITOR_GROUND_STORAGE) {
@@ -105,9 +108,12 @@ public class Loot {
             table.addPool(Loot.pool("items").rolls(3, 4).entries(dna, softTissue, plantSoftTissue, amber).build());
         } else if (name == Loot.VISITOR_DINING_HALL) {
             LootEntry amber = Loot.entry(ItemHandler.AMBER).weight(2).count(0, 1).data(0, 1).build();
-            table.addPool(Loot.pool("items").rolls(8, 11).entries(amber).build());
+            LootEntry tooth = Loot.entry(ItemHandler.FOSSILS.get("tooth")).weight(2).function(DINOSAUR_DATA).count(1, 2).build();
+            LootEntry actionFigure = Loot.entry(ItemHandler.DISPLAY_BLOCK).function(DINOSAUR_DATA).weight(1).build();
+            table.addPool(Loot.pool("items").rolls(8, 11).entries(amber, tooth, actionFigure).build());
         }
     }
+
     public static class PoolBuilder {
         private String name;
         private int minRolls;
