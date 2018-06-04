@@ -11,6 +11,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.PaleoBaleBlock;
+import org.jurassicraft.server.block.TourRailBlock;
 import org.jurassicraft.server.block.plant.DoublePlantBlock;
 import org.jurassicraft.server.block.tree.AncientPlanksBlock;
 import org.jurassicraft.server.block.tree.TreeType;
@@ -176,6 +177,24 @@ public class RecipeHandler {
 
             GameRegistry.addShapelessRecipe(new ItemStack(ItemHandler.ATTRACTION_SIGN, 1, i), new ItemStack(ItemHandler.ATTRACTION_SIGN, 1, previous));
         }
+
+        int[] dinosaurorder = {3, 1, 7, 9, 2, 4, 13, 19, 20, 0};
+        for(int i = 0; i < dinosaurorder.length; i++) {
+            int next = (i + 1) % dinosaurorder.length;
+            for(int i1 = 0; i1 < 3; i1++) {
+                GameRegistry.addShapelessRecipe(new ItemStack(ItemHandler.DISPLAY_BLOCK, 1, dinosaurorder[i] * 16), new ItemStack(ItemHandler.DISPLAY_BLOCK, 1, (dinosaurorder[next] * 16) + (i1 * 2)));
+            }
+        }
+
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ItemHandler.DISPLAY_BLOCK), " C ", "SSS", 'C', Items.CLAY_BALL, 'S', "slabWood"));
+
+        GameRegistry.addShapelessRecipe(new ItemStack(BlockHandler.TOUR_RAIL_SLOW), new ItemStack(BlockHandler.TOUR_RAIL));
+        GameRegistry.addShapelessRecipe(new ItemStack(BlockHandler.TOUR_RAIL_MEDIUM), new ItemStack(BlockHandler.TOUR_RAIL_SLOW));
+        GameRegistry.addShapelessRecipe(new ItemStack(BlockHandler.TOUR_RAIL_FAST), new ItemStack(BlockHandler.TOUR_RAIL_MEDIUM));
+        GameRegistry.addShapelessRecipe(new ItemStack(BlockHandler.TOUR_RAIL), new ItemStack(BlockHandler.TOUR_RAIL_FAST));
+
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BlockHandler.TOUR_RAIL), "BRB", "TRT", "BRB", 'B', Blocks.IRON_BARS, 'T' , "dustRedstone", 'R', Blocks.RAIL));
+
     }
 
     private static void addPaleoBaleRecipe(PaleoBaleBlock block) {
