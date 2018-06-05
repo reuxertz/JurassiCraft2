@@ -1,9 +1,6 @@
 package org.jurassicraft.server.world.structure;
 
-import net.minecraft.block.BlockColored;
-import net.minecraft.block.BlockDoor;
-import net.minecraft.block.BlockNewLog;
-import net.minecraft.block.BlockPlanks;
+import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumDyeColor;
@@ -124,12 +121,12 @@ public class GeneticistVillagerHouse extends StructureVillagePieces.Village {
             String type = block.getValue();
             switch (type) {
                 case "GeneticistChest":
-                    world.setBlockState(pos, Blocks.CHEST.getDefaultState().withRotation(this.rotation.add(Rotation.CLOCKWISE_90)));
+                    world.setBlockState(pos, Blocks.CHEST.getDefaultState().withRotation(this.rotation.add(Rotation.CLOCKWISE_90)).withMirror(this.mirror));
                     ((TileEntityChest) world.getTileEntity(pos)).setLootTable(Loot.GENETICIST_HOUSE_CHEST, random.nextLong());
                     break;
                 case "GeneticistMachine":
                     if (random.nextInt(4) == 0) {
-                        world.setBlockState(pos, MACHINES[random.nextInt(MACHINES.length)].withRotation(this.rotation.add(Rotation.CLOCKWISE_90)));
+                        world.setBlockState(pos, MACHINES[random.nextInt(MACHINES.length)].withRotation(this.rotation.add(Rotation.CLOCKWISE_90)).withMirror(this.mirror));
                     }
                     break;
                 case "Log":
@@ -139,7 +136,7 @@ public class GeneticistVillagerHouse extends StructureVillagePieces.Village {
                     world.setBlockState(pos, this.getBiomeSpecificBlockState(Blocks.COBBLESTONE.getDefaultState()));
                     break;
                 case "BaseStairs":
-                    world.setBlockState(pos, this.getBiomeSpecificBlockState(Blocks.STONE_STAIRS.getDefaultState().withRotation(this.rotation)));
+                    world.setBlockState(pos, this.getBiomeSpecificBlockState(Blocks.STONE_STAIRS.getDefaultState().withRotation(this.rotation).withMirror(this.mirror)));
                     break;
                 case "Wall":
                     world.setBlockState(pos, this.getBiomeSpecificBlockState(Blocks.PLANKS.getDefaultState()));
@@ -160,14 +157,10 @@ public class GeneticistVillagerHouse extends StructureVillagePieces.Village {
                             gate = Blocks.OAK_FENCE_GATE.getDefaultState();
                             break;
                     }
-                    world.setBlockState(pos, gate.withRotation(this.rotation));
+                    world.setBlockState(pos, gate.withRotation(this.rotation).withMirror(this.mirror));
                     break;
                 case "StainedClay":
-                    IBlockState state = Blocks.STAINED_HARDENED_CLAY.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.BLACK);
-                    if (this.structureType == 1) {
-                        state = Blocks.LOG2.getDefaultState().withProperty(BlockNewLog.VARIANT, BlockPlanks.EnumType.ACACIA);
-                    }
-                    world.setBlockState(pos, state);
+                    world.setBlockState(pos, Blocks.STONE_SLAB.getDefaultState());
                     break;
                 case "Bricks":
                     IBlockState brick = Blocks.STONEBRICK.getDefaultState();
@@ -183,16 +176,17 @@ public class GeneticistVillagerHouse extends StructureVillagePieces.Village {
             String type = block.getValue();
             switch (type) {
                 case "Door":
-                    world.setBlockState(pos, this.biomeDoor().getDefaultState().withRotation(this.rotation));
+                    world.setBlockState(pos, this.biomeDoor().getDefaultState().withRotation(this.rotation).withMirror(this.mirror));
                     break;
                 case "DoorTop":
-                    world.setBlockState(pos, this.biomeDoor().getDefaultState().withProperty(BlockDoor.HALF, BlockDoor.EnumDoorHalf.UPPER).withRotation(this.rotation));
+                    world.setBlockState(pos, this.biomeDoor().getDefaultState().withProperty(BlockDoor.HALF, BlockDoor.EnumDoorHalf.UPPER).withRotation(this.rotation).withMirror(this.mirror));
                     break;
                 case "Torch":
                     world.setBlockState(pos, Blocks.TORCH.getDefaultState());
+                    world.setBlockState(pos.down(), Blocks.STONEBRICK.getDefaultState());
                     break;
                 case "TorchDoor":
-                    world.setBlockState(pos, Blocks.TORCH.getDefaultState().withRotation(this.rotation));
+                    world.setBlockState(pos, Blocks.TORCH.getDefaultState().withRotation(this.rotation).withMirror(this.mirror));
                     break;
             }
         }

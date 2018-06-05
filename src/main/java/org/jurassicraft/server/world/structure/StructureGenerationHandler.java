@@ -9,7 +9,6 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import org.jurassicraft.server.entity.ai.util.MathUtils;
 import org.jurassicraft.server.maps.MapUtils;
 
 import java.util.*;
@@ -53,10 +52,8 @@ public enum StructureGenerationHandler implements IWorldGenerator {
 
     public static void register() {
         GameRegistry.registerWorldGenerator(INSTANCE, 0);
-        StructureGenerationHandler.registerGenerator(VisitorCentreGenerator::new, (world, pos, random) -> {
-            return world.getChunkFromBlockCoords(pos) == world.getChunkFromBlockCoords(MapUtils.getVisitorCenterPosition());
-        });
-        StructureGenerationHandler.registerGenerator(RaptorPaddockGenerator::new, 15, Biomes.JUNGLE, Biomes.MUTATED_JUNGLE, Biomes.JUNGLE_EDGE, Biomes.MUTATED_JUNGLE_EDGE, Biomes.SAVANNA, Biomes.MUTATED_SAVANNA);
+        StructureGenerationHandler.registerGenerator(VisitorCentreGenerator::new, (world, pos, random) -> world.getChunkFromBlockCoords(pos) == world.getChunkFromBlockCoords(MapUtils.getVisitorCenterPosition()));
+        StructureGenerationHandler.registerGenerator(RaptorPaddockGenerator::new, 400, Biomes.JUNGLE, Biomes.MUTATED_JUNGLE, Biomes.JUNGLE_EDGE, Biomes.MUTATED_JUNGLE_EDGE, Biomes.SAVANNA, Biomes.MUTATED_SAVANNA);
     }
 
     public static void registerGenerator(Function<Random, StructureGenerator> generatorFunction, int weight, Biome... validBiomes) {

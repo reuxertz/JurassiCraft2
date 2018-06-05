@@ -11,9 +11,8 @@ import net.minecraft.world.gen.structure.template.Template;
 import net.minecraft.world.gen.structure.template.TemplateManager;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.world.loot.Loot;
-import org.lwjgl.Sys;
 
-import javax.swing.plaf.synth.SynthStyle;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -44,6 +43,9 @@ public class VisitorCentreGenerator extends StructureGenerator {
         MinecraftServer server = world.getMinecraftServer();
         TemplateManager templateManager = world.getSaveHandler().getStructureTemplateManager();
         PlacementSettings settings = new PlacementSettings();
+        settings.setRotation(this.rotation);
+        settings.setMirror(this.mirror);
+        settings.setRandom(random);
         Template template = templateManager.getTemplate(server, STRUCTURE);
         template.addBlocksToWorldChunk(world, position, settings);
         Map<BlockPos, String> dataBlocks = template.getDataBlocks(position, settings);
@@ -61,13 +63,9 @@ public class VisitorCentreGenerator extends StructureGenerator {
         }
     }
 
+    @Nullable
     @Override
-    public int getOffsetY() {
-        return 6;
-    }
-
-    @Override
-    protected boolean canSpawnOnHills() {
-        return true;
+    public BlockPos getLevelPosition() {
+        return new BlockPos(38, 3,1);
     }
 }

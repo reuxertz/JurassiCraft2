@@ -33,6 +33,7 @@ import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.DinosaurSerializers;
 import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.entity.GoatEntity;
+import org.jurassicraft.server.entity.villager.VillagerHandler;
 import org.jurassicraft.server.event.ServerEventHandler;
 import org.jurassicraft.server.food.FoodHelper;
 import org.jurassicraft.server.food.FoodNutrients;
@@ -92,6 +93,7 @@ public class ServerProxy implements IGuiHandler {
         ItemHandler.init();
         StorageTypeRegistry.init();
         StructureGenerationHandler.register();
+        VillagerHandler.init();
 
         FoodNutrients.register();
 

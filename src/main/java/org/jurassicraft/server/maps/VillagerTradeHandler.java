@@ -27,7 +27,7 @@ public class VillagerTradeHandler {
                 career.addTrade(1, (merchant, recipeList, random) -> {
                     World world = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(0);
                     BlockPos blockpos = MapUtils.getVisitorCenterPosition();
-                    ItemStack itemstack = ItemMap.setupNewMap(world, (double)blockpos.getX(), (double)blockpos.getZ(), (byte)3, true, true);
+                    ItemStack itemstack = ItemMap.setupNewMap(world, (double)blockpos.getX(), (double)blockpos.getZ(), (byte)4, true, true);
                     ItemMap.renderBiomePreviewMap(world, itemstack);
                     MapData.addTargetDecoration(itemstack, blockpos, "+", MapDecoration.Type.MANSION);
                     itemstack.setTranslatableName("filled_map.jurassicraft.visitorcenter");

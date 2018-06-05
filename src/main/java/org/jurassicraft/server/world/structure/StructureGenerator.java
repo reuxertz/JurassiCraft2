@@ -2,13 +2,17 @@ package org.jurassicraft.server.world.structure;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.feature.WorldGenerator;
+import net.minecraft.world.storage.MapDecoration;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Random;
 
 public abstract class StructureGenerator extends WorldGenerator {
@@ -86,7 +90,7 @@ public abstract class StructureGenerator extends WorldGenerator {
             ground = currentPos.down();
             IBlockState state = chunk.getBlockState(ground);
             Material material = state.getMaterial();
-            if (material == Material.GROUND || material == Material.GRASS || material == Material.ROCK || material.isLiquid()) {
+            if (material == Material.GROUND || material == Material.SAND || material == Material.GRASS || material == Material.ROCK|| material.isLiquid()) {
                 break;
             }
         }
@@ -95,12 +99,32 @@ public abstract class StructureGenerator extends WorldGenerator {
 
     @Override
     public boolean generate(World world, Random random, BlockPos position) {
-        position = this.placeOnGround(world, position, this.getOffsetY());
+        BlockPos levelPos = getLevelPosition();
+        position = levelPos == null ? this.placeOnGround(world, position, this.getOffsetY()) : this.getGround(world, position).subtract(this.transformPos(levelPos, this.mirror, this.rotation));
         if (position != null) {
             this.generateStructure(world, random, position);
+            this.generateFiller(world, position);
             return true;
         }
         return false;
+    }
+
+    protected void generateFiller(World world, BlockPos pos) {
+        BlockPos min = this.transformPos(new BlockPos(0, 0, 0), this.mirror, this.rotation).add(pos);
+        BlockPos max = this.transformPos(new BlockPos(this.sizeX - 1, 0, this.sizeZ - 1), this.mirror, this.rotation).add(pos);
+
+        for(int x = Math.min(min.getX(), max.getX()); x <= Math.max(min.getX(), max.getX()); x ++) {
+            for(int z = Math.min(min.getZ(), max.getZ()); z <= Math.max(min.getZ(), max.getZ()); z ++) {
+                BlockPos blockPos = new BlockPos(x, pos.getY(), z);
+                if(world.getBlockState(blockPos).getMaterial() != Material.AIR) {
+                    BlockPos setpos = blockPos.down();
+                    do {
+                        world.setBlockState(setpos, this.getFillerState());
+                        setpos = setpos.down();
+                    } while (world.getBlockState(setpos).getBlock().isReplaceable(world, setpos));
+                }
+            }
+        }
     }
 
     protected boolean canSpawnOnHills() {
@@ -136,5 +160,17 @@ public abstract class StructureGenerator extends WorldGenerator {
 
     protected abstract void generateStructure(World world, Random random, BlockPos position);
 
-    public abstract int getOffsetY();
+    public int getOffsetY() {
+        return -1;
+    }
+
+    @Nullable
+    public BlockPos getLevelPosition() {
+        return null;
+    }
+
+    @Nonnull
+    public IBlockState getFillerState() {
+        return Blocks.DIRT.getDefaultState();
+    }
 }

@@ -1,5 +1,7 @@
 package org.jurassicraft.server.maps;
 
+import com.google.common.collect.Lists;
+import net.minecraft.init.Biomes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -11,12 +13,26 @@ public class MapUtils {
     private static final int MIN_DISTANCE = 5000;
     private static final int MAX_DISTANCE = 10000;
 
+    private static BlockPos cachedPos = null;
+
     public static BlockPos getVisitorCenterPosition() {
+        if(cachedPos == null) {
+            cachedPos = generatePosition();
+        }
+        return cachedPos;
+    }
+
+    private static BlockPos generatePosition() {
         World world = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(0);
         Random worldRandom = new Random(world.getSeed());
         int range = MAX_DISTANCE - MIN_DISTANCE;
-        BlockPos pos = new BlockPos(worldRandom.nextInt(range) + MIN_DISTANCE, 0, worldRandom.nextInt(range) + MIN_DISTANCE);
-//        System.out.println(pos);
+        BlockPos pos = null;
+        for(int i = 0; i < 10000; i++) {
+            pos = new BlockPos(worldRandom.nextInt(range) + MIN_DISTANCE, 0, worldRandom.nextInt(range) + MIN_DISTANCE);
+            if(Lists.newArrayList(Biomes.JUNGLE, Biomes.MUTATED_JUNGLE, Biomes.JUNGLE_EDGE, Biomes.MUTATED_JUNGLE_EDGE, Biomes.SAVANNA, Biomes.MUTATED_SAVANNA).contains(world.getBiome(pos))) {
+                return pos;
+            }
+        }
         return pos;
     }
 }
