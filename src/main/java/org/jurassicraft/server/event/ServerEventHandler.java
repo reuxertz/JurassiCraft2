@@ -63,7 +63,7 @@ public class ServerEventHandler {
                     BlockPos topBlock = world.getTopSolidOrLiquidBlock(pos);
 
                     if (world.getBlockState(topBlock.down()).isOpaqueCube() && !world.getBlockState(topBlock).getMaterial().isLiquid()) {
-                        world.setBlockState(topBlock, BlockHandler.MOSS.getDefaultState(), 2);
+                        world.setBlockState(topBlock, BlockHandler.MOSS.getDefaultState(), 2 | 16);
                     }
                 }
             }
@@ -74,8 +74,8 @@ public class ServerEventHandler {
                 if (rand.nextInt(8) == 0) {
                     BlockPos topBlock = world.getTopSolidOrLiquidBlock(pos);
                     if (world.getBlockState(topBlock.down()).isOpaqueCube() && !world.getBlockState(topBlock).getMaterial().isLiquid()) {
-                        world.setBlockState(topBlock.up(), BlockHandler.WEST_INDIAN_LILAC.getDefaultState(), 2);
-                        world.setBlockState(topBlock, BlockHandler.WEST_INDIAN_LILAC.getDefaultState().withProperty(DoublePlantBlock.HALF, DoublePlantBlock.BlockHalf.LOWER), 2);
+                        world.setBlockState(topBlock.up(), BlockHandler.WEST_INDIAN_LILAC.getDefaultState(), 2 | 16);
+                        world.setBlockState(topBlock, BlockHandler.WEST_INDIAN_LILAC.getDefaultState().withProperty(DoublePlantBlock.HALF, DoublePlantBlock.BlockHalf.LOWER), 2 | 16);
                     }
                 }
             }
@@ -85,8 +85,8 @@ public class ServerEventHandler {
             if (rand.nextInt(8) == 0) {
                 BlockPos topBlock = world.getTopSolidOrLiquidBlock(pos);
                 if (world.getBlockState(topBlock.down()).isOpaqueCube() && !world.getBlockState(topBlock).getMaterial().isLiquid()) {
-                    world.setBlockState(topBlock.up(), BlockHandler.HELICONIA.getDefaultState(), 2);
-                    world.setBlockState(topBlock, BlockHandler.HELICONIA.getDefaultState().withProperty(DoublePlantBlock.HALF, DoublePlantBlock.BlockHalf.LOWER), 2);
+                    world.setBlockState(topBlock.up(), BlockHandler.HELICONIA.getDefaultState(), 2 | 16);
+                    world.setBlockState(topBlock, BlockHandler.HELICONIA.getDefaultState().withProperty(DoublePlantBlock.HALF, DoublePlantBlock.BlockHalf.LOWER), 2 | 16);
                 }
             }
         }
@@ -100,7 +100,7 @@ public class ServerEventHandler {
                         IBlockState state = world.getBlockState(topBlock.down());
 
                         if (state.isOpaqueCube()) {
-                            world.setBlockState(topBlock, BlockHandler.GRACILARIA.getDefaultState(), 2);
+                            world.setBlockState(topBlock, BlockHandler.GRACILARIA.getDefaultState(), 2 | 16);
                         }
                     }
                 }
@@ -128,7 +128,7 @@ public class ServerEventHandler {
                 FossilizedTrackwayBlock.TrackwayType type = FossilizedTrackwayBlock.TrackwayType.values()[rand.nextInt(FossilizedTrackwayBlock.TrackwayType.values().length)];
 
                 for (int i = 0; i < rand.nextInt(2) + 1; i++) {
-                    BlockPos basePos = new BlockPos(pos.getX() + rand.nextInt(10) - 5, y, pos.getZ() + rand.nextInt(10) - 5);
+                    BlockPos basePos = new BlockPos(pos.getX() + rand.nextInt(10) + 3, y, pos.getZ() + rand.nextInt(10) + 3);
 
                     float angle = (float) (rand.nextDouble() * 360.0F);
 
@@ -141,7 +141,7 @@ public class ServerEventHandler {
                         BlockPos trackwayPos = basePos.add(xOffset * l, 0, zOffset * l);
 
                         if (world.getBlockState(trackwayPos).getBlock() == Blocks.STONE) {
-                            world.setBlockState(trackwayPos, trackway);
+                            world.setBlockState(trackwayPos, trackway, 2 | 16);
                         }
                     }
                 }
