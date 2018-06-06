@@ -1,56 +1,96 @@
 package org.jurassicraft.server.conf;
 
-import net.ilexiconn.llibrary.server.config.ConfigEntry;
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.ConfigManager;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.jurassicraft.JurassiCraft;
 
-public class JurassiCraftConfig {
-    @ConfigEntry(category = "Entities", name = "Dinosaur Spawning")
-    public boolean naturalSpawning;
+@Config(modid = JurassiCraft.MODID, category = "")
+@Mod.EventBusSubscriber(modid = JurassiCraft.MODID)
+public class JurassiCraftConfig { //TODO: move all structures to same parent package
 
-    @ConfigEntry(category = "Entities", name = "Only Hunt when Hungry")
-    public boolean huntWhenHungry = false;
+    @Config.Name("entities")
+    public static final Entities ENTITIES = new Entities();
 
-    @ConfigEntry(category = "Mineral Generation", name = "Fossil Generation")
-    public boolean fossilGeneration = true;
+    @Config.Name("mineral Generation")
+    public static final MineralGeneration MINERAL_GENERATION = new MineralGeneration();
 
-    @ConfigEntry(category = "Vehicles", name = "Helicopter Explosion")
-    public boolean helicopterExplosion = true;
+    @Config.Name("plant Generation")
+    public static final PlantGeneration PLANT_GENERATION = new PlantGeneration();
 
-    @ConfigEntry(category = "Mineral Generation", name = "Nest Fossil Generation")
-    public boolean nestFossilGeneration = true;
+    @Config.Name("structure Generation")
+    public static final StructureGeneration STRUCTURE_GENERATION = new StructureGeneration();
 
-    @ConfigEntry(category = "Mineral Generation", name = "Fossilized Trackway Generation")
-    public boolean trackwayGeneration = true;
+    @Config.Name("vehicles")
+    public static final Vehicles VEHICLES = new Vehicles();
 
-    @ConfigEntry(category = "Mineral Generation", name = "Plant Fossil Generation")
-    public boolean plantFossilGeneration = true;
 
-    @ConfigEntry(category = "Mineral Generation", name = "Amber Generation")
-    public boolean amberGeneration = true;
+    public static class Entities {
+        @Config.Name("Dinosaur Spawning")
+        public boolean naturalSpawning = false;
 
-    @ConfigEntry(category = "Mineral Generation", name = "Ice Shard Generation")
-    public boolean iceShardGeneration = true;
+        @Config.Name("Only Hunt when Hungry")
+        public boolean huntWhenHungry = false;
+    }
 
-    @ConfigEntry(category = "Mineral Generation", name = "Gypsum Generation")
-    public boolean gypsumGeneration = true;
+    public static class MineralGeneration {
+        @Config.Name("Fossil Generation")
+        public boolean fossilGeneration = true;
 
-    @ConfigEntry(category = "Mineral Generation", name = "Petrified Tree Generation")
-    public boolean petrifiedTreeGeneration = true;
+        @Config.Name("Nest Fossil Generation")
+        public boolean nestFossilGeneration = true;
 
-    @ConfigEntry(category = "Plant Generation", name = "Moss Generation")
-    public boolean mossGeneration = true;
+        @Config.Name("Fossilized Trackway Generation")
+        public boolean trackwayGeneration = true;
 
-    @ConfigEntry(category = "Plant Generation", name = "Peat Generation")
-    public boolean peatGeneration = true;
+        @Config.Name("Plant Fossil Generation")
+        public boolean plantFossilGeneration = true;
 
-    @ConfigEntry(category = "Plant Generation", name = "Flower Generation")
-    public boolean flowerGeneration = true;
+        @Config.Name("Amber Generation")
+        public boolean amberGeneration = true;
 
-    @ConfigEntry(category = "Plant Generation", name = "Gracilaria Generation")
-    public boolean gracilariaGeneration = true;
+        @Config.Name("Ice Shard Generation")
+        public boolean iceShardGeneration = true;
 
-    @ConfigEntry(category = "Structure Generation", name = "Visitor Generation")
-    public boolean visitorcentergeneration = true;
+        @Config.Name("Gypsum Generation")
+        public boolean gypsumGeneration = true;
 
-    @ConfigEntry(category = "Structure Generation", name = "Raptor Generation")
-    public boolean raptorgeneration = true;
+        @Config.Name("Petrified Tree Generation")
+        public boolean petrifiedTreeGeneration = true;
+    }
+
+    public static class PlantGeneration {
+        @Config.Name("Moss Generation")
+        public boolean mossGeneration = true;
+
+        @Config.Name("Peat Generation")
+        public boolean peatGeneration = true;
+
+        @Config.Name("Flower Generation")
+        public boolean flowerGeneration = true;
+
+        @Config.Name("Gracilaria Generation")
+        public boolean gracilariaGeneration = true;
+    }
+
+    public static class StructureGeneration {
+        @Config.Name("Visitor Generation")
+        public boolean visitorcentergeneration = true;
+
+        @Config.Name("Raptor Generation")
+        public boolean raptorgeneration = true;
+    }
+
+    public static class Vehicles {
+        @Config.Name("Helicopter Explosion")
+        public boolean helicopterExplosion;
+    }
+    @SubscribeEvent
+    public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+        if(JurassiCraft.MODID.equals(event.getConfigID())) {
+            ConfigManager.sync(JurassiCraft.MODID, Config.Type.INSTANCE);
+        }
+    }
 }

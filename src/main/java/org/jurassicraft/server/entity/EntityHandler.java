@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.api.Hybrid;
+import org.jurassicraft.server.conf.JurassiCraftConfig;
 import org.jurassicraft.server.dinosaur.AlligatorGarDinosaur;
 import org.jurassicraft.server.dinosaur.BrachiosaurusDinosaur;
 import org.jurassicraft.server.dinosaur.CoelacanthDinosaur;
@@ -142,7 +143,7 @@ public class EntityHandler {
 
             registerEntity(clazz, dinosaur.getName());
 
-            if (canSpawn && JurassiCraft.CONFIG.naturalSpawning) {
+            if (canSpawn && JurassiCraftConfig.ENTITIES.naturalSpawning) {
                 EntityRegistry.addSpawn(clazz, dinosaur.getSpawnChance(), 1, Math.min(6, dinosaur.getMaxHerdSize() / 2), dinosaur.isMarineCreature() ? EnumCreatureType.WATER_CREATURE : EnumCreatureType.CREATURE, dinosaur.getSpawnBiomes());
             }
         }

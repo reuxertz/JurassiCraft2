@@ -198,7 +198,7 @@ public class HelicopterBaseEntity extends EntityLivingBase implements IEntityAdd
         }
         this.interpSpeed.setTarget(2F);
         super.onLivingUpdate();
-        if (JurassiCraft.CONFIG.helicopterExplosion == true) {
+        if (JurassiCraftConfig.VEHICLES.helicopterExplosion == true) {
             if (this.motionX * this.motionX + this.motionZ * this.motionZ > 1.1 * 1.1 && this.collidedHorizontally) {
                 world.createExplosion(this.getRidingEntity(), posX, posY, posZ, 12, true);
             }

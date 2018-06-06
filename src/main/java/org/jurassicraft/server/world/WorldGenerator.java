@@ -22,6 +22,7 @@ import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.FossilizedTrackwayBlock;
 import org.jurassicraft.server.block.NestFossilBlock;
 import org.jurassicraft.server.block.tree.TreeType;
+import org.jurassicraft.server.conf.JurassiCraftConfig;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.period.TimePeriod;
@@ -42,7 +43,7 @@ public enum WorldGenerator implements IWorldGenerator {
     public void generateOverworld(World world, Random random, int chunkX, int chunkZ) {
         Biome biome = world.getBiome(new BlockPos(chunkX, 0, chunkZ));
 
-        if (JurassiCraft.CONFIG.petrifiedTreeGeneration) {
+        if (JurassiCraftConfig.MINERAL_GENERATION.petrifiedTreeGeneration) {
             for (int i = 0; i < world.provider.getHorizon() * 0.0125; i++) {
                 int randPosX = chunkX + random.nextInt(16) + 8;
                 int randPosZ = chunkZ + random.nextInt(16) + 8;
@@ -52,7 +53,7 @@ public enum WorldGenerator implements IWorldGenerator {
             }
         }
 
-        if (JurassiCraft.CONFIG.fossilGeneration) {
+        if (JurassiCraftConfig.MINERAL_GENERATION.fossilGeneration) {
             for (int i = 0; i < 32; i++) {
                 int randPosX = chunkX + random.nextInt(16);
                 int randPosY = random.nextInt(64);
@@ -86,7 +87,7 @@ public enum WorldGenerator implements IWorldGenerator {
             }
         }
 
-        if (JurassiCraft.CONFIG.nestFossilGeneration) {
+        if (JurassiCraftConfig.MINERAL_GENERATION.nestFossilGeneration) {
             int nestChance = 100;
 
             //TODO BiomeDictionary.isBiomeOfType, maybe hasType?
@@ -138,15 +139,15 @@ public enum WorldGenerator implements IWorldGenerator {
 
         Predicate<IBlockState> defaultPredicate = BlockMatcher.forBlock(Blocks.STONE);
 
-        if (JurassiCraft.CONFIG.amberGeneration) {
+        if (JurassiCraftConfig.MINERAL_GENERATION.amberGeneration) {
             this.generateOre(world, chunkX, chunkZ, 20, 8, 3, BlockHandler.AMBER_ORE.getDefaultState(), random, defaultPredicate);
         }
 
-        if (JurassiCraft.CONFIG.iceShardGeneration) {
+        if (JurassiCraftConfig.MINERAL_GENERATION.iceShardGeneration) {
             this.generateOre(world, chunkX, chunkZ, 64, 8, 1, BlockHandler.ICE_SHARD.getDefaultState(), random, defaultPredicate);
         }
 
-        if (JurassiCraft.CONFIG.gypsumGeneration) {
+        if (JurassiCraftConfig.MINERAL_GENERATION.gypsumGeneration) {
             this.generateOre(world, chunkX, chunkZ, 128, 32, 10, BlockHandler.GYPSUM_STONE.getDefaultState(), random, defaultPredicate);
         }
     }
