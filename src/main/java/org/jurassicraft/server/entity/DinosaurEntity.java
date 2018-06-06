@@ -672,7 +672,10 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     }
     
     public boolean canEatEntity(Entity entity) {
-	return !isEntityFreindly(entity);
+        if(entity instanceof EntityPlayer && (((EntityPlayer)entity).isCreative() || ((EntityPlayer)entity).isSpectator())) {
+            return false;
+        }
+        return !isEntityFreindly(entity);
     }
     
     //Should really be @SideOnly(Side.CLIENT)
@@ -689,10 +692,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         }
         
         if(!this.world.isRemote && this.dinosaur.getDiet().canEat(this, FoodType.MEAT) && this.getMetabolism().isHungry()) {
-            Optional<EntityLivingBase> optional = world.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().grow(10, 10, 10), this::canEatEntity).stream().findAny();
-            if(optional.isPresent()) {
-                this.setAttackTarget(optional.get());
-            }
+            world.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().grow(10, 10, 10), this::canEatEntity).stream().findAny().ifPresent(this::setAttackTarget);
         }
 
 
