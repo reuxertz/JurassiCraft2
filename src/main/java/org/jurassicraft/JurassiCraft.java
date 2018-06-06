@@ -43,11 +43,11 @@ public class JurassiCraft {
     @NetworkWrapper({ PlacePaddockSignMessage.class, ChangeTemperatureMessage.class, HelicopterEngineMessage.class, HelicopterDirectionMessage.class, HelicopterModulesMessage.class, SwitchHybridizerCombinatorMode.class, SetOrderMessage.class, OpenFieldGuideGuiMessage.class, UpdateVehicleControlMessage.class, MicroraptorDismountMessage.class, FordExplorerChangeStateMessage.class, FordExplorerUpdatePositionStateMessage.class, DNASequenceTransferClicked.class, CultivatorSyncNutrients.class, CarEntityPlayRecord.class, AttemptMoveToSeatMessage.class})
     public static SimpleNetworkWrapper NETWORK_WRAPPER;
 
-    private Logger logger;
+    private static Logger logger;
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
-        this.logger = event.getModLog();
+        logger = event.getModLog();
         UpdateHandler.INSTANCE.registerUpdateChecker(this, "http://pastebin.com/raw/Rb96SNWb");
         PROXY.onPreInit(event);
     }
@@ -86,7 +86,7 @@ public class JurassiCraft {
         }
     }
 
-    public Logger getLogger() {
-        return this.logger;
+    public static Logger getLogger() {
+        return logger;
     }
 }

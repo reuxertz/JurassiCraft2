@@ -250,7 +250,7 @@ public abstract class Dinosaur implements Comparable<Dinosaur>
             return TabulaModelHelper.loadTabulaModel(modelPath);
         } catch (Exception e)
         {
-            JurassiCraft.INSTANCE.getLogger().fatal("Couldn't load model " + modelPath, e);
+            JurassiCraft.getLogger().fatal("Couldn't load model " + modelPath, e);
         }
 
         return null;

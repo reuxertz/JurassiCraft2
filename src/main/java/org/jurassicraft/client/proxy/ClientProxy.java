@@ -81,7 +81,7 @@ public class ClientProxy extends ServerProxy {
         try {
             LanguageHandler.INSTANCE.loadRemoteLocalization(JurassiCraft.MODID);
         } catch (Exception e) {
-            JurassiCraft.INSTANCE.getLogger().error("Failed to load remote localizations", e);
+            JurassiCraft.getLogger().error("Failed to load remote localizations", e);
         }
 
         ClientEventHandler eventHandler = new ClientEventHandler();
@@ -113,7 +113,7 @@ public class ClientProxy extends ServerProxy {
                     try {
                 	PATRONS.add(UUID.fromString(patron));
                     } catch (IllegalArgumentException e) {
-                	JurassiCraft.INSTANCE.getLogger().error("Error getting UUID: " + e.getMessage());
+                	JurassiCraft.getLogger().error("Error getting UUID: " + e.getMessage());
                     }
                 }
             }

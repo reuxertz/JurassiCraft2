@@ -108,7 +108,7 @@ public class FoodHelper {
     private static void registerFood(FoodKey food, FoodType foodType, int healAmount, FoodEffect... effects) {
         if (!FOODS.contains(food)) {
             if( food == null || food.hashCode() == 0 ) {
-                JurassiCraft.INSTANCE.getLogger().log(Level.ERROR, "Something tried to register an invalid food!");
+                JurassiCraft.getLogger().log(Level.ERROR, "Something tried to register an invalid food!");
                 return;
             }
 
