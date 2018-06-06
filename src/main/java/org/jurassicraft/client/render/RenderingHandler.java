@@ -439,6 +439,8 @@ public enum RenderingHandler {
         this.registerItemRenderer(ItemHandler.DART_POISON_EXECUTIONER_CONCOCTION, "dart_colored");
         this.registerItemRenderer(ItemHandler.DART_TIPPED_POTION, "dart_colored");
 
+        this.registerItemRenderer(ItemHandler.WEST_INDIAN_LILAC_BERRIES);
+
         this.registerRenderInfo(EntityHandler.BRACHIOSAURUS, new BrachiosaurusAnimator(), 1.5F);
         this.registerRenderInfo(EntityHandler.COELACANTH, new CoelacanthAnimator(), 0.0F);
 //        this.registerRenderInfo(EntityHandler.ALLIGATORGAR, new AlligatorGarAnimator(), 0.0F);

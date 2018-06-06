@@ -226,7 +226,9 @@ public class ItemHandler {
     public static final Dart DART_POISON_CYCASIN = new Dart((entity, stack) -> entity.addPotionEffect(new PotionEffect(MobEffects.POISON, 2000)), 0xE2E1B8);
     public static final Dart DART_POISON_EXECUTIONER_CONCOCTION = new Dart((entity, stack) -> entity.setDeathIn(200), 0x000000);
     public static final Dart DART_TIPPED_POTION = new PotionDart();
-    
+
+    public static final WestIndianLilacBerriesItem WEST_INDIAN_LILAC_BERRIES = new WestIndianLilacBerriesItem();
+
     public static void init() {
         registerItem(FOSSILIZED_EGG, "Fossilized Egg");
 
@@ -353,6 +355,7 @@ public class ItemHandler {
 
         registerItem(FUN_FRIES, "Fun Fries");
         registerItem(OILED_POTATO_STRIPS, "Oiled Potato Strips");
+        registerItem(WEST_INDIAN_LILAC_BERRIES, "West Indian Lilac Berries");
 
         registerItem(LUNCH_BOX, "Lunch Box");
         registerItem(STAMP_SET, "Stamp Set");
@@ -364,7 +367,7 @@ public class ItemHandler {
         registerItem(DART_POISON_CYCASIN, "Dart Poision Cycasin");
         registerItem(DART_POISON_EXECUTIONER_CONCOCTION, "Dart Poison Executioner Concoction");
         registerItem(DART_TIPPED_POTION, "Dart Tipped Potion");
-        
+
         for (TreeType type : TreeType.values()) {
             registerTreeType(type);
         }
