@@ -50,7 +50,6 @@ public class StructureUtils {
 
         @Override
         public void readFromNBT(NBTTagCompound nbt) {
-            System.out.println(nbt);
             this.visitorCenter = nbt.getBoolean("VisitorCenter");
             this.raptorPaddock = nbt.getBoolean("RaptorPaddock");
         }

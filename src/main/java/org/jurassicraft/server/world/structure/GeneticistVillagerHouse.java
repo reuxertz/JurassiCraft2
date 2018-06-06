@@ -116,9 +116,7 @@ public class GeneticistVillagerHouse extends StructureVillagePieces.Village {
         template.addBlocksToWorldChunk(world, lowerCorner, settings);
         this.count++;
         Map<BlockPos, String> dataBlocks = template.getDataBlocks(lowerCorner, settings);
-        for (Map.Entry<BlockPos, String> block : dataBlocks.entrySet()) {
-            BlockPos pos = block.getKey();
-            String type = block.getValue();
+        dataBlocks.forEach((pos, type) -> {
             switch (type) {
                 case "GeneticistChest":
                     world.setBlockState(pos, Blocks.CHEST.getDefaultState().withRotation(this.rotation.add(Rotation.CLOCKWISE_90)).withMirror(this.mirror));
@@ -160,7 +158,7 @@ public class GeneticistVillagerHouse extends StructureVillagePieces.Village {
                     world.setBlockState(pos, gate.withRotation(this.rotation).withMirror(this.mirror));
                     break;
                 case "StainedClay":
-                    world.setBlockState(pos, Blocks.LOG.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y));
+                    world.setBlockState(pos, this.getBiomeSpecificBlockState(Blocks.LOG.getDefaultState()).withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y));
                     break;
                 case "Bricks":
                     IBlockState brick = Blocks.STONEBRICK.getDefaultState();
@@ -170,10 +168,9 @@ public class GeneticistVillagerHouse extends StructureVillagePieces.Village {
                     world.setBlockState(pos, brick);
                     break;
             }
-        }
-        for (Map.Entry<BlockPos, String> block : dataBlocks.entrySet()) {
-            BlockPos pos = block.getKey();
-            String type = block.getValue();
+        });
+
+        dataBlocks.forEach((pos, type) -> {
             switch (type) {
                 case "Door":
                     world.setBlockState(pos, this.biomeDoor().getDefaultState().withRotation(this.rotation).withMirror(this.mirror));
@@ -183,13 +180,12 @@ public class GeneticistVillagerHouse extends StructureVillagePieces.Village {
                     break;
                 case "Torch":
                     world.setBlockState(pos, Blocks.TORCH.getDefaultState());
-                    world.setBlockState(pos.down(), Blocks.STONEBRICK.getDefaultState());
                     break;
                 case "TorchDoor":
                     world.setBlockState(pos, Blocks.TORCH.getDefaultState().withRotation(this.rotation).withMirror(this.mirror));
                     break;
             }
-        }
+        });
         return true;
     }
 
