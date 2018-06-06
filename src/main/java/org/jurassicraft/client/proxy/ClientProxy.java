@@ -113,7 +113,7 @@ public class ClientProxy extends ServerProxy {
                     try {
                 	PATRONS.add(UUID.fromString(patron));
                     } catch (IllegalArgumentException e) {
-                	JurassiCraft.getLogger().error("Error getting UUID: " + e.getMessage());
+                	    JurassiCraft.getLogger().error("Error getting UUID: " + e.getMessage());
                     }
                 }
             }

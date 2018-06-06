@@ -22,7 +22,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
-@Mod(modid = JurassiCraft.MODID, name = JurassiCraft.NAME, version = JurassiCraft.VERSION, guiFactory = "org.jurassicraft.client.gui.JurassiCraftGUIFactory", dependencies = "required-after:llibrary@[" + JurassiCraft.LLIBRARY_VERSION + ",)")
+@Mod(modid = JurassiCraft.MODID, name = JurassiCraft.NAME, version = JurassiCraft.VERSION, dependencies = "required-after:llibrary@[" + JurassiCraft.LLIBRARY_VERSION + ",)")
 public class JurassiCraft {
     public static final String MODID = "jurassicraft";
     public static final String NAME = "JurassiCraft";
@@ -34,9 +34,6 @@ public class JurassiCraft {
 
     @Instance(JurassiCraft.MODID)
     public static JurassiCraft INSTANCE;
-
-    @Config
-    public static JurassiCraftConfig CONFIG;
 
     public static long timerTicks;
 

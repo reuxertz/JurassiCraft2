@@ -5,6 +5,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
 import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.conf.JurassiCraftConfig;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.ai.core.Herd;
 
@@ -67,7 +68,7 @@ public class SelectTargetEntityAI extends EntityAIBase
             return false;
         }
 
-        if (!this.entity.getMetabolism().isHungry() && JurassiCraft.CONFIG.huntWhenHungry)
+        if (!this.entity.getMetabolism().isHungry() && JurassiCraftConfig.ENTITIES.huntWhenHungry)
         {
             return false;
         }

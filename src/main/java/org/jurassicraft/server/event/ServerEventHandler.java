@@ -26,6 +26,7 @@ import org.jurassicraft.server.achievements.AchievementHandler;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.FossilizedTrackwayBlock;
 import org.jurassicraft.server.block.plant.DoublePlantBlock;
+import org.jurassicraft.server.conf.JurassiCraftConfig;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.util.GameRuleHandler;
 import org.jurassicraft.server.world.WorldGenCoal;
@@ -76,13 +77,13 @@ public class ServerEventHandler {
 
         BiomeDecorator decorator = biome.decorator;
 
-        if (JurassiCraft.CONFIG.plantFossilGeneration) {
+        if (JurassiCraftConfig.MINERAL_GENERATION.plantFossilGeneration) {
             if (decorator != null && decorator.chunkProviderSettings != null && !(decorator.coalGen instanceof WorldGenCoal)) {
                 decorator.coalGen = new WorldGenCoal(Blocks.COAL_ORE.getDefaultState(), decorator.chunkProviderSettings.coalSize);
             }
         }
 
-        if (JurassiCraft.CONFIG.mossGeneration) {
+        if (JurassiCraftConfig.PLANT_GENERATION.mossGeneration) {
             if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.FOREST) || BiomeDictionary.hasType(biome, BiomeDictionary.Type.CONIFEROUS) || BiomeDictionary.hasType(biome, BiomeDictionary.Type.SWAMP) || BiomeDictionary.hasType(biome, BiomeDictionary.Type.JUNGLE)) {
                 if (rand.nextInt(8) == 0) {
                     BlockPos topBlock = world.getTopSolidOrLiquidBlock(pos);
@@ -94,7 +95,7 @@ public class ServerEventHandler {
             }
         }
 
-        if (JurassiCraft.CONFIG.flowerGeneration) {
+        if (JurassiCraftConfig.PLANT_GENERATION.flowerGeneration) {
             if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.SWAMP) || BiomeDictionary.hasType(biome, BiomeDictionary.Type.JUNGLE)) {
                 if (rand.nextInt(8) == 0) {
                     BlockPos topBlock = world.getTopSolidOrLiquidBlock(pos);
@@ -116,7 +117,7 @@ public class ServerEventHandler {
             }
         }
 
-        if (JurassiCraft.CONFIG.gracilariaGeneration) {
+        if (JurassiCraftConfig.PLANT_GENERATION.gracilariaGeneration) {
             if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.OCEAN)) {
                 if (rand.nextInt(8) == 0) {
                     BlockPos topBlock = world.getTopSolidOrLiquidBlock(pos);
@@ -132,7 +133,7 @@ public class ServerEventHandler {
             }
         }
 
-        if (JurassiCraft.CONFIG.peatGeneration) {
+        if (JurassiCraftConfig.PLANT_GENERATION.peatGeneration) {
             if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.SWAMP)) {
                 if (rand.nextInt(2) == 0) {
                     new WorldGenMinable(BlockHandler.PEAT.getDefaultState(), 5, input -> input == Blocks.DIRT.getDefaultState() || input == Blocks.GRASS.getDefaultState()).generate(world, rand, world.getTopSolidOrLiquidBlock(pos));
@@ -140,7 +141,7 @@ public class ServerEventHandler {
             }
         }
 
-        if (JurassiCraft.CONFIG.trackwayGeneration) {
+        if (JurassiCraftConfig.MINERAL_GENERATION.trackwayGeneration) {
             int footprintChance = 20;
 
             if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.RIVER)) {

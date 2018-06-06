@@ -33,6 +33,7 @@ import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.DinosaurSerializers;
 import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.entity.GoatEntity;
+import org.jurassicraft.server.entity.villager.VillagerHandler;
 import org.jurassicraft.server.event.ServerEventHandler;
 import org.jurassicraft.server.food.FoodHelper;
 import org.jurassicraft.server.food.FoodNutrients;
@@ -40,6 +41,7 @@ import org.jurassicraft.server.genetics.StorageTypeRegistry;
 import org.jurassicraft.server.item.FossilItem;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.item.JournalItem;
+import org.jurassicraft.server.maps.VillagerTradeHandler;
 import org.jurassicraft.server.plant.PlantHandler;
 import org.jurassicraft.server.recipe.RecipeHandler;
 import org.jurassicraft.server.world.WorldGenerator;
@@ -62,6 +64,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import org.jurassicraft.server.world.structure.StructureGenerationHandler;
 
 public class ServerProxy implements IGuiHandler {
     public static final int GUI_CLEANING_STATION_ID = 0;
@@ -90,6 +93,9 @@ public class ServerProxy implements IGuiHandler {
         RecipeHandler.init();
         AchievementHandler.init();
         StorageTypeRegistry.init();
+        StructureGenerationHandler.register();
+        VillagerTradeHandler.init();
+        VillagerHandler.init();
 
         FoodNutrients.register();
 
@@ -110,11 +116,13 @@ public class ServerProxy implements IGuiHandler {
 	    List<Biome.SpawnListEntry> list = biome.getSpawnableList(EnumCreatureType.CREATURE);
 	    boolean shouldAddGoat = false;
 	    for(Biome.SpawnListEntry entry : list) {
-		if(entry.entityClass == EntityPig.class) {
-		    shouldAddGoat = true;
-		}
+            if(entry.entityClass == EntityPig.class) {
+                shouldAddGoat = true;
+            }
 	    }
-	    list.add(new Biome.SpawnListEntry(GoatEntity.class,  10, 2, 4));
+	    if(shouldAddGoat) {
+            list.add(new Biome.SpawnListEntry(GoatEntity.class,  10, 2, 4));
+        }
 	}
     }
 
