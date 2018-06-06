@@ -160,7 +160,7 @@ public class GeneticistVillagerHouse extends StructureVillagePieces.Village {
                     world.setBlockState(pos, gate.withRotation(this.rotation).withMirror(this.mirror));
                     break;
                 case "StainedClay":
-                    world.setBlockState(pos, Blocks.STONE_SLAB.getDefaultState());
+                    world.setBlockState(pos, Blocks.LOG.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y));
                     break;
                 case "Bricks":
                     IBlockState brick = Blocks.STONEBRICK.getDefaultState();
