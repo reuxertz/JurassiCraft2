@@ -148,7 +148,6 @@ public class BlockHandler
     public static PaleoBaleBlock PALEO_BALE_CYCAD = new PaleoBaleBlock(PaleoBaleBlock.Variant.CYCAD);
     public static PaleoBaleBlock PALEO_BALE_FERN = new PaleoBaleBlock(PaleoBaleBlock.Variant.FERN);
     public static PaleoBaleBlock PALEO_BALE_LEAVES = new PaleoBaleBlock(PaleoBaleBlock.Variant.LEAVES);
-
     public static PaleoBaleBlock PALEO_BALE_OTHER = new PaleoBaleBlock(PaleoBaleBlock.Variant.OTHER);
 
     public static void init()

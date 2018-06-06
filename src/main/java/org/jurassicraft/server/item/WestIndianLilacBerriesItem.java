@@ -10,12 +10,9 @@ import org.jurassicraft.server.tab.TabHandler;
 
 public class WestIndianLilacBerriesItem extends ItemFood{
 
-    public WestIndianLilacBerriesItem(int amount, float saturation, boolean isWolfFood) {
+    public WestIndianLilacBerriesItem() {
         super(1, 0.1F, false);
-
         this.setHasSubtypes(true);
-
-        this.setCreativeTab(TabHandler.FOODS);
     }
 
     protected void onFoodEaten(ItemStack stack, World worldIn, EntityPlayer player) {

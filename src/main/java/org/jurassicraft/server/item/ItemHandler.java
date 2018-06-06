@@ -145,7 +145,7 @@ public class ItemHandler {
     public static final Item WILD_POTATO = new ItemFood(1, 0.1F, false).setCreativeTab(TabHandler.FOODS);
     public static final Item WILD_POTATO_COOKED = new ItemFood(6, 0.6F, false).setCreativeTab(TabHandler.FOODS);
     public static final Item RHAMNUS_BERRIES = new RhamnusBerriesItem(3,0.3F).setCreativeTab(TabHandler.FOODS);
-    public static final Item WEST_INDIAN_LILAC_BERRIES = new WestIndianLilacBerriesItem(1, 0.1F, false).setCreativeTab(TabHandler.FOODS);
+    public static final Item WEST_INDIAN_LILAC_BERRIES = new WestIndianLilacBerriesItem().setCreativeTab(TabHandler.FOODS);
 
     public static final GracilariaItem GRACILARIA = (GracilariaItem) new GracilariaItem(BlockHandler.GRACILARIA).setCreativeTab(TabHandler.PLANTS);
     public static final BasicItem LIQUID_AGAR = new BasicItem(TabHandler.PLANTS);

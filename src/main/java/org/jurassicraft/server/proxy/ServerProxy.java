@@ -116,16 +116,18 @@ public class ServerProxy implements IGuiHandler {
     }
 
     public void onInit(FMLInitializationEvent event) {
-	for(Biome biome : ForgeRegistries.BIOMES.getValues()) { //Adds the goat spawning to biomes that spawn pigs. TODO: maybe add a config for biomes ?
-	    List<Biome.SpawnListEntry> list = biome.getSpawnableList(EnumCreatureType.CREATURE);
-	    boolean shouldAddGoat = false;
-	    for(Biome.SpawnListEntry entry : list) {
-		if(entry.entityClass == EntityPig.class) {
-		    shouldAddGoat = true;
-		}
-	    }
-	    list.add(new Biome.SpawnListEntry(GoatEntity.class,  10, 2, 4));
-	}
+        for(Biome biome : ForgeRegistries.BIOMES.getValuesCollection()) { //Adds the goat spawning to biomes that spawn pigs. TODO: maybe add a config for biomes ?
+            List<Biome.SpawnListEntry> list = biome.getSpawnableList(EnumCreatureType.CREATURE);
+            boolean shouldAddGoat = false;
+            for(Biome.SpawnListEntry entry : list) {
+                if(entry.entityClass == EntityPig.class) {
+                    shouldAddGoat = true;
+                }
+            }
+            if(shouldAddGoat) {
+                list.add(new Biome.SpawnListEntry(GoatEntity.class,  10, 2, 4));
+            }
+        }
     }
 
     public EntityPlayer getPlayer() {
