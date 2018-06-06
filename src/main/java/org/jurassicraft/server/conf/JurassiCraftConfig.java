@@ -89,7 +89,7 @@ public class JurassiCraftConfig { //TODO: move all structures to same parent pac
     }
     @SubscribeEvent
     public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if(JurassiCraft.MODID.equals(event.getConfigID())) {
+        if(JurassiCraft.MODID.equals(event.getModID())) {
             ConfigManager.sync(JurassiCraft.MODID, Config.Type.INSTANCE);
         }
     }
