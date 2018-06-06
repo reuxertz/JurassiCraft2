@@ -13,6 +13,7 @@ import org.jurassicraft.server.maps.MapUtils;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public enum StructureGenerationHandler implements IWorldGenerator {
     INSTANCE;
@@ -28,9 +29,11 @@ public enum StructureGenerationHandler implements IWorldGenerator {
             BlockPos pos = new BlockPos(blockX, 0, blockZ);
             Biome biome = world.getBiomeForCoordsBody(pos);
 
+            StructureUtils.StructureData data = StructureUtils.getStructureData();
+
             boolean universalGeneratorsGenerated = false;
             for(GeneratorEntry generatorEntry : UNIVERSAL_GENERATORS) {
-                if (generatorEntry.predicate.canSpawn(world, pos, random)) {
+                if (generatorEntry.predicate.canSpawn(world, pos, random) && generatorEntry.configPredicate.test(data)) {
                     generatorEntry.generatorFunction.apply(random).generate(world, random, pos);
                     universalGeneratorsGenerated = true;
                 }
@@ -41,7 +44,7 @@ public enum StructureGenerationHandler implements IWorldGenerator {
                 if (entries != null && !entries.isEmpty()) {
                     GeneratorEntry generatorEntry = entries.get(random.nextInt(entries.size()));
                     if (generatorEntry != null) {
-                        if (generatorEntry.predicate.canSpawn(world, pos, random)) {
+                        if (generatorEntry.predicate.canSpawn(world, pos, random)&& generatorEntry.configPredicate.test(data)) {
                             generatorEntry.generatorFunction.apply(random).generate(world, random, pos);
                         }
                     }
@@ -52,16 +55,16 @@ public enum StructureGenerationHandler implements IWorldGenerator {
 
     public static void register() {
         GameRegistry.registerWorldGenerator(INSTANCE, 0);
-        StructureGenerationHandler.registerGenerator(VisitorCentreGenerator::new, (world, pos, random) -> world.getChunkFromBlockCoords(pos) == world.getChunkFromBlockCoords(MapUtils.getVisitorCenterPosition()));
-        StructureGenerationHandler.registerGenerator(RaptorPaddockGenerator::new, 400, Biomes.JUNGLE, Biomes.MUTATED_JUNGLE, Biomes.JUNGLE_EDGE, Biomes.MUTATED_JUNGLE_EDGE, Biomes.SAVANNA, Biomes.MUTATED_SAVANNA);
+        StructureGenerationHandler.registerGenerator(VisitorCentreGenerator::new, StructureUtils.StructureData::isVisitorCenter,(world, pos, random) -> world.getChunkFromBlockCoords(pos) == world.getChunkFromBlockCoords(MapUtils.getVisitorCenterPosition()));
+        StructureGenerationHandler.registerGenerator(RaptorPaddockGenerator::new, StructureUtils.StructureData::isRaptorPaddock,400, Biomes.JUNGLE, Biomes.MUTATED_JUNGLE, Biomes.JUNGLE_EDGE, Biomes.MUTATED_JUNGLE_EDGE, Biomes.SAVANNA, Biomes.MUTATED_SAVANNA);
     }
 
-    public static void registerGenerator(Function<Random, StructureGenerator> generatorFunction, int weight, Biome... validBiomes) {
-        registerGenerator(generatorFunction, (world, pos, random) -> random.nextInt(weight) == 0, validBiomes);
+    public static void registerGenerator(Function<Random, StructureGenerator> generatorFunction, Predicate<StructureUtils.StructureData> configPredicate, int weight, Biome... validBiomes) {
+        registerGenerator(generatorFunction, configPredicate, (world, pos, random) -> random.nextInt(weight) == 0, validBiomes);
     }
 
-    public static void registerGenerator(Function<Random, StructureGenerator> generatorFunction, StructurePredicate predicate, Biome... validBiomes) {
-        GeneratorEntry entry = new GeneratorEntry(generatorFunction, predicate);
+    public static void registerGenerator(Function<Random, StructureGenerator> generatorFunction, Predicate<StructureUtils.StructureData> configPredicate, StructurePredicate predicate, Biome... validBiomes) {
+        GeneratorEntry entry = new GeneratorEntry(generatorFunction, configPredicate, predicate);
         for (Biome biome : validBiomes) {
             StructureGenerationHandler.addEntry(biome, entry);
         }
@@ -75,11 +78,13 @@ public enum StructureGenerationHandler implements IWorldGenerator {
     }
 
     private static class GeneratorEntry {
-        private Function<Random, StructureGenerator> generatorFunction;
-        private StructurePredicate predicate;
+        private final Function<Random, StructureGenerator> generatorFunction;
+        private final Predicate<StructureUtils.StructureData> configPredicate;
+        private final StructurePredicate predicate;
 
-        public GeneratorEntry(Function<Random, StructureGenerator> generatorFunction, StructurePredicate predicate) {
+        public GeneratorEntry(Function<Random, StructureGenerator> generatorFunction, Predicate<StructureUtils.StructureData> configPredicate, StructurePredicate predicate) {
             this.generatorFunction = generatorFunction;
+            this.configPredicate = configPredicate;
             this.predicate = predicate;
         }
     }
