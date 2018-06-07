@@ -9,7 +9,7 @@ public class DinosaurSerializers {
     public static final DataSerializer<DinosaurEntity.Order> ORDER = new DataSerializer<DinosaurEntity.Order>() {
         @Override
         public void write(PacketBuffer buf, DinosaurEntity.Order value) {
-            buf.writeByte(value.ordinal());
+            buf.writeByte((value == null ? DinosaurEntity.Order.WANDER : value).ordinal());
         }
 
         @Override
