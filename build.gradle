@@ -13,8 +13,8 @@ buildscript {
 apply plugin: "net.minecraftforge.gradle.forge"
 
 def mod_file = getModFile()
-version = getVersion("VERSION", mod_file)
-def llibrary_version = getVersion("LLIBRARY_VERSION", mod_file)
+version = getVersion("VERSION", mod_file, true)
+def llibrary_version = getVersion("LLIBRARY_VERSION", mod_file, false)
 group = "${MOD_GROUP}"
 archivesBaseName = "${MOD_NAME}"
 sourceCompatibility = targetCompatibility = "1.8"
@@ -38,7 +38,7 @@ repositories {
 dependencies {
     deobfCompile "mezz.jei:jei_1.12.2:4.9.1.187:api"
     runtime "mezz.jei:jei_1.12.2:4.9.1.187"
-    compile "net.ilexiconn:llibrary:1.7.9-1.12.2:dev"
+    compile "net.ilexiconn:llibrary:${llibrary_version}-1.12.2"
     testCompile "junit:junit:4.12"
 }
 
@@ -73,7 +73,7 @@ String getModFile() {
     return path
 }
 
-String getVersion(String type, String mod_file) {
+String getVersion(String type, String mod_file, boolean addMcVer) {
     String major = "0"
     String revision = "0"
     String patch = "0"
@@ -90,7 +90,11 @@ String getVersion(String type, String mod_file) {
             patch = pts[2]
         }
     }
-    return "${version_minecraft}-$major.$revision.$patch"
+    if(addMcVer) {
+        return "${version_minecraft}-$major.$revision.$patch"
+    }
+    return "$major.$revision.$patch"
+
 }
 
 idea { module { inheritOutputDirs = true } }
