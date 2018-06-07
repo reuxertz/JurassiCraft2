@@ -11,13 +11,8 @@
 package org.jurassicraft.server.command;
 
 import com.google.common.collect.Lists;
-import net.minecraft.command.CommandException;
+import net.minecraft.command.*;
 import net.minecraft.command.CommandResultStats.Type;
-import net.minecraft.command.EntityNotFoundException;
-import net.minecraft.command.EntitySelector;
-import net.minecraft.command.ICommand;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.server.MinecraftServer;
@@ -29,9 +24,11 @@ import net.minecraft.world.World;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.model.animation.EntityAnimation;
 import org.jurassicraft.server.api.Animatable;
-import org.jurassicraft.server.world.structure.VisitorCentreGenerator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 /**
  * @author jabelar
@@ -68,7 +65,6 @@ public class ForceAnimationCommand implements ICommand {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         World world = sender.getEntityWorld();
-        new VisitorCentreGenerator(new Random()).generate(server.getWorld(0), new Random(), sender.getPosition());
         if (world.isRemote) {
             JurassiCraft.getLogger().debug("Not processing on Client side");
         } else {
