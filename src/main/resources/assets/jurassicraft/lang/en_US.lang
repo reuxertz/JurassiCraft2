@@ -212,10 +212,12 @@ item.mealworm_beetles.name=Mealworm Beetles
 item.fine_net.name=Fine Net
 item.plankton.name=Plankton
 item.krill.name=Krill
-
 item.mural.name=Mural
-
 item.ingen_journal.name=InGen Journal
+item.birthing_wand.name=Birthing Wand
+item.breeding_wand.name=Breeding Wand
+
+filled_map.jurassicraft.visitorcenter=Visitor Center Map
 
 // Crops ========================================
 item.ajuginucula_smithii_seeds.name=Ajuginucula Smithii Seeds
