@@ -12,6 +12,8 @@ import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.client.sound.EntitySound;
 import org.jurassicraft.server.entity.vehicle.CarEntity;
 
@@ -42,6 +44,7 @@ public class CarEntityPlayRecord extends AbstractMessage<CarEntityPlayRecord> {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void onClientReceived(Minecraft client, CarEntityPlayRecord message, EntityPlayer player, MessageContext messageContext) {
         Entity entity = player.world.getEntityByID(message.entityId);
         if(entity instanceof CarEntity) {
