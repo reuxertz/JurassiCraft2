@@ -19,6 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Entity representing a seat inside the helicopter. Should NOT be spawned inside the world, the {@link HelicopterBaseEntity Helicopter Entity} handles that for you.
  */
+@Deprecated //REMOVE
 public class HelicopterSeatEntity extends Entity implements IEntityAdditionalSpawnData {
     public HelicopterBaseEntity parent;
     private UUID parentID;

@@ -60,7 +60,6 @@ public class HelicopterModuleSpot {
     }
 
     public void readFromNBT(NBTTagCompound compound) {
-        System.out.println(">> " + compound);
         this.modules.clear();
         NBTTagList list = compound.getTagList("modules", Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < list.tagCount(); i++) {
@@ -95,7 +94,6 @@ public class HelicopterModuleSpot {
             if (module == null) {
                 System.err.println("Null module for id " + id);
             } else {
-                System.out.println(">> Read for " + id + " " + nbt);
                 module.readFromNBT(nbt);
                 this.addModule(module);
             }
@@ -122,7 +120,6 @@ public class HelicopterModuleSpot {
 
     public void onClicked(EntityPlayer player, Vec3d vec) {
         for (HelicopterModule m : this.modules) {
-            System.out.println(">> Clicked on " + m.getModuleID());
             if (m.onClicked(this, player, vec)) {
                 return;
             }

@@ -149,7 +149,6 @@ public class HelicopterBaseEntity extends EntityLivingBase implements IEntityAdd
         }
 
         this.modulesSynced = false;
-        System.out.println("read heliID=" + this.heliID);
     }
 
     @Override
@@ -181,8 +180,6 @@ public class HelicopterBaseEntity extends EntityLivingBase implements IEntityAdd
             spots.appendTag(spotData);
         }
         tagCompound.setTag("spots", spots);
-
-        System.out.println("wrote heliID=" + this.heliID);
     }
 
     // apparently up to the entity to update its position given the motion
@@ -347,8 +344,6 @@ public class HelicopterBaseEntity extends EntityLivingBase implements IEntityAdd
         Vec3d localVec = vec.rotateYaw((float) Math.toRadians(this.rotationYaw));
 
         if (!this.attachModule(player, localVec, activeItemStack)) {
-            System.out.println(localVec);
-
             if (localVec.z > 0.6) {
                 player.startRiding(this.seats[0]);
                 return EnumActionResult.SUCCESS;
@@ -361,7 +356,6 @@ public class HelicopterBaseEntity extends EntityLivingBase implements IEntityAdd
             }
             for (HelicopterModuleSpot spot : this.moduleSpots) {
                 if (spot != null && spot.isClicked(localVec)) {
-                    System.out.println(spot);
                     spot.onClicked(player, vec);
                     return EnumActionResult.SUCCESS;
                 }
