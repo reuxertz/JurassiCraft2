@@ -90,7 +90,7 @@ String getVersion(String type, String mod_file) {
             patch = pts[2]
         }
     }
-    return "$major.$revision.$patch"
+    return "${version_minecraft}-$major.$revision.$patch"
 }
 
 idea { module { inheritOutputDirs = true } }
