@@ -3,6 +3,7 @@ package org.jurassicraft.client.render.entity;
 import java.util.Comparator;
 import java.util.List;
 
+import net.minecraftforge.fml.common.Mod;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.entity.vehicle.CarEntity;
@@ -32,7 +33,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@EventBusSubscriber(modid=JurassiCraft.MODID)
+@Mod.EventBusSubscriber(modid=JurassiCraft.MODID, value = Side.CLIENT)
 public class TyretrackRenderer {
     
     public static final List<Material> ALLOWED_MATERIALS = Lists.newArrayList(Material.GRASS, Material.GROUND, Material.SAND);//TODO: configurable ?

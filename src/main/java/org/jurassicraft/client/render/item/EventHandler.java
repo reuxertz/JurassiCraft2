@@ -1,5 +1,6 @@
 package org.jurassicraft.client.render.item;
 
+import net.minecraftforge.fml.common.Mod;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.render.item.models.GuiItemModelWrapper;
 import org.jurassicraft.server.item.ItemHandler;
@@ -18,7 +19,8 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
-@EventBusSubscriber(modid=JurassiCraft.MODID, value=Side.CLIENT)
+@SuppressWarnings("unused")
+@Mod.EventBusSubscriber(modid=JurassiCraft.MODID, value=Side.CLIENT)
 public class EventHandler {
     
     public static IBakedModel DART_GUN_GUI;
@@ -30,14 +32,14 @@ public class EventHandler {
     
     @SubscribeEvent
     public static void onModelBaked(ModelBakeEvent event) {
-	for(ModelResourceLocation mrl : event.getModelRegistry().getKeys()) {
-	    if(mrl.getVariant().equals("inventory")) {
-		ResourceLocation location = new ResourceLocation(mrl.getResourceDomain(), mrl.getResourcePath());
-		if(location.equals(ItemHandler.DART_GUN.getRegistryName())) {
-		    event.getModelRegistry().putObject(mrl, new GuiItemModelWrapper(event.getModelRegistry().getObject(mrl), DART_GUN_GUI));
-		}
-	    }
-	}
+        for(ModelResourceLocation mrl : event.getModelRegistry().getKeys()) {
+            if(mrl.getVariant().equals("inventory")) {
+            ResourceLocation location = new ResourceLocation(mrl.getResourceDomain(), mrl.getResourcePath());
+            if(location.equals(ItemHandler.DART_GUN.getRegistryName())) {
+                event.getModelRegistry().putObject(mrl, new GuiItemModelWrapper(event.getModelRegistry().getObject(mrl), DART_GUN_GUI));
+            }
+            }
+        }
     }
     
     private static IBakedModel getModel(ResourceLocation resourceLocation, TextureMap map) {

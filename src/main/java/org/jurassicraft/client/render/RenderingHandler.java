@@ -84,7 +84,7 @@ import static org.jurassicraft.server.item.ItemHandler.*;
 import static org.jurassicraft.server.block.BlockHandler.*;
 
 @SideOnly(Side.CLIENT)
-@Mod.EventBusSubscriber(modid=JurassiCraft.MODID)
+@Mod.EventBusSubscriber(modid=JurassiCraft.MODID, value = Side.CLIENT)
 public enum RenderingHandler {
     INSTANCE;
 
