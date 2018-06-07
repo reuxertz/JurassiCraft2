@@ -25,14 +25,11 @@ public class VillagerTradeHandler {
         } else {
             VillagerRegistry.VillagerCareer career = profession.getCareer(1);
             if(career.getName().equals("cartographer")) {
-                career.addTrade(1, (merchant, recipeList, random) -> {
+                career.addTrade(4, (merchant, recipeList, random) -> {
                     if(StructureUtils.getStructureData().isVisitorCenter()) {
                         World world = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(0);
                         BlockPos blockpos = MapUtils.getVisitorCenterPosition();
-                        ItemStack itemstack = ItemMap.setupNewMap(world, blockpos.getX() - 16, blockpos.getZ() - 16, (byte)4, true, true);
-                        MapData data = ((ItemMap)itemstack.getItem()).getMapData(itemstack, world);
-                        data.xCenter = blockpos.getX();
-                        data.xCenter = blockpos.getZ();
+                        ItemStack itemstack = ItemMap.setupNewMap(world, blockpos.getX(), blockpos.getZ(), (byte)2, true, true);
                         ItemMap.renderBiomePreviewMap(world, itemstack);
                         MapData.addTargetDecoration(itemstack, blockpos, "+", MapDecoration.Type.MANSION);
                         itemstack.setTranslatableName("filled_map.jurassicraft.visitorcenter");
