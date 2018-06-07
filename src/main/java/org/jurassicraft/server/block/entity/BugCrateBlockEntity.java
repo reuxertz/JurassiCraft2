@@ -25,7 +25,6 @@ public class BugCrateBlockEntity extends MachineBaseBlockEntity {
 
     @Override
     protected boolean canProcess(int process) {
-        System.out.println("sss");
         for (int i = 0; i < 3; i++) {
             ItemStack stack = this.getStackInSlot(i);
             BreedableBug bug = BreedableBug.getBug(stack);

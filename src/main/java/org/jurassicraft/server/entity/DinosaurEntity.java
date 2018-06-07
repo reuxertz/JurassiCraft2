@@ -712,8 +712,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
                 }
             }
             if ((this.getAnimation() == EntityAnimation.LAYING_EGG.get() || this.getAnimation() == EntityAnimation.GIVING_BIRTH.get()) && this.animationTick == this.getAnimationLength() / 2) {
-                System.out.println(this.children);
-        	for (DinosaurEntity child : this.children) {
+        	    for (DinosaurEntity child : this.children) {
                     Entity entity;
                     if (this.dinosaur.givesDirectBirth()) {
                         entity = child;
@@ -723,7 +722,6 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
                         entity = new DinosaurEggEntity(this.world, child, this);
                     }
                     entity.setPosition(this.posX + (this.rand.nextFloat() - 0.5F), this.posY + 0.5F, this.posZ + (this.rand.nextFloat() - 0.5F));
-                    System.out.println("SPAWN");
                     this.world.spawnEntity(entity);
                 }
             }
@@ -757,7 +755,6 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
                                 }
                                 child.setGenetics(genetics);
                                 child.setAttributes(attributes);
-                                System.out.println(this.children.size());
                                 this.children.add(child);
                             } catch (Exception e) {
                                 e.printStackTrace();

@@ -33,10 +33,8 @@ public class HelicopterModulesMessage extends AbstractMessage<HelicopterModulesM
     public void onClientReceived(Minecraft minecraft, HelicopterModulesMessage message, EntityPlayer player, MessageContext messageContext) {
         HelicopterBaseEntity helicopter = HelicopterMessages.getHeli(player.world, message.heliID);
         if (helicopter != null) {
-            System.out.println(message.heliID);
             HelicopterModuleSpot spot = helicopter.getModuleSpot(message.pos);
             spot.readFromNBT(message.compound);
-            System.out.println(message.compound);
         }
     }
 
@@ -44,10 +42,8 @@ public class HelicopterModulesMessage extends AbstractMessage<HelicopterModulesM
     public void onServerReceived(MinecraftServer minecraftServer, HelicopterModulesMessage message, EntityPlayer player, MessageContext messageContext) {
         HelicopterBaseEntity helicopter = HelicopterMessages.getHeli(player.world, message.heliID);
         if (helicopter != null) {
-            System.out.println(message.heliID);
             HelicopterModuleSpot spot = helicopter.getModuleSpot(message.pos);
             spot.readFromNBT(message.compound);
-            System.out.println(message.compound);
         }
     }
 

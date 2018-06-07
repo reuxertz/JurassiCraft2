@@ -128,7 +128,7 @@ public class RegistryHandler
         try {
             trigger = (ICriterionTrigger<T>) CriterionRegister.invoke(null, trigger);
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            System.out.println("Failed to register trigger " + trigger.getId() + "!");
+            JurassiCraft.getLogger().error("Failed to register trigger " + trigger.getId() + "!");
             e.printStackTrace();
         }
         return trigger;
