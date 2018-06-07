@@ -216,6 +216,10 @@ item.krill.name=Krill
 item.mural.name=Mural
 
 item.ingen_journal.name=InGen Journal
+item.birthing_wand.name=Birthing Wand
+item.breeding_wand.name=Breeding Wand
+
+filled_map.jurassicraft.visitorcenter=Visitor Center Map
 
 // Crops ========================================
 item.ajuginucula_smithii_seeds.name=Ajuginucula Smithii Seeds
@@ -334,6 +338,9 @@ tile.cycad_zamites.name=Zamites
 tile.dicksonia.name=Dicksonia
 tile.dicroidium_zuberi.name=Dicroidium Zuberi
 tile.west_indian_lilac.name=West Indian Lilac
+tile.west_indian_lilac_flowers.name=Flowering West Indian Lilac
+tile.west_indian_lilac_fruit.name=Fruited West Indian Lilac
+item.west_indian_lilac_fruit.name=West Indian Lilac Berries
 tile.dictyophyllum.name=Dictyophyllum
 tile.serenna_veriformans.name=Serenna Veriformans
 tile.ladinia_simplex.name=Ladinia Simplex
