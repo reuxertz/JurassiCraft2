@@ -270,7 +270,7 @@ public class Herd implements Iterable<DinosaurEntity> {
             for (DinosaurEntity entity : this.leader.world.getEntitiesWithinAABB(this.leader.getClass(), searchBounds)) {
                 if (!entity.isCarcass() && !entity.isDead && !(entity.getMetabolism().isStarving() || entity.getMetabolism().isDehydrated())) {
                     Herd otherHerd = entity.herd;
-                    if (otherHerd == null) {
+                    if (otherHerd == null || otherHerd.members.size() == 1) {
                         if (this.size() >= this.herdType.getMaxHerdSize()) {
                             if (GameRuleHandler.KILL_HERD_OUTCAST.getBoolean(this.leader.world) && this.herdType.getDinosaurType() == Dinosaur.DinosaurType.AGGRESSIVE && !this.enemies.contains(entity)) {
                                 this.enemies.add(entity);
