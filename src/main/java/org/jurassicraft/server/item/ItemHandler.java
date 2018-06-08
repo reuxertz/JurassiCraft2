@@ -352,7 +352,7 @@ public class ItemHandler {
         registerItem(PLANT_FOSSIL, "Plant Fossil");
         registerItem(TWIG_FOSSIL, "Twig Fossil");
 
-        registerItem(HELICOPTER, "Helicopter Spawner");
+//        registerItem(HELICOPTER, "Helicopter Spawner");
 //        registerItem(MINIGUN_MODULE, "Helicopter Minigun");
 
         registerItem(AMBER_CANE, "Amber Cane");
