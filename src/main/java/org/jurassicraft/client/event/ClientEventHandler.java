@@ -86,11 +86,13 @@ public class ClientEventHandler {
         int i = 0;
         for(KeyBinding binding : KeyBindingHandler.VEHICLE_KEY_BINDINGS) {
             if(binding.isPressed()) {
-                JurassiCraft.NETWORK_WRAPPER.sendToServer(new AttemptMoveToSeatMessage(i));
                 EntityPlayer player = Minecraft.getMinecraft().player;
                 Entity entity = player.getRidingEntity();
-                if (entity instanceof MultiSeatedEntity) {
-                    ((MultiSeatedEntity) entity).tryPutInSeat(player, i);
+                if(entity instanceof MultiSeatedEntity) {
+                    int fromSeat = ((MultiSeatedEntity)entity).getSeatForEntity(player);
+                    if(fromSeat != -1) {
+                        JurassiCraft.NETWORK_WRAPPER.sendToServer(new AttemptMoveToSeatMessage(entity, fromSeat, i));
+                    }
                 }
                 break;
             }
