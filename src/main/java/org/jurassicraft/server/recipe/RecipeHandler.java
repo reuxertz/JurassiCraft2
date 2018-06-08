@@ -11,7 +11,6 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.PaleoBaleBlock;
-import org.jurassicraft.server.block.TourRailBlock;
 import org.jurassicraft.server.block.plant.DoublePlantBlock;
 import org.jurassicraft.server.block.tree.AncientPlanksBlock;
 import org.jurassicraft.server.block.tree.TreeType;
@@ -194,6 +193,10 @@ public class RecipeHandler {
         GameRegistry.addShapelessRecipe(new ItemStack(BlockHandler.TOUR_RAIL), new ItemStack(BlockHandler.TOUR_RAIL_FAST));
 
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BlockHandler.TOUR_RAIL), "BRB", "TRT", "BRB", 'B', Blocks.IRON_BARS, 'T' , "dustRedstone", 'R', Blocks.RAIL));
+
+
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ItemHandler.PREGNANCY_TEST), "P  ", " R ", "  W", 'P', new ItemStack(Blocks.WOOL, 1, EnumDyeColor.PINK.getMetadata()), 'R' , "dustRedstone", 'W', new ItemStack(Blocks.WOOL)));
+
 
     }
 
