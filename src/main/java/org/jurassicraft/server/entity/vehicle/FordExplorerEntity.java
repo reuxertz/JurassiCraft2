@@ -2,8 +2,6 @@ package org.jurassicraft.server.entity.vehicle;
 
 
 import com.google.common.collect.Lists;
-import net.minecraft.block.BlockRail;
-import net.minecraft.block.BlockRailBase;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
@@ -83,7 +81,7 @@ public class FordExplorerEntity extends CarEntity {
 				isRails = world.getBlockState(rail).getBlock() instanceof TourRailBlock;
 			}
 
-			if(!isRails && world.getBlockState(rail.down()).getBlock() instanceof TourRailBlock && Arrays.asList(BlockRailBase.EnumRailDirection.ASCENDING_EAST, BlockRailBase.EnumRailDirection.ASCENDING_NORTH, BlockRailBase.EnumRailDirection.ASCENDING_SOUTH, BlockRailBase.EnumRailDirection.ASCENDING_WEST).contains(world.getBlockState(rail.down()).getValue(BlockRail.SHAPE))) {
+			if(!isRails && world.getBlockState(rail.down()).getBlock() instanceof TourRailBlock && Arrays.asList(TourRailBlock.EnumRailDirection.ASCENDING_EAST, TourRailBlock.EnumRailDirection.ASCENDING_NORTH, TourRailBlock.EnumRailDirection.ASCENDING_SOUTH, TourRailBlock.EnumRailDirection.ASCENDING_WEST).contains(world.getBlockState(rail.down()).getValue(TourRailBlock.SHAPE))) {
 				rail = rail.down(1);
 				isRails = world.getBlockState(rail).getBlock() instanceof TourRailBlock;
 			}
