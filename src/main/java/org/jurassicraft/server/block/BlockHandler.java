@@ -306,17 +306,17 @@ public class BlockHandler {
         GameRegistry.registerTileEntity(ElectricFencePoleBlockEntity.class, "tileEntityElectricPole");
         GameRegistry.registerTileEntity(ElectricFenceBaseBlockEntity.class, "tileEntityElectricBase");
 
-        registerBlock(LOW_SECURITY_FENCE_WIRE, "Low Security Fence Wire");
-        registerBlock(MED_SECURITY_FENCE_WIRE, "Med Security Fence Wire");
-        registerBlock(HIGH_SECURITY_FENCE_WIRE, "High Security Fence Wire");
+        registerBlock(LOW_SECURITY_FENCE_WIRE, /*Low*/"Security Fence Wire");
+//        registerBlock(MED_SECURITY_FENCE_WIRE, "Med Security Fence Wire");
+//        registerBlock(HIGH_SECURITY_FENCE_WIRE, "High Security Fence Wire");
 
-        registerBlock(LOW_SECURITY_FENCE_POLE, "Low Security Fence Pole");
-        registerBlock(MED_SECURITY_FENCE_POLE, "Med Security Fence Pole");
-        registerBlock(HIGH_SECURITY_FENCE_POLE, "High Security Fence Pole");
+        registerBlock(LOW_SECURITY_FENCE_POLE, /*Low*/" Security Fence Pole");
+//        registerBlock(MED_SECURITY_FENCE_POLE, "Med Security Fence Pole");
+//        registerBlock(HIGH_SECURITY_FENCE_POLE, "High Security Fence Pole");
 
-        registerBlock(LOW_SECURITY_FENCE_BASE, "Low Security Fence Base");
-        registerBlock(MED_SECURITY_FENCE_BASE, "Med Security Fence Base");
-        registerBlock(HIGH_SECURITY_FENCE_BASE, "High Security Fence Base");
+        registerBlock(LOW_SECURITY_FENCE_BASE, /*Low*/"Security Fence Base");
+//        registerBlock(MED_SECURITY_FENCE_BASE, "Med Security Fence Base");
+//        registerBlock(HIGH_SECURITY_FENCE_BASE, "High Security Fence Base");
 
         registerBlock(PALEO_BALE_OTHER, "Paleo Bale Other");
         registerBlock(PALEO_BALE_CYCADEOIDEA, "Paleo Bale Cycadeoidea");
