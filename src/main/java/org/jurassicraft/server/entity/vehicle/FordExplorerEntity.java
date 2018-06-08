@@ -62,8 +62,8 @@ public class FordExplorerEntity extends CarEntity {
 	protected Seat[] createSeats() {
 		Seat frontLeft = new Seat(0.563F, 0.45F, 0.4F, 0.5F, 0.25F);
 		Seat frontRight = new Seat(-0.563F, 0.45F, 0.4F, 0.5F, 0.25F);
-		Seat backLeft = new Seat( 0.563F, 0.45F, -1F, 0.4F, 0.25F);
-		Seat backRight = new Seat( -0.563F, 0.45F, -1F, 0.4F, 0.25F);
+		Seat backLeft = new Seat( 0.563F, 0.45F, -1F, 0.5F, 0.25F);
+		Seat backRight = new Seat( -0.563F, 0.45F, -1F, 0.5F, 0.25F);
 		return new Seat[] { frontLeft, frontRight, backLeft, backRight };
 	}
 
@@ -103,10 +103,10 @@ public class FordExplorerEntity extends CarEntity {
 		}
 		if(onRails) {
 			this.setSize(0.75F, 0.25F);
-			this.stepHeight = 0F;
+//			this.stepHeight = 0F;
 		} else {
 			this.setSize(3.0F, 2.5F);
-			this.stepHeight = 1.5F;
+//			this.stepHeight = 1.5F;
 		}
 		this.setPosition(this.posX, this.posY, this.posZ); //Make sure that the car is in the right position. Can cause issues when changing size of car
 		super.onUpdate();
@@ -529,7 +529,7 @@ public class FordExplorerEntity extends CarEntity {
 				mZ = getLook(1f).z;
 			}
 
-			double max = getSpeedType().modifier / 4f;
+			double max = getSpeedType().modifier / 8f;
 			mX = MathHelper.clamp(mX, -max, max);
 			mZ = MathHelper.clamp(mZ, -max, max);
 			FordExplorerEntity.this.move(MoverType.SELF, mX, 0D, mZ);
