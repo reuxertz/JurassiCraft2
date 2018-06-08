@@ -1581,10 +1581,10 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     }
 
     public void disturbSleep() {
-	if(tranquilizerTicks == 0) {
-	    this.isSleeping = false;
-	    this.stayAwakeTime = 400;
-	}
+        if(tranquilizerTicks == 0) {
+            this.isSleeping = false;
+            this.stayAwakeTime = 400;
+        }
     }
 
     public void writeStatsToLog() {
