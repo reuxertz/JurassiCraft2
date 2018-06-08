@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import net.minecraft.util.text.TextComponentTranslation;
 import org.jurassicraft.client.sound.SoundHandler;
 import org.jurassicraft.server.api.Hybrid;
 import org.jurassicraft.server.block.BlockHandler;
@@ -86,30 +87,39 @@ public class ItemHandler {
     }).setCreativeTab(TabHandler.ITEMS);
     
     public static final Item BREEDING_WAND = new EntityRightClickItem(interaction -> {
-	ItemStack stack = interaction.getPlayer().getHeldItem(interaction.getHand());
-	NBTTagCompound nbt = stack.getOrCreateSubCompound("wand_info");
-	if(nbt.hasKey("dino_id", 99)) {
-	    Entity entity = interaction.getPlayer().world.getEntityByID(nbt.getInteger("dino_id"));
-	    if(entity instanceof DinosaurEntity && ((DinosaurEntity)entity).isMale() != ((DinosaurEntity)interaction.getTarget()).isMale()) {
-		((DinosaurEntity)entity).breed((DinosaurEntity)interaction.getTarget());
-		((DinosaurEntity)interaction.getTarget()).breed((DinosaurEntity)entity);
-	    } else if(entity != interaction.getTarget()) {
-		nbt.removeTag("dino_id"); 
-	    }
-	    return true;
-	} else if(interaction.getTarget() instanceof DinosaurEntity) {
-	    nbt.setInteger("dino_id", interaction.getTarget().getEntityId());
-	    return true;
-	}
-	return false;
+        ItemStack stack = interaction.getPlayer().getHeldItem(interaction.getHand());
+        NBTTagCompound nbt = stack.getOrCreateSubCompound("wand_info");
+        if(nbt.hasKey("dino_id", 99)) {
+            Entity entity = interaction.getPlayer().world.getEntityByID(nbt.getInteger("dino_id"));
+            if(entity instanceof DinosaurEntity && ((DinosaurEntity)entity).isMale() != ((DinosaurEntity)interaction.getTarget()).isMale()) {
+            ((DinosaurEntity)entity).breed((DinosaurEntity)interaction.getTarget());
+            ((DinosaurEntity)interaction.getTarget()).breed((DinosaurEntity)entity);
+            } else if(entity != interaction.getTarget()) {
+            nbt.removeTag("dino_id");
+            }
+            return true;
+        } else if(interaction.getTarget() instanceof DinosaurEntity) {
+            nbt.setInteger("dino_id", interaction.getTarget().getEntityId());
+            return true;
+        }
+        return false;
     }).setCreativeTab(TabHandler.ITEMS);
     
     public static final Item BIRTHING_WAND = new EntityRightClickItem(interaction -> {
-	if(interaction.getTarget() instanceof DinosaurEntity) {
-	    ((DinosaurEntity)interaction.getTarget()).giveBirth();
-	    return true;
-	}
-	return false;
+        if(interaction.getTarget() instanceof DinosaurEntity) {
+            ((DinosaurEntity)interaction.getTarget()).giveBirth();
+            return true;
+        }
+        return false;
+    });
+
+    public static final Item PREGNANCY_TEST = new EntityRightClickItem(interaction -> {
+        if(interaction.getTarget() instanceof DinosaurEntity && !interaction.getPlayer().world.isRemote) {
+            DinosaurEntity dino = ((DinosaurEntity)interaction.getTarget());
+            interaction.getPlayer().sendStatusMessage(new TextComponentTranslation("dinosaur.pregnancytest." + (dino.isMale() ? "male" : dino.isPregnant() ? "pregnant" : "not_pregnant")), false);
+            return true;
+        }
+        return false;
     });
 
     public static final BasicItem PLANT_CELLS = new BasicItem(TabHandler.ITEMS);
@@ -306,6 +316,7 @@ public class ItemHandler {
         registerItem(GROWTH_SERUM, "Growth Serum");
         registerItem(BREEDING_WAND, "Breeding Wand");
         registerItem(BIRTHING_WAND, "Birthing_Wand");
+        registerItem(PREGNANCY_TEST, "Pregnancy Test");
         registerItem(STORAGE_DISC, "Storage Disc");
         registerItem(DISC_DRIVE, "Disc Reader");
         registerItem(LASER, "Laser");

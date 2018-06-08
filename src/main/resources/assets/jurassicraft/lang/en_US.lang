@@ -216,6 +216,7 @@ item.mural.name=Mural
 item.ingen_journal.name=InGen Journal
 item.birthing_wand.name=Birthing Wand
 item.breeding_wand.name=Breeding Wand
+item.pregnancy_test.name=Pregnancy Test
 
 filled_map.jurassicraft.visitorcenter=Visitor Center Map
 
@@ -618,3 +619,7 @@ death.attack.jurassic.car2=%s didn't look both ways
 crafting.skeleton.needed=Need {bonename}
 crafting.skeleton.toomany=Need {bonename}
 crafting.skeleton.mismatched=Mismatched bones
+
+dinosaur.pregnancytest.male=Male dinos cant get pregnant :/
+dinosaur.pregnancytest.not_pregnant=Dinosaur is not pregnant
+dinosaur.pregnancytest.pregnant=Dinosaur is pregnant. Congratulations! \o/

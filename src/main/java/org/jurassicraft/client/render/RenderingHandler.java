@@ -274,6 +274,7 @@ public enum RenderingHandler {
         registerItemRenderer(GROWTH_SERUM);
         registerItemRenderer(BREEDING_WAND);
         registerItemRenderer(BIRTHING_WAND);
+        registerItemRenderer(PREGNANCY_TEST);
         registerItemRenderer(IRON_ROD);
         registerItemRenderer(IRON_BLADES);
         registerItemRenderer(PETRI_DISH);
