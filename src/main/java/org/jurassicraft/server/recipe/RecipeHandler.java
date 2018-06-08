@@ -198,8 +198,9 @@ public class RecipeHandler {
     }
 
     private static void addPaleoBaleRecipe(PaleoBaleBlock block) {
-        for (Item ingredient : block.getVariant().getIngredients()) {
-            GameRegistry.addRecipe(new ItemStack(block, Block.getBlockFromItem(ingredient) instanceof DoublePlantBlock ? 2 : 1), "###", "###", "###", '#', ingredient);
+        for (ItemStack ingredient : block.getVariant().getIngredients()) {
+            ingredient = ingredient.copy();
+            GameRegistry.addRecipe(new ItemStack(block, Block.getBlockFromItem(ingredient.getItem()) instanceof DoublePlantBlock ? 2 : 1), "###", "###", "###", '#', ingredient);
         }
     }
 
