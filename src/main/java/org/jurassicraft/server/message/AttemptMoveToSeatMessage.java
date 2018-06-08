@@ -6,38 +6,67 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.entity.vehicle.CarEntity;
 import org.jurassicraft.server.entity.vehicle.MultiSeatedEntity;
 
 public class AttemptMoveToSeatMessage extends AbstractMessage<AttemptMoveToSeatMessage> {
 
-    private int seat;
+    private int fromSeat;
+    private int toSeat;
+    private int entityID;
 
     @SuppressWarnings("unused")
     public AttemptMoveToSeatMessage(){}
 
-    public AttemptMoveToSeatMessage(int seat){
-        this.seat = seat;
+    public AttemptMoveToSeatMessage(Entity entity, int fromSeat, int toSeat){
+        this.toSeat = toSeat;
+        this.entityID = entity.getEntityId();
+        this.fromSeat = fromSeat;
+    }
+
+    private AttemptMoveToSeatMessage(AttemptMoveToSeatMessage message) {
+        this.toSeat = message.toSeat;
+        this.fromSeat = message.fromSeat;
+        this.entityID = message.entityID;
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(seat);
+        buf.writeInt(toSeat);
+        buf.writeInt(fromSeat);
+        buf.writeInt(entityID);
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        seat = buf.readInt();
+        toSeat = buf.readInt();
+        fromSeat = buf.readInt();
+        entityID = buf.readInt();
+
     }
 
     @Override
-    public void onClientReceived(Minecraft client, AttemptMoveToSeatMessage message, EntityPlayer player, MessageContext messageContext) {}
+    public void onClientReceived(Minecraft client, AttemptMoveToSeatMessage message, EntityPlayer player, MessageContext messageContext) {
+        putEntityInSeat(player.world, message);
+    }
 
     @Override
     public void onServerReceived(MinecraftServer server, AttemptMoveToSeatMessage message, EntityPlayer player, MessageContext messageContext) {
-        Entity entity = player.getRidingEntity();
-        if(entity instanceof MultiSeatedEntity) {
-            ((MultiSeatedEntity)entity).tryPutInSeat(player, message.seat);
+        if(putEntityInSeat(player.world, message)) {
+            JurassiCraft.NETWORK_WRAPPER.sendToDimension(new AttemptMoveToSeatMessage(message), player.dimension);
         }
+    }
+
+    private boolean putEntityInSeat(World world, AttemptMoveToSeatMessage message) {
+        Entity entity = world.getEntityByID(message.entityID);
+        if(entity instanceof MultiSeatedEntity) {
+            MultiSeatedEntity multiSeatedEntity = ((MultiSeatedEntity)entity);
+            multiSeatedEntity.tryPutInSeat(multiSeatedEntity.getEntityInSeat(message.fromSeat), message.toSeat);
+            return true;
+        }
+        return false;
     }
 }
