@@ -39,6 +39,7 @@ import org.jurassicraft.server.message.UpdateVehicleControlMessage;
 import org.lwjgl.input.Keyboard;
 import org.omg.CORBA.DoubleHolder;
 
+import javax.annotation.Nullable;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector4d;
 import java.util.List;
@@ -562,6 +563,21 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
         return false;
     }
 
+    @Nullable
+    @Override
+    public Entity getEntityInSeat(int seatID) {
+        return getSeat(seatID).getOccupant();
+    }
+
+    @Override
+    public int getSeatForEntity(Entity entity) {
+        for(int i = 0; i < this.seats.length; i++) {
+            if(this.seats[i].getOccupant() == entity) {
+                return i;
+            }
+        }
+        return -1;
+    }
     @Override
     protected void removePassenger(Entity passenger) {
         super.removePassenger(passenger);

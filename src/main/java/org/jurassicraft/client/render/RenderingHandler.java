@@ -278,6 +278,9 @@ public enum RenderingHandler {
         this.registerItemRenderer(PLANT_CELLS_PETRI_DISH);
         this.registerItemRenderer(PLANT_CELLS);
         this.registerItemRenderer(GROWTH_SERUM);
+        this.registerItemRenderer(BREEDING_WAND);
+        this.registerItemRenderer(BIRTHING_WAND);
+        this.registerItemRenderer(PREGNANCY_TEST);
         this.registerItemRenderer(IRON_ROD);
         this.registerItemRenderer(IRON_BLADES);
         this.registerItemRenderer(PETRI_DISH);

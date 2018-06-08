@@ -1,15 +1,15 @@
 package org.jurassicraft.server.item;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemFood;
-import net.minecraft.item.ItemSeedFood;
-import net.minecraft.item.ItemSeeds;
+import net.minecraft.item.*;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import org.jurassicraft.JurassiCraft;
@@ -18,6 +18,7 @@ import org.jurassicraft.server.api.Hybrid;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.tree.TreeType;
 import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.item.block.AncientDoorItem;
 import org.jurassicraft.server.item.vehicles.HelicopterItem;
@@ -67,8 +68,56 @@ public class ItemHandler {
     public static final BasicItem DISC_DRIVE = new BasicItem(TabHandler.ITEMS);
     public static final BasicItem LASER = new BasicItem(TabHandler.ITEMS);
 
-    public static final GrowthSerumItem GROWTH_SERUM = new GrowthSerumItem();
+    public static final Item GROWTH_SERUM = new EntityRightClickItem(interaction -> {
+        if (interaction.getTarget() instanceof DinosaurEntity) {
+            DinosaurEntity dinosaur = (DinosaurEntity) interaction.getTarget();
+            if (!dinosaur.isCarcass()) {
+                dinosaur.setFullyGrown();
+                interaction.getStack().shrink(1);
+                if (!interaction.getPlayer().capabilities.isCreativeMode) {
+                    interaction.getPlayer().inventory.addItemStackToInventory(new ItemStack(ItemHandler.EMPTY_SYRINGE));
+                }
+                return true;
+            }
+        }
+        return false;
+    }).setCreativeTab(TabHandler.ITEMS);
 
+    public static final Item BREEDING_WAND = new EntityRightClickItem(interaction -> {
+        ItemStack stack = interaction.getPlayer().getHeldItem(interaction.getHand());
+        NBTTagCompound nbt = stack.getOrCreateSubCompound("wand_info");
+        if(nbt.hasKey("dino_id", 99)) {
+            Entity entity = interaction.getPlayer().world.getEntityByID(nbt.getInteger("dino_id"));
+            if(entity instanceof DinosaurEntity && ((DinosaurEntity)entity).isMale() != ((DinosaurEntity)interaction.getTarget()).isMale()) {
+                ((DinosaurEntity)entity).breed((DinosaurEntity)interaction.getTarget());
+                ((DinosaurEntity)interaction.getTarget()).breed((DinosaurEntity)entity);
+            } else if(entity != interaction.getTarget()) {
+                nbt.removeTag("dino_id");
+            }
+            return true;
+        } else if(interaction.getTarget() instanceof DinosaurEntity) {
+            nbt.setInteger("dino_id", interaction.getTarget().getEntityId());
+            return true;
+        }
+        return false;
+    }).setCreativeTab(TabHandler.ITEMS);
+
+    public static final Item BIRTHING_WAND = new EntityRightClickItem(interaction -> {
+        if(interaction.getTarget() instanceof DinosaurEntity) {
+            ((DinosaurEntity)interaction.getTarget()).giveBirth();
+            return true;
+        }
+        return false;
+    });
+
+    public static final Item PREGNANCY_TEST = new EntityRightClickItem(interaction -> {
+        if(interaction.getTarget() instanceof DinosaurEntity && !interaction.getPlayer().world.isRemote) {
+            DinosaurEntity dino = ((DinosaurEntity)interaction.getTarget());
+            interaction.getPlayer().sendStatusMessage(new TextComponentTranslation("dinosaur.pregnancytest." + (dino.isMale() ? "male" : dino.isPregnant() ? "pregnant" : "not_pregnant")), false);
+            return true;
+        }
+        return false;
+    });
     public static final BasicItem PLANT_CELLS = new BasicItem(TabHandler.ITEMS);
     public static final PlantCallusItem PLANT_CALLUS = new PlantCallusItem();
     public static final BasicItem PLANT_CELLS_PETRI_DISH = new BasicItem(TabHandler.ITEMS);
@@ -262,6 +311,9 @@ public class ItemHandler {
         registerItem(EMPTY_TEST_TUBE, "Empty Test Tube");
         registerItem(EMPTY_SYRINGE, "Empty Syringe");
         registerItem(GROWTH_SERUM, "Growth Serum");
+        registerItem(BREEDING_WAND, "Breeding Wand");
+        registerItem(BIRTHING_WAND, "Birthing_Wand");
+        registerItem(PREGNANCY_TEST, "Pregnancy Test");
         registerItem(STORAGE_DISC, "Storage Disc");
         registerItem(DISC_DRIVE, "Disc Reader");
         registerItem(LASER, "Laser");

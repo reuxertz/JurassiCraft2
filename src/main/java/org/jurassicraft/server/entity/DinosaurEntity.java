@@ -697,7 +697,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
 
 
         if (!this.isMale() && !this.world.isRemote) {
-            if (this.pregnantTime > 0) {
+            if (this.isPregnant()) {
                 if (--this.pregnantTime <= 0) {
                     this.getNavigator().clearPathEntity();
                     this.setAnimation(this.dinosaur.givesDirectBirth() ? EntityAnimation.GIVING_BIRTH.get() : EntityAnimation.LAYING_EGG.get());
@@ -1352,6 +1352,11 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         return this.isMale;
     }
 
+    public boolean isPregnant() {
+        return !this.isMale() && this.pregnantTime > 0;
+    }
+
+
     public void setMale(boolean male) {
         this.isMale = male;
     }
@@ -1669,6 +1674,11 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         }
         super.moveRelative(strafe, up, friction);
     }
+
+    public void giveBirth() {
+        pregnantTime = 1;
+    }
+
     public void setDeathIn(int ticks) { // :(
         this.ticksUntilDeath = ticks;
         this.addPotionEffect(new PotionEffect(MobEffects.POISON, ticks));
