@@ -30,6 +30,7 @@ public class InterpValue implements INBTSerializable<NBTTagCompound> {
     private double previousCurrent;
     private boolean initilized;
 
+    @Deprecated
     public InterpValue(double speed) {
         this(() -> true, speed);
     }

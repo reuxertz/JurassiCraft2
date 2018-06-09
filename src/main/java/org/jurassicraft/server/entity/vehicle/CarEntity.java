@@ -91,6 +91,8 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
 
     @SideOnly(Side.CLIENT)
     public EntitySound<CarEntity> sound;
+    @SideOnly(Side.CLIENT)
+    public final InterpValue steerAmount = new InterpValue(this,0.1D);
 
     private float healAmount;
     private int healCooldown = 40;
@@ -694,6 +696,8 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
 
     public final class Seat {
 
+        private final InterpValue interpValue = new InterpValue(CarEntity.this,0.1D);
+
         private float offsetX;
         private float offsetY;
         private float offsetZ;
@@ -746,6 +750,10 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
             double y = pos.y;
             double z = pos.z;
             return new AxisAlignedBB(x - this.radius, y, z - this.radius, x + this.radius, y + this.offsetY + this.height, z + this.radius);
+        }
+
+        public InterpValue getInterpValue() {
+            return interpValue;
         }
     }
     

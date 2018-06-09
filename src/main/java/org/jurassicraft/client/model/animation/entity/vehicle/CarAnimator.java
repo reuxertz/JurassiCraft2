@@ -15,7 +15,6 @@ import java.util.List;
 public class CarAnimator implements ITabulaModelAnimator<CarEntity> {
     private final List<CarAnimator.Door> doorList = Lists.newArrayList();
     public float partialTicks;
-    private final InterpValue steerAmount = new InterpValue(0.1D);
 
     public CarAnimator addDoor(Door door) {
 	this.doorList.add(door);
@@ -26,7 +25,7 @@ public class CarAnimator implements ITabulaModelAnimator<CarEntity> {
     public void setRotationAngles(TabulaModel model, CarEntity entity, float limbSwing, float limbSwingAmount,
 	    float ageInTicks, float rotationYaw, float rotationPitch, float scale) {
 		doorList.forEach(door -> {
-			InterpValue value = door.getInterpValue();
+			InterpValue value = door.getInterpValue(entity);
 			CarEntity.Seat seat = door.getSeat(entity);
 			CarEntity.Seat closestSeat = seat;
 			EntityPlayer player = Minecraft.getMinecraft().player;
@@ -41,29 +40,28 @@ public class CarAnimator implements ITabulaModelAnimator<CarEntity> {
 		});
 
 		AdvancedModelRenderer wheelHolderFront = model.getCube("wheel holder front");
-			AdvancedModelRenderer wheelHolderBack = model.getCube("wheel holder back");
+		AdvancedModelRenderer wheelHolderBack = model.getCube("wheel holder back");
 
-			float wheelRotation = entity.prevWheelRotateAmount + (entity.wheelRotateAmount - entity.prevWheelRotateAmount) * partialTicks;
-			float wheelRotationAmount = entity.wheelRotation - entity.wheelRotateAmount * (1.0F - partialTicks);
+		float wheelRotation = entity.prevWheelRotateAmount + (entity.wheelRotateAmount - entity.prevWheelRotateAmount) * partialTicks;
+		float wheelRotationAmount = entity.wheelRotation - entity.wheelRotateAmount * (1.0F - partialTicks);
 
-			if (entity.backward()) {
-				wheelRotationAmount = -wheelRotationAmount;
-			}
+		if (entity.backward()) {
+			wheelRotationAmount = -wheelRotationAmount;
+		}
 
-			wheelHolderFront.rotateAngleX = wheelRotationAmount * 0.5F;
-			wheelHolderBack.rotateAngleX = wheelRotationAmount * 0.5F;
+		wheelHolderFront.rotateAngleX = wheelRotationAmount * 0.5F;
+		wheelHolderBack.rotateAngleX = wheelRotationAmount * 0.5F;
 
-			steerAmount.setTarget(Math.toRadians(entity.left() ? 40.0F : entity.right() ? -40.0F : 0.0F) * wheelRotation);
+		entity.steerAmount.setTarget(Math.toRadians(entity.left() ? 40.0F : entity.right() ? -40.0F : 0.0F) * wheelRotation);
 
-			float steerAmount = (float) this.steerAmount.getValueForRendering(partialTicks);
+		float steerAmount = (float) entity.steerAmount.getValueForRendering(partialTicks);
 
-			model.getCube("steering wheel main").rotateAngleZ = steerAmount;
-			wheelHolderFront.rotateAngleY = -steerAmount * 0.15F;
+		model.getCube("steering wheel main").rotateAngleZ = steerAmount;
+		wheelHolderFront.rotateAngleY = -steerAmount * 0.15F;
 	
     }
     
     public static class Door {
-		private final InterpValue interpValue = new InterpValue(0.1D);
 		private final String name;
 		private final int seatIndex;
 		private final boolean isLeft;
@@ -74,8 +72,8 @@ public class CarAnimator implements ITabulaModelAnimator<CarEntity> {
 			this.isLeft = isLeft;
 		}
 
-		public InterpValue getInterpValue() {
-			return interpValue;
+		public InterpValue getInterpValue(CarEntity entity) {
+			return getSeat(entity).getInterpValue();
 		}
 
 		public String getName() {

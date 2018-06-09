@@ -420,7 +420,7 @@ public class ItemHandler {
         
         registerItem(DART_GUN, "Dart Gun");
         registerItem(DART_TRANQUILIZER, "Dart Tranquilizer");
-        registerItem(DART_POISON_CYCASIN, "Dart Poision Cycasin");
+        registerItem(DART_POISON_CYCASIN, "Dart Poison Cycasin");
         registerItem(DART_POISON_EXECUTIONER_CONCOCTION, "Dart Poison Executioner Concoction");
         registerItem(DART_TIPPED_POTION, "Dart Tipped Potion");
         
