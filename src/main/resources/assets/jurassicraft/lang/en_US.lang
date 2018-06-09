@@ -94,6 +94,7 @@ item.caudal_fin_fresh.name=Fresh {dino} Caudal Fin
 item.wing_bones_fresh.name=Fresh {dino} Wing Bones
 item.arm_bones_fresh.name=Fresh {dino} Arm Bones
 item.first_dorsal_fin_fresh.name=Fresh {dino} First Dorsal Fin
+item.pelvic_fin_bones_fresh.name=Fresh {dino} Pelvic Fin Bones
 
 item.fossilized_egg.name=Fossilized Egg
 
@@ -217,6 +218,12 @@ item.ingen_journal.name=InGen Journal
 item.birthing_wand.name=Birthing Wand
 item.breeding_wand.name=Breeding Wand
 item.pregnancy_test.name=Pregnancy Test
+item.dart_gun.name=Dart Gun
+item.dart_tranquilizer.name=Dart Tranquilizer
+item.dart_poison_cycasin.name=Poisoned Dart
+item.dart_poison_executioner_concoction.name=Lethal Dart
+item.dart_tipped_potion.name=Potion Dart
+item.west_indian_lilac_berries.name=West Indian Lilac Berries
 
 filled_map.jurassicraft.visitorcenter=Visitor Center Map
 

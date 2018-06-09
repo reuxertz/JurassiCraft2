@@ -194,9 +194,11 @@ public class RecipeHandler {
 
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BlockHandler.TOUR_RAIL), "BRB", "TRT", "BRB", 'B', Blocks.IRON_BARS, 'T' , "dustRedstone", 'R', Blocks.RAIL));
 
-
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ItemHandler.PREGNANCY_TEST), "P  ", " R ", "  W", 'P', new ItemStack(Blocks.WOOL, 1, EnumDyeColor.PINK.getMetadata()), 'R' , "dustRedstone", 'W', new ItemStack(Blocks.WOOL)));
 
+        GameRegistry.addShapelessRecipe(new ItemStack(ItemHandler.DART_POISON_EXECUTIONER_CONCOCTION), ItemHandler.DART_POISON_CYCASIN, Items.SPIDER_EYE);
+        GameRegistry.addShapelessRecipe(new ItemStack(ItemHandler.DART_POISON_CYCASIN), ItemHandler.DART_TRANQUILIZER, Items.SPIDER_EYE);
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ItemHandler.DART_TRANQUILIZER, 6), " F", "N ", 'N', "nuggetIron", 'F', Items.FLINT));
 
     }
 
