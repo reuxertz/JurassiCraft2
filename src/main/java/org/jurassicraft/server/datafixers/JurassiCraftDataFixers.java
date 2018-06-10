@@ -24,5 +24,12 @@ public class JurassiCraftDataFixers {
             }
             return nbt;
         }));
+
+        modFixs.registerFix(FixTypes.ENTITY, new DataFixerFactory(1, compound -> {
+            if("jurassicraft.mural".equals(compound.getString("id"))) {
+                compound.setString("id", "jurassicraft:entities.mural");
+            }
+            return compound;
+        }));
     }
 }
