@@ -717,7 +717,9 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
                     if (this.dinosaur.givesDirectBirth()) {
                         entity = child;
                         child.setAge(0);
-                        this.family.addChild(entity.getUniqueID());
+                        if(this.family != null) {
+                            this.family.addChild(entity.getUniqueID());
+                        }
                     } else {
                         entity = new DinosaurEggEntity(this.world, child, this);
                     }
