@@ -16,7 +16,7 @@ Reuxertz
 AnarchCassius   
 Collin  
 Wyn Price  
-NeusFear
+NeusFear  
 Cazsius
 
 ### Modelers / Texturers
