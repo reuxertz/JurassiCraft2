@@ -553,6 +553,15 @@ achievement.jurassicraft.reinforcedStone.desc=Craft some reinforced stone blocks
 
 //Keybinds ==============================================
 key.microraptor_dismount=Dismount Microraptor
+key.vehicle_0.switch=Attempt to move to Seat 1
+key.vehicle_1.switch=Attempt to move to Seat 2
+key.vehicle_2.switch=Attempt to move to Seat 3
+key.vehicle_3.switch=Attempt to move to Seat 4
+key.vehicle_4.switch=Attempt to move to Seat 5
+key.vehicle_5.switch=Attempt to move to Seat 6
+key.vehicle_6.switch=Attempt to move to Seat 7
+key.vehicle_7.switch=Attempt to move to Seat 8
+key.vehicle_8.switch=Attempt to move to Seat 9
 
 //Other =============
 message.tame.name=You have tamed a {dinosaur}
