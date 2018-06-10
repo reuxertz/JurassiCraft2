@@ -22,16 +22,18 @@ public class DinosaurLookHelper extends EntityLookHelper {
 
     @Override
     public void setLookPositionWithEntity(Entity entity, float deltaYaw, float deltaPitch) {
-        this.posX = entity.posX;
-        if (entity instanceof EntityLivingBase) {
-            this.posY = entity.posY + (double) entity.getEyeHeight();
-        } else {
-            this.posY = (entity.getEntityBoundingBox().minY + entity.getEntityBoundingBox().maxY) / 2.0D;
+        if(entity != null) {
+            this.posX = entity.posX;
+            if (entity instanceof EntityLivingBase) {
+                this.posY = entity.posY + (double) entity.getEyeHeight();
+            } else {
+                this.posY = (entity.getEntityBoundingBox().minY + entity.getEntityBoundingBox().maxY) / 2.0D;
+            }
+            this.posZ = entity.posZ;
+            this.deltaLookYaw = deltaYaw;
+            this.deltaLookPitch = deltaPitch;
+            this.isLooking = true;
         }
-        this.posZ = entity.posZ;
-        this.deltaLookYaw = deltaYaw;
-        this.deltaLookPitch = deltaPitch;
-        this.isLooking = true;
     }
 
     @Override
