@@ -115,12 +115,12 @@ public enum RenderingHandler {
         ModelLoader.setCustomStateMapper(BlockHandler.LOW_SECURITY_FENCE_BASE, new MultipartStateMap());
         ModelLoader.setCustomStateMapper(BlockHandler.LOW_SECURITY_FENCE_POLE, new MultipartStateMap());
         ModelLoader.setCustomStateMapper(BlockHandler.LOW_SECURITY_FENCE_WIRE, new MultipartStateMap());
-        ModelLoader.setCustomStateMapper(BlockHandler.MED_SECURITY_FENCE_BASE, new MultipartStateMap());
-        ModelLoader.setCustomStateMapper(BlockHandler.MED_SECURITY_FENCE_POLE, new MultipartStateMap());
-        ModelLoader.setCustomStateMapper(BlockHandler.MED_SECURITY_FENCE_WIRE, new MultipartStateMap());
-        ModelLoader.setCustomStateMapper(BlockHandler.HIGH_SECURITY_FENCE_BASE, new MultipartStateMap());
-        ModelLoader.setCustomStateMapper(BlockHandler.HIGH_SECURITY_FENCE_POLE, new MultipartStateMap());
-        ModelLoader.setCustomStateMapper(BlockHandler.HIGH_SECURITY_FENCE_WIRE, new MultipartStateMap());
+//        ModelLoader.setCustomStateMapper(BlockHandler.MED_SECURITY_FENCE_BASE, new MultipartStateMap());
+//        ModelLoader.setCustomStateMapper(BlockHandler.MED_SECURITY_FENCE_POLE, new MultipartStateMap());
+//        ModelLoader.setCustomStateMapper(BlockHandler.MED_SECURITY_FENCE_WIRE, new MultipartStateMap());
+//        ModelLoader.setCustomStateMapper(BlockHandler.HIGH_SECURITY_FENCE_BASE, new MultipartStateMap());
+//        ModelLoader.setCustomStateMapper(BlockHandler.HIGH_SECURITY_FENCE_POLE, new MultipartStateMap());
+//        ModelLoader.setCustomStateMapper(BlockHandler.HIGH_SECURITY_FENCE_WIRE, new MultipartStateMap());
 
         int i = 0;
 
@@ -248,12 +248,12 @@ public enum RenderingHandler {
         registerBlockRenderer(BlockHandler.LOW_SECURITY_FENCE_POLE);
         registerBlockRenderer(BlockHandler.LOW_SECURITY_FENCE_BASE);
         registerBlockRenderer(BlockHandler.LOW_SECURITY_FENCE_WIRE);
-        registerBlockRenderer(BlockHandler.MED_SECURITY_FENCE_POLE);
-        registerBlockRenderer(BlockHandler.MED_SECURITY_FENCE_BASE);
-        registerBlockRenderer(BlockHandler.MED_SECURITY_FENCE_WIRE);
-        registerBlockRenderer(BlockHandler.HIGH_SECURITY_FENCE_POLE);
-        registerBlockRenderer(BlockHandler.HIGH_SECURITY_FENCE_BASE);
-        registerBlockRenderer(BlockHandler.HIGH_SECURITY_FENCE_WIRE);
+//        registerBlockRenderer(BlockHandler.MED_SECURITY_FENCE_POLE);
+//        registerBlockRenderer(BlockHandler.MED_SECURITY_FENCE_BASE);
+//        registerBlockRenderer(BlockHandler.MED_SECURITY_FENCE_WIRE);
+//        registerBlockRenderer(BlockHandler.HIGH_SECURITY_FENCE_POLE);
+//        registerBlockRenderer(BlockHandler.HIGH_SECURITY_FENCE_BASE);
+//        registerBlockRenderer(BlockHandler.HIGH_SECURITY_FENCE_WIRE);
 
         registerBlockRenderer(WILD_POTATO_PLANT);
 
@@ -309,7 +309,7 @@ public enum RenderingHandler {
         registerItemRenderer(AMBER, 0, "amber_mosquito");
         registerItemRenderer(AMBER, 1, "amber_aphid");
 
-        registerItemRenderer(HELICOPTER, "helicopter_spawner");
+//        registerItemRenderer(HELICOPTER, "helicopter_spawner");
 
         registerItemRenderer(JURASSICRAFT_THEME_DISC, "disc_jurassicraft_theme");
         registerItemRenderer(DONT_MOVE_A_MUSCLE_DISC, "disc_dont_move_a_muscle");
