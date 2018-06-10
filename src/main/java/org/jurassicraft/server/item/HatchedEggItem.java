@@ -84,7 +84,7 @@ public class HatchedEggItem extends DNAContainerItem {
                     entity.setGenetics(this.getGeneticCode(player, stack));
                     entity.setDNAQuality(this.getDNAQuality(player, stack));
                     entity.setMale(this.getGender(player, stack));
-
+                    entity.setOwner(player);
                     if (!player.isSneaking()) {
                         entity.setOwner(player);
                     }
