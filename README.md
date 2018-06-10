@@ -9,7 +9,6 @@ Kash
 JTGhawk137  
 Cody  
 Hyperion  
-Totemaster
 
 ### Developers
 JTGhawk137  
@@ -18,13 +17,14 @@ AnarchCassius
 Collin  
 Wyn Price  
 NeusFear
+Cazsius
 
 ### Modelers / Texturers
 CarrotJet   
 RaptorWhisper   
-HarvNut     
-Andreas     
+HarvNut      
 Cody    
+Cuchololthespanishman
 
 ### Special Mentions for all JurassiCraft projects
 
@@ -35,8 +35,6 @@ Gegy
 WorldSEnder
 
 Paul Fulham
-
-Cuchololthespanishman
 
 Raptorek20
 
