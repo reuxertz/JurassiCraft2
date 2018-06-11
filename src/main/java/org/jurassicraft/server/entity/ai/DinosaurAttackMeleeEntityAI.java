@@ -17,27 +17,21 @@ public class DinosaurAttackMeleeEntityAI extends EntityAIAttackMelee
     }
 
     @Override
-    public void updateTask()
-    {
-        EntityLivingBase target = this.attacker.getAttackTarget();
-
-        if (target != null)
-        {
-            super.updateTask();
+    public boolean shouldContinueExecuting() {
+        if(super.shouldContinueExecuting()) {
+            EntityLivingBase target = this.attacker.getAttackTarget();
+            if (target instanceof DinosaurEntity && ((DinosaurEntity) target).isCarcass()) {
+                return false;
+            }
+            return true;
         }
-
-        if (target == null || target.isDead || (target instanceof DinosaurEntity && ((DinosaurEntity) target).isCarcass()))
-        {
-            super.resetTask();
-            this.attacker.setAttackTarget(null);
-        }
+        return false;
     }
 
     @Override
     protected double getAttackReachSqr(EntityLivingBase attackTarget)
     {
-        if (attackTarget.getEntityBoundingBox().intersects(this.dinosaur.getEntityBoundingBox().expand(1.3, 1.3, 1.3)))
-        {
+        if (attackTarget.getEntityBoundingBox().intersects(this.dinosaur.getEntityBoundingBox().expand(1.3, 1.3, 1.3))) {
             return 1024.0;
         }
         double grownWidth = this.attacker.width + 1.0;
