@@ -49,7 +49,7 @@ public abstract class SwimmingDinosaurEntity extends DinosaurEntity {
     @Override
     public void travel(float strafe, float vertical, float forward) {
         if (this.isServerWorld() && this.isInWater() && !this.isCarcass()) {
-            this.moveRelative(strafe, forward, 0.1F, 0.1F);
+            this.moveRelative(strafe, vertical, forward, 0.1F);
             this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
             this.motionX *= 0.7D;
             this.motionY *= 0.7D;
