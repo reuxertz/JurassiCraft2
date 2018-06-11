@@ -31,6 +31,9 @@ import org.jurassicraft.server.plugin.jei.category.calcification.CalcificationRe
 import org.jurassicraft.server.plugin.jei.category.cleaningstation.CleanableInput;
 import org.jurassicraft.server.plugin.jei.category.cleaningstation.CleaningStationRecipeCategory;
 import org.jurassicraft.server.plugin.jei.category.cleaningstation.CleaningStationRecipeWrapper;
+import org.jurassicraft.server.plugin.jei.category.cultivate.CultivateInput;
+import org.jurassicraft.server.plugin.jei.category.cultivate.CultivatorRecipeCategory;
+import org.jurassicraft.server.plugin.jei.category.cultivate.CultivatorRecipeWrapper;
 import org.jurassicraft.server.plugin.jei.category.dnasequencer.DNASequencerRecipeCategory;
 import org.jurassicraft.server.plugin.jei.category.dnasequencer.DNASequencerRecipeWrapper;
 import org.jurassicraft.server.plugin.jei.category.dnasequencer.SequencerInput;
@@ -53,6 +56,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @JEIPlugin
@@ -66,6 +70,8 @@ public class JurassiCraftJEIPlugin implements IModPlugin {
     public static final String EMBRYO_CALCIFICATION_MACHINE = "jurassicraft.embryo_calcification_machine";
     public static final String SKELETON_ASSEMBLY = "jurassicraft.skeleton_assembly";
     public static final String DNA_SEQUENCER = "jurassicraft.dna_sequencer";
+    public static final String CULTIVATEOR = "jurassicraft.cultivator";
+
 
     @Override
     public void register(IModRegistry registry) {
@@ -110,6 +116,9 @@ public class JurassiCraftJEIPlugin implements IModPlugin {
         registry.handleRecipes(SequencerInput.class, DNASequencerRecipeWrapper::new, DNA_SEQUENCER);
         registry.addRecipeCatalyst(new ItemStack(BlockHandler.DNA_SEQUENCER), DNA_SEQUENCER);
 
+        registry.handleRecipes(CultivateInput.class, CultivatorRecipeWrapper::new, CULTIVATEOR);
+        registry.addRecipeCatalyst(new ItemStack(BlockHandler.CULTIVATOR_BOTTOM), CULTIVATEOR);
+
         registry.addRecipeClickArea(FossilGrinderGui.class, 78, 33, 26, 19, FOSSIL_GRINDER);
         registry.addRecipeClickArea(CleaningStationGui.class, 78, 33, 26, 19, CLEANING_STATION);
         registry.addRecipeClickArea(DNASynthesizerGui.class, 78, 33, 26, 19, DNA_SYNTHASIZER);
@@ -117,6 +126,7 @@ public class JurassiCraftJEIPlugin implements IModPlugin {
         registry.addRecipeClickArea(EmbryoCalcificationMachineGui.class, 66, 30, 26, 19, EMBRYO_CALCIFICATION_MACHINE);
         registry.addRecipeClickArea(SkeletonAssemblyGui.class, 106, 50, 26, 19, SKELETON_ASSEMBLY);
         registry.addRecipeClickArea(DNASequencerGui.class, 86, 18, 23, 52, DNA_SEQUENCER);
+        registry.addRecipeClickArea(CultivateGui.class, 98, 20, 64, 64, CULTIVATEOR);
 
         IRecipeTransferRegistry recipeTransferRegistry = registry.getRecipeTransferRegistry();
 
@@ -127,6 +137,7 @@ public class JurassiCraftJEIPlugin implements IModPlugin {
         recipeTransferRegistry.addRecipeTransferHandler(EmbryoCalcificationMachineContainer.class, EMBRYO_CALCIFICATION_MACHINE, 0, 2, 3, 36);
         recipeTransferRegistry.addRecipeTransferHandler(SkeletonAssemblyContainer.class, SKELETON_ASSEMBLY, 1, 25, 26, 36);
         recipeTransferRegistry.addRecipeTransferHandler(new DNASequencerTransferHandler(registry.getJeiHelpers().recipeTransferHandlerHelper()), DNA_SEQUENCER);
+        recipeTransferRegistry.addRecipeTransferHandler(CultivateContainer.class, CULTIVATEOR, 0, 1, 4, 36);
 
         //register recipes
         registry.addRecipes(getAllItems(GrindableItem::getGrindableItem, GrinderInput::new), FOSSIL_GRINDER);
@@ -134,6 +145,7 @@ public class JurassiCraftJEIPlugin implements IModPlugin {
         registry.addRecipes(getAllItems(SynthesizableItem::getSynthesizableItem, SynthesizerInput::new), DNA_SYNTHASIZER);
         registry.addRecipes(getAllItems(SequencableItem::getSequencableItem, SequencerInput::new), DNA_SEQUENCER);
 
+        registry.addRecipes(getDinos(CultivateInput::new, dino -> dino.getBirthType() == Dinosaur.BirthType.LIVE_BIRTH), CULTIVATEOR);
         registry.addRecipes(getDinos(CalcificationInput::new), EMBRYO_CALCIFICATION_MACHINE);
         registry.addRecipes(getDinos(EmbryoInput.DinosaurInput::new), EMBRYOMIC_MACHINE);
         registry.addRecipes(getPlants(EmbryoInput.PlantInput::new), EMBRYOMIC_MACHINE);
@@ -146,7 +158,11 @@ public class JurassiCraftJEIPlugin implements IModPlugin {
     }
 
     private <T> List<T> getDinos(Function<Dinosaur,T> func) {
-        return EntityHandler.getRegisteredDinosaurs().stream().map(func).collect(Collectors.toList());
+        return getDinos(func, dino -> true);
+    }
+
+    private <T> List<T> getDinos(Function<Dinosaur,T> func, Predicate<Dinosaur> filter) {
+        return EntityHandler.getRegisteredDinosaurs().stream().filter(filter).map(func).collect(Collectors.toList());
     }
 
     private <T> List<T> getPlants(Function<Plant,T> func) {
@@ -176,7 +192,8 @@ public class JurassiCraftJEIPlugin implements IModPlugin {
         	new EmbryonicRecipeCategory(guiHelper),
         	new CalcificationRecipeCategory(guiHelper),
         	new SkeletonAssemblyRecipeCategory(guiHelper),
-            new DNASequencerRecipeCategory(guiHelper)
+            new DNASequencerRecipeCategory(guiHelper),
+            new CultivatorRecipeCategory(guiHelper)
         );
     }
 }
