@@ -25,7 +25,7 @@ import java.util.Random;
 public class CultivatorBlockEntity extends MachineBaseBlockEntity implements TemperatureControl {
     private static final int[] INPUTS = new int[] { 0, 1, 2, 3 };
     private static final int[] OUTPUTS = new int[] { 4 };
-    private static final int MAX_NUTRIENTS = 3000;
+    public static final int MAX_NUTRIENTS = 3000;
     private NonNullList<ItemStack> slots = NonNullList.withSize(5, ItemStack.EMPTY);
     private int waterLevel;
     private int lipids;
