@@ -25,12 +25,10 @@ public class InventoryDinosaur implements IInventory {
         NBTTagList nbttaglist = new NBTTagList();
 
         for (int i = 0; i < this.inventory.length; ++i) {
-            if (!this.inventory[i].isEmpty()) {
-                NBTTagCompound slotTag = new NBTTagCompound();
-                slotTag.setByte("Slot", (byte) i);
-                this.inventory[i].writeToNBT(slotTag);
-                nbttaglist.appendTag(slotTag);
-            }
+            NBTTagCompound slotTag = new NBTTagCompound();
+            slotTag.setByte("Slot", (byte) i);
+            this.inventory[i].writeToNBT(slotTag);
+            nbttaglist.appendTag(slotTag);
         }
 
         nbt.setTag("Items", nbttaglist);
@@ -111,7 +109,7 @@ public class InventoryDinosaur implements IInventory {
 
     @Override
     public boolean isUsableByPlayer(EntityPlayer player) {
-        return !this.entity.isDead && player.getDistanceSq(this.entity) <= 64.0D;
+        return !this.entity.isDead && player.getDistanceSqToEntity(this.entity) <= 64.0D;
     }
 
     @Override
@@ -192,8 +190,8 @@ public class InventoryDinosaur implements IInventory {
         }
     }
 
-	@Override
-	public boolean isEmpty() {
-		return false;
-	}
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
 }
