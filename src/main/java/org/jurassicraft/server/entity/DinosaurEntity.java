@@ -1211,13 +1211,13 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
                 }
             }
         } else {
-            if (stack == null && hand == EnumHand.MAIN_HAND && this.world.isRemote) {
+            if (stack.isEmpty() && hand == EnumHand.MAIN_HAND && this.world.isRemote) {
                 if (this.isOwner(player)) {
                     JurassiCraft.PROXY.openOrderGui(this);
                 } else {
                     player.sendMessage(new TextComponentTranslation("message.not_owned.name"));
                 }
-            } else if (stack != null && (this.metabolism.isThirsty() || this.metabolism.isHungry())) {
+            } else if (!stack.isEmpty()&& (this.metabolism.isThirsty() || this.metabolism.isHungry())) {
                 if (!this.world.isRemote) {
                     Item item = stack.getItem();
                     boolean fed = false;
