@@ -109,7 +109,7 @@ public class InventoryDinosaur implements IInventory {
 
     @Override
     public boolean isUsableByPlayer(EntityPlayer player) {
-        return !this.entity.isDead && player.getDistanceSqToEntity(this.entity) <= 64.0D;
+        return !this.entity.isDead && player.getDistance(this.entity) <= 64.0D;
     }
 
     @Override
