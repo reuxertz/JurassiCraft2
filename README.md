@@ -9,7 +9,6 @@ Kash
 JTGhawk137  
 Cody  
 Hyperion  
-Totemaster
 
 ### Developers
 JTGhawk137  
