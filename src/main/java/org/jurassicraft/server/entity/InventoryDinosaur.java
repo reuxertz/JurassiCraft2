@@ -6,6 +6,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
@@ -14,20 +15,20 @@ import java.util.Random;
 public class InventoryDinosaur implements IInventory {
     private DinosaurEntity entity;
 
-    private ItemStack[] inventory;
+    private NonNullList<ItemStack> inventory;
 
     public InventoryDinosaur(DinosaurEntity entity) {
         this.entity = entity;
-        this.inventory = new ItemStack[entity.getDinosaur().getStorage()];
+        this.inventory = NonNullList.withSize(entity.getDinosaur().getStorage(), ItemStack.EMPTY);
     }
 
     public void writeToNBT(NBTTagCompound nbt) {
         NBTTagList nbttaglist = new NBTTagList();
 
-        for (int i = 0; i < this.inventory.length; ++i) {
+        for (int i = 0; i < this.inventory.size(); ++i) {
             NBTTagCompound slotTag = new NBTTagCompound();
             slotTag.setByte("Slot", (byte) i);
-            this.inventory[i].writeToNBT(slotTag);
+            this.inventory.get(i).writeToNBT(slotTag);
             nbttaglist.appendTag(slotTag);
         }
 
@@ -36,14 +37,12 @@ public class InventoryDinosaur implements IInventory {
 
     public void readFromNBT(NBTTagCompound nbt) {
         NBTTagList nbttaglist = nbt.getTagList("Items", 10);
-        this.inventory = new ItemStack[this.getSizeInventory()];
-
         for (int i = 0; i < nbttaglist.tagCount(); ++i) {
             NBTTagCompound slotTag = nbttaglist.getCompoundTagAt(i);
             ItemStack stack = new ItemStack(slotTag);
             int j = slotTag.getByte("Slot") & 255;
 
-            if (j >= 0 && j < this.inventory.length) {
+            if (j >= 0 && j < this.inventory.size()) {
                 this.setInventorySlotContents(j, stack);
             }
         }
@@ -51,27 +50,27 @@ public class InventoryDinosaur implements IInventory {
 
     @Override
     public int getSizeInventory() {
-        return this.inventory.length;
+        return this.inventory.size();
     }
 
     @Override
     public ItemStack getStackInSlot(int index) {
-        return this.inventory[index];
+        return this.inventory.get(index);
     }
 
     @Override
     public ItemStack decrStackSize(int index, int count) {
-        if (!this.inventory[index].isEmpty()) {
+        if (!this.inventory.get(index).isEmpty()) {
             ItemStack itemstack;
 
-            if (this.inventory[index].getCount() <= count) {
-                itemstack = this.inventory[index];
+            if (this.inventory.get(index).getCount() <= count) {
+                itemstack = this.inventory.get(index);
                 this.setInventorySlotContents(index, ItemStack.EMPTY);
                 return itemstack;
             } else {
-                itemstack = this.inventory[index].splitStack(count);
+                itemstack = this.inventory.get(index).splitStack(count);
 
-                if (this.inventory[index].getCount() == 0) {
+                if (this.inventory.get(index).getCount() == 0) {
                     this.setInventorySlotContents(index, ItemStack.EMPTY);
                 }
 
@@ -84,14 +83,14 @@ public class InventoryDinosaur implements IInventory {
 
     @Override
     public ItemStack removeStackFromSlot(int index) {
-        ItemStack itemstack = this.inventory[index];
+        ItemStack itemstack = this.inventory.get(index);
         this.setInventorySlotContents(index, ItemStack.EMPTY);
         return itemstack;
     }
 
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
-        this.inventory[index] = stack;
+        this.inventory.set(index, stack);
 
         if (!stack.isEmpty() && stack.getCount() > this.getInventoryStackLimit()) {
             stack.setCount(this.getInventoryStackLimit());
