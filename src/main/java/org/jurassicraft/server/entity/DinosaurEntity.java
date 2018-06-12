@@ -432,6 +432,10 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
                     this.disturbSleep();
                 }
 
+                if(attacker instanceof EntityLivingBase) {
+                    this.respondToAttack((EntityLivingBase)attacker);
+                }
+
                 return super.attackEntityFrom(damageSource, amount);
             }
         } else if (!this.world.isRemote) {
