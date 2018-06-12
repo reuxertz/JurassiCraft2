@@ -30,6 +30,7 @@ public class TyrannosaurusDinosaur extends Dinosaur {
         this.setStorage(54);
         this.setDiet(Diet.CARNIVORE.get());
         this.setBones("arm_bones", "foot_bones", "leg_bones", "neck_vertebrae", "pelvis", "ribcage", "shoulder_bone", "skull", "tail_vertebrae", "tooth");
+        this.setOverlayTypes("mouth", "teeth", "nostrils", "eyes", "eyelids", "claws", "stripes");
         this.setHeadCubeName("Head");
         this.setScale(2.4F, 0.35F);
         this.setMaxHerdSize(3);

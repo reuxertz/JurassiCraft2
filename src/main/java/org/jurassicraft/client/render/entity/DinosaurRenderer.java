@@ -11,6 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.client.render.entity.dinosaur.DinosaurRenderInfo;
+import org.jurassicraft.client.render.entity.dinosaur.layers.*;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.GrowthStage;
@@ -19,24 +20,45 @@ import java.awt.*;
 import java.util.Random;
 
 @SideOnly(Side.CLIENT)
-public class DinosaurRenderer extends RenderLiving<DinosaurEntity> {
+public class DinosaurRenderer extends RenderLiving<DinosaurEntity>
+{
     public Dinosaur dinosaur;
     public DinosaurRenderInfo renderInfo;
 
     public Random random;
 
-    public DinosaurRenderer(DinosaurRenderInfo renderInfo, RenderManager renderManager) {
+    public DinosaurRenderer(DinosaurRenderInfo renderInfo, RenderManager renderManager)
+    {
         super(renderManager, renderInfo.getModel(GrowthStage.INFANT), renderInfo.getShadowSize());
 
         this.dinosaur = renderInfo.getDinosaur();
         this.random = new Random();
         this.renderInfo = renderInfo;
 
-        this.addLayer(new LayerEyelid(this));
+        if (dinosaur.getOverlayTypes() != null)
+            for (int i = 0; i < dinosaur.getOverlayTypes().length; i++)
+            {
+                if (dinosaur.getOverlayTypes()[i].equalsIgnoreCase("mouth"))
+                    this.addLayer(new LayerMouth(this));
+                if (dinosaur.getOverlayTypes()[i].equalsIgnoreCase("teeth"))
+                    this.addLayer(new LayerTeeth(this));
+                if (dinosaur.getOverlayTypes()[i].equalsIgnoreCase("nostrils"))
+                    this.addLayer(new LayerNostrils(this));
+                if (dinosaur.getOverlayTypes()[i].equalsIgnoreCase("eyes"))
+                    this.addLayer(new LayerEyes(this));
+                if (dinosaur.getOverlayTypes()[i].equalsIgnoreCase("eyelids"))
+                    this.addLayer(new LayerEyelids(this));
+                if (dinosaur.getOverlayTypes()[i].equalsIgnoreCase("claws"))
+                    this.addLayer(new LayerClaws(this));
+                if (dinosaur.getOverlayTypes()[i].equalsIgnoreCase("stripes"))
+                    this.addLayer(new LayerStripes(this));
+            }
     }
 
+
     @Override
-    public void preRenderCallback(DinosaurEntity entity, float partialTick) {
+    public void preRenderCallback(DinosaurEntity entity, float partialTick)
+    {
         float scaleModifier = entity.getAttributes().getScaleModifier();
         float scale = (float) entity.interpolate(this.dinosaur.getScaleInfant(), this.dinosaur.getScaleAdult()) * scaleModifier;
 
@@ -45,8 +67,9 @@ public class DinosaurRenderer extends RenderLiving<DinosaurEntity> {
         GlStateManager.translate(this.dinosaur.getOffsetX() * scale, this.dinosaur.getOffsetY() * scale, this.dinosaur.getOffsetZ() * scale);
 
         String name = entity.getCustomNameTag();
-        
-        switch (name) {
+
+        switch (name)
+        {
             case "Kashmoney360":
             case "JTGhawk137":
                 GlStateManager.scale(0.1F, scale, scale);
@@ -70,54 +93,26 @@ public class DinosaurRenderer extends RenderLiving<DinosaurEntity> {
     }
 
     @Override
-    public void doRender(DinosaurEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
+    public void doRender(DinosaurEntity entity, double x, double y, double z, float entityYaw, float partialTicks)
+    {
         this.mainModel = this.renderInfo.getModel(entity.getGrowthStage());
         super.doRender(entity, x, y, z, entityYaw, partialTicks);
     }
 
     @Override
-    public ResourceLocation getEntityTexture(DinosaurEntity entity) {
+    public ResourceLocation getEntityTexture(DinosaurEntity entity)
+    {
         GrowthStage growthStage = entity.getGrowthStage();
-        if (!this.dinosaur.doesSupportGrowthStage(growthStage)) {
+        if (!this.dinosaur.doesSupportGrowthStage(growthStage))
+        {
             growthStage = GrowthStage.ADULT;
         }
         return entity.isMale() ? this.dinosaur.getMaleTexture(growthStage) : this.dinosaur.getFemaleTexture(growthStage);
     }
 
     @Override
-    protected void applyRotations(DinosaurEntity entity, float p_77043_2_, float p_77043_3_, float partialTicks) {
+    protected void applyRotations(DinosaurEntity entity, float p_77043_2_, float p_77043_3_, float partialTicks)
+    {
         GlStateManager.rotate(180.0F - p_77043_3_, 0.0F, 1.0F, 0.0F);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public class LayerEyelid implements LayerRenderer<DinosaurEntity> {
-        private final DinosaurRenderer renderer;
-
-        public LayerEyelid(DinosaurRenderer renderer) {
-            this.renderer = renderer;
-        }
-
-        @Override
-        public void doRenderLayer(DinosaurEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float age, float yaw, float pitch, float scale) {
-            if (!entity.isInvisible()) {
-                if (entity.areEyelidsClosed()) {
-                    ResourceLocation texture = this.renderer.dinosaur.getEyelidTexture(entity);
-                    if (texture != null) {
-                        ITextureObject textureObject = Minecraft.getMinecraft().getTextureManager().getTexture(texture);
-                        if (textureObject != TextureUtil.MISSING_TEXTURE) {
-                            this.renderer.bindTexture(texture);
-
-                            this.renderer.getMainModel().render(entity, limbSwing, limbSwingAmount, age, yaw, pitch, scale);
-                            this.renderer.setLightmap(entity); //TODO: Make sure this works this.renderer.setLightmap(entity, partialTicks);
-                        }
-                    }
-                }
-            }
-        }
-
-        @Override
-        public boolean shouldCombineTextures() {
-            return true;
-        }
     }
 }

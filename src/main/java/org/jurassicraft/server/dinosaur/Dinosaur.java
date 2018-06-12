@@ -29,10 +29,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 
 public abstract class Dinosaur implements Comparable<Dinosaur> {
-    private final Map<GrowthStage, List<ResourceLocation>> overlays = new HashMap<>();
+    private final Map<GrowthStage, List<ResourceLocation>> growthOverlays = new HashMap<>();
     private final Map<GrowthStage, ResourceLocation> maleTextures = new HashMap<>();
     private final Map<GrowthStage, ResourceLocation> femaleTextures = new HashMap<>();
-    private final Map<GrowthStageGenderContainer, ResourceLocation> eyelidTextures = new HashMap<>();
+    private Map<String, Map<GrowthStageGenderContainer, ResourceLocation>> overlay = new HashMap();
 
     private String name;
     private Class<? extends DinosaurEntity> entityClass;
@@ -99,6 +99,7 @@ public abstract class Dinosaur implements Comparable<Dinosaur> {
     private int jumpHeight;
 
     private String[][] recipe;
+    private String[] overlayTypes;
 
     public static Matrix4d getParentRotationMatrix(TabulaModelContainer model, TabulaCubeContainer cube, boolean includeParents, boolean ignoreSelf, float rot) {
         List<TabulaCubeContainer> parentCubes = new ArrayList<>();
@@ -196,14 +197,25 @@ public abstract class Dinosaur implements Comparable<Dinosaur> {
                 this.maleTextures.put(growthStage, hybridTexture);
                 this.femaleTextures.put(growthStage, hybridTexture);
 
-                ResourceLocation eyelidTexture = new ResourceLocation(JurassiCraft.MODID, baseName + "_eyelid.png");
-                this.eyelidTextures.put(new GrowthStageGenderContainer(growthStage, false), eyelidTexture);
-                this.eyelidTextures.put(new GrowthStageGenderContainer(growthStage, true), eyelidTexture);
+                if(overlayTypes != null)
+                    if(growthStage.equals(GrowthStage.ADULT))
+                for (int i = 0; i < overlayTypes.length; i++)
+                {
+                    overlay.put(overlayTypes[i], new HashMap<>());
+                    overlay.get(overlayTypes[i]).put(new GrowthStageGenderContainer(growthStage, false), new ResourceLocation(JurassiCraft.MODID, baseName + "_" + overlayTypes[i] + ".png"));
+                    overlay.get(overlayTypes[i]).put(new GrowthStageGenderContainer(growthStage, true), new ResourceLocation(JurassiCraft.MODID, baseName + "_" + overlayTypes[i] + ".png"));
+                }
             } else {
                 this.maleTextures.put(growthStage, new ResourceLocation(JurassiCraft.MODID, baseTextures + formattedName + "_male_" + growthStageName + ".png"));
                 this.femaleTextures.put(growthStage, new ResourceLocation(JurassiCraft.MODID, baseTextures + formattedName + "_female_" + growthStageName + ".png"));
-                this.eyelidTextures.put(new GrowthStageGenderContainer(growthStage, true), new ResourceLocation(JurassiCraft.MODID, baseTextures + formattedName + "_male_" + growthStageName + "_eyelid.png"));
-                this.eyelidTextures.put(new GrowthStageGenderContainer(growthStage, false), new ResourceLocation(JurassiCraft.MODID, baseTextures + formattedName + "_female_" + growthStageName + "_eyelid.png"));
+                if(overlayTypes != null)
+                    if(growthStage.equals(GrowthStage.ADULT))
+                for (int i = 0; i < overlayTypes.length; i++)
+                {
+                    overlay.put(overlayTypes[i], new HashMap<>());
+                    overlay.get(overlayTypes[i]).put(new GrowthStageGenderContainer(growthStage, true), new ResourceLocation(JurassiCraft.MODID, baseTextures + formattedName + "_male_" + growthStageName + "_" + overlayTypes[i] + ".png"));
+                    overlay.get(overlayTypes[i]).put(new GrowthStageGenderContainer(growthStage, false), new ResourceLocation(JurassiCraft.MODID, baseTextures + formattedName + "_female_" + growthStageName + "_" + overlayTypes[i] + ".png"));
+                }
             }
 
             List<ResourceLocation> overlaysForGrowthStage = new ArrayList<>();
@@ -212,7 +224,7 @@ public abstract class Dinosaur implements Comparable<Dinosaur> {
                 overlaysForGrowthStage.add(new ResourceLocation(JurassiCraft.MODID, baseTextures + formattedName + "_overlay_" + growthStageName + "_" + i + ".png"));
             }
 
-            this.overlays.put(growthStage, overlaysForGrowthStage);
+            this.growthOverlays.put(growthStage, overlaysForGrowthStage);
         }
 
         this.poseHandler = new PoseHandler(this);
@@ -233,6 +245,16 @@ public abstract class Dinosaur implements Comparable<Dinosaur> {
         }
 
         return null;
+    }
+
+    public void setOverlayTypes(String... overlayTypes)
+    {
+        this.overlayTypes = overlayTypes;
+    }
+
+    public String[] getOverlayTypes()
+    {
+        return overlayTypes;
     }
 
     public void setEggColorMale(int primary, int secondary) {
@@ -507,8 +529,14 @@ public abstract class Dinosaur implements Comparable<Dinosaur> {
         this.storage = storage;
     }
 
-    public ResourceLocation getOverlayTexture(GrowthStage stage, int overlay) {
-        return this.overlays.containsKey(stage) ? this.overlays.get(stage).get(overlay) : null;
+    public ResourceLocation getGrowthOverlayTexture(GrowthStage stage, int overlay)
+    {
+        return this.growthOverlays.containsKey(stage) ? this.growthOverlays.get(stage).get(overlay) : null;
+    }
+
+    public ResourceLocation getOverlayTexture(DinosaurEntity entity, String overlayName)
+    {
+        return this.overlay.get(overlayName).get(new GrowthStageGenderContainer(entity.getGrowthStage(), entity.isMale()));
     }
 
     public int getOverlayCount() {
@@ -517,10 +545,6 @@ public abstract class Dinosaur implements Comparable<Dinosaur> {
 
     public void setOverlayCount(int count) {
         this.overlayCount = count;
-    }
-
-    public ResourceLocation getEyelidTexture(DinosaurEntity entity) {
-        return this.eyelidTextures.get(new GrowthStageGenderContainer(entity.getGrowthStage(), entity.isMale()));
     }
 
     public Diet getDiet() {
