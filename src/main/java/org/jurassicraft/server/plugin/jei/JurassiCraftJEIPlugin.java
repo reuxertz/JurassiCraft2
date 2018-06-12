@@ -48,6 +48,9 @@ import org.jurassicraft.server.plugin.jei.category.embroyonicmachine.EmbryonicRe
 import org.jurassicraft.server.plugin.jei.category.fossilgrinder.FossilGrinderRecipeCategory;
 import org.jurassicraft.server.plugin.jei.category.fossilgrinder.FossilGrinderRecipeWrapper;
 import org.jurassicraft.server.plugin.jei.category.fossilgrinder.GrinderInput;
+import org.jurassicraft.server.plugin.jei.category.incubator.IncubatorInput;
+import org.jurassicraft.server.plugin.jei.category.incubator.IncubatorRecipeCategory;
+import org.jurassicraft.server.plugin.jei.category.incubator.IncubatorRecipeWrapper;
 import org.jurassicraft.server.plugin.jei.category.skeletonassembly.SkeletonAssemblyRecipeCategory;
 import org.jurassicraft.server.plugin.jei.category.skeletonassembly.SkeletonAssemblyRecipeWrapper;
 import org.jurassicraft.server.plugin.jei.category.skeletonassembly.SkeletonInput;
@@ -73,6 +76,7 @@ public class JurassiCraftJEIPlugin implements IModPlugin {
     public static final String SKELETON_ASSEMBLY = "jurassicraft.skeleton_assembly";
     public static final String DNA_SEQUENCER = "jurassicraft.dna_sequencer";
     public static final String CULTIVATEOR = "jurassicraft.cultivator";
+    public static final String INCUBATOR = "jurassicraft.incubator";
 
 
     @Override
@@ -123,6 +127,9 @@ public class JurassiCraftJEIPlugin implements IModPlugin {
         BlockHandler.CULTIVATOR_BOTTOM.getSubBlocks(CreativeTabs.SEARCH, list);
         list.forEach(item -> registry.addRecipeCatalyst(item, CULTIVATEOR));
 
+        registry.handleRecipes(IncubatorInput.class, IncubatorRecipeWrapper::new, INCUBATOR);
+        registry.addRecipeCatalyst(new ItemStack(BlockHandler.INCUBATOR), INCUBATOR);
+
         registry.addRecipeClickArea(FossilGrinderGui.class, 78, 33, 26, 19, FOSSIL_GRINDER);
         registry.addRecipeClickArea(CleaningStationGui.class, 78, 33, 26, 19, CLEANING_STATION);
         registry.addRecipeClickArea(DNASynthesizerGui.class, 78, 33, 26, 19, DNA_SYNTHASIZER);
@@ -150,6 +157,7 @@ public class JurassiCraftJEIPlugin implements IModPlugin {
         registry.addRecipes(getAllItems(SequencableItem::getSequencableItem, SequencerInput::new), DNA_SEQUENCER);
 
         registry.addRecipes(getDinos(CultivateInput::new, dino -> dino.getBirthType() == Dinosaur.BirthType.LIVE_BIRTH), CULTIVATEOR);
+        registry.addRecipes(getDinos(IncubatorInput::new, dino -> dino.getBirthType() == Dinosaur.BirthType.EGG_LAYING), INCUBATOR);
         registry.addRecipes(getDinos(CalcificationInput::new), EMBRYO_CALCIFICATION_MACHINE);
         registry.addRecipes(getDinos(EmbryoInput.DinosaurInput::new), EMBRYOMIC_MACHINE);
         registry.addRecipes(getPlants(EmbryoInput.PlantInput::new), EMBRYOMIC_MACHINE);
@@ -198,14 +206,15 @@ public class JurassiCraftJEIPlugin implements IModPlugin {
         IGuiHelper guiHelper = registry.getJeiHelpers().getGuiHelper();
 
         registry.addRecipeCategories(
-        	new FossilGrinderRecipeCategory(guiHelper),
-        	new CleaningStationRecipeCategory(guiHelper),
-        	new DNASynthesizerRecipeCategory(guiHelper),
-        	new EmbryonicRecipeCategory(guiHelper),
-        	new CalcificationRecipeCategory(guiHelper),
-        	new SkeletonAssemblyRecipeCategory(guiHelper),
-            new DNASequencerRecipeCategory(guiHelper),
-            new CultivatorRecipeCategory(guiHelper)
+                new FossilGrinderRecipeCategory(guiHelper),
+                new CleaningStationRecipeCategory(guiHelper),
+                new DNASynthesizerRecipeCategory(guiHelper),
+                new EmbryonicRecipeCategory(guiHelper),
+                new CalcificationRecipeCategory(guiHelper),
+                new SkeletonAssemblyRecipeCategory(guiHelper),
+                new DNASequencerRecipeCategory(guiHelper),
+                new CultivatorRecipeCategory(guiHelper),
+                new IncubatorRecipeCategory(guiHelper)
         );
     }
 }
