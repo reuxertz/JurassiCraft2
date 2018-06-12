@@ -29,24 +29,25 @@ public class DinosaurRenderer extends RenderLiving<DinosaurEntity> {
         this.random = new Random();
         this.renderInfo = renderInfo;
 
-        if(dinosaur.getOverlays().length != 0)
-        for(int i = 0; i < dinosaur.getOverlays().length; i++)
-        {
-            if(dinosaur.getOverlays()[i].equalsIgnoreCase("mouth"))
-                this.addLayer(new LayerMouth(this));
-            if(dinosaur.getOverlays()[i].equalsIgnoreCase("teeth"))
-                this.addLayer(new LayerTeeth(this));
-            if(dinosaur.getOverlays()[i].equalsIgnoreCase("nostrils"))
-                this.addLayer(new LayerNostrils(this));
-            if(dinosaur.getOverlays()[i].equalsIgnoreCase("eyes"))
-                this.addLayer(new LayerEyes(this));
-            if(dinosaur.getOverlays()[i].equalsIgnoreCase("eyelids"))
-                this.addLayer(new LayerEyelids(this));
-            if(dinosaur.getOverlays()[i].equalsIgnoreCase("claws"))
-                this.addLayer(new LayerClaws(this));
-            if(dinosaur.getOverlays()[i].equalsIgnoreCase("stripes"))
-                this.addLayer(new LayerStripes(this));
-        }
+//        if(dinosaur.getOverlays().length != 0)
+//        for(int i = 0; i < dinosaur.getOverlays().length; i++)
+//        {
+//            if(dinosaur.getOverlays()[i].equalsIgnoreCase("mouth"))
+//                this.addLayer(new LayerMouth(this));
+//            if(dinosaur.getOverlays()[i].equalsIgnoreCase("teeth"))
+//                this.addLayer(new LayerTeeth(this));
+//            if(dinosaur.getOverlays()[i].equalsIgnoreCase("nostrils"))
+//                this.addLayer(new LayerNostrils(this));
+//            if(dinosaur.getOverlays()[i].equalsIgnoreCase("eyes"))
+//                this.addLayer(new LayerEyes(this));
+//            if(dinosaur.getOverlays()[i].equalsIgnoreCase("eyelids"))
+//                this.addLayer(new LayerEyelids(this));
+//            if(dinosaur.getOverlays()[i].equalsIgnoreCase("claws"))
+//                this.addLayer(new LayerClaws(this));
+//            if(dinosaur.getOverlays()[i].equalsIgnoreCase("stripes"))
+//                this.addLayer(new LayerStripes(this));
+//        }
+            this.addLayer(new LayerEyelids(this));
     }
 
     @Override
