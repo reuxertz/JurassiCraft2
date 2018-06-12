@@ -25,7 +25,7 @@ public class InventoryDinosaur implements IInventory {
         NBTTagList nbttaglist = new NBTTagList();
 
         for (int i = 0; i < this.inventory.length; ++i) {
-            if (this.inventory[i] != null) {
+            if (!this.inventory[i].isEmpty()) {
                 NBTTagCompound slotTag = new NBTTagCompound();
                 slotTag.setByte("Slot", (byte) i);
                 this.inventory[i].writeToNBT(slotTag);
@@ -63,43 +63,39 @@ public class InventoryDinosaur implements IInventory {
 
     @Override
     public ItemStack decrStackSize(int index, int count) {
-        if (this.inventory[index] != null) {
+        if (!this.inventory[index].isEmpty()) {
             ItemStack itemstack;
 
             if (this.inventory[index].getCount() <= count) {
                 itemstack = this.inventory[index];
-                this.setInventorySlotContents(index, null);
+                this.setInventorySlotContents(index, ItemStack.EMPTY);
                 return itemstack;
             } else {
                 itemstack = this.inventory[index].splitStack(count);
 
                 if (this.inventory[index].getCount() == 0) {
-                    this.setInventorySlotContents(index, null);
+                    this.setInventorySlotContents(index, ItemStack.EMPTY);
                 }
 
                 return itemstack;
             }
         } else {
-            return null;
+            return ItemStack.EMPTY;
         }
     }
 
     @Override
     public ItemStack removeStackFromSlot(int index) {
-        if (this.inventory[index] != null) {
-            ItemStack itemstack = this.inventory[index];
-            this.setInventorySlotContents(index, null);
-            return itemstack;
-        } else {
-            return null;
-        }
+        ItemStack itemstack = this.inventory[index];
+        this.setInventorySlotContents(index, ItemStack.EMPTY);
+        return itemstack;
     }
 
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
         this.inventory[index] = stack;
 
-        if (stack != null && stack.getCount() > this.getInventoryStackLimit()) {
+        if (!stack.isEmpty() && stack.getCount() > this.getInventoryStackLimit()) {
             stack.setCount(this.getInventoryStackLimit());
         }
     }
@@ -149,7 +145,7 @@ public class InventoryDinosaur implements IInventory {
     @Override
     public void clear() {
         for (int i = 0; i < this.getSizeInventory(); i++) {
-            this.setInventorySlotContents(i, null);
+            this.setInventorySlotContents(i, ItemStack.EMPTY);
         }
     }
 
@@ -172,7 +168,7 @@ public class InventoryDinosaur implements IInventory {
         for (int i = 0; i < this.getSizeInventory(); ++i) {
             ItemStack itemstack = this.getStackInSlot(i);
 
-            if (itemstack != null) {
+            if (!itemstack.isEmpty()) {
                 float offsetX = rand.nextFloat() * 0.8F + 0.1F;
                 float offsetY = rand.nextFloat() * 0.8F + 0.1F;
                 float offsetZ = rand.nextFloat() * 0.8F + 0.1F;
@@ -198,7 +194,6 @@ public class InventoryDinosaur implements IInventory {
 
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 }
