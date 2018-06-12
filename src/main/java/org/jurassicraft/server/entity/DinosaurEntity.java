@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.entity.ai.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jurassicraft.JurassiCraft;
@@ -81,11 +82,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAITasks;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.ai.EntityLookHelper;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -246,6 +242,8 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         this.tasks.addTask(1, new RespondToAttackEntityAI(this));
 
         this.tasks.addTask(1, new TemptNonAdultEntityAI(this, 0.6));
+
+        this.tasks.addTask(1, new EntityAIPanic(this, 1.25D));
 
         if (this.dinosaur.shouldDefendOwner()) {
             this.tasks.addTask(2, new DefendOwnerEntityAI(this));
