@@ -87,7 +87,7 @@ public class SkeletonAssemblyContainer extends Container {
 
     private String identify(ItemStack stack) {
         if (stack != ItemStack.EMPTY && stack.getItem() instanceof FossilItem) {
-            return ((FossilItem) stack.getItem()).getBoneType();
+            return ((FossilItem) stack.getItem()).getBoneType(stack);
         }
         return "";
     }
@@ -247,8 +247,7 @@ public class SkeletonAssemblyContainer extends Container {
         }
 
         public ItemStack getResult() {
-            int metadata = DisplayBlockItem.getMetadata(EntityHandler.getDinosaurId(this.dinosaur), this.fresh ? 2 : 1, true);
-            return new ItemStack(ItemHandler.DISPLAY_BLOCK, 1, metadata);
+            return DisplayBlockItem.writeToStack(new ItemStack(ItemHandler.DISPLAY_BLOCK), new DisplayBlockItem.DisplayBlockProperties(this.dinosaur, this.fresh ? DisplayBlockItem.DisplayBlockProperties.Type.SKELETON_FRESH : DisplayBlockItem.DisplayBlockProperties.Type.SKELETON));
         }
 
         @Override

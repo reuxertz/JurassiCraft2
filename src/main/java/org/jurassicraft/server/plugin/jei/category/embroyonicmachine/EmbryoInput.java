@@ -1,6 +1,7 @@
 package org.jurassicraft.server.plugin.jei.category.embroyonicmachine;
 
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
@@ -16,13 +17,11 @@ import java.util.Random;
 public interface EmbryoInput {
     boolean isValid();
 
-    int getMetadata();
-
     NBTTagCompound getTag();
 
-    Item getInputItem();
+    ItemStack getInputItemStack();
 
-    Item getOutputItem();
+    ItemStack getOutputItemStack();
 
     Item getPetriDishItem();
 
@@ -35,13 +34,9 @@ public interface EmbryoInput {
 
         @Override
         public boolean isValid() {
-            return this.dinosaur.shouldRegister();
+            return true;
         }
 
-        @Override
-        public int getMetadata() {
-            return EntityHandler.getDinosaurId(this.dinosaur);
-        }
 
         @Override
         public NBTTagCompound getTag() {
@@ -52,13 +47,13 @@ public interface EmbryoInput {
         }
 
         @Override
-        public Item getInputItem() {
-            return ItemHandler.DNA;
+        public ItemStack getInputItemStack() {
+            return ItemHandler.DNA.getItemStack(this.dinosaur);
         }
 
         @Override
-        public Item getOutputItem() {
-            return ItemHandler.SYRINGE;
+        public ItemStack getOutputItemStack() {
+            return ItemHandler.SYRINGE.getItemStack(this.dinosaur);
         }
 
         @Override
@@ -80,26 +75,21 @@ public interface EmbryoInput {
         }
 
         @Override
-        public int getMetadata() {
-            return PlantHandler.getPlantId(this.plant);
-        }
-
-        @Override
-        public NBTTagCompound getTag() {
-            PlantDNA dna = new PlantDNA(this.getMetadata(), 100);
+        public NBTTagCompound getTag() {//TODO
+            PlantDNA dna = new PlantDNA(plant.getHealAmount(), 100);
             NBTTagCompound tag = new NBTTagCompound();
             dna.writeToNBT(tag);
             return tag;
         }
 
         @Override
-        public Item getInputItem() {
-            return ItemHandler.PLANT_DNA;
+        public ItemStack getInputItemStack() { //TODO:
+            return new ItemStack(ItemHandler.PLANT_DNA);
         }
 
         @Override
-        public Item getOutputItem() {
-            return ItemHandler.PLANT_CALLUS;
+        public ItemStack getOutputItemStack() {
+            return new ItemStack(ItemHandler.PLANT_CALLUS);
         }
 
         @Override

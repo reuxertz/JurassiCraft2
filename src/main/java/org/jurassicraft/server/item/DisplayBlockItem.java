@@ -1,58 +1,43 @@
 package org.jurassicraft.server.item;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-
-import net.minecraft.client.util.ITooltipFlag;
-import org.jurassicraft.client.render.RenderingHandler;
-import org.jurassicraft.server.block.BlockHandler;
-import org.jurassicraft.server.block.entity.DisplayBlockEntity;
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.EntityHandler;
-import org.jurassicraft.server.tab.TabHandler;
-import org.jurassicraft.server.util.LangHelper;
-
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.client.render.RenderingHandler;
+import org.jurassicraft.server.block.BlockHandler;
+import org.jurassicraft.server.block.entity.DisplayBlockEntity;
+import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.entity.JurassicraftRegisteries;
+import org.jurassicraft.server.tab.TabHandler;
+import org.jurassicraft.server.util.LangHelper;
 
-public class DisplayBlockItem extends Item {
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class DisplayBlockItem extends Item implements DinosaurProvider {
     public DisplayBlockItem() {
         super();
         this.setCreativeTab(TabHandler.DECORATIONS);
         this.setHasSubtypes(true);
     }
 
-    @SideOnly(Side.CLIENT)
-    public void initModels(Collection<Dinosaur> dinos, RenderingHandler renderer) {
-        for (Dinosaur dino : dinos) {
-            int dex = EntityHandler.getDinosaurId(dino);
-            String dinoName = dino.getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
-            renderer.registerItemRenderer(this, getMetadata(dex, 0, false), "action_figure/action_figure_" + dinoName);
-            renderer.registerItemRenderer(this, getMetadata(dex, 1, false), "action_figure/action_figure_" + dinoName);
-            renderer.registerItemRenderer(this, getMetadata(dex, 2, false), "action_figure/action_figure_" + dinoName);
-            renderer.registerItemRenderer(this, getMetadata(dex, 1, true), "skeleton/fossil/skeleton_fossil_" + dinoName);
-            renderer.registerItemRenderer(this, getMetadata(dex, 2, true), "skeleton/fresh/skeleton_fresh_" + dinoName);
-        }
-    }
+
 
     @Override
     public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
@@ -66,12 +51,12 @@ public class DisplayBlockItem extends Item {
                 world.setBlockState(pos, block.getStateForPlacement(world, pos, side, hitX, hitY, hitZ, 0, player));
                 block.onBlockPlacedBy(world, pos, state, player, stack);
 
-                int mode = this.getVariant(stack);
+                DisplayBlockProperties properties = getProperties(stack);
 
                 DisplayBlockEntity tile = (DisplayBlockEntity) world.getTileEntity(pos);
 
                 if (tile != null) {
-                    tile.setDinosaur(this.getDinosaurID(stack), mode > 0 ? mode == 1 : world.rand.nextBoolean(), this.isSkeleton(stack));
+                    tile.setDinosaur(properties.getDinosaur(), properties.getType() == DisplayBlockProperties.Type.RANDOM ? world.rand.nextBoolean() : properties.getType() == DisplayBlockProperties.Type.MALE, properties.getType().isSkeleton());
                     tile.setRot(180 - (int) player.getRotationYawHead());
                     world.notifyBlockUpdate(pos, state, state, 0);
                     tile.markDirty();
@@ -87,66 +72,34 @@ public class DisplayBlockItem extends Item {
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        String dinoName = this.getDinosaur(stack).getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
-        if (!this.isSkeleton(stack)) {
+        Dinosaur dinosaur = getDinosaur(stack);
+        String dinoName = dinosaur.getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
+        DisplayBlockProperties properties = getProperties(stack);
+        if (!properties.getType().isSkeleton()) {
             return new LangHelper("item.action_figure.name").withProperty("dino", "entity.jurassicraft." + dinoName + ".name").build();
         }
-        return new LangHelper("item.skeleton." + (this.getVariant(stack) == 1 ? "fossil" : "fresh") + ".name").withProperty("dino", "entity.jurassicraft." + dinoName + ".name").build();
-    }
-
-    public Dinosaur getDinosaur(ItemStack stack) {
-        return EntityHandler.getDinosaurById(getDinosaurID(stack));
+        return new LangHelper("item.skeleton." + (properties.getType() == DisplayBlockProperties.Type.SKELETON ? "fossil" : "fresh") + ".name").withProperty("dino", "entity.jurassicraft." + dinoName + ".name").build();
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subtypes) {
-        List<Dinosaur> dinosaurs = new LinkedList<>(EntityHandler.getDinosaurs().values());
+        List<Dinosaur> list = Lists.newArrayList(JurassicraftRegisteries.DINOSAUR_REGISTRY.getValuesCollection());
+        Collections.sort(list);
 
-        Collections.sort(dinosaurs);
-        if(this.isInCreativeTab(tab))
-        for (Dinosaur dinosaur : dinosaurs) {
-            if (dinosaur.shouldRegister()) {
-                subtypes.add(new ItemStack(this, 1, getMetadata(EntityHandler.getDinosaurId(dinosaur), 0, false)));
-                for (int variant = 1; variant < 3; variant++) {
-                    subtypes.add(new ItemStack(this, 1, getMetadata(EntityHandler.getDinosaurId(dinosaur), variant, true)));
+        for(DisplayBlockProperties.Type type : DisplayBlockProperties.Type.values()) {
+            if(type.isCreativeTab()) {
+                for(Dinosaur dino : list) {
+                    subtypes.add(writeToStack(new ItemStack(this), new DisplayBlockProperties(dino, type)));
                 }
             }
         }
     }
 
-    public static int getMetadata(int dinosaur, int variant, boolean isSkeleton) {
-        return dinosaur << 4 | variant << 1 | (isSkeleton ? 1 : 0);
-    }
-
-    public int getDinosaurID(ItemStack stack) {
-        return stack.getMetadata() >> 4 & 0xFFFF;
-    }
-
-    public int getVariant(ItemStack stack) {
-        return stack.getMetadata() >> 1 & 7;
-    }
-
-    public boolean isSkeleton(ItemStack stack) {
-        return (stack.getMetadata() & 1) == 1;
-    }
-
-    public int changeMode(ItemStack stack) {
-        int dinosaur = this.getDinosaurID(stack);
-        boolean skeleton = this.isSkeleton(stack);
-
-        int mode = this.getVariant(stack) + 1;
-        mode %= 3;
-
-        stack.setItemDamage(getMetadata(dinosaur, mode, skeleton));
-
-        return mode;
-    }
-
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, World world, List<String> lore, ITooltipFlag tooltipFlag) {
-        if (!this.isSkeleton(stack)) {
+        if (!getProperties(stack).getType().isSkeleton()) {
             lore.add(TextFormatting.BLUE + I18n.format("lore.change_gender.name"));
         }
     }
@@ -155,25 +108,121 @@ public class DisplayBlockItem extends Item {
     @SideOnly(Side.CLIENT)
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
     	ItemStack stack = player.getHeldItem(hand);
-        if (!this.isSkeleton(stack)) {
-            int mode = this.changeMode(stack);
+    	DisplayBlockProperties properties = getProperties(stack);
+        if (!properties.getType().isSkeleton()) {
+            properties = properties.cycleIgnore(DisplayBlockProperties.Type.SKELETON, DisplayBlockProperties.Type.SKELETON_FRESH);
             if (world.isRemote) {
-                String modeString = "";
-                switch (mode) {
-                    case 0:
-                        modeString = "random";
-                        break;
-                    case 1:
-                        modeString = "male";
-                        break;
-                    case 2:
-                        modeString = "female";
-                        break;
-                }
-                player.sendMessage(new TextComponentString(new LangHelper("actionfigure.genderchange.name").withProperty("mode", I18n.format("gender." + modeString + ".name")).build()));
+                player.sendMessage(new TextComponentString(new LangHelper("actionfigure.genderchange.name").withProperty("mode", I18n.format("gender." + properties.getType().toString().toLowerCase(Locale.ENGLISH) + ".name")).build()));
             }
             return new ActionResult<>(EnumActionResult.SUCCESS, stack);
         }
         return new ActionResult<>(EnumActionResult.PASS, stack);
+    }
+
+    public static DisplayBlockProperties getProperties(ItemStack stack) {
+        NBTTagCompound nbt = stack.getOrCreateSubCompound("jurassicraft").getCompoundTag("Display Block");
+        return new DisplayBlockProperties(JurassicraftRegisteries.DINOSAUR_REGISTRY.getValue(new ResourceLocation(nbt.getString("Dinosaur"))), DisplayBlockProperties.Type.getEnum(nbt.getString("Type")));
+    }
+
+    public static ItemStack writeToStack(ItemStack stack, DisplayBlockProperties properties) {
+        NBTTagCompound compound = stack.getOrCreateSubCompound("jurassicraft");
+        compound.setTag("Display Block", properties.writeToNBT(compound.getCompoundTag("Display Block")));
+        return stack;
+    }
+
+    @Override
+    public Dinosaur getDinosaur(ItemStack stack) {
+        return getProperties(stack).getDinosaur();
+    }
+
+    @Override
+    public ItemStack getItemStack(Dinosaur dinosaur) {
+        return writeToStack(new ItemStack(this), new DisplayBlockProperties(dinosaur, DisplayBlockProperties.Type.RANDOM));
+    }
+
+    @Override
+    public Map<String, ResourceLocation> getModelResourceLocations(Dinosaur dinosaur) {
+        Map<String, ResourceLocation> map = Maps.newHashMap();
+        for (DisplayBlockProperties.Type type : DisplayBlockProperties.Type.values()) {
+            map.put(type.toString(), new ResourceLocation(dinosaur.getRegistryName().getResourceDomain(), "item/" + type.modelPrefix + dinosaur.getRegistryName().getResourcePath()));
+        }
+        return map;
+    }
+
+    @Override
+    public String getVarient(ItemStack stack) {
+        return getProperties(stack).getType().toString();
+    }
+
+    public static class DisplayBlockProperties {
+        private final Dinosaur dinosaur;
+        private final Type type;
+
+        public DisplayBlockProperties(Dinosaur dinosaur, Type type) {
+            this.dinosaur = dinosaur;
+            this.type = type;
+        }
+
+        public Dinosaur getDinosaur() {
+            return dinosaur;
+        }
+
+        public Type getType() {
+            return type;
+        }
+
+        public DisplayBlockProperties cycle() {
+            return new DisplayBlockProperties(this.dinosaur, Type.values()[(this.type.ordinal() + 1) % Type.values().length]);
+        }
+
+        public DisplayBlockProperties cycleIgnore(Type... types) {
+            List<Type> typeList = Lists.newArrayList(types);
+            DisplayBlockProperties ret = this;
+            do {
+                ret = ret.cycle();
+            } while (typeList.contains(ret.type));
+            return ret;
+        }
+
+        public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+            nbt.setString("Dinosaur", this.dinosaur.getRegistryName().toString());
+            nbt.setString("Type", this.type.toString());
+            return nbt;
+        }
+
+        public enum Type {
+            RANDOM("action_figure/", false, true),
+            MALE("action_figure/", false, false),
+            FEMALE("action_figure/", false, false),
+            SKELETON("skeleton/fossil/", true, false),
+            SKELETON_FRESH("skeleton/fresh/", true, true);
+
+            private final String modelPrefix;
+            private final boolean skeleton;
+            private final boolean creativeTab;
+
+            Type(String modelPrefix, boolean skeleton, boolean creativeTab) {
+                this.modelPrefix = modelPrefix;
+                this.skeleton = skeleton;
+                this.creativeTab = creativeTab;
+            }
+
+            public boolean isSkeleton() {
+                return skeleton;
+            }
+
+            public boolean isCreativeTab() {
+                return creativeTab;
+            }
+
+            public static Type getEnum(String type) {
+                try {
+                    return valueOf(type);
+                } catch (IllegalArgumentException e) {
+                    return RANDOM;
+                }
+            }
+
+        }
     }
 }

@@ -32,10 +32,6 @@ public class HatchedEggItem extends DNAContainerItem {
                 .withProperty("dino", "entity.jurassicraft." + dinoName + ".name").build();
     }
 
-    public Dinosaur getDinosaur(ItemStack stack) {
-        return EntityHandler.getDinosaurById(stack.getMetadata());
-    }
-
     public boolean getGender(EntityPlayer player, ItemStack stack) {
         NBTTagCompound nbt = stack.getTagCompound();
 
@@ -56,10 +52,10 @@ public class HatchedEggItem extends DNAContainerItem {
         return gender;
     }
 
-    @Override
-    public int getContainerId(ItemStack stack) {
-        return EntityHandler.getDinosaurId(this.getDinosaur(stack));
-    }
+//    @Override
+//    public int getContainerId(ItemStack stack) {
+//        return EntityHandler.getDinosaurId(this.getDinosaur(stack));
+//    }
 
     @Override
     public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {

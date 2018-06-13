@@ -1,14 +1,17 @@
 package org.jurassicraft.server.item;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
 import com.google.common.collect.Lists;
+import jdk.nashorn.internal.ir.JumpStatement;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jurassicraft.server.api.GrindableItem;
 import org.jurassicraft.server.block.NestFossilBlock;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.entity.JurassicraftRegisteries;
 import org.jurassicraft.server.tab.TabHandler;
 import org.jurassicraft.server.util.LangHelper;
 
@@ -54,9 +57,9 @@ public class FossilizedEggItem extends Item implements GrindableItem {
         int outputType = random.nextInt(3);
 
         if (outputType == 0) {
-            List<Dinosaur> dinosaurs = EntityHandler.getPrehistoricDinosaurs();
+            List<Dinosaur> dinosaurs = JurassicraftRegisteries.DINOSAUR_REGISTRY.getValues();
 
-            ItemStack output = new ItemStack(ItemHandler.SOFT_TISSUE, 1, EntityHandler.getDinosaurId(dinosaurs.get(random.nextInt(dinosaurs.size()))));
+            ItemStack output = ItemHandler.SOFT_TISSUE.getItemStack(dinosaurs.get(random.nextInt(dinosaurs.size())));
             output.setTagCompound(tag);
             return output;
         } else if (outputType == 1) {
@@ -70,12 +73,13 @@ public class FossilizedEggItem extends Item implements GrindableItem {
     public List<Pair<Float, ItemStack>> getChancedOutputs(ItemStack inputItem) {
         List<Pair<Float, ItemStack>> list = Lists.newArrayList();
         NBTTagCompound tag = inputItem.getTagCompound();
-        List<Dinosaur> dinosaurs = EntityHandler.getPrehistoricDinosaurs();
+        Collection<Dinosaur> dinosaurs = JurassicraftRegisteries.DINOSAUR_REGISTRY.getValuesCollection();
         float single = 100F/3F;
         float dinoSingle = single / dinosaurs.size();
         for(Dinosaur dinosaur : dinosaurs) {
-            ItemStack output = new ItemStack(ItemHandler.SOFT_TISSUE, 1, EntityHandler.getDinosaurId(dinosaur));
+            ItemStack output = new ItemStack(ItemHandler.SOFT_TISSUE);
             output.setTagCompound(tag);
+            output.getOrCreateSubCompound("jurassicraft").setString("dinosaur", dinosaur.getRegistryName().toString());
             list.add(Pair.of(dinoSingle, output));
         }
         list.add(Pair.of(single, new ItemStack(Items.DYE, 1, 15)));

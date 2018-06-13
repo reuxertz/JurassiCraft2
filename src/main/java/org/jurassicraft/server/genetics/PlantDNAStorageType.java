@@ -11,7 +11,7 @@ public class PlantDNAStorageType implements StorageType {
 
     @Override
     public ItemStack createItem() {
-        ItemStack output = new ItemStack(ItemHandler.PLANT_DNA, 1, this.getMetadata());
+        ItemStack output = new ItemStack(ItemHandler.PLANT_DNA, 1, 0);//TODO
         NBTTagCompound compound = new NBTTagCompound();
         this.dna.writeToNBT(compound);
         output.setTagCompound(compound);
@@ -33,8 +33,4 @@ public class PlantDNAStorageType implements StorageType {
         this.dna.addInformation(stack, tooltip);
     }
 
-    @Override
-    public int getMetadata() {
-        return this.dna.getMetadata();
-    }
 }

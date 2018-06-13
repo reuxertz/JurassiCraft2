@@ -23,6 +23,7 @@ import org.jurassicraft.server.block.tree.AncientDoorBlock;
 import org.jurassicraft.server.container.*;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.entity.JurassicraftRegisteries;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.plant.Plant;
 import org.jurassicraft.server.plant.PlantHandler;
@@ -162,7 +163,7 @@ public class JurassiCraftJEIPlugin implements IModPlugin {
         registry.addRecipes(getDinos(EmbryoInput.DinosaurInput::new), EMBRYOMIC_MACHINE);
         registry.addRecipes(getPlants(EmbryoInput.PlantInput::new), EMBRYOMIC_MACHINE);
 
-        for (Dinosaur dinosaur : EntityHandler.getRegisteredDinosaurs()) {
+        for (Dinosaur dinosaur : JurassicraftRegisteries.DINOSAUR_REGISTRY.getValuesCollection()) {
             registry.addRecipes(Lists.newArrayList(new SkeletonInput(dinosaur, false), new SkeletonInput(dinosaur, true)), SKELETON_ASSEMBLY);
         }
 
@@ -174,7 +175,7 @@ public class JurassiCraftJEIPlugin implements IModPlugin {
     }
 
     private <T> List<T> getDinos(Function<Dinosaur,T> func, Predicate<Dinosaur> filter) {
-        return EntityHandler.getRegisteredDinosaurs().stream().filter(filter).map(func).collect(Collectors.toList());
+        return JurassicraftRegisteries.DINOSAUR_REGISTRY.getValuesCollection().stream().filter(filter).map(func).collect(Collectors.toList());
     }
 
     private <T> List<T> getPlants(Function<Plant,T> func) {

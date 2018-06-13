@@ -14,10 +14,7 @@ import org.jurassicraft.server.util.LangHelper;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class DNAContainerItem extends Item {
-    public int getContainerId(ItemStack stack) {
-        return 0;
-    }
+public class DNAContainerItem extends Item implements DinosaurProvider {
 
     public int getDNAQuality(EntityPlayer player, ItemStack stack) {
         int quality = player.capabilities.isCreativeMode ? 100 : 0;

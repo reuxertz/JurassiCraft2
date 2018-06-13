@@ -24,7 +24,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class DinosaurMeatItem extends ItemFood {
+public class DinosaurMeatItem extends ItemFood implements DinosaurProvider{
     public DinosaurMeatItem() {
         super(3, 0.3F, true);
         this.setHasSubtypes(true);
@@ -45,21 +45,11 @@ public class DinosaurMeatItem extends ItemFood {
         }
     }
 
-    public Dinosaur getDinosaur(ItemStack stack) {
-        return EntityHandler.getDinosaurById(stack.getItemDamage());
-    }
-
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subtypes) {
-        List<Dinosaur> dinosaurs = new LinkedList<>(EntityHandler.getDinosaurs().values());
-
-        Collections.sort(dinosaurs);
-        if(this.isInCreativeTab(tab))
-        for (Dinosaur dinosaur : dinosaurs) {
-            if (dinosaur.shouldRegister()) {
-                subtypes.add(new ItemStack(this, 1, EntityHandler.getDinosaurId(dinosaur)));
-            }
+        if(this.isInCreativeTab(tab)) {
+            subtypes.addAll(this.getAllStacksOrdered());
         }
     }
 

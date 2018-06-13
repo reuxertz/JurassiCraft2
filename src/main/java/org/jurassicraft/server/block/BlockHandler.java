@@ -19,6 +19,7 @@ import org.jurassicraft.server.block.plant.*;
 import org.jurassicraft.server.block.tree.*;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.entity.JurassicraftRegisteries;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.util.RegistryHandler;
 
@@ -40,8 +41,8 @@ public class BlockHandler
 
     public static final Map<TreeType, AncientLogBlock> PETRIFIED_LOGS = new HashMap<>();
 
-    public static final List<FossilBlock> FOSSILS = new ArrayList<>();
-    public static final List<EncasedFossilBlock> ENCASED_FOSSILS = new ArrayList<>();
+    public static final FossilBlock FOSSIL = new FossilBlock();
+    public static final EncasedFossilBlock ENCASED_FOSSIL = new EncasedFossilBlock();
 
     public static final PlantFossilBlock PLANT_FOSSIL = new PlantFossilBlock();
 
@@ -157,17 +158,6 @@ public class BlockHandler
         registerBlock(NEST_FOSSIL, "Nest Fossil");
         registerBlock(ENCASED_NEST_FOSSIL, "Encased Nest Fossil");
 
-        for (int i = 0; i < (int) Math.ceil(EntityHandler.getHighestID() / 16.0F); i++)
-        {
-            FossilBlock fossil = new FossilBlock(i * 16);
-            EncasedFossilBlock encasedFossil = new EncasedFossilBlock(i * 16);
-
-            FOSSILS.add(fossil);
-            ENCASED_FOSSILS.add(encasedFossil);
-
-            registerBlock(fossil, "Fossil Block " + i);
-            registerBlock(encasedFossil, "Encased Fossil " + i);
-        }
 
         for (TreeType type : TreeType.values())
         {
@@ -341,55 +331,8 @@ public class BlockHandler
             OreDictionary.registerOre("fenceGateWood", ANCIENT_FENCE_GATES.get(TreeType.values()[i]));
             OreDictionary.registerOre("doorWood", ANCIENT_DOORS.get(TreeType.values()[i]));
         }
-        for(FossilBlock fossil : FOSSILS)
-        {
-            OreDictionary.registerOre("fossil", fossil);
-        }
-    }
+        OreDictionary.registerOre("fossil", FOSSIL);
 
-    public static FossilBlock getFossilBlock(Dinosaur dinosaur)
-    {
-        return getFossilBlock(EntityHandler.getDinosaurId(dinosaur));
-    }
-
-    private static int getBlockId(int id)
-    {
-        return (int) (Math.floor((((float) id + 1.0F) / 16.0F) - 0.0625F));
-    }
-
-    public static EncasedFossilBlock getEncasedFossil(Dinosaur dinosaur)
-    {
-        return getEncasedFossil(EntityHandler.getDinosaurId(dinosaur));
-    }
-
-    public static EncasedFossilBlock getEncasedFossil(int id)
-    {
-        return ENCASED_FOSSILS.get(getBlockId(id));
-    }
-
-    public static FossilBlock getFossilBlock(int id)
-    {
-        return FOSSILS.get(getBlockId(id));
-    }
-
-    public static int getDinosaurId(FossilBlock fossil, int metadata)
-    {
-        return (FOSSILS.indexOf(fossil) * 16) + metadata;
-    }
-
-    public static int getDinosaurId(EncasedFossilBlock fossil, int metadata)
-    {
-        return (ENCASED_FOSSILS.indexOf(fossil) * 16) + metadata;
-    }
-
-    public static int getMetadata(int id)
-    {
-        return id % 16;
-    }
-
-    public static int getMetadata(Dinosaur dinosaur)
-    {
-        return getMetadata(EntityHandler.getDinosaurId(dinosaur));
     }
 
     public static void registerBlock(Class<? extends TileEntity> tileEntity, Block block, String name)

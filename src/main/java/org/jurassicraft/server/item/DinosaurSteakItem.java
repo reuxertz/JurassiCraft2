@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class DinosaurSteakItem extends ItemFood {
+public class DinosaurSteakItem extends ItemFood implements DinosaurProvider {
     public DinosaurSteakItem() {
         super(8, 0.8F, true);
 
@@ -42,21 +42,11 @@ public class DinosaurSteakItem extends ItemFood {
         }
     }
 
-    public Dinosaur getDinosaur(ItemStack stack) {
-        return EntityHandler.getDinosaurById(stack.getItemDamage());
-    }
-
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subtypes) {
-        List<Dinosaur> dinosaurs = new LinkedList<>(EntityHandler.getDinosaurs().values());
-
-        Collections.sort(dinosaurs);
-        if(this.isInCreativeTab(tab))
-        for (Dinosaur dinosaur : dinosaurs) {
-            if (dinosaur.shouldRegister()) {
-                subtypes.add(new ItemStack(this, 1, EntityHandler.getDinosaurId(dinosaur)));
-            }
+        if(this.isInCreativeTab(tab)) {
+            subtypes.addAll(this.getAllStacksOrdered());
         }
     }
 }

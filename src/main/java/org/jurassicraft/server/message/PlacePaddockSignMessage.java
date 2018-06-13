@@ -11,14 +11,16 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.entity.JurassicraftRegisteries;
 import org.jurassicraft.server.entity.item.PaddockSignEntity;
 import org.jurassicraft.server.item.ItemHandler;
 
 public class PlacePaddockSignMessage extends AbstractMessage<PlacePaddockSignMessage> {
-    private int dino;
+    private Dinosaur dino;
     private BlockPos pos;
     private int x;
     private int y;
@@ -30,7 +32,7 @@ public class PlacePaddockSignMessage extends AbstractMessage<PlacePaddockSignMes
     }
 
     public PlacePaddockSignMessage(EnumHand hand, EnumFacing facing, BlockPos pos, Dinosaur dino) {
-        this.dino = EntityHandler.getDinosaurId(dino);
+        this.dino = dino;
         this.pos = new BlockPos(this.x, this.y, this.z);
         this.x = pos.getX();
         this.y = pos.getY();
@@ -71,7 +73,7 @@ public class PlacePaddockSignMessage extends AbstractMessage<PlacePaddockSignMes
         buffer.writeInt(this.x);
         buffer.writeInt(this.y);
         buffer.writeInt(this.z);
-        buffer.writeInt(this.dino);
+        ByteBufUtils.writeRegistryEntry(buffer, this.dino);
         buffer.writeByte((byte) this.facing.getIndex());
         buffer.writeByte((byte) this.hand.ordinal());
     }
@@ -81,7 +83,7 @@ public class PlacePaddockSignMessage extends AbstractMessage<PlacePaddockSignMes
         this.x = buffer.readInt();
         this.y = buffer.readInt();
         this.z = buffer.readInt();
-        this.dino = buffer.readInt();
+        this.dino = ByteBufUtils.readRegistryEntry(buffer, JurassicraftRegisteries.DINOSAUR_REGISTRY);
         this.facing = EnumFacing.getFront(buffer.readByte());
         this.hand = EnumHand.values()[buffer.readByte()];
         this.pos = new BlockPos(this.x, this.y, this.z);

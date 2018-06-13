@@ -10,14 +10,12 @@ import java.util.Map;
 import javax.vecmathimpl.Matrix4d;
 import javax.vecmathimpl.Vector3d;
 
+import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.model.animation.PoseHandler;
 import org.jurassicraft.server.api.GrowthStageGenderContainer;
 import org.jurassicraft.server.api.Hybrid;
-import org.jurassicraft.server.entity.Diet;
-import org.jurassicraft.server.entity.DinosaurEntity;
-import org.jurassicraft.server.entity.GrowthStage;
-import org.jurassicraft.server.entity.SleepTime;
+import org.jurassicraft.server.entity.*;
 import org.jurassicraft.server.entity.ai.util.MovementType;
 import org.jurassicraft.server.period.TimePeriod;
 import org.jurassicraft.server.tabula.TabulaModelHelper;
@@ -28,7 +26,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 
-public abstract class Dinosaur implements Comparable<Dinosaur> {
+public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comparable<Dinosaur> {
+
+    public static final Dinosaur MISSING = EntityHandler.VELOCIRAPTOR;
+
     private final Map<GrowthStage, List<ResourceLocation>> overlays = new HashMap<>();
     private final Map<GrowthStage, ResourceLocation> maleTextures = new HashMap<>();
     private final Map<GrowthStage, ResourceLocation> femaleTextures = new HashMap<>();
@@ -47,7 +48,6 @@ public abstract class Dinosaur implements Comparable<Dinosaur> {
     private float babySizeY, adultSizeY;
     private float babyEyeHeight, adultEyeHeight;
     private double attackSpeed = 1.0;
-    private boolean shouldRegister = true;
     private boolean isMarineAnimal;
     private boolean isMammal;
     private int storage;
@@ -168,8 +168,12 @@ public abstract class Dinosaur implements Comparable<Dinosaur> {
         return x < 0 ? x > -0.0001 ? 0 : x : x < 0.0001 ? 0 : x;
     }
 
-    public void init() {
-        String formattedName = this.getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
+    public final void init() { //TODO: move away from init //TODO: dont do that
+
+        EntityHandler.registerEntity(this.getDinosaurClass(), this.getName());
+
+        String formattedName = this.getRegistryName().getResourcePath();
+        String domain = this.getRegistryName().getResourceDomain();
 
         for (GrowthStage stage : GrowthStage.VALUES) {
             if (this.doesSupportGrowthStage(stage)) {
@@ -191,25 +195,25 @@ public abstract class Dinosaur implements Comparable<Dinosaur> {
             if (this instanceof Hybrid) {
                 String baseName = baseTextures + formattedName + "_" + growthStageName;
 
-                ResourceLocation hybridTexture = new ResourceLocation(JurassiCraft.MODID, baseName + ".png");
+                ResourceLocation hybridTexture = new ResourceLocation(domain, baseName + ".png");
 
                 this.maleTextures.put(growthStage, hybridTexture);
                 this.femaleTextures.put(growthStage, hybridTexture);
 
-                ResourceLocation eyelidTexture = new ResourceLocation(JurassiCraft.MODID, baseName + "_eyelid.png");
+                ResourceLocation eyelidTexture = new ResourceLocation(domain, baseName + "_eyelid.png");
                 this.eyelidTextures.put(new GrowthStageGenderContainer(growthStage, false), eyelidTexture);
                 this.eyelidTextures.put(new GrowthStageGenderContainer(growthStage, true), eyelidTexture);
             } else {
-                this.maleTextures.put(growthStage, new ResourceLocation(JurassiCraft.MODID, baseTextures + formattedName + "_male_" + growthStageName + ".png"));
-                this.femaleTextures.put(growthStage, new ResourceLocation(JurassiCraft.MODID, baseTextures + formattedName + "_female_" + growthStageName + ".png"));
-                this.eyelidTextures.put(new GrowthStageGenderContainer(growthStage, true), new ResourceLocation(JurassiCraft.MODID, baseTextures + formattedName + "_male_" + growthStageName + "_eyelid.png"));
-                this.eyelidTextures.put(new GrowthStageGenderContainer(growthStage, false), new ResourceLocation(JurassiCraft.MODID, baseTextures + formattedName + "_female_" + growthStageName + "_eyelid.png"));
+                this.maleTextures.put(growthStage, new ResourceLocation(domain, baseTextures + formattedName + "_male_" + growthStageName + ".png"));
+                this.femaleTextures.put(growthStage, new ResourceLocation(domain, baseTextures + formattedName + "_female_" + growthStageName + ".png"));
+                this.eyelidTextures.put(new GrowthStageGenderContainer(growthStage, true), new ResourceLocation(domain, baseTextures + formattedName + "_male_" + growthStageName + "_eyelid.png"));
+                this.eyelidTextures.put(new GrowthStageGenderContainer(growthStage, false), new ResourceLocation(domain, baseTextures + formattedName + "_female_" + growthStageName + "_eyelid.png"));
             }
 
             List<ResourceLocation> overlaysForGrowthStage = new ArrayList<>();
 
             for (int i = 1; i <= this.getOverlayCount(); i++) {
-                overlaysForGrowthStage.add(new ResourceLocation(JurassiCraft.MODID, baseTextures + formattedName + "_overlay_" + growthStageName + "_" + i + ".png"));
+                overlaysForGrowthStage.add(new ResourceLocation(domain, baseTextures + formattedName + "_overlay_" + growthStageName + "_" + i + ".png"));
             }
 
             this.overlays.put(growthStage, overlaysForGrowthStage);
@@ -295,10 +299,6 @@ public abstract class Dinosaur implements Comparable<Dinosaur> {
         this.randomFlock = randomFlock;
     }
 
-    public void disableRegistry() {
-        this.shouldRegister = false;
-    }
-    
     public MovementType getMovementType() {
         return movementType;
     }
@@ -311,8 +311,9 @@ public abstract class Dinosaur implements Comparable<Dinosaur> {
         return this.name;
     }
 
-    public void setName(String name) {
+    public Dinosaur setName(String name) {
         this.name = name;
+        return this;
     }
 
     public void setBreeding(boolean directBirth, int minClutch, int maxClutch, int breedCooldown, boolean breedAroundOffspring, boolean defendOffspring) {
@@ -428,9 +429,6 @@ public abstract class Dinosaur implements Comparable<Dinosaur> {
         this.attackSpeed = attackSpeed;
     }
 
-    public boolean shouldRegister() {
-        return this.shouldRegister;
-    }
 
     protected String getDinosaurTexture(String subtype) {
         String dinosaurName = this.getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
@@ -786,6 +784,14 @@ public abstract class Dinosaur implements Comparable<Dinosaur> {
     }
 
     public void applyMeatEffect(EntityPlayer player, boolean cooked) {
+    }
+
+    public final boolean isMissing() {
+        return this == MISSING;
+    }
+
+    public final String phraseRegistryName() {
+        return this.getRegistryName().toString().replace(':', '.');
     }
 
     public enum DinosaurType {

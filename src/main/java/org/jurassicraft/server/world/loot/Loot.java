@@ -24,8 +24,11 @@ import net.minecraft.world.storage.loot.functions.SetNBT;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.entity.JurassicraftRegisteries;
 import org.jurassicraft.server.genetics.DinoDNA;
 import org.jurassicraft.server.genetics.GeneticsHelper;
+import org.jurassicraft.server.item.DinosaurProvider;
+import org.jurassicraft.server.item.FossilItem;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.plant.Plant;
 import org.jurassicraft.server.plant.PlantHandler;
@@ -90,7 +93,7 @@ public class Loot {
             LootEntry plantFossil = Loot.entry(ItemHandler.PLANT_FOSSIL).weight(5).count(1, 3).build();
             LootEntry twig = Loot.entry(ItemHandler.TWIG_FOSSIL).weight(5).count(1, 3).build();
             LootEntry amber = Loot.entry(ItemHandler.AMBER).weight(2).count(0, 1).data(0, 1).build();
-            LootEntry skull = Loot.entry(ItemHandler.FOSSILS.get("skull")).weight(2).function(DINOSAUR_DATA).count(1, 2).build();
+            LootEntry skull = Loot.entry(ItemHandler.FOSSIL).weight(2).function(new FossilVarient("skull")).function(DINOSAUR_DATA).count(1, 2).build();///////////////////
 
             table.addPool(Loot.pool("fossils").rolls(1, 2).entries(plantFossil, twig, amber, skull).build());
 
@@ -108,7 +111,7 @@ public class Loot {
             table.addPool(Loot.pool("items").rolls(3, 4).entries(dna, softTissue, plantSoftTissue, amber).build());
         } else if (name == Loot.VISITOR_DINING_HALL) {
             LootEntry amber = Loot.entry(ItemHandler.AMBER).weight(2).count(0, 1).data(0, 1).build();
-            LootEntry tooth = Loot.entry(ItemHandler.FOSSILS.get("tooth")).weight(2).function(DINOSAUR_DATA).count(1, 2).build();
+            LootEntry tooth = Loot.entry(ItemHandler.FOSSIL).function(new FossilVarient("tooth")).weight(2).function(DINOSAUR_DATA).count(1, 2).build();
             LootEntry actionFigure = Loot.entry(ItemHandler.DISPLAY_BLOCK).function(DINOSAUR_DATA).weight(1).build();
             table.addPool(Loot.pool("items").rolls(8, 11).entries(amber, tooth, actionFigure).build());
         }
@@ -240,6 +243,21 @@ public class Loot {
         }
     }
 
+    public static class FossilVarient extends LootFunction {
+
+        private final String varient;
+
+        public FossilVarient(String varient) {
+            super(new LootCondition[0]);
+            this.varient = varient;
+        }
+
+        @Override
+        public ItemStack apply(ItemStack stack, Random rand, LootContext context) {
+            return stack.getItem() instanceof FossilItem ? ((FossilItem)stack.getItem()).createNewStack(new FossilItem.FossilInfomation(Dinosaur.MISSING, varient)) : stack;
+        }
+    }
+
     public static class DinosaurData extends LootFunction {
         public DinosaurData() {
             super(new LootCondition[0]);
@@ -251,10 +269,10 @@ public class Loot {
 
         @Override
         public ItemStack apply(ItemStack stack, Random rand, LootContext context) {
-            List<Dinosaur> dinosaurs = EntityHandler.getRegisteredDinosaurs();
+            List<Dinosaur> dinosaurs = JurassicraftRegisteries.DINOSAUR_REGISTRY.getValues();
             Dinosaur dinosaur = dinosaurs.get(rand.nextInt(dinosaurs.size()));
-            stack.setItemDamage(EntityHandler.getDinosaurId(dinosaur));
-            return stack;
+            DinosaurProvider provider = DinosaurProvider.getFromStack(stack);
+            return !provider.isMissing() ? provider.getItemStack(dinosaur) : stack;
         }
     }
 
@@ -298,7 +316,7 @@ public class Loot {
             if (this.full) {
                 quality = 100;
             }
-            DinoDNA dna = new DinoDNA(EntityHandler.getDinosaurById(stack.getItemDamage()), quality, GeneticsHelper.randomGenetics(rand));
+            DinoDNA dna = new DinoDNA(DinosaurProvider.getFromStack(stack).getDinosaur(stack), quality, GeneticsHelper.randomGenetics(rand));
             NBTTagCompound compound = new NBTTagCompound();
             dna.writeToNBT(compound);
             stack.setTagCompound(compound);

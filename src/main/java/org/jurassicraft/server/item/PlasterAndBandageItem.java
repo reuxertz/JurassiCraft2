@@ -5,6 +5,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -14,6 +15,7 @@ import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.EncasedFossilBlock;
 import org.jurassicraft.server.block.FossilBlock;
 import org.jurassicraft.server.block.NestFossilBlock;
+import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.tab.TabHandler;
 
 public class PlasterAndBandageItem extends Item {
@@ -33,9 +35,13 @@ public class PlasterAndBandageItem extends Item {
 
             if (block instanceof FossilBlock) {
                 if (!world.isRemote) {
-                    int id = BlockHandler.getDinosaurId((FossilBlock) block, block.getMetaFromState(state));
+                    Dinosaur dinosaur = ((FossilBlock)block).getDinosaur(world, pos);
+                    world.setBlockState(pos, BlockHandler.ENCASED_FOSSIL.getDefaultState());
 
-                    world.setBlockState(pos, BlockHandler.getEncasedFossil(id).getDefaultState().withProperty(EncasedFossilBlock.VARIANT, BlockHandler.getMetadata(id)));
+                    TileEntity tileEntity = world.getTileEntity(pos);
+                    if(tileEntity instanceof FossilBlock.FossilBlockEntity) {
+                        ((FossilBlock.FossilBlockEntity)tileEntity).setDinosaur(dinosaur);
+                    }
 
                     if (!player.capabilities.isCreativeMode) {
                         stack.shrink(1);

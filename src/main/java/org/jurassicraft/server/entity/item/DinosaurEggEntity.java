@@ -9,11 +9,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.entity.JurassicraftRegisteries;
 import org.jurassicraft.server.item.ItemHandler;
 
 import java.util.Optional;
@@ -89,7 +92,7 @@ public class DinosaurEggEntity extends Entity implements IEntityAdditionalSpawnD
     @Override
     public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
         if (this.entity != null && !this.world.isRemote) {
-            ItemStack eggStack = new ItemStack(ItemHandler.EGG, 1, EntityHandler.getDinosaurId(this.entity.getDinosaur()));
+            ItemStack eggStack = ItemHandler.EGG.getItemStack(this.entity.getDinosaur());
             NBTTagCompound nbt = new NBTTagCompound();
             nbt.setInteger("DNAQuality", this.entity.getDNAQuality());
             nbt.setString("Genetics", this.entity.getGenetics());
@@ -136,7 +139,7 @@ public class DinosaurEggEntity extends Entity implements IEntityAdditionalSpawnD
         NBTTagCompound entityTag = compound.getCompoundTag("Hatchling");
         this.entity = (DinosaurEntity) EntityList.createEntityFromNBT(entityTag, this.world);
         this.parent = compound.getUniqueId("Parent");
-        this.dinosaur = EntityHandler.getDinosaurById(compound.getInteger("DinosaurID"));
+        this.dinosaur = JurassicraftRegisteries.DINOSAUR_REGISTRY.getValue(new ResourceLocation(compound.getString("Dinosaur")));
     }
 
     @Override
@@ -146,17 +149,17 @@ public class DinosaurEggEntity extends Entity implements IEntityAdditionalSpawnD
             compound.setTag("Hatchling", this.entity.serializeNBT());
         }
         compound.setUniqueId("Parent", this.parent);
-        compound.setInteger("DinosaurID", EntityHandler.getDinosaurId(dinosaur));
+        compound.setString("Dinosaur", this.dinosaur.getRegistryName().toString());
     }
 
     @Override
     public void writeSpawnData(ByteBuf buffer) {
-        buffer.writeInt(EntityHandler.getDinosaurId(this.entity != null ? this.entity.getDinosaur() : EntityHandler.getDinosaurById(0)));
+        ByteBufUtils.writeRegistryEntry(buffer, this.dinosaur);
     }
 
     @Override
     public void readSpawnData(ByteBuf additionalData) {
-        this.dinosaur = EntityHandler.getDinosaurById(additionalData.readInt());
+        this.dinosaur = ByteBufUtils.readRegistryEntry(additionalData, JurassicraftRegisteries.DINOSAUR_REGISTRY);
     }
 
     @Nullable

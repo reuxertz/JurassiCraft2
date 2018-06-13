@@ -1,67 +1,42 @@
 package org.jurassicraft.server.item;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
-
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.world.World;
-import org.apache.commons.lang3.tuple.Pair;
-import org.jurassicraft.server.api.GrindableItem;
-import org.jurassicraft.server.api.Hybrid;
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.EntityHandler;
-import org.jurassicraft.server.plant.PlantHandler;
-import org.jurassicraft.server.tab.TabHandler;
-import org.jurassicraft.server.util.LangHelper;
-
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.IForgeRegistryEntry;
+import org.apache.commons.lang3.tuple.Pair;
+import org.jurassicraft.server.api.GrindableItem;
+import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.entity.JurassicraftRegisteries;
+import org.jurassicraft.server.tab.TabHandler;
+import org.jurassicraft.server.util.LangHelper;
 
-public class FossilItem extends Item implements GrindableItem {
-    public static Map<String, List<Dinosaur>> fossilDinosaurs = new HashMap<>();
-    private String type;
-    private boolean fresh;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Random;
+import java.util.stream.Collectors;
 
-    public FossilItem(String type, boolean fresh) {
-        this.type = type.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
+public class FossilItem extends Item implements GrindableItem, DinosaurProvider {
+
+    private final boolean fresh;
+
+    public FossilItem(boolean fresh) {
         this.fresh = fresh;
-
         this.setHasSubtypes(true);
-
         this.setCreativeTab(TabHandler.FOSSILS);
-    }
-
-    public static void init() {
-        for (Dinosaur dinosaur : EntityHandler.getDinosaurs().values()) {
-            String[] boneTypes = dinosaur.getBones();
-
-            for (String boneType : boneTypes) {
-                List<Dinosaur> dinosaursWithType = fossilDinosaurs.get(boneType);
-
-                if (dinosaursWithType == null) {
-                    dinosaursWithType = new ArrayList<>();
-                }
-
-                dinosaursWithType.add(dinosaur);
-
-                fossilDinosaurs.put(boneType, dinosaursWithType);
-            }
-        }
     }
 
     @Override
@@ -69,29 +44,27 @@ public class FossilItem extends Item implements GrindableItem {
         Dinosaur dinosaur = this.getDinosaur(stack);
 
         if (dinosaur != null) {
-            return new LangHelper(this.getUnlocalizedName() + ".name").withProperty("dino", "entity.jurassicraft." + dinosaur.getName().replace(" ", "_").toLowerCase(Locale.ENGLISH) + ".name").build();
+            return new LangHelper("item." + this.getVarient(stack) + ".name").withProperty("dino", "entity.jurassicraft." + dinosaur.getName().replace(" ", "_").toLowerCase(Locale.ENGLISH) + ".name").build();
         }
 
         return super.getItemStackDisplayName(stack);
     }
 
+    @Override
     public Dinosaur getDinosaur(ItemStack stack) {
-        return EntityHandler.getDinosaurById(stack.getItemDamage());
+        return getFossilInfomation(stack).getDinosaur();
+    }
+
+    @Override
+    public ItemStack getItemStack(Dinosaur dinosaur) {
+        return createNewStack(new FossilInfomation(dinosaur, dinosaur.getBones()[0]));
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subtypes) {
-        List<Dinosaur> dinosaurs = new ArrayList<>(EntityHandler.getRegisteredDinosaurs());
-
-        Collections.sort(dinosaurs);
-
-        List<Dinosaur> dinosaursForType = fossilDinosaurs.get(this.type);
-        if(this.isInCreativeTab(tab))
-        for (Dinosaur dinosaur : dinosaurs) {
-            if (dinosaursForType.contains(dinosaur) && !(!this.fresh && dinosaur instanceof Hybrid)) {
-                subtypes.add(new ItemStack(this, 1, EntityHandler.getDinosaurId(dinosaur)));
-            }
+        if(this.isInCreativeTab(tab)) {
+            FossilInfomation.getAllInfomation().stream().map(this::createNewStack).forEach(subtypes::add);
         }
     }
 
@@ -120,16 +93,31 @@ public class FossilItem extends Item implements GrindableItem {
     }
 
     @Override
+    public Map<String, ResourceLocation> getModelResourceLocations(Dinosaur dinosaur) {
+        Map<String, ResourceLocation> map = Maps.newHashMap();
+        ResourceLocation dinoreg = dinosaur.getRegistryName();
+        for(String bone : dinosaur.getBones()) {
+            map.put(bone, new ResourceLocation(dinoreg.getResourceDomain(), "item/" + (fresh ? "fresh_" : "") + "bones/" + dinoreg.getResourcePath()+ "/" + bone));
+        }
+        return map;
+    }
+
+    @Override
+    public String getVarient(ItemStack stack) {
+        return getFossilInfomation(stack).getType();
+    }
+
+    @Override
     public boolean isGrindable(ItemStack stack) {
         return true;
     }
     
     public boolean isFresh() {
-        return this.fresh;
+        return fresh;
     }
     
-    public String getBoneType(){
-        return type;
+    public String getBoneType(ItemStack stack){
+        return getFossilInfomation(stack).getType();
     }
     
     @Override
@@ -138,7 +126,7 @@ public class FossilItem extends Item implements GrindableItem {
 
         int outputType = random.nextInt(6);
 
-        if (outputType == 5 || this.fresh) {
+        if (outputType == 5 || this.isFresh()) {
             ItemStack output = new ItemStack(ItemHandler.SOFT_TISSUE, 1, stack.getItemDamage());
             output.setTagCompound(tag);
             return output;
@@ -151,9 +139,7 @@ public class FossilItem extends Item implements GrindableItem {
 
     @Override
     public List<ItemStack> getJEIRecipeTypes() {
-        List<ItemStack> list = Lists.newArrayList();
-        fossilDinosaurs.get(this.type).forEach(dino -> list.add(new ItemStack(this, 1, EntityHandler.getDinosaurId(dino))));
-        return list;
+        return FossilInfomation.getAllInfomation().stream().map(this::createNewStack).collect(Collectors.toList());
     }
 
     @Override
@@ -162,9 +148,52 @@ public class FossilItem extends Item implements GrindableItem {
         NBTTagCompound tag = inputItem.getTagCompound();
         ItemStack output = new ItemStack(ItemHandler.SOFT_TISSUE, 1, inputItem.getItemDamage());
         output.setTagCompound(tag);
-        if(this.fresh) {
+        if(this.isFresh()) {
             return Lists.newArrayList(Pair.of(100F, output));
         }
         return Lists.newArrayList(Pair.of(single, output), Pair.of(50f, new ItemStack(Items.DYE, 1, 15)), Pair.of(single*2f, new ItemStack(Items.FLINT)));
+    }
+
+    public static FossilInfomation getFossilInfomation(ItemStack stack) {
+        NBTTagCompound nbt = stack.getOrCreateSubCompound("jurassicraft").getCompoundTag("Fossil Info");
+        return new FossilInfomation(JurassicraftRegisteries.DINOSAUR_REGISTRY.getValue(new ResourceLocation(nbt.getString("Dinosaur"))), nbt.getString("Bone Type"));
+    }
+
+    public static ItemStack putFossilInfomation(ItemStack stack, FossilInfomation infomation) {
+        NBTTagCompound compound = stack.getOrCreateSubCompound("jurassicraft");
+        NBTTagCompound nbt = compound.getCompoundTag("Fossil Info");
+        nbt.setString("Dinosaur", infomation.getDinosaur().getRegistryName().toString());
+        nbt.setString("Bone Type", infomation.getType());
+        compound.setTag("Fossil Info", nbt);
+        return stack;
+    }
+
+    public ItemStack createNewStack(FossilInfomation fossilInfomation) {
+        return putFossilInfomation(new ItemStack(this), fossilInfomation);
+    }
+
+    public static class FossilInfomation {
+
+        public static List<FossilInfomation> getAllInfomation() {
+            List<FossilInfomation> list = Lists.newArrayList();
+            JurassicraftRegisteries.DINOSAUR_REGISTRY.forEach(dino -> Lists.newArrayList(dino.getBones()).forEach(bone -> list.add(new FossilInfomation(dino, bone))));
+            return list;
+        }
+
+        private final Dinosaur dinosaur;
+        private final String type;
+
+        public FossilInfomation(Dinosaur dinosaur, String string) {
+            this.dinosaur = dinosaur;
+            this.type = string;
+        }
+
+        public Dinosaur getDinosaur() {
+            return dinosaur;
+        }
+
+        public String getType() {
+            return type;
+        }
     }
 }

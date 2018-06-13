@@ -39,7 +39,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class DinosaurSpawnEggItem extends Item {
+public class DinosaurSpawnEggItem extends Item implements DinosaurProvider {
     public DinosaurSpawnEggItem() {
         super();
         this.setHasSubtypes(true);
@@ -49,6 +49,11 @@ public class DinosaurSpawnEggItem extends Item {
     @Override
     public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target, EnumHand hand) {
         return true;
+    }
+
+    @Override
+    public boolean shouldOverrideModel(Dinosaur dinosaur) {
+        return false;
     }
 
     public DinosaurEntity spawnDinosaur(World world, EntityPlayer player, ItemStack stack, double x, double y, double z) {
@@ -108,27 +113,11 @@ public class DinosaurSpawnEggItem extends Item {
         return new LangHelper("item.dino_spawn_egg.name").withProperty("dino", "entity.jurassicraft." + dinosaur.getName().replace(" ", "_").toLowerCase(Locale.ENGLISH) + ".name").build();
     }
 
-    public Dinosaur getDinosaur(ItemStack stack) {
-        Dinosaur dinosaur = EntityHandler.getDinosaurById(stack.getItemDamage());
-
-        if (dinosaur == null) {
-            dinosaur = EntityHandler.VELOCIRAPTOR;
-        }
-
-        return dinosaur;
-    }
-
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subtypes) {
-        List<Dinosaur> dinosaurs = new LinkedList<>(EntityHandler.getDinosaurs().values());
-
-        Collections.sort(dinosaurs);
-        if(this.isInCreativeTab(tab))
-        for (Dinosaur dinosaur : dinosaurs) {
-            if (dinosaur.shouldRegister()) {
-                subtypes.add(new ItemStack(this, 1, EntityHandler.getDinosaurId(dinosaur)));
-            }
+        if(this.isInCreativeTab(tab)) {
+            subtypes.addAll(this.getAllStacksOrdered());
         }
     }
 

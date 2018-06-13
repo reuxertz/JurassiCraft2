@@ -86,8 +86,6 @@ public class ServerProxy implements IGuiHandler {
         EntityHandler.init();
         DinosaurSerializers.register();
 
-        FossilItem.init();
-
         PlantHandler.init();
         BlockHandler.init();
         ItemHandler.init();

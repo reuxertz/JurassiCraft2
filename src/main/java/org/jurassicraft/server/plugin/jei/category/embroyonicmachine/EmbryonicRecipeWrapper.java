@@ -21,17 +21,16 @@ public class EmbryonicRecipeWrapper implements IRecipeWrapper {
     public void getIngredients(IIngredients ingredients) {
         List<ItemStack> inputs = new ArrayList<>();
 
-        int metadata = this.input.getMetadata();
         NBTTagCompound tag = this.input.getTag();
 
-        ItemStack inputStack = new ItemStack(this.input.getInputItem(), 1, metadata);
+        ItemStack inputStack = this.input.getInputItemStack();
         inputStack.setTagCompound(tag);
 
         inputs.add(inputStack);
         inputs.add(new ItemStack(this.input.getPetriDishItem()));
         ingredients.setInputs(ItemStack.class, inputs);
 
-        ItemStack outputStack = new ItemStack(this.input.getOutputItem(), 1, metadata);
+        ItemStack outputStack = this.input.getOutputItemStack();
         outputStack.setTagCompound(tag);
         ingredients.setOutput(ItemStack.class, outputStack);
     }

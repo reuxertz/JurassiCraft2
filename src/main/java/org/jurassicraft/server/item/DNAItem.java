@@ -31,32 +31,16 @@ public class DNAItem extends DNAContainerItem {
         return new LangHelper("item.dna.name").withProperty("dino", "entity.jurassicraft." + dinoName + ".name").build();
     }
 
-    public Dinosaur getDinosaur(ItemStack stack) {
-        Dinosaur dinosaur = EntityHandler.getDinosaurById(stack.getItemDamage());
-
-        if (dinosaur == null) {
-            dinosaur = EntityHandler.VELOCIRAPTOR;
-        }
-
-        return dinosaur;
-    }
-
-    @Override
-    public int getContainerId(ItemStack stack) {
-        return EntityHandler.getDinosaurId(this.getDinosaur(stack));
-    }
+//    @Override
+//    public int getContainerId(ItemStack stack) {
+//        return EntityHandler.getDinosaurId(this.getDinosaur(stack));
+//    }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subtypes) {
-        List<Dinosaur> dinosaurs = new LinkedList<>(EntityHandler.getDinosaurs().values());
-
-        Collections.sort(dinosaurs);
-        if(this.isInCreativeTab(tab))
-        for (Dinosaur dinosaur : dinosaurs) {
-            if (dinosaur.shouldRegister()) {
-                subtypes.add(new ItemStack(this, 1, EntityHandler.getDinosaurId(dinosaur)));
-            }
+        if(this.isInCreativeTab(tab)) {
+            subtypes.addAll(this.getAllStacksOrdered());
         }
     }
 }

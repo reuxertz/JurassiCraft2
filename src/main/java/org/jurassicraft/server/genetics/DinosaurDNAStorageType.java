@@ -2,6 +2,7 @@ package org.jurassicraft.server.genetics;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.item.ItemHandler;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public class DinosaurDNAStorageType implements StorageType {
 
     @Override
     public ItemStack createItem() {
-        ItemStack output = new ItemStack(ItemHandler.DNA, 1, this.getMetadata());
+        ItemStack output = ItemHandler.DNA.getItemStack(this.dna.getDinosaur());
         NBTTagCompound compound = new NBTTagCompound();
         this.dna.writeToNBT(compound);
         output.setTagCompound(compound);
@@ -33,8 +34,4 @@ public class DinosaurDNAStorageType implements StorageType {
         this.dna.addInformation(stack, tooltip);
     }
 
-    @Override
-    public int getMetadata() {
-        return this.dna.getMetadata();
-    }
 }

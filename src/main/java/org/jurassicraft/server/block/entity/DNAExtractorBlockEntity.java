@@ -8,9 +8,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.api.Hybrid;
 import org.jurassicraft.server.container.DNAExtractorContainer;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.entity.JurassicraftRegisteries;
 import org.jurassicraft.server.genetics.DinoDNA;
 import org.jurassicraft.server.genetics.GeneticsHelper;
 import org.jurassicraft.server.genetics.PlantDNA;
@@ -20,6 +22,7 @@ import org.jurassicraft.server.plant.PlantHandler;
 
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class DNAExtractorBlockEntity extends MachineBaseBlockEntity {
     private static final int[] INPUTS = new int[]{0, 1};
@@ -58,7 +61,9 @@ public class DNAExtractorBlockEntity extends MachineBaseBlockEntity {
 
             if (item == ItemHandler.AMBER || item == ItemHandler.SEA_LAMPREY) {
                 if (input.getItemDamage() == 0) {
-                    List<Dinosaur> possibleDinos = item == ItemHandler.AMBER ? EntityHandler.getDinosaursFromAmber() : EntityHandler.getMarineCreatures();
+                    List<Dinosaur> possibleDinos = JurassicraftRegisteries.DINOSAUR_REGISTRY.getValuesCollection().stream()
+                            .filter(dino -> !(dino instanceof Hybrid) && (item != ItemHandler.AMBER) == dino.isMarineCreature())
+                            .collect(Collectors.toList());
 
                     Dinosaur dino = possibleDinos.get(rand.nextInt(possibleDinos.size()));
 

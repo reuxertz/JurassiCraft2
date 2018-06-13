@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.jurassicraft.server.entity.EntityHandler;
+import net.minecraft.item.Item;
 import org.jurassicraft.server.item.DisplayBlockItem;
 import org.jurassicraft.server.item.FossilItem;
 import org.jurassicraft.server.item.ItemHandler;
@@ -25,15 +25,14 @@ public class SkeletonAssemblyRecipeWrapper implements IRecipeWrapper {
     @Override
     public void getIngredients(IIngredients ingredients) {
         String[][] recipe = this.input.dinosaur.getRecipe();
-        Map<String, FossilItem> fossils = this.input.fresh ? ItemHandler.FRESH_FOSSILS : ItemHandler.FOSSILS;
-        int id = EntityHandler.getDinosaurId(this.input.dinosaur);
+        Item fossilItem = this.input.fresh ? ItemHandler.FRESH_FOSSIL : ItemHandler.FOSSIL;
 
         List<ItemStack> inputs = new ArrayList<>(recipe.length);
         for (String[] row : recipe) {
             for (int i = 0; i < 5; i++) {
                 String column = i < row.length ? row[i] : "";
                 if (!column.isEmpty()) {
-                    inputs.add(new ItemStack(fossils.get(column), 1, id));
+                    inputs.add(((FossilItem) fossilItem).createNewStack(new FossilItem.FossilInfomation(this.input.dinosaur, column)));
                 } else {
                     inputs.add(null);
                 }
@@ -41,8 +40,7 @@ public class SkeletonAssemblyRecipeWrapper implements IRecipeWrapper {
         }
         ingredients.setInputs(ItemStack.class, inputs);
 
-        ItemStack output = new ItemStack(ItemHandler.DISPLAY_BLOCK, 1, DisplayBlockItem.getMetadata(id, this.input.fresh ? 2 : 1, true));
-        ingredients.setOutput(ItemStack.class, output);
+        ingredients.setOutput(ItemStack.class, DisplayBlockItem.writeToStack(new ItemStack(ItemHandler.DISPLAY_BLOCK), new DisplayBlockItem.DisplayBlockProperties(this.input.dinosaur, this.input.fresh ? DisplayBlockItem.DisplayBlockProperties.Type.SKELETON_FRESH : DisplayBlockItem.DisplayBlockProperties.Type.SKELETON)));
     }
 
     @Override

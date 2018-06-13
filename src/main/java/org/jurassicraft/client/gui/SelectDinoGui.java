@@ -12,9 +12,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.entity.JurassicraftRegisteries;
 import org.jurassicraft.server.message.PlacePaddockSignMessage;
 import org.lwjgl.opengl.GL11;
 
@@ -26,7 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class SelectDinoGui extends GuiScreen {
-    private final Map<Integer, ResourceLocation> TEXTURES = new HashMap<>();
+    private final Map<ResourceLocation, ResourceLocation> TEXTURES = new HashMap<>();
     public int columnsPerPage = 5;
     public int rowsPerPage = 3;
     private int page;
@@ -56,7 +58,7 @@ public class SelectDinoGui extends GuiScreen {
 
         this.page = 0;
 
-        this.dinosaurs = new ArrayList<>(EntityHandler.getRegisteredDinosaurs());
+        this.dinosaurs = new ArrayList<>(JurassicraftRegisteries.DINOSAUR_REGISTRY.getValuesCollection());
 
         Collections.sort(this.dinosaurs);
 
@@ -154,15 +156,15 @@ public class SelectDinoGui extends GuiScreen {
 
         for (Dinosaur dinosaur : this.dinosaurs) {
             if (i >= signsPerPage * this.page && i < signsPerPage * (this.page + 1)) {
-                int id = EntityHandler.getDinosaurId(dinosaur);
+                ResourceLocation regname = dinosaur.getRegistryName();
 
                 GlStateManager.pushMatrix();
 
-                ResourceLocation texture = this.TEXTURES.get(id);
+                ResourceLocation texture = this.TEXTURES.get(regname);
 
                 if (texture == null) {
-                    texture = new ResourceLocation(JurassiCraft.MODID, "textures/paddock/" + EntityHandler.getDinosaurById(id).getName().toLowerCase(Locale.ENGLISH) + ".png");
-                    this.TEXTURES.put(id, texture);
+                    texture = new ResourceLocation(regname.getResourceDomain(), "textures/paddock/" + regname.getResourcePath() + ".png");
+                    this.TEXTURES.put(regname, texture);
                 }
 
                 this.mc.getTextureManager().bindTexture(texture);

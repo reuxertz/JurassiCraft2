@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
@@ -59,6 +58,7 @@ import org.jurassicraft.server.entity.item.DinosaurEggEntity;
 import org.jurassicraft.server.food.FoodHelper;
 import org.jurassicraft.server.food.FoodType;
 import org.jurassicraft.server.genetics.GeneticsHelper;
+import org.jurassicraft.server.item.FossilItem;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.message.SetOrderMessage;
 import org.jurassicraft.server.util.GameRuleHandler;
@@ -113,7 +113,6 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.vecmath.Vector3f;
@@ -498,12 +497,10 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         boolean burning = this.isBurning();
 
         for (int i = 0; i < count; ++i) {
-            int meta = EntityHandler.getDinosaurId(this.dinosaur);
-
             if (burning) {
-                this.entityDropItem(new ItemStack(ItemHandler.DINOSAUR_STEAK, 1, meta), 0.0F);
+                this.entityDropItem(ItemHandler.DINOSAUR_STEAK.getItemStack(this.dinosaur), 0.0F);
             } else {
-                this.dropStackWithGenetics(new ItemStack(ItemHandler.DINOSAUR_MEAT, 1, meta));
+                this.dropStackWithGenetics(ItemHandler.DINOSAUR_MEAT.getItemStack(this.dinosaur));
             }
         }
     }
@@ -597,7 +594,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
 
-        this.dinosaur = EntityHandler.getDinosaurByClass(this.getClass());
+        this.dinosaur = JurassicraftRegisteries.DINOSAUR_REGISTRY.getValuesCollection().stream().filter(dino -> dino.getDinosaurClass() == this.getClass()).findFirst().orElse(Dinosaur.MISSING);
         this.attributes = DinosaurAttributes.create(this);
 
         this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
@@ -1158,18 +1155,17 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     protected void dropFewItems(boolean playerAttack, int looting) {
         for (String bone : this.dinosaur.getBones()) {
             if (this.rand.nextInt(10) != 0) {
-                this.dropStackWithGenetics(new ItemStack(ItemHandler.FRESH_FOSSILS.get(bone), 1, EntityHandler.getDinosaurId(this.dinosaur)));
+                this.dropStackWithGenetics(ItemHandler.FRESH_FOSSIL.createNewStack(new FossilItem.FossilInfomation(this.dinosaur, bone)));
             }
         }
     }
 
     private void dropStackWithGenetics(ItemStack stack) {
-        NBTTagCompound nbt = new NBTTagCompound();
+        NBTTagCompound nbt = stack.getTagCompound();
         nbt.setInteger("DNAQuality", this.geneticsQuality);
-        nbt.setInteger("Dinosaur", EntityHandler.getDinosaurId(this.dinosaur));
+        nbt.setString("Dinosaur", this.dinosaur.getRegistryName().toString());
         nbt.setString("Genetics", this.genetics);
         stack.setTagCompound(nbt);
-
         this.entityDropItem(stack, 0.0F);
     }
 
@@ -1670,7 +1666,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
 
     @Override
     public ItemStack getPickedResult(RayTraceResult target) {
-        return new ItemStack(ItemHandler.SPAWN_EGG, 1, EntityHandler.getDinosaurId(this.dinosaur));
+        return ItemHandler.SPAWN_EGG.getItemStack(this.dinosaur);
     }
 	
     @Override

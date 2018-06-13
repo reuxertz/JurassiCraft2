@@ -4,6 +4,7 @@ import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.tree.TreeType;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.entity.JurassicraftRegisteries;
 import org.jurassicraft.server.item.ItemHandler;
 
 import net.minecraft.init.Items;
@@ -13,9 +14,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class SmeltingRecipeHandler {
     public static void init() {
-        for (Dinosaur dinosaur : EntityHandler.getRegisteredDinosaurs()) {
-            int id = EntityHandler.getDinosaurId(dinosaur);
-            GameRegistry.addSmelting(new ItemStack(ItemHandler.DINOSAUR_MEAT, 1, id), new ItemStack(ItemHandler.DINOSAUR_STEAK, 1, id), 5F);
+        for (Dinosaur dinosaur : JurassicraftRegisteries.DINOSAUR_REGISTRY.getValuesCollection()) {
+            GameRegistry.addSmelting(ItemHandler.DINOSAUR_MEAT.getItemStack(dinosaur), ItemHandler.DINOSAUR_STEAK.getItemStack(dinosaur), 5F);
         }
         
         for (TreeType type : TreeType.values()) {

@@ -53,12 +53,14 @@ public class DisplayBlock extends BlockContainer {
         TileEntity entity = world.getTileEntity(pos);
         if (entity instanceof DisplayBlockEntity) {
             DisplayBlockEntity displayEntity = (DisplayBlockEntity) entity;
-            Dinosaur dinosaur = displayEntity.getEntity().getDinosaur();
-            if (dinosaur != null && !displayEntity.isSkeleton()) {
-                float width = MathHelper.clamp(dinosaur.getAdultSizeX() * 0.25F, 0.1F, 1.0F);
-                float height = MathHelper.clamp(dinosaur.getAdultSizeY() * 0.25F, 0.1F, 1.0F);
-                float halfWidth = width / 2.0F;
-                return new AxisAlignedBB(0.5 - halfWidth, 0, 0.5 - halfWidth, halfWidth + 0.5, height, halfWidth + 0.5);
+            if(displayEntity.getEntity() != null) {
+                Dinosaur dinosaur = displayEntity.getEntity().getDinosaur();
+                if (dinosaur != null && !displayEntity.isSkeleton()) {
+                    float width = MathHelper.clamp(dinosaur.getAdultSizeX() * 0.25F, 0.1F, 1.0F);
+                    float height = MathHelper.clamp(dinosaur.getAdultSizeY() * 0.25F, 0.1F, 1.0F);
+                    float halfWidth = width / 2.0F;
+                    return new AxisAlignedBB(0.5 - halfWidth, 0, 0.5 - halfWidth, halfWidth + 0.5, height, halfWidth + 0.5);
+                }
             }
         }
         return new AxisAlignedBB(0, 0, 0, 1, 1, 1);
@@ -142,8 +144,7 @@ public class DisplayBlock extends BlockContainer {
     }
 
     public ItemStack getItemFromTile(DisplayBlockEntity tile) {
-        int metadata = DisplayBlockItem.getMetadata(EntityHandler.getDinosaurId(tile.getEntity().getDinosaur()), tile.isMale() ? 1 : 2, tile.isSkeleton());
-        return new ItemStack(ItemHandler.DISPLAY_BLOCK, 1, metadata);
+        return DisplayBlockItem.writeToStack(new ItemStack(this), new DisplayBlockItem.DisplayBlockProperties(tile.getDinosaur(), tile.isSkeleton() ? DisplayBlockItem.DisplayBlockProperties.Type.SKELETON : tile.isMale() ? DisplayBlockItem.DisplayBlockProperties.Type.MALE : DisplayBlockItem.DisplayBlockProperties.Type.FEMALE));
     }
 
     @Override

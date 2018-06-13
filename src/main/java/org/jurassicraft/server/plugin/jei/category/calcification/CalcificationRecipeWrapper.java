@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.genetics.DinoDNA;
 import org.jurassicraft.server.genetics.GeneticsHelper;
@@ -28,18 +29,18 @@ public class CalcificationRecipeWrapper implements IRecipeWrapper {
     public void getIngredients(IIngredients ingredients) {
         List<ItemStack> inputs = new ArrayList<>();
 
-        int metadata = EntityHandler.getDinosaurId(this.input.dinosaur);
+        Dinosaur dinosaur = this.input.dinosaur;
         NBTTagCompound tag = new NBTTagCompound();
         DinoDNA dna = new DinoDNA(this.input.dinosaur, 100, GeneticsHelper.randomGenetics(new Random()));
         dna.writeToNBT(tag);
 
-        ItemStack inputStack = new ItemStack(ItemHandler.SYRINGE, 1, metadata);
+        ItemStack inputStack = ItemHandler.SYRINGE.getItemStack(dinosaur);
         inputStack.setTagCompound(tag);
 
         inputs.add(inputStack);
         ingredients.setInputs(ItemStack.class, inputs);
 
-        ItemStack outputStack = new ItemStack(ItemHandler.EGG, 1, metadata);
+        ItemStack outputStack = ItemHandler.EGG.getItemStack(dinosaur);
         outputStack.setTagCompound(tag);
         ingredients.setOutput(ItemStack.class, outputStack);
     }

@@ -6,12 +6,9 @@ import java.util.Map;
 
 import net.minecraft.util.text.TextComponentTranslation;
 import org.jurassicraft.client.sound.SoundHandler;
-import org.jurassicraft.server.api.Hybrid;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.tree.TreeType;
-import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.DinosaurEntity;
-import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.item.block.AncientDoorItem;
 import org.jurassicraft.server.item.vehicles.HelicopterItem;
 import org.jurassicraft.server.item.vehicles.HelicopterModuleItem;
@@ -30,7 +27,6 @@ import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.potion.PotionUtils;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class ItemHandler {
@@ -165,8 +161,8 @@ public class ItemHandler {
     public static final PlantFossilItem PLANT_FOSSIL = new PlantFossilItem();
     public static final TwigFossilItem TWIG_FOSSIL = new TwigFossilItem();
 
-    public static final Map<String, FossilItem> FOSSILS = new HashMap<>();
-    public static final Map<String, FossilItem> FRESH_FOSSILS = new HashMap<>();
+    public static final FossilItem FOSSIL = new FossilItem(false);
+    public static final FossilItem FRESH_FOSSIL = new FossilItem(true);
 
     public static final FossilizedEggItem FOSSILIZED_EGG = new FossilizedEggItem();
 
@@ -284,27 +280,27 @@ public class ItemHandler {
     public static void init() {
         registerItem(FOSSILIZED_EGG, "Fossilized Egg");
 
-        for (Map.Entry<Integer, Dinosaur> entry : EntityHandler.getDinosaurs().entrySet()) {
-            Dinosaur dinosaur = entry.getValue();
+//        JurassicraftRegisteries.DINOSAUR_REGISTRY.getValuesCollection().forEach(dinosaur -> {
+//            String[] boneTypes = dinosaur.getBones();
+//            for (String boneType : boneTypes) {
+//                if (!(dinosaur instanceof Hybrid)) {
+//                    if (!FOSSILS.containsKey(boneType)) {
+//                        FossilItem fossil = new FossilItem(boneType, false);
+//                        FOSSILS.put(boneType, fossil);
+//                        registerItem(fossil, boneType);
+//                    }
+//                }
+//
+//                if (!FRESH_FOSSIL.containsKey(boneType)) {
+//                    FossilItem fossil = new FossilItem(boneType, true);
+//                    FRESH_FOSSIL.put(boneType, fossil);
+//                    registerItem(fossil, boneType + " Fresh");
+//                }
+//            }
+//        });
 
-            String[] boneTypes = dinosaur.getBones();
-
-            for (String boneType : boneTypes) {
-                if (!(dinosaur instanceof Hybrid)) {
-                    if (!FOSSILS.containsKey(boneType)) {
-                        FossilItem fossil = new FossilItem(boneType, false);
-                        FOSSILS.put(boneType, fossil);
-                        registerItem(fossil, boneType);
-                    }
-                }
-
-                if (!FRESH_FOSSILS.containsKey(boneType)) {
-                    FossilItem fossil = new FossilItem(boneType, true);
-                    FRESH_FOSSILS.put(boneType, fossil);
-                    registerItem(fossil, boneType + " Fresh");
-                }
-            }
-        }
+        registerItem(FOSSIL, "Fossil");
+        registerItem(FRESH_FOSSIL, "Fresh Fossil");
 
         registerItem(SPAWN_EGG, "Dino Spawn Egg");
         registerItem(FIELD_GUIDE, "Field Guide");

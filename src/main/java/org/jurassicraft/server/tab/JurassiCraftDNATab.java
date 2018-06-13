@@ -1,10 +1,12 @@
 package org.jurassicraft.server.tab;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.entity.JurassicraftRegisteries;
 import org.jurassicraft.server.item.ItemHandler;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -23,7 +25,7 @@ public class JurassiCraftDNATab extends CreativeTabs {
     @SideOnly(Side.CLIENT)
     public ItemStack getIconItemStack() {
         if (this.stacks == null) {
-            List<Dinosaur> registeredDinosaurs = EntityHandler.getRegisteredDinosaurs();
+            Collection<Dinosaur> registeredDinosaurs = JurassicraftRegisteries.DINOSAUR_REGISTRY.getValuesCollection();
 
             int dinosaurs = registeredDinosaurs.size();
             this.stacks = new ItemStack[dinosaurs * 3];
@@ -31,11 +33,9 @@ public class JurassiCraftDNATab extends CreativeTabs {
             int i = 0;
 
             for (Dinosaur dino : registeredDinosaurs) {
-                int id = EntityHandler.getDinosaurId(dino);
-
-                this.stacks[i] = new ItemStack(ItemHandler.DNA, 1, id);
-                this.stacks[i + dinosaurs] = new ItemStack(ItemHandler.SOFT_TISSUE, 1, id);
-                this.stacks[i + (dinosaurs * 2)] = new ItemStack(ItemHandler.SYRINGE, 1, id);
+                this.stacks[i] = ItemHandler.DNA.getItemStack(dino);
+                this.stacks[i + dinosaurs] = ItemHandler.SOFT_TISSUE.getItemStack(dino);
+                this.stacks[i + (dinosaurs * 2)] = ItemHandler.SYRINGE.getItemStack(dino);
 
                 i++;
             }

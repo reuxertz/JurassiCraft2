@@ -15,6 +15,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.jurassicraft.server.api.SynthesizableItem;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.entity.JurassicraftRegisteries;
 import org.jurassicraft.server.genetics.DinoDNA;
 import org.jurassicraft.server.genetics.PlantDNA;
 import org.jurassicraft.server.genetics.StorageType;
@@ -25,7 +26,7 @@ import org.jurassicraft.server.tab.TabHandler;
 import java.util.List;
 import java.util.Random;
 
-public class StorageDiscItem extends Item implements SynthesizableItem {
+public class StorageDiscItem extends Item implements SynthesizableItem, DinosaurProvider{
     public StorageDiscItem() {
         super();
         this.setCreativeTab(TabHandler.ITEMS);
@@ -35,16 +36,12 @@ public class StorageDiscItem extends Item implements SynthesizableItem {
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, World worldIn, List<String> toolTip, ITooltipFlag flagIn)
     {
-        NBTTagCompound tag = stack.getTagCompound();
-        if (tag != null) {
-            String storageId = tag.getString("StorageId");
-            StorageType type = StorageTypeRegistry.getStorageType(storageId);
-            if (type != null) {
-                type.readFromNBT(tag);
-                type.addInformation(stack, toolTip);
-            }
-        } else {
-            toolTip.add(TextFormatting.RED + I18n.format("cage.empty.name"));
+        NBTTagCompound tag = stack.getOrCreateSubCompound("jurassicraft").getCompoundTag("dna");
+        String storageId = tag.getString("StorageId");
+        StorageType type = StorageTypeRegistry.getStorageType(storageId);
+        if (type != null) {
+            type.readFromNBT(tag);
+            type.addInformation(stack, toolTip);
         }
     }
 
@@ -52,6 +49,11 @@ public class StorageDiscItem extends Item implements SynthesizableItem {
     public boolean isSynthesizable(ItemStack stack) {
         NBTTagCompound tagCompound = stack.getTagCompound();
         return tagCompound != null && tagCompound.hasKey("DNAQuality") && tagCompound.getInteger("DNAQuality") == 100;
+    }
+
+    @Override
+    public boolean shouldOverrideModel(Dinosaur dinosaur) {
+        return false;
     }
 
     @Override
@@ -74,7 +76,7 @@ public class StorageDiscItem extends Item implements SynthesizableItem {
     public List<ItemStack> getJEIRecipeTypes() {
         List<ItemStack> list = Lists.newArrayList();
 
-        EntityHandler.getRegisteredDinosaurs().forEach(dino -> {
+        JurassicraftRegisteries.DINOSAUR_REGISTRY.forEach(dino -> {
             DinoDNA dna = new DinoDNA(dino, -1, "");
             ItemStack stack = new ItemStack(this);
             NBTTagCompound nbt = new NBTTagCompound();

@@ -1,18 +1,12 @@
 package org.jurassicraft.client.render;
 
-import java.awt.*;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import net.minecraft.item.ItemBlock;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.model.MultipartStateMap;
 import org.jurassicraft.client.model.animation.EntityAnimator;
-import org.jurassicraft.client.model.animation.entity.AlligatorGarAnimator;
 import org.jurassicraft.client.model.animation.entity.BrachiosaurusAnimator;
 import org.jurassicraft.client.model.animation.entity.CoelacanthAnimator;
 import org.jurassicraft.client.model.animation.entity.DilophosaurusAnimator;
@@ -41,10 +35,7 @@ import org.jurassicraft.server.block.plant.AncientCoralBlock;
 import org.jurassicraft.server.block.tree.AncientLeavesBlock;
 import org.jurassicraft.server.block.tree.TreeType;
 import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.EntityHandler;
-import org.jurassicraft.server.entity.GoatEntity;
-import org.jurassicraft.server.entity.TranquilizerDartEntity;
-import org.jurassicraft.server.entity.VenomEntity;
+import org.jurassicraft.server.entity.*;
 import org.jurassicraft.server.entity.item.AttractionSignEntity;
 import org.jurassicraft.server.entity.item.DinosaurEggEntity;
 import org.jurassicraft.server.entity.item.MuralEntity;
@@ -96,6 +87,8 @@ public enum RenderingHandler {
     @SideOnly(Side.CLIENT)
     public static void onModelEvent(final ModelRegistryEvent event)
     {
+        RenderingHandler.INSTANCE.preInit();
+
         for (EnumDyeColor color : EnumDyeColor.values()) {
             registerItemRenderer(Item.getItemFromBlock(CULTIVATOR_BOTTOM), color.getMetadata(), "cultivate/cultivate_bottom_" + color.getName().toLowerCase(Locale.ENGLISH));
         }
@@ -122,25 +115,12 @@ public enum RenderingHandler {
 //        ModelLoader.setCustomStateMapper(BlockHandler.HIGH_SECURITY_FENCE_POLE, new MultipartStateMap());
 //        ModelLoader.setCustomStateMapper(BlockHandler.HIGH_SECURITY_FENCE_WIRE, new MultipartStateMap());
 
-        int i = 0;
 
-        for (EncasedFossilBlock fossil : ENCASED_FOSSILS) {
-            for (int meta = 0; meta < 16; meta++) {
-                registerBlockRenderer(fossil, meta, "encased_fossil_" + i);
-            }
+//        BlockHandler.FOSSILS.forEach((dinosaur, encasedFossilBlock) -> registerBlockRenderer(encasedFossilBlock, "encased_fossil_" + dinosaur.phraseRegistryName()));
+//        ENCASED_FOSSILS.forEach((dinosaur, encasedFossilBlock) -> registerBlockRenderer(encasedFossilBlock, "encased_fossil_" + dinosaur.phraseRegistryName()));
 
-            i++;
-        }
-
-        i = 0;
-
-        for (FossilBlock fossil : BlockHandler.FOSSILS) {
-            for (int meta = 0; meta < 16; meta++) {
-                registerBlockRenderer(fossil, meta, "fossil_block_" + i);
-            }
-
-            i++;
-        }
+        registerBlockRenderer(BlockHandler.FOSSIL);
+        registerBlockRenderer(BlockHandler.ENCASED_FOSSIL);
 
         registerBlockRenderer(BlockHandler.PLANT_FOSSIL, "plant_fossil_block");
 
@@ -288,9 +268,7 @@ public enum RenderingHandler {
 
         registerItemRenderer(INGEN_JOURNAL);
 
-        for (Entry<Integer, Dinosaur> entry : EntityHandler.getDinosaurs().entrySet()) {
-            registerItemRenderer(SPAWN_EGG, entry.getKey(), "dino_spawn_egg");
-        }
+        registerItemRenderer(SPAWN_EGG,"dino_spawn_egg");
 
         registerItemRenderer(PADDOCK_SIGN);
 
@@ -356,38 +334,44 @@ public enum RenderingHandler {
 
         registerItemRenderer(MURAL, "mural");
 
-        for (Dinosaur dinosaur : EntityHandler.getDinosaurs().values()) {
-            int meta = EntityHandler.getDinosaurId(dinosaur);
+//        for (Dinosaur dinosaur : EntityHandler.getDinosaurs().values()) {
+//            int meta = EntityHandler.getDinosaurId(dinosaur);
 
-            String formattedName = dinosaur.getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
+//            String formattedName = dinosaur.getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
 
-            for (Map.Entry<String, FossilItem> entry : ItemHandler.FOSSILS.entrySet()) {
-                List<Dinosaur> dinosaursForType = FossilItem.fossilDinosaurs.get(entry.getKey());
-                if (dinosaursForType.contains(dinosaur)) {
-                    registerItemRenderer(entry.getValue(), meta, "bones/" + formattedName + "_" + entry.getKey());
-                }
-            }
+//            for (Map.Entry<String, FossilItem> entry : ItemHandler.FOSSILS.entrySet()) {
+//                List<Dinosaur> dinosaursForType = FossilItem.fossilDinosaurs.get(entry.getKey());
+//                if (dinosaursForType.contains(dinosaur)) {
+//                    registerItemRenderer(entry.getValue());//"bones/" + formattedName + "_" + entry.getKey()
+//                }
+//            }
+//
+//            for (Map.Entry<String, FossilItem> entry : FRESH_FOSSIL.entrySet()) {
+//                List<Dinosaur> dinosaursForType = FossilItem.fossilDinosaurs.get(entry.getKey());
+//                if (dinosaursForType.contains(dinosaur)) {
+//                    registerItemRenderer(entry.getValue());//"fresh_bones/" + formattedName + "_" + entry.getKey()
+//                }
+//            }
 
-            for (Map.Entry<String, FossilItem> entry : FRESH_FOSSILS.entrySet()) {
-                List<Dinosaur> dinosaursForType = FossilItem.fossilDinosaurs.get(entry.getKey());
-                if (dinosaursForType.contains(dinosaur)) {
-                    registerItemRenderer(entry.getValue(), meta, "fresh_bones/" + formattedName + "_" + entry.getKey());
-                }
-            }
+//            FRESH_FOSSIL.values().forEach(RenderingHandler::registerItemRenderer);/**/
+//            ItemHandler.FOSSILS.values().forEach(RenderingHandler::registerItemRenderer);
 
-            registerItemRenderer(DNA, meta, "dna/dna_" + formattedName);
-            registerItemRenderer(DINOSAUR_MEAT, meta, "meat/meat_" + formattedName);
-            registerItemRenderer(DINOSAUR_STEAK, meta, "meat/steak_" + formattedName);
-            registerItemRenderer(SOFT_TISSUE, meta, "soft_tissue/soft_tissue_" + formattedName);
-            registerItemRenderer(SYRINGE, meta, "syringe/syringe_" + formattedName);
+
+            registerItemRenderer(ItemHandler.FOSSIL);
+            registerItemRenderer(FRESH_FOSSIL);
+            registerItemRenderer(DNA);//"dna/dna_" + formattedName
+            registerItemRenderer(DINOSAUR_MEAT);//"meat/meat_" + formattedName
+            registerItemRenderer(DINOSAUR_STEAK);//"meat/steak_" + formattedName
+            registerItemRenderer(SOFT_TISSUE);//"soft_tissue/soft_tissue_" + formattedName
+            registerItemRenderer(SYRINGE);//"syringe/syringe_" + formattedName
             //registerItemRenderer(ACTION_FIGURE, meta, "action_figure/action_figure_" + formattedName);
 
-            if (!dinosaur.givesDirectBirth()) {
-                registerItemRenderer(EGG, meta, "egg/egg_" + formattedName);
-            }
+//            if (!dinosaur.givesDirectBirth()) {
+            registerItemRenderer(EGG);//"egg/egg_" + formattedName
+//            }
 
-            registerItemRenderer(HATCHED_EGG, meta, "hatched_egg/egg_" + formattedName);
-        }
+            registerItemRenderer(HATCHED_EGG);//"hatched_egg/egg_" + formattedName
+//        }
 
         for (Plant plant : PlantHandler.getPrehistoricPlantsAndTrees()) {
             int meta = PlantHandler.getPlantId(plant);
@@ -440,12 +424,12 @@ public enum RenderingHandler {
         registerItemRenderer(DART_TIPPED_POTION, "dart_colored");
 
         registerItemRenderer(WEST_INDIAN_LILAC_BERRIES);
+
+        registerItemRenderer(ItemHandler.DISPLAY_BLOCK);
     }
 
     public void preInit() {
         TabulaModelHandler.INSTANCE.addDomain(JurassiCraft.MODID);
-        ItemHandler.DISPLAY_BLOCK.initModels(EntityHandler.getDinosaurs().values(), this);
-
         registerRenderInfo(EntityHandler.BRACHIOSAURUS, new BrachiosaurusAnimator(), 1.5F);
         registerRenderInfo(EntityHandler.COELACANTH, new CoelacanthAnimator(), 0.0F);
 //        registerRenderInfo(EntityHandler.ALLIGATORGAR, new AlligatorGarAnimator(), 0.0F);

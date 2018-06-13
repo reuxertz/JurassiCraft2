@@ -2,9 +2,11 @@ package org.jurassicraft.server.genetics;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.entity.JurassicraftRegisteries;
 import org.jurassicraft.server.util.LangHelper;
 
 import java.util.List;
@@ -26,14 +28,14 @@ public class/* Bingo! */ DinoDNA {
     }
 
     public static DinoDNA readFromNBT(NBTTagCompound nbt) {
-        return new DinoDNA(EntityHandler.getDinosaurById(nbt.getInteger("Dinosaur")), nbt.getInteger("DNAQuality"), nbt.getString("Genetics"));
+        return new DinoDNA(JurassicraftRegisteries.DINOSAUR_REGISTRY.getValue(new ResourceLocation(nbt.getString("Dinosaur"))), nbt.getInteger("DNAQuality"), nbt.getString("Genetics"));
     }
 
     public void writeToNBT(NBTTagCompound nbt) {
         nbt.setInteger("DNAQuality", this.quality);
         nbt.setString("Genetics", this.genetics);
         nbt.setString("StorageId", "DinoDNA");
-        nbt.setInteger("Dinosaur", EntityHandler.getDinosaurId(this.dinosaur));
+        nbt.setString("Dinosaur", this.dinosaur.getRegistryName().toString());
     }
 
     public int getDNAQuality() {
@@ -68,7 +70,7 @@ public class/* Bingo! */ DinoDNA {
         return this.dinosaur;
     }
 
-    public int getMetadata() {
-        return EntityHandler.getDinosaurId(this.dinosaur);
-    }
+//    public int getMetadata() {
+//        return EntityHandler.getDinosaurId(this.dinosaur);
+//    }
 }

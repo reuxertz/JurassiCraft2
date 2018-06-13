@@ -17,7 +17,7 @@ public class DisplayBlockRenderer extends TileEntitySpecialRenderer<DisplayBlock
 
         GlStateManager.rotate(tileEntity.getRot(), 0.0F, 1.0F, 0.0F);
 
-        double scale = tileEntity.getEntity().isSkeleton() ? 1.0 : 0.15;
+        double scale = tileEntity.isSkeleton() ? 1.0 : 0.15;
         GlStateManager.scale(scale, scale, scale);
 
         DinosaurEntity entity = tileEntity.getEntity();

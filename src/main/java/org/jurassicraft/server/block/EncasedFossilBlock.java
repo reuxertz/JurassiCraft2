@@ -10,6 +10,7 @@ import org.jurassicraft.server.api.CleanableItem;
 import org.jurassicraft.server.api.SubBlocksBlock;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.item.FossilItem;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.item.block.EncasedFossilItemBlock;
 import org.jurassicraft.server.tab.TabHandler;
@@ -31,65 +32,7 @@ import net.minecraft.world.Explosion;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class EncasedFossilBlock extends Block implements SubBlocksBlock, CleanableItem {
-    public static final PropertyInteger VARIANT = PropertyInteger.create("variant", 0, 15);
-
-    private int start;
-
-    public EncasedFossilBlock(int start) {
-        super(Material.ROCK);
-        this.setHardness(2.0F);
-        this.setResistance(8.0F);
-        this.setSoundType(SoundType.STONE);
-        this.setCreativeTab(TabHandler.FOSSILS);
-
-        this.start = start;
-
-        this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, 0));
-    }
-
-    @Override
-    public IBlockState getStateFromMeta(int meta) {
-        return this.getDefaultState().withProperty(VARIANT, meta);
-    }
-
-    @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(VARIANT);
-    }
-
-    @Override
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, VARIANT);
-    }
-
-    @Override
-    protected ItemStack getSilkTouchDrop(IBlockState state) {
-        return new ItemStack(Item.getItemFromBlock(this), 1, this.getMetaFromState(state));
-    }
-
-    @Override
-    public int damageDropped(IBlockState state) {
-        return this.getMetaFromState(state);
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
-        Map<Integer, Dinosaur> dinosaurs = EntityHandler.getDinosaurs();
-
-        for (int i = 0; i < 16; i++) {
-            Dinosaur dinosaur = dinosaurs.get(i + this.start);
-
-            if (dinosaur != null && dinosaur.shouldRegister()) {
-                list.add(new ItemStack(this, 1, i));
-            }
-        }
-    }
-
-    public Dinosaur getDinosaur(int metadata) {
-        return EntityHandler.getDinosaurById(this.start + metadata);
-    }
+public class EncasedFossilBlock extends FossilBlock implements CleanableItem {
 
     @Override
     public ItemBlock getItemBlock() {
@@ -134,32 +77,30 @@ public class EncasedFossilBlock extends Block implements SubBlocksBlock, Cleanab
 
     @Override
     public boolean isCleanable(ItemStack stack) {
-        return true;
+        return !this.getDinosaur(stack).isMissing();
     }
 
     @Override
     public ItemStack getCleanedItem(ItemStack stack, Random random) {
-        int dinosaurId = BlockHandler.getDinosaurId((EncasedFossilBlock) Block.getBlockFromItem(stack.getItem()), stack.getItemDamage());
-        String[] bones = EntityHandler.getDinosaurById(dinosaurId).getBones();
-        return new ItemStack(ItemHandler.FOSSILS.get(bones[random.nextInt(bones.length)]), 1, dinosaurId);
+        Dinosaur dinosaur = this.getDinosaur(stack);
+        String[] bones = dinosaur.getBones();
+        return ItemHandler.FOSSIL.createNewStack(new FossilItem.FossilInfomation(dinosaur, bones[random.nextInt(bones.length)]));
     }
 
     @Override
     public List<ItemStack> getJEIRecipeTypes() {
-        List<ItemStack> list = Lists.newArrayList();
-        EntityHandler.getDinosaurs().values().forEach(dino -> list.add(new ItemStack(BlockHandler.getEncasedFossil(dino), 1, EntityHandler.getDinosaurId(dino)%16)));
-        return list;
+        return this.getAllStacks();
     }
 
     @Override
     public List<Pair<Float, ItemStack>> getChancedOutputs(ItemStack inputItem) {
-        int dinosaurId = BlockHandler.getDinosaurId((EncasedFossilBlock) Block.getBlockFromItem(inputItem.getItem()), inputItem.getItemDamage());
-        String[] bones = EntityHandler.getDinosaurById(dinosaurId).getBones();
+        Dinosaur dinosaur = this.getDinosaur(inputItem);
+        String[] bones = dinosaur.getBones();
         float single = 100F / bones.length;
 
         List<Pair<Float, ItemStack>> list = Lists.newArrayList();
         for(String bone : bones) {
-            list.add(Pair.of(single, new ItemStack(ItemHandler.FOSSILS.get(bone), 1, dinosaurId)));
+            list.add(Pair.of(single, ItemHandler.FOSSIL.createNewStack(new FossilItem.FossilInfomation(dinosaur, bone))));
         }
         return list;
     }

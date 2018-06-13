@@ -12,6 +12,7 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.entity.item.PaddockSignEntity;
 import org.lwjgl.opengl.GL11;
@@ -30,7 +31,7 @@ public class PaddockSignRenderer implements IRenderFactory<PaddockSignEntity> {
     public static class Renderer extends Render<PaddockSignEntity> {
         private static int DISPLAY_LIST = -1;
         private static boolean HAS_COMPILED = false;
-        private final Map<Integer, ResourceLocation> TEXTURES = new HashMap<>();
+        private final Map<ResourceLocation, ResourceLocation> TEXTURES = new HashMap<>();
 
         public Renderer(RenderManager manager) {
             super(manager);
@@ -45,14 +46,9 @@ public class PaddockSignRenderer implements IRenderFactory<PaddockSignEntity> {
             GlStateManager.disableCull();
             this.bindEntityTexture(entity);
 
-            int id = entity.getDinosaur();
+            ResourceLocation dinosaur = entity.getDinosaur().getRegistryName();
 
-            ResourceLocation texture = this.TEXTURES.get(id);
-
-            if (texture == null) {
-                texture = new ResourceLocation(JurassiCraft.MODID, "textures/paddock/" + EntityHandler.getDinosaurById(id).getName().toLowerCase(Locale.ENGLISH) + ".png");
-                this.TEXTURES.put(id, texture);
-            }
+            ResourceLocation texture = this.TEXTURES.computeIfAbsent(dinosaur, location -> new ResourceLocation(location.getResourceDomain(), "textures/paddock/" + location.getResourcePath() + ".png"));
 
             this.bindTexture(texture);
 

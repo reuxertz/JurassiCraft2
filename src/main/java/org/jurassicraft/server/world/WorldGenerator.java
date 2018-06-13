@@ -17,14 +17,13 @@ import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fml.common.IWorldGenerator;
-import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.FossilizedTrackwayBlock;
 import org.jurassicraft.server.block.NestFossilBlock;
 import org.jurassicraft.server.block.tree.TreeType;
 import org.jurassicraft.server.conf.JurassiCraftConfig;
 import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.entity.JurassicraftRegisteries;
 import org.jurassicraft.server.period.TimePeriod;
 
 import java.util.List;
@@ -72,16 +71,11 @@ public enum WorldGenerator implements IWorldGenerator {
                 if (period != null) {
                     randPosY += random.nextInt(8) - 4;
 
-                    List<Dinosaur> dinos = EntityHandler.getDinosaursFromPeriod(period);
+                    List<Dinosaur> dinos = JurassicraftRegisteries.getTimePeriodMap().get(period);
 
                     if (dinos != null && dinos.size() > 0) {
                         Dinosaur dinosaur = dinos.get(random.nextInt(dinos.size()));
-
-                        if (dinosaur.shouldRegister()) {
-                            int meta = BlockHandler.getMetadata(dinosaur);
-
-                            new WorldGenMinable(BlockHandler.getFossilBlock(dinosaur).getStateFromMeta(meta), 5).generate(world, random, new BlockPos(randPosX, randPosY, randPosZ));
-                        }
+                        new WorldFossilGen(dinosaur, 5).generate(world, random, new BlockPos(randPosX, randPosY, randPosZ));
                     }
                 }
             }

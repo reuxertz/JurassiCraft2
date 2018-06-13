@@ -24,7 +24,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class SoftTissueItem extends Item implements SequencableItem {
+public class SoftTissueItem extends Item implements SequencableItem, DinosaurProvider{
     public SoftTissueItem() {
         this.setHasSubtypes(true);
 
@@ -38,27 +38,11 @@ public class SoftTissueItem extends Item implements SequencableItem {
         return new LangHelper("item.soft_tissue.name").withProperty("dino", "entity.jurassicraft." + dinoName + ".name").build();
     }
 
-    public Dinosaur getDinosaur(ItemStack stack) {
-        Dinosaur dinosaur = EntityHandler.getDinosaurById(stack.getItemDamage());
-
-        if (dinosaur == null) {
-            dinosaur = EntityHandler.VELOCIRAPTOR;
-        }
-
-        return dinosaur;
-    }
-
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subtypes) {
-        List<Dinosaur> dinosaurs = new LinkedList<>(EntityHandler.getDinosaurs().values());
-
-        Collections.sort(dinosaurs);
-        if(this.isInCreativeTab(tab))
-        for (Dinosaur dinosaur : dinosaurs) {
-            if (dinosaur.shouldRegister()) {
-                subtypes.add(new ItemStack(this, 1, EntityHandler.getDinosaurId(dinosaur)));
-            }
+        if(this.isInCreativeTab(tab)) {
+            subtypes.addAll(this.getAllStacksOrdered());
         }
     }
 
@@ -74,7 +58,7 @@ public class SoftTissueItem extends Item implements SequencableItem {
         if (nbt == null) {
             nbt = new NBTTagCompound();
             int quality = SequencableItem.randomQuality(random);
-            DinoDNA dna = new DinoDNA(EntityHandler.getDinosaurById(stack.getItemDamage()), quality, GeneticsHelper.randomGenetics(random));
+            DinoDNA dna = new DinoDNA(DinosaurProvider.getFromStack(stack).getDinosaur(stack), quality, GeneticsHelper.randomGenetics(random));
             dna.writeToNBT(nbt);
         } else if (!nbt.hasKey("Dinosaur")) {
             nbt.setInteger("Dinosaur", stack.getItemDamage());
@@ -95,7 +79,7 @@ public class SoftTissueItem extends Item implements SequencableItem {
     public List<Pair<Float, ItemStack>> getChancedOutputs(ItemStack inputItem) {
         List<Pair<Float, ItemStack>> list = Lists.newArrayList();
         NBTTagCompound nbt = new NBTTagCompound();
-        DinoDNA dna = new DinoDNA(EntityHandler.getDinosaurById(inputItem.getItemDamage()), -1, "");
+        DinoDNA dna = new DinoDNA(DinosaurProvider.getFromStack(inputItem).getDinosaur(inputItem), -1, "");
         dna.writeToNBT(nbt);
         ItemStack output = new ItemStack(ItemHandler.STORAGE_DISC);
         output.setTagCompound(nbt);

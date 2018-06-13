@@ -17,6 +17,7 @@ import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.food.FoodNutrients;
+import org.jurassicraft.server.item.DinosaurProvider;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.message.CultivatorSyncNutrients;
 
@@ -45,9 +46,12 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
     protected boolean canProcess(int process) {
     	ItemStack itemstack = this.slots.get(0);
         if (itemstack.getItem() == ItemHandler.SYRINGE && this.waterLevel == 2) {
-            Dinosaur dino = EntityHandler.getDinosaurById(itemstack.getItemDamage());
-            if (dino != null && dino.getBirthType() == Dinosaur.BirthType.LIVE_BIRTH) {
-                return this.lipids >= dino.getLipids() && this.minerals >= dino.getMinerals() && this.proximates >= dino.getProximates() && this.vitamins >= dino.getVitamins();
+            DinosaurProvider provider = DinosaurProvider.getFromStack(itemstack);
+            if(provider.isMissing()) {
+                Dinosaur dino = provider.getDinosaur(itemstack);
+                if (dino != null && dino.getBirthType() == Dinosaur.BirthType.LIVE_BIRTH) {
+                    return this.lipids >= dino.getLipids() && this.minerals >= dino.getMinerals() && this.proximates >= dino.getProximates() && this.vitamins >= dino.getVitamins();
+                }
             }
         }
 
@@ -57,7 +61,7 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
     @Override
     protected void processItem(int process) {
         ItemStack syringe = this.slots.get(0);
-        Dinosaur dinosaur = EntityHandler.getDinosaurById(syringe.getItemDamage());
+        Dinosaur dinosaur = DinosaurProvider.getFromStack(syringe).getDinosaur(syringe);
 
         if (dinosaur != null) {
             this.lipids -= dinosaur.getLipids();
@@ -239,7 +243,8 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
 
     private DinosaurEntity createEntity() {
         try {
-            this.dinosaurEntity = EntityHandler.getDinosaurById(this.getStackInSlot(0).getMetadata()).getDinosaurClass().getDeclaredConstructor(World.class).newInstance(this.world);
+            ItemStack stack = this.getStackInSlot(0);
+            this.dinosaurEntity = DinosaurProvider.getFromStack(stack).getDinosaur(stack).getDinosaurClass().getDeclaredConstructor(World.class).newInstance(this.world);
             this.dinosaurEntity.setMale(this.temperature > 50);
             this.dinosaurEntity.setFullyGrown();
             this.dinosaurEntity.getAttributes().setScaleModifier(1f);
@@ -356,10 +361,9 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
 
     public Dinosaur getDinosaur() {
     	ItemStack stack = this.slots.get(0);
-        if (stack.isEmpty()) {
-            return EntityHandler.getDinosaurById(stack.getItemDamage());
+        if (!stack.isEmpty()) {
+            return DinosaurProvider.getFromStack(stack).getDinosaur(stack);
         }
-
         return null;
     }
 

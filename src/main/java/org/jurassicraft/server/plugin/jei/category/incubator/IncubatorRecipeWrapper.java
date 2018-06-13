@@ -18,9 +18,8 @@ public class IncubatorRecipeWrapper implements IRecipeWrapper {
 
     @Override
     public void getIngredients(IIngredients ingredients) {
-        int meta = EntityHandler.getDinosaurId(this.dinosaur);
-        ingredients.setInput(ItemStack.class, new ItemStack(ItemHandler.EGG, 1, meta));
-        ingredients.setOutput(ItemStack.class, new ItemStack(ItemHandler.HATCHED_EGG, 1, meta));
+        ingredients.setInput(ItemStack.class, ItemHandler.EGG.getItemStack(this.dinosaur));
+        ingredients.setOutput(ItemStack.class, ItemHandler.HATCHED_EGG.getItemStack(this.dinosaur));
     }
 
     public Dinosaur getDinosaur() {

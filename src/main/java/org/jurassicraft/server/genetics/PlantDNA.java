@@ -13,7 +13,7 @@ public class PlantDNA {
     private int plant;
     private int quality;
 
-    public PlantDNA(int plant, int quality) {
+    public PlantDNA(int plant, int quality) { //TODO
         this.plant = plant;
         this.quality = quality;
     }

@@ -34,10 +34,10 @@ public class EventHandler {
     public static void onModelBaked(ModelBakeEvent event) {
         for(ModelResourceLocation mrl : event.getModelRegistry().getKeys()) {
             if(mrl.getVariant().equals("inventory")) {
-            ResourceLocation location = new ResourceLocation(mrl.getResourceDomain(), mrl.getResourcePath());
-            if(location.equals(ItemHandler.DART_GUN.getRegistryName())) {
-                event.getModelRegistry().putObject(mrl, new GuiItemModelWrapper(event.getModelRegistry().getObject(mrl), DART_GUN_GUI));
-            }
+                ResourceLocation location = new ResourceLocation(mrl.getResourceDomain(), mrl.getResourcePath());
+                if(location.equals(ItemHandler.DART_GUN.getRegistryName())) {
+                    event.getModelRegistry().putObject(mrl, new GuiItemModelWrapper(event.getModelRegistry().getObject(mrl), DART_GUN_GUI));
+                }
             }
         }
     }

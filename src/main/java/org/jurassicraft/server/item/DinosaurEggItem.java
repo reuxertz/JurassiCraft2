@@ -23,7 +23,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class DinosaurEggItem extends DNAContainerItem {
+public class DinosaurEggItem extends DNAContainerItem implements DinosaurProvider{//TODO not let direct birth animals
     public DinosaurEggItem() {
         super();
 
@@ -36,30 +36,19 @@ public class DinosaurEggItem extends DNAContainerItem {
     public String getItemStackDisplayName(ItemStack stack) {
         String dinoName = this.getDinosaur(stack).getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
 
-        return new LangHelper("item.dino_egg.name").withProperty("dino", "entity.jurassicraft." + dinoName + ".name").build();
-    }
-
-    public Dinosaur getDinosaur(ItemStack stack) {
-        return EntityHandler.getDinosaurById(stack.getMetadata());
+        return new LangHelper("item.egg.name").withProperty("dino", "entity.jurassicraft." + dinoName + ".name").build();
     }
 
     @Override
-    public int getContainerId(ItemStack stack) {
-        return EntityHandler.getDinosaurId(this.getDinosaur(stack));
+    public boolean shouldOverrideModel(Dinosaur dinosaur) {
+        return dinosaur.getBirthType() == Dinosaur.BirthType.EGG_LAYING;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subtypes) {
-        List<Dinosaur> dinosaurs = new LinkedList<>(EntityHandler.getDinosaurs().values());
-
-        Collections.sort(dinosaurs);
         if(this.isInCreativeTab(tab)) {
-            for (Dinosaur dinosaur : dinosaurs) {
-                if (dinosaur.shouldRegister() && !dinosaur.givesDirectBirth()) {
-                    subtypes.add(new ItemStack(this, 1, EntityHandler.getDinosaurId(dinosaur)));
-                }
-            }
+            subtypes.addAll(this.getAllStacksOrdered());
         }
     }
 

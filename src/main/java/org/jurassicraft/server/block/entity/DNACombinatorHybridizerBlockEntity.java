@@ -14,6 +14,7 @@ import org.jurassicraft.server.api.Hybrid;
 import org.jurassicraft.server.container.DNACombinatorHybridizerContainer;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.entity.JurassicraftRegisteries;
 import org.jurassicraft.server.genetics.DinoDNA;
 import org.jurassicraft.server.genetics.PlantDNA;
 import org.jurassicraft.server.item.ItemHandler;
@@ -49,7 +50,7 @@ public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntity {
             dinosaurs[i] = this.getDino(discs[i]);
         }
 
-        for (Dinosaur dino : EntityHandler.getRegisteredDinosaurs()) {
+        for (Dinosaur dino : JurassicraftRegisteries.DINOSAUR_REGISTRY.getValuesCollection()) {
             if (dino instanceof Hybrid) {
                 Hybrid dinoHybrid = (Hybrid) dino;
 
@@ -121,9 +122,8 @@ public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntity {
                 DinoDNA dna = new DinoDNA(hybrid, 100, this.slots.get(0).getTagCompound().getString("Genetics"));
                 dna.writeToNBT(nbt);
 
-                ItemStack output = new ItemStack(ItemHandler.STORAGE_DISC);
-                output.setItemDamage(EntityHandler.getDinosaurId(dna.getDinosaur()));
-                output.setTagCompound(nbt);
+                ItemStack output = ItemHandler.STORAGE_DISC.getItemStack(dna.getDinosaur());
+                output.getOrCreateSubCompound("jurassicraft").setTag("dna", nbt);
 
                 this.mergeStack(this.getOutputSlot(output), output);
 
@@ -136,8 +136,8 @@ public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntity {
                 String storageId = this.slots.get(8).getTagCompound().getString("StorageId");
 
                 if (storageId.equals("DinoDNA")) {
-                    DinoDNA dna1 = DinoDNA.readFromNBT(this.slots.get(8).getTagCompound());
-                    DinoDNA dna2 = DinoDNA.readFromNBT(this.slots.get(9).getTagCompound());
+                    DinoDNA dna1 = DinoDNA.readFromNBT(this.slots.get(8).getOrCreateSubCompound("jurassicraft").getCompoundTag("dna"));
+                    DinoDNA dna2 = DinoDNA.readFromNBT(this.slots.get(9).getOrCreateSubCompound("jurassicraft").getCompoundTag("dna"));
 
                     int newQuality = dna1.getDNAQuality() + dna2.getDNAQuality();
 
