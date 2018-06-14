@@ -92,7 +92,7 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
     @SideOnly(Side.CLIENT)
     public EntitySound<CarEntity> sound;
     @SideOnly(Side.CLIENT)
-    public final InterpValue steerAmount = new InterpValue(this,0.1D);
+    public InterpValue steerAmount;
 
     private float healAmount;
     private int healCooldown = 40;
@@ -108,6 +108,7 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
         this.stepHeight = 1.5F;
         if (world.isRemote) {
             this.startSound();
+            this.steerAmount = new InterpValue(this,0.1D);
         }
         for(int i = 0; i < 4; i++) {
             this.wheelDataList[i] = Lists.newArrayList();
