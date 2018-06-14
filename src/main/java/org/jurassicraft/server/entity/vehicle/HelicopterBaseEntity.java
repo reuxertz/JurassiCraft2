@@ -198,13 +198,10 @@ public class HelicopterBaseEntity extends EntityLivingBase implements IEntityAdd
         }
         this.interpSpeed.setTarget(2F);
         super.onLivingUpdate();
-        if (JurassiCraftConfig.VEHICLES.helicopterExplosion == true) {
+        if (JurassiCraftConfig.VEHICLES.helicopterExplosion) {
             if (this.motionX * this.motionX + this.motionZ * this.motionZ > 1.1 * 1.1 && this.collidedHorizontally) {
                 world.createExplosion(this.getRidingEntity(), posX, posY, posZ, 12, true);
             }
-        } else
-        {
-            return;
         }
 
         // update rotor angle
@@ -323,7 +320,7 @@ public class HelicopterBaseEntity extends EntityLivingBase implements IEntityAdd
             direction.addVector(-1f, 0, 0);
         }
 
-        if (!Minecraft.getMinecraft().gameSettings.keyBindUseItem.isKeyDown()) {
+        if (!Minecraft.getMinecraft().gameSettings.keyBindJump.isKeyDown()) {
             direction.addVector(0, 1, 0);
         }
 

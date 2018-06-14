@@ -2,6 +2,7 @@ package org.jurassicraft.server.block.entity;
 
 import java.util.Random;
 
+import net.minecraft.item.Item;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.api.GrindableItem;
 import org.jurassicraft.server.container.FossilGrinderContainer;
@@ -46,7 +47,7 @@ public class FossilGrinderBlockEntity extends MachineBaseBlockEntity {
     protected void processItem(int process) {
         Random rand = new Random();
 
-        ItemStack input = null;
+        ItemStack input = ItemStack.EMPTY;
         int index = 0;
 
         for (int inputIndex = 0; inputIndex < 6; inputIndex++) {
@@ -64,7 +65,6 @@ public class FossilGrinderBlockEntity extends MachineBaseBlockEntity {
             ItemStack output = grindableItem.getGroundItem(input, rand);
 
             int emptySlot = this.getOutputSlot(output);
-
             if (emptySlot != -1) {
                 this.mergeStack(emptySlot, output);
                 this.decreaseStackSize(index);
