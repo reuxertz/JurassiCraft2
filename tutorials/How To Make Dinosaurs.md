@@ -9,7 +9,7 @@ When mined, this will drop 4-8 Gypsum Powder, which is then used with paper and 
 <img src="https://i.imgur.com/D6T1Xh7.png"></img>
 ## Getting Fossils
 Once you have the `plaster and bandage`, its time to start fossil hunting! Search through your world until you find fossils. The further you go down in the world, the older the time period of dinosaur fossils you will find. Once you find a fossil, DO NOT BREAK IT. As mentioned before, the fossils would have been there for millions of years, and will be very fragile. Insead, right click the fossil with  the `plaster and bandage` to encase the fossil, as to make for easy and safe fossil transport. You can now mine the encased fossil.   
-<img src="https://media.giphy.com/media/iNxv0oh2raaHqIf22k/giphy.gif"></img>
+[Link to gif](https://imgur.com/lR0UwUF)
 ## Fossil Cleaner
 Once mined, you'll need to clean the fossil. Theres going to be bits of rock and soil stuck to the fossil, which will make the results impure. To fix this, simply put the fossil in the fossil cleaner. The Fossil Cleaner will clean the fossils, giving you a dinosaur bone.   
 <img src="https://i.imgur.com/Ij9Jdri.png"></img> <img src="https://i.imgur.com/jpy66Wv.png"></img>
