@@ -81,8 +81,7 @@ public class FordExplorerEntity extends CarEntity {
 				isRails = world.getBlockState(rail).getBlock() instanceof TourRailBlock;
 			}
 
-			if(!isRails && world.getBlockState(rail.down()).getBlock() instanceof TourRailBlock && Arrays.asList(TourRailBlock.EnumRailDirection.ASCENDING_EAST, TourRailBlock.EnumRailDirection.ASCENDING_NORTH, TourRailBlock.EnumRailDirection.ASCENDING_SOUTH, TourRailBlock.EnumRailDirection.ASCENDING_WEST).contains(world.getBlockState(rail.down()).getValue(TourRailBlock.SHAPE))) {
-				rail = rail.down(1);
+            if(!isRails && world.getBlockState(rail.down()).getBlock() instanceof TourRailBlock && Arrays.asList(TourRailBlock.EnumRailDirection.ASCENDING_EAST, TourRailBlock.EnumRailDirection.ASCENDING_NORTH, TourRailBlock.EnumRailDirection.ASCENDING_SOUTH, TourRailBlock.EnumRailDirection.ASCENDING_WEST).contains(TourRailBlock.getRailDirection(world, rail.down()))) {				rail = rail.down(1);
 				isRails = world.getBlockState(rail).getBlock() instanceof TourRailBlock;
 			}
 

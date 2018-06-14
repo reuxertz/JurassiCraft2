@@ -46,7 +46,7 @@ public class FossilGrinderBlockEntity extends MachineBaseBlockEntity {
     protected void processItem(int process) {
         Random rand = new Random();
 
-        ItemStack input = null;
+        ItemStack input = ItemStack.EMPTY;
         int index = 0;
 
         for (int inputIndex = 0; inputIndex < 6; inputIndex++) {
