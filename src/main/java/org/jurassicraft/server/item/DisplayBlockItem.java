@@ -32,9 +32,7 @@ import java.util.stream.Collectors;
 
 public class DisplayBlockItem extends Item implements DinosaurProvider {
     public DisplayBlockItem() {
-        super();
         this.setCreativeTab(TabHandler.DECORATIONS);
-        this.setHasSubtypes(true);
     }
 
 

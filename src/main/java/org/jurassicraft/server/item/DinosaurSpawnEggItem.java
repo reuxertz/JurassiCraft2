@@ -41,8 +41,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class DinosaurSpawnEggItem extends Item implements DinosaurProvider {
     public DinosaurSpawnEggItem() {
-        super();
-        this.setHasSubtypes(true);
         this.setCreativeTab(TabHandler.ITEMS);
     }
 

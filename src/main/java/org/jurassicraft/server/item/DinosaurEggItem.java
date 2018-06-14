@@ -26,9 +26,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class DinosaurEggItem extends DNAContainerItem implements DinosaurProvider{//TODO not let direct birth animals
     public DinosaurEggItem() {
         super();
-
         this.setCreativeTab(TabHandler.DNA);
-        this.setHasSubtypes(true);
         this.setMaxStackSize(1);
     }
 

@@ -26,8 +26,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SoftTissueItem extends Item implements SequencableItem, DinosaurProvider{
     public SoftTissueItem() {
-        this.setHasSubtypes(true);
-
         this.setCreativeTab(TabHandler.DNA);
     }
 

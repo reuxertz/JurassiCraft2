@@ -27,8 +27,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class DinosaurMeatItem extends ItemFood implements DinosaurProvider{
     public DinosaurMeatItem() {
         super(3, 0.3F, true);
-        this.setHasSubtypes(true);
-
         this.setCreativeTab(TabHandler.FOODS);
     }
 

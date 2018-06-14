@@ -35,7 +35,6 @@ public class FossilItem extends Item implements GrindableItem, DinosaurProvider 
 
     public FossilItem(boolean fresh) {
         this.fresh = fresh;
-        this.setHasSubtypes(true);
         this.setCreativeTab(TabHandler.FOSSILS);
     }
 

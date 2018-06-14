@@ -28,7 +28,6 @@ import java.util.Random;
 
 public class StorageDiscItem extends Item implements SynthesizableItem, DinosaurProvider{
     public StorageDiscItem() {
-        super();
         this.setCreativeTab(TabHandler.ITEMS);
     }
 
