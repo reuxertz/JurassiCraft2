@@ -12,11 +12,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.EntityHandler;
-import org.jurassicraft.server.entity.JurassicraftRegisteries;
+import org.jurassicraft.server.registries.JurassicraftRegisteries;
 import org.jurassicraft.server.message.PlacePaddockSignMessage;
 import org.lwjgl.opengl.GL11;
 
@@ -24,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class SelectDinoGui extends GuiScreen {

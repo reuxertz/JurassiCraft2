@@ -19,7 +19,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.model.DinosaurItemModel;
 import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.JurassicraftRegisteries;
+import org.jurassicraft.server.registries.JurassicraftRegisteries;
 import org.jurassicraft.server.item.DinosaurProvider;
 
 import java.io.OutputStream;

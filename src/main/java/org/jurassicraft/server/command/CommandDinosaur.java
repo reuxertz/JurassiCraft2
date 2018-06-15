@@ -11,7 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.JurassicraftRegisteries;
+import org.jurassicraft.server.registries.JurassicraftRegisteries;
 import org.jurassicraft.server.item.DinosaurProvider;
 
 import javax.annotation.Nullable;

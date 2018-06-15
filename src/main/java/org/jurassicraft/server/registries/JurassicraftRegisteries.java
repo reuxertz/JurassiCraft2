@@ -1,4 +1,4 @@
-package org.jurassicraft.server.entity;
+package org.jurassicraft.server.registries;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;

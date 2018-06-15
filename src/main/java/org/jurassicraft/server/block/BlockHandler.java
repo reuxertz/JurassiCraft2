@@ -17,9 +17,6 @@ import org.jurassicraft.server.block.fence.FenceType;
 import org.jurassicraft.server.block.machine.*;
 import org.jurassicraft.server.block.plant.*;
 import org.jurassicraft.server.block.tree.*;
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.EntityHandler;
-import org.jurassicraft.server.entity.JurassicraftRegisteries;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.util.RegistryHandler;
 
