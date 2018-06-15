@@ -56,7 +56,7 @@ public enum StructureGenerationHandler implements IWorldGenerator {
     public static void register() {
         GameRegistry.registerWorldGenerator(INSTANCE, 0);
         StructureGenerationHandler.registerGenerator(VisitorCentreGenerator::new, StructureUtils.StructureData::isVisitorCenter,(world, pos, random) -> world.getChunkFromBlockCoords(pos) == world.getChunkFromBlockCoords(MapUtils.getVisitorCenterPosition()));
-        StructureGenerationHandler.registerGenerator(RaptorPaddockGenerator::new, StructureUtils.StructureData::isRaptorPaddock,400, Biomes.JUNGLE, Biomes.MUTATED_JUNGLE, Biomes.JUNGLE_EDGE, Biomes.MUTATED_JUNGLE_EDGE, Biomes.SAVANNA, Biomes.MUTATED_SAVANNA);
+        StructureGenerationHandler.registerGenerator(RaptorPaddockGenerator::new, StructureUtils.StructureData::isRaptorPaddock,4000, Biomes.JUNGLE, Biomes.MUTATED_JUNGLE, Biomes.JUNGLE_EDGE, Biomes.MUTATED_JUNGLE_EDGE, Biomes.SAVANNA, Biomes.MUTATED_SAVANNA);
     }
 
     public static void registerGenerator(Function<Random, StructureGenerator> generatorFunction, Predicate<StructureUtils.StructureData> configPredicate, int weight, Biome... validBiomes) {
