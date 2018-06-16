@@ -6,7 +6,10 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.api.DinosaurProvider;
+import org.jurassicraft.server.api.PlantProvider;
 import org.jurassicraft.server.container.EmbryonicMachineContainer;
+import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.item.DNAItem;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.item.PlantDNAItem;
@@ -28,15 +31,16 @@ public class EmbryonicMachineBlockEntity extends MachineBaseBlockEntity {
         ItemStack petridish = this.slots.get(1);
         ItemStack syringe = this.slots.get(2);
 
-        if (dna != null && petridish != null && syringe != null && syringe.getItem() == ItemHandler.EMPTY_SYRINGE) {
-            ItemStack output = null;
-
+        if (!dna.isEmpty() && !petridish.isEmpty() && syringe.getItem() == ItemHandler.EMPTY_SYRINGE) {
+            ItemStack output = ItemStack.EMPTY;
             if (petridish.getItem() == ItemHandler.PETRI_DISH && dna.getItem() instanceof DNAItem) {
-                output = new ItemStack(ItemHandler.SYRINGE, 1, dna.getItemDamage());
+                output = new ItemStack(ItemHandler.SYRINGE);
                 output.setTagCompound(dna.getTagCompound());
+                ItemHandler.SYRINGE.putValue(output, DinosaurProvider.getFromStack(dna).getValue(dna));
             } else if (petridish.getItem() == ItemHandler.PLANT_CELLS_PETRI_DISH && dna.getItem() instanceof PlantDNAItem) {
-                output = new ItemStack(ItemHandler.PLANT_CALLUS, 1, dna.getItemDamage());
+                output = new ItemStack(ItemHandler.PLANT_CALLUS);
                 output.setTagCompound(dna.getTagCompound());
+                ItemHandler.PLANT_CALLUS.putValue(output, PlantProvider.getFromStack(dna).getValue(dna));
             }
 
             return output != null && this.hasOutputSlot(output);
@@ -51,9 +55,9 @@ public class EmbryonicMachineBlockEntity extends MachineBaseBlockEntity {
             ItemStack output = null;
 
             if (this.slots.get(0).getItem() instanceof DNAItem && this.slots.get(1).getItem() == ItemHandler.PETRI_DISH) {
-                output = new ItemStack(ItemHandler.SYRINGE, 1, this.slots.get(0).getItemDamage());
+                output = ItemHandler.SYRINGE.getItemStack(DinosaurProvider.getFromStack(this.slots.get(0)).getValue(this.slots.get(0)));
             } else if (this.slots.get(0).getItem() instanceof PlantDNAItem && this.slots.get(1).getItem() == ItemHandler.PLANT_CELLS_PETRI_DISH) {
-                output = new ItemStack(ItemHandler.PLANT_CALLUS, 1, this.slots.get(0).getItemDamage());
+                output = ItemHandler.PLANT_CALLUS.getItemStack(PlantProvider.getFromStack(this.slots.get(0)).getValue(this.slots.get(0)));
             }
 
             output.setTagCompound(this.slots.get(0).getTagCompound());

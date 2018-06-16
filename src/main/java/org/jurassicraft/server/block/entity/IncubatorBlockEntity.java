@@ -1,6 +1,7 @@
 package org.jurassicraft.server.block.entity;
 
 import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.api.DinosaurProvider;
 import org.jurassicraft.server.api.IncubatorEnvironmentItem;
 import org.jurassicraft.server.container.IncubatorContainer;
 import org.jurassicraft.server.item.DinosaurEggItem;
@@ -73,7 +74,7 @@ public class IncubatorBlockEntity extends MachineBaseBlockEntity implements Temp
         if (this.canProcess(process) && !this.world.isRemote) {
             ItemStack egg = this.slots.get(process);
 
-            ItemStack incubatedEgg = new ItemStack(ItemHandler.HATCHED_EGG, 1, egg.getItemDamage());
+            ItemStack incubatedEgg = ItemHandler.HATCHED_EGG.getItemStack(DinosaurProvider.getFromStack(egg).getValue(egg));
             NBTTagCompound compound = new NBTTagCompound();
             compound.setBoolean("Gender", this.temperature[process] > 50);
 

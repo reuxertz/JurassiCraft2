@@ -279,7 +279,7 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
                                 break;
                         }
                         
-                        ItemStack stack = (ItemStack)this.slots.get(feedSlot);
+                        ItemStack stack = this.slots.get(feedSlot);
 
                         if (stack != ItemStack.EMPTY) {
                             EntityItem itemEntity = new EntityItem(this.world, this.pos.getX() + offsetX, this.pos.getY() + offsetY, this.pos.getZ() + offsetZ, new ItemStack(stack.getItem(), 1, stack.getItemDamage()));

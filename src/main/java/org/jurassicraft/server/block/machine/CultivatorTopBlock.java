@@ -23,14 +23,7 @@ public class CultivatorTopBlock extends CultivatorBlock implements NoItemBlock {
 
     @Override
     public ItemStack getPickBlock(IBlockState state, RayTraceResult result, World world, BlockPos pos, EntityPlayer player) {
-        Item item = Item.getItemFromBlock(BlockHandler.CULTIVATOR_BOTTOM.get(this.color));
-
-        if (item == null) {
-            return null;
-        }
-
-        Block block = item instanceof ItemBlock ? getBlockFromItem(item) : this;
-        return new ItemStack(item, 1, block.getMetaFromState(world.getBlockState(pos)));
+        return new ItemStack(Item.getItemFromBlock(BlockHandler.CULTIVATOR_BOTTOM.get(this.color)));
     }
 
     @Override

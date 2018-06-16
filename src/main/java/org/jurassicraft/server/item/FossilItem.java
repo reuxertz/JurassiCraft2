@@ -125,9 +125,9 @@ public class FossilItem extends Item implements GrindableItem, DinosaurProvider 
         int outputType = random.nextInt(6);
 
         if (outputType == 5 || this.isFresh()) {
-            ItemStack output = new ItemStack(ItemHandler.SOFT_TISSUE, 1, stack.getItemDamage());
+            ItemStack output = new ItemStack(ItemHandler.SOFT_TISSUE);
             output.setTagCompound(tag);
-            return output;
+            return ItemHandler.SOFT_TISSUE.putValue(output, DinosaurProvider.getFromStack(stack).getValue(stack));
         } else if (outputType < 3) {
             return new ItemStack(Items.DYE, 1, 15);
         }
@@ -144,8 +144,9 @@ public class FossilItem extends Item implements GrindableItem, DinosaurProvider 
     public List<Pair<Float, ItemStack>> getChancedOutputs(ItemStack inputItem) {
         float single = 100F/6F;
         NBTTagCompound tag = inputItem.getTagCompound();
-        ItemStack output = new ItemStack(ItemHandler.SOFT_TISSUE, 1, inputItem.getItemDamage());
+        ItemStack output = new ItemStack(ItemHandler.SOFT_TISSUE);
         output.setTagCompound(tag);
+        ItemHandler.SOFT_TISSUE.putValue(output, DinosaurProvider.getFromStack(inputItem).getValue(inputItem));
         if(this.isFresh()) {
             return Lists.newArrayList(Pair.of(100F, output));
         }

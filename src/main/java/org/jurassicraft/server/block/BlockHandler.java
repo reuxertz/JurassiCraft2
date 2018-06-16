@@ -153,6 +153,11 @@ public class BlockHandler
 
     static
     {
+
+        for (TreeType type : TreeType.values()) {
+            initilizeTreeType(type);
+        }
+
         for(EnumDyeColor color : EnumDyeColor.values()) {
             CULTIVATOR_BOTTOM.put(color, new CultivatorBottomBlock(color));
             CULTIVATOR_TOP.put(color, new CultivatorTopBlock(color));
@@ -180,12 +185,6 @@ public class BlockHandler
         for (NestFossilBlock.Variant variant : NestFossilBlock.Variant.values()) {
             registerBlock(NEST_FOSSIL.get(variant), "Nest Fossil " + variant.getName());
             registerBlock(ENCASED_NEST_FOSSIL.get(variant), "Encased Nest Fossil " + variant.getName());
-        }
-
-
-        for (TreeType type : TreeType.values())
-        {
-            registerTreeType(type);
         }
 
         registerBlock(AMBER_ORE, "Amber Ore");
@@ -292,10 +291,13 @@ public class BlockHandler
         registerBlock(PALEO_BALE_CYCAD, "Paleo Bale Cycad");
         registerBlock(PALEO_BALE_FERN, "Paleo Bale Fern");
         registerBlock(PALEO_BALE_LEAVES, "Paleo Bale Leaves");
+
+        for (TreeType type : TreeType.values()) {
+            registerTreeType(type);
+        }
     }
 
-    public static void registerTreeType(TreeType type)
-    {
+    private static void initilizeTreeType(TreeType type) {
         AncientPlanksBlock planks = new AncientPlanksBlock(type);
         AncientLogBlock log = new AncientLogBlock(type, false);
         AncientLogBlock petrifiedLog = new AncientLogBlock(type, true);
@@ -320,20 +322,6 @@ public class BlockHandler
         ANCIENT_DOORS.put(type, door);
         PETRIFIED_LOGS.put(type, petrifiedLog);
 
-        String typeName = type.name();
-
-        registerBlock(planks, typeName + " Planks");
-        registerBlock(log, typeName + " Log");
-        registerBlock(petrifiedLog, typeName + " Log Petrified");
-        registerBlock(leaves, typeName + " Leaves");
-        registerBlock(sapling, typeName + " Sapling");
-        registerBlock(stair, typeName + " Stairs");
-        registerBlock(slab, typeName + " Slab");
-        registerBlock(doubleSlab, typeName + " Double Slab");
-        registerBlock(fence, typeName + " Fence");
-        registerBlock(fenceGate, typeName + " Fence Gate");
-        registerBlock(door, typeName + " Door");
-
         Blocks.FIRE.setFireInfo(leaves, 30, 60);
         Blocks.FIRE.setFireInfo(planks, 5, 20);
         Blocks.FIRE.setFireInfo(log, 5, 5);
@@ -343,6 +331,21 @@ public class BlockHandler
         Blocks.FIRE.setFireInfo(stair, 5, 20);
         Blocks.FIRE.setFireInfo(fence, 5, 20);
         Blocks.FIRE.setFireInfo(fenceGate, 5, 20);
+    }
+
+    private static void registerTreeType(TreeType type) {
+        String typeName = type.name();
+        registerBlock(ANCIENT_PLANKS.get(type), typeName + " Planks");
+        registerBlock(ANCIENT_LOGS.get(type), typeName + " Log");
+        registerBlock(PETRIFIED_LOGS.get(type), typeName + " Log Petrified");
+        registerBlock(ANCIENT_LEAVES.get(type), typeName + " Leaves");
+        registerBlock(ANCIENT_SAPLINGS.get(type), typeName + " Sapling");
+        registerBlock(ANCIENT_STAIRS.get(type), typeName + " Stairs");
+        registerBlock(ANCIENT_SLABS.get(type), typeName + " Slab");
+        registerBlock(ANCIENT_DOUBLE_SLABS.get(type), typeName + " Double Slab");
+        registerBlock(ANCIENT_FENCES.get(type), typeName + " Fence");
+        registerBlock(ANCIENT_FENCE_GATES.get(type), typeName + " Fence Gate");
+        registerBlock(ANCIENT_DOORS.get(type), typeName + " Door");
     }
 
     /**

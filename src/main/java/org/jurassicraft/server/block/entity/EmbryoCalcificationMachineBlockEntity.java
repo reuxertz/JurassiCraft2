@@ -34,7 +34,7 @@ public class EmbryoCalcificationMachineBlockEntity extends MachineBaseBlockEntit
             Dinosaur dino = DinosaurProvider.getFromStack(input).getValue(input);
 
             if (!dino.isMammal()) {
-                ItemStack output = new ItemStack(ItemHandler.EGG, 1, input.getItemDamage());
+                ItemStack output = ItemHandler.EGG.getItemStack(DinosaurProvider.getFromStack(input).getValue(input));
                 output.setTagCompound(input.getTagCompound());
 
                 return this.hasOutputSlot(output);
@@ -47,8 +47,12 @@ public class EmbryoCalcificationMachineBlockEntity extends MachineBaseBlockEntit
     @Override
     protected void processItem(int process) {
         if (this.canProcess(process)) {
-            ItemStack output = new ItemStack(ItemHandler.EGG, 1, this.slots.get(0).getItemDamage());
+            ItemStack input = this.slots.get(0);
+            Dinosaur dinosaur = (DinosaurProvider.getFromStack(input).getValue(input));
+            ItemStack output = ItemHandler.EGG.getItemStack(dinosaur);
             output.setTagCompound(this.slots.get(0).getTagCompound());
+
+            DinosaurProvider.getFromStack(output).putValue(output, dinosaur); //Make sure dinosaur is in output
 
             this.mergeStack(2, output);
             this.decreaseStackSize(0);

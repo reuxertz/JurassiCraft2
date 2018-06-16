@@ -75,7 +75,7 @@ public class AncientLogBlock extends BlockLog implements GrindableItem {
 
     @Override
     protected ItemStack getSilkTouchDrop(IBlockState state) {
-        return new ItemStack(Item.getItemFromBlock(this), 1, 0);
+        return new ItemStack(Item.getItemFromBlock(this));
     }
 
     @Override

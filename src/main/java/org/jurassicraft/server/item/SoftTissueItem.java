@@ -9,6 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jurassicraft.server.api.DinosaurProvider;
 import org.jurassicraft.server.api.SequencableItem;
+import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.genetics.DinoDNA;
 import org.jurassicraft.server.genetics.GeneticsHelper;
 import org.jurassicraft.server.tab.TabHandler;
@@ -55,19 +56,17 @@ public class SoftTissueItem extends Item implements SequencableItem, DinosaurPro
     @Override
     public ItemStack getSequenceOutput(ItemStack stack, Random random) {
         NBTTagCompound nbt = stack.getTagCompound();
-
+        Dinosaur dinosaur = DinosaurProvider.getFromStack(stack).getValue(stack);
         if (nbt == null) {
             nbt = new NBTTagCompound();
             int quality = SequencableItem.randomQuality(random);
-            DinoDNA dna = new DinoDNA(DinosaurProvider.getFromStack(stack).getValue(stack), quality, GeneticsHelper.randomGenetics(random));
+            DinoDNA dna = new DinoDNA(dinosaur, quality, GeneticsHelper.randomGenetics(random));
             dna.writeToNBT(nbt);
-        } else if (!nbt.hasKey("Dinosaur")) {
-            nbt.setInteger("Dinosaur", stack.getItemDamage());
         }
 
         ItemStack output = new ItemStack(ItemHandler.STORAGE_DISC);
         output.setTagCompound(nbt);
-
+        ItemHandler.STORAGE_DISC.putValue(output, dinosaur);
         return output;
     }
 

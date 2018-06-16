@@ -2,6 +2,7 @@ package org.jurassicraft.server.plant;
 
 import net.minecraft.block.Block;
 import net.minecraftforge.registries.IForgeRegistryEntry;
+import org.jurassicraft.server.block.tree.TreeType;
 import org.jurassicraft.server.food.FoodHelper;
 
 public class Plant extends IForgeRegistryEntry.Impl<Plant> implements Comparable<Plant> {
@@ -12,8 +13,8 @@ public class Plant extends IForgeRegistryEntry.Impl<Plant> implements Comparable
     private final int healAmount;
 
     private FoodHelper.FoodEffect[] foodEffects = new FoodHelper.FoodEffect[0];
-    private boolean isTree = false;
     private boolean isPrehistoric = true;
+    private TreeType treeType;
 
     @Deprecated
     public Plant(String name, Block block, int healAmount) {
@@ -26,8 +27,8 @@ public class Plant extends IForgeRegistryEntry.Impl<Plant> implements Comparable
         this.healAmount = healAmount;
     }
 
-    public Plant withTree(boolean isTree) {
-        this.isTree = isTree;
+    public Plant withTreeType(TreeType treeType) {
+        this.treeType = treeType;
         return this;
     }
 
@@ -45,8 +46,8 @@ public class Plant extends IForgeRegistryEntry.Impl<Plant> implements Comparable
         return this.block;
     }
 
-    public boolean shouldRegister() {
-        return true;
+    public TreeType getTreeType() {
+        return treeType;
     }
 
     @Override
@@ -67,6 +68,6 @@ public class Plant extends IForgeRegistryEntry.Impl<Plant> implements Comparable
     }
 
     public boolean isTree() {
-        return this.isTree;
+        return this.treeType != null;
     }
 }

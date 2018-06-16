@@ -1,7 +1,5 @@
 package org.jurassicraft.server.plant;
 
-import com.google.common.collect.Lists;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.PotionTypes;
 import net.minecraft.potion.PotionEffect;
@@ -14,7 +12,6 @@ import org.jurassicraft.server.block.tree.TreeType;
 import org.jurassicraft.server.food.FoodHelper;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,10 +19,10 @@ import java.util.stream.Collectors;
 public class PlantHandler {
     public static final Plant AJUGINUCULA_SMITHII = new Plant(BlockHandler.AJUGINUCULA_SMITHII, 2000).withFoodEffects(new FoodHelper.FoodEffect(new PotionEffect(MobEffects.SPEED, 100), 100));
     public static final Plant SMALL_ROYAL_FERN = new Plant(BlockHandler.SMALL_ROYAL_FERN, 2000);
-    public static final Plant CALAMITES = new Plant(BlockHandler.ANCIENT_SAPLINGS.get(TreeType.CALAMITES), 1000).withFoodEffects(new FoodHelper.FoodEffect(PotionTypes.POISON.getEffects().get(0), 5)).withTree(true);
+    public static final Plant CALAMITES = new Plant(BlockHandler.ANCIENT_SAPLINGS.get(TreeType.CALAMITES), 1000).withFoodEffects(new FoodHelper.FoodEffect(PotionTypes.POISON.getEffects().get(0), 5)).withTreeType(TreeType.CALAMITES);
     public static final Plant SMALL_CHAIN_FERN = new Plant(BlockHandler.SMALL_CHAIN_FERN, 2000);
     public static final Plant SMALL_CYCAD = new Plant(BlockHandler.SMALL_CYCAD, 2000).withFoodEffects(new FoodHelper.FoodEffect(PotionTypes.POISON.getEffects().get(0), 100));
-    public static final Plant GINKGO = new Plant(BlockHandler.ANCIENT_SAPLINGS.get(TreeType.GINKGO), 1000).withTree(true);
+    public static final Plant GINKGO = new Plant(BlockHandler.ANCIENT_SAPLINGS.get(TreeType.GINKGO), 1000).withTreeType(TreeType.GINKGO);
     public static final Plant CYCADEOIDEA = new Plant(BlockHandler.CYCADEOIDEA, 2000);
     public static final Plant CRY_PANSY = new Plant(BlockHandler.CRY_PANSY, 250);
     public static final Plant SCALY_TREE_FERN = new Plant(BlockHandler.SCALY_TREE_FERN, 4000).withFoodEffects(new FoodHelper.FoodEffect(PotionTypes.POISON.getEffects().get(0), 100));
@@ -42,10 +39,10 @@ public class PlantHandler {
     public static final Plant LIRIODENDRITES = new Plant(BlockHandler.LIRIODENDRITES, 4000);
     public static final Plant RAPHAELIA = new Plant(BlockHandler.RAPHAELIA, 2000);
     public static final Plant ENCEPHALARTOS = new Plant(BlockHandler.ENCEPHALARTOS, 4000).withFoodEffects(new FoodHelper.FoodEffect(PotionTypes.POISON.getEffects().get(0), 35));
-    public static final Plant PSARONIUS = new Plant(BlockHandler.ANCIENT_SAPLINGS.get(TreeType.PSARONIUS), 1000).withTree(true);
-    public static final Plant PHOENIX = new Plant(BlockHandler.ANCIENT_SAPLINGS.get(TreeType.PHOENIX), 1000).withTree(true);
+    public static final Plant PSARONIUS = new Plant(BlockHandler.ANCIENT_SAPLINGS.get(TreeType.PSARONIUS), 1000).withTreeType(TreeType.PSARONIUS);
+    public static final Plant PHOENIX = new Plant(BlockHandler.ANCIENT_SAPLINGS.get(TreeType.PHOENIX), 1000).withTreeType(TreeType.PHOENIX);
     public static final Plant WILD_POTATO = new Plant(BlockHandler.WILD_POTATO_PLANT, 3000);
-    public static final Plant ARAUCARIA = new Plant(BlockHandler.ANCIENT_SAPLINGS.get(TreeType.ARAUCARIA), 1000).withTree(true);
+    public static final Plant ARAUCARIA = new Plant(BlockHandler.ANCIENT_SAPLINGS.get(TreeType.ARAUCARIA), 1000).withTreeType(TreeType.ARAUCARIA);
     public static final Plant BRISTLE_FERN = new Plant(BlockHandler.BRISTLE_FERN, 2000);
     public static final Plant CINNAMON_FERN = new Plant(BlockHandler.CINNAMON_FERN, 2000);
     public static final Plant TEMPSKYA = new Plant(BlockHandler.TEMPSKYA, 4000);

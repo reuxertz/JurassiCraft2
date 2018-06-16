@@ -11,11 +11,11 @@ public class PlantDNAStorageType implements StorageType {
 
     @Override
     public ItemStack createItem() {
-        ItemStack output = new ItemStack(ItemHandler.PLANT_DNA, 1, 0);//TODO
+        ItemStack output = new ItemStack(ItemHandler.PLANT_DNA);
         NBTTagCompound compound = new NBTTagCompound();
         this.dna.writeToNBT(compound);
         output.setTagCompound(compound);
-        return output;
+        return ItemHandler.PLANT_DNA.putValue(output, this.dna.getPlant());
     }
 
     @Override

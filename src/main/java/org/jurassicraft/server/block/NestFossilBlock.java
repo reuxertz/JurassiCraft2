@@ -51,12 +51,12 @@ public class NestFossilBlock extends Block implements SubBlocksBlock, CleanableI
 
     @Override
     protected ItemStack getSilkTouchDrop(IBlockState state) {
-        return new ItemStack(Item.getItemFromBlock(this), 1, this.damageDropped(state));
+        return new ItemStack(Item.getItemFromBlock(this));
     }
 
     @Override
     public ItemBlock getItemBlock() {
-        return new NestFossilItemBlock(this, this.encased);
+        return new NestFossilItemBlock(this, this.encased, variant);
     }
 
     @Override

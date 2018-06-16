@@ -70,7 +70,7 @@ public class FossilizedTrackwayBlock extends Block implements SubBlocksBlock {
 
     @Override
     protected ItemStack getSilkTouchDrop(IBlockState state) {
-        return new ItemStack(Item.getItemFromBlock(this), 1, this.damageDropped(state));
+        return new ItemStack(Item.getItemFromBlock(this));
     }
 
     @Override
