@@ -27,9 +27,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class JournalItem extends Item {
-    public JournalItem() {
-        super();
-        this.setHasSubtypes(true);
+    private final JournalType type;
+
+    public JournalItem(JournalType type) {
+        this.type = type;
         this.setCreativeTab(TabHandler.ITEMS);
     }
 
@@ -37,8 +38,7 @@ public class JournalItem extends Item {
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
     	ItemStack stack = player.getHeldItem(hand);
         if (world.isRemote) {
-        	
-            JurassiCraft.PROXY.openJournal(JournalType.get(stack.getMetadata()));
+            JurassiCraft.PROXY.openJournal(this.type);
         }
         return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
     }
@@ -46,53 +46,30 @@ public class JournalItem extends Item {
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        JournalType type = JournalType.get(stack.getMetadata());
-        tooltip.add(I18n.translateToLocal("journal." + type.getIdentifier().getResourcePath() + ".name"));
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if(this.isInCreativeTab(tab))
-        for (JournalType type : JournalType.values()) {
-            items.add(new ItemStack(this, 1, type.getMetadata()));
-        }
+        tooltip.add(I18n.translateToLocal("journal." + this.type.getIdentifier().getResourcePath() + ".name"));
     }
 
     public enum JournalType {
-        CHEF_ALEJANDRO(0, new ResourceLocation(JurassiCraft.MODID, "chef_alejandro")),
-        DENNIS_NEDRY(1, new ResourceLocation(JurassiCraft.MODID, "dennis_nedry")),
-        DR_GERRY_HARDING(2, new ResourceLocation(JurassiCraft.MODID, "dr_gerry_harding")),
-        DR_HENRY_WU(3, new ResourceLocation(JurassiCraft.MODID, "dr_henry_wu")),
-        DR_LAURA_SORKIN(4, new ResourceLocation(JurassiCraft.MODID, "dr_laura_sorkin")),
-        ED_REGIS(5, new ResourceLocation(JurassiCraft.MODID, "ed_regis")),
-        JOHN_HAMMOND(6, new ResourceLocation(JurassiCraft.MODID, "john_hammond")),
-        RAY_ARNOLD(7, new ResourceLocation(JurassiCraft.MODID, "ray_arnold")),
-        ROBERT_MULDOON(8, new ResourceLocation(JurassiCraft.MODID, "robert_muldoon"));
+        CHEF_ALEJANDRO(new ResourceLocation(JurassiCraft.MODID, "chef_alejandro")),
+        DENNIS_NEDRY(new ResourceLocation(JurassiCraft.MODID, "dennis_nedry")),
+        DR_GERRY_HARDING(new ResourceLocation(JurassiCraft.MODID, "dr_gerry_harding")),
+        DR_HENRY_WU(new ResourceLocation(JurassiCraft.MODID, "dr_henry_wu")),
+        DR_LAURA_SORKIN(new ResourceLocation(JurassiCraft.MODID, "dr_laura_sorkin")),
+        ED_REGIS(new ResourceLocation(JurassiCraft.MODID, "ed_regis")),
+        JOHN_HAMMOND(new ResourceLocation(JurassiCraft.MODID, "john_hammond")),
+        RAY_ARNOLD(new ResourceLocation(JurassiCraft.MODID, "ray_arnold")),
+        ROBERT_MULDOON(new ResourceLocation(JurassiCraft.MODID, "robert_muldoon"));
 
-        public static final JournalType[] VALUES = new JournalType[values().length];
-
-        private final int metadata;
         private final ResourceLocation identifier;
         private final ResourceLocation location;
 
         @SideOnly(Side.CLIENT)
         private Content content;
 
-        static {
-            for (JournalType type : values()) {
-                VALUES[type.getMetadata()] = type;
-            }
-        }
 
-        JournalType(int metadata, ResourceLocation identifier) {
-            this.metadata = metadata;
+        JournalType(ResourceLocation identifier) {
             this.identifier = identifier;
             this.location = new ResourceLocation(identifier.getResourceDomain(), "journal_entries/" + identifier.getResourcePath() + ".json");
-        }
-
-        public int getMetadata() {
-            return this.metadata;
         }
 
         @SideOnly(Side.CLIENT)
@@ -114,13 +91,6 @@ public class JournalItem extends Item {
 
         public ResourceLocation getLocation() {
             return this.location;
-        }
-
-        public static JournalType get(int metadata) {
-            if (metadata >= 0 && metadata < VALUES.length) {
-                return VALUES[metadata];
-            }
-            return CHEF_ALEJANDRO;
         }
     }
 

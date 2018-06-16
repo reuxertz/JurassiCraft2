@@ -9,6 +9,7 @@ import mezz.jei.api.recipe.transfer.IRecipeTransferRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -87,8 +88,9 @@ public class JurassiCraftJEIPlugin implements IModPlugin {
             blacklist.addIngredientToBlacklist(new ItemStack(door));
         }
 
-        blacklist.addIngredientToBlacklist(new ItemStack(BlockHandler.CULTIVATOR_TOP, 1, OreDictionary.WILDCARD_VALUE));
-        blacklist.addIngredientToBlacklist(new ItemStack(BlockHandler.DISPLAY_BLOCK));
+        for (EnumDyeColor color : EnumDyeColor.values()) {
+            blacklist.addIngredientToBlacklist(new ItemStack(BlockHandler.CULTIVATOR_BOTTOM.get(color)));
+        }
         blacklist.addIngredientToBlacklist(new ItemStack(BlockHandler.KRILL_SWARM));
         blacklist.addIngredientToBlacklist(new ItemStack(BlockHandler.PLANKTON_SWARM));
 //        blacklist.addIngredientToBlacklist(new ItemStack(BlockHandler.TOUR_RAIL_POWERED)); TODO
@@ -122,9 +124,9 @@ public class JurassiCraftJEIPlugin implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(BlockHandler.DNA_SEQUENCER), DNA_SEQUENCER);
 
         registry.handleRecipes(CultivateInput.class, CultivatorRecipeWrapper::new, CULTIVATEOR);
-        NonNullList<ItemStack> list = NonNullList.create();
-        BlockHandler.CULTIVATOR_BOTTOM.getSubBlocks(CreativeTabs.SEARCH, list);
-        list.forEach(item -> registry.addRecipeCatalyst(item, CULTIVATEOR));
+        for (EnumDyeColor color : EnumDyeColor.values()) {
+            registry.addRecipeCatalyst(new ItemStack(BlockHandler.CULTIVATOR_BOTTOM.get(color)), CULTIVATEOR);
+        }
 
         registry.handleRecipes(IncubatorInput.class, IncubatorRecipeWrapper::new, INCUBATOR);
         registry.addRecipeCatalyst(new ItemStack(BlockHandler.INCUBATOR), INCUBATOR);

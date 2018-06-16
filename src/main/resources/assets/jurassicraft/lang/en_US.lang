@@ -28,6 +28,8 @@ entity.jurassicraft.paddock_sign.name=Paddock Sign
 
 entity.Villager.jurassicraft:geneticist=Geneticist
 
+
+
 //Items ==================================================
 item.plaster_and_bandage.name=Plaster and Bandage
 
@@ -409,47 +411,47 @@ tile.gracilaria_seaweed.name=Gracilaria Plant
 tile.wild_potato_plant.name=Wild Potato Plant
 
 //Plants =========================================
-plants.small_royal_fern.name=Royal Fern
-plants.calamites.name=Calamites
-plants.small_chain_fern.name=Chain Fern
-plants.small_cycad.name=Cycad
-plants.ginkgo.name=Ginkgo
-plants.psaronius.name=Psaronius
-plants.phoenix.name=Phoenix
-plants.bennettitalean_cycadeoidea.name=Cycadeoidea
-plants.cry_pansy.name=Cry Pansy
-plants.scaly_tree_fern.name=Scaly Tree Fern
-plants.cycad_zamites.name=Zamites
-plants.dicksonia.name=Dicksonia
-plants.ajuginucula_smithii.name=Ajuginucula Smithii
-plants.wild_onion.name=Wild Onion
-plants.dicroidium_zuberi.name=Dicroidium Zuberi
-plants.west_indian_lilac.name=West Indian Lilac
-plants.dictyophyllum.name=Dictyophyllum
-plants.serenna_veriformans.name=Serenna Veriformans
-plants.ladinia_simplex.name=Ladinia Simplex
-plants.orontium_mackii.name=Orontium Mackii
-plants.umaltolepis.name=Umaltolepis
-plants.liriodendrites.name=Liriodendrites
-plants.raphaelia.name=Raphaelia
-plants.encephalartos.name=Encephalartos
-plants.wild_potato.name=Wild Potato
-plants.araucaria.name=Araucaria
-plants.cinnamon_fern.name=Cinnamon Fern
-plants.bristle_fern.name=Bristle Fern
-plants.tempskya.name=Tempskya
-plants.woolly_stalked_begonia.name=Woolly-stalked Begonia
-plants.largestipule_leather_root.name=Largestipule Leather-root
-plants.rhacophyton.name=Rhacophyton
-plants.graminidites_bambusoides.name=Graminidites Bambusoides
-plants.enallhelia.name=Enallhelia
-plants.aulopora.name=Aulopora
-plants.cladochonus.name=Cladochonus
-plants.lithostrotion.name=Lithostrotion
-plants.stylophyllopsis.name=Stylophyllopsis
-plants.hippurites_radiosus.name=Hippurites Radiosus
-plants.heliconia.name=Heliconia
-plants.rhamnus_salifocifus.name=Rhamnus Salifocifus
+plants.jurassicraft.small_royal_fern.name=Royal Fern
+plants.jurassicraft.calamites.name=Calamites
+plants.jurassicraft.small_chain_fern.name=Chain Fern
+plants.jurassicraft.small_cycad.name=Cycad
+plants.jurassicraft.ginkgo.name=Ginkgo
+plants.jurassicraft.psaronius.name=Psaronius
+plants.jurassicraft.phoenix.name=Phoenix
+plants.jurassicraft.bennettitalean_cycadeoidea.name=Cycadeoidea
+plants.jurassicraft.cry_pansy.name=Cry Pansy
+plants.jurassicraft.scaly_tree_fern.name=Scaly Tree Fern
+plants.jurassicraft.cycad_zamites.name=Zamites
+plants.jurassicraft.dicksonia.name=Dicksonia
+plants.jurassicraft.ajuginucula_smithii.name=Ajuginucula Smithii
+plants.jurassicraft.wild_onion.name=Wild Onion
+plants.jurassicraft.dicroidium_zuberi.name=Dicroidium Zuberi
+plants.jurassicraft.west_indian_lilac.name=West Indian Lilac
+plants.jurassicraft.dictyophyllum.name=Dictyophyllum
+plants.jurassicraft.serenna_veriformans.name=Serenna Veriformans
+plants.jurassicraft.ladinia_simplex.name=Ladinia Simplex
+plants.jurassicraft.orontium_mackii.name=Orontium Mackii
+plants.jurassicraft.umaltolepis.name=Umaltolepis
+plants.jurassicraft.liriodendrites.name=Liriodendrites
+plants.jurassicraft.raphaelia.name=Raphaelia
+plants.jurassicraft.encephalartos.name=Encephalartos
+plants.jurassicraft.wild_potato.name=Wild Potato
+plants.jurassicraft.araucaria.name=Araucaria
+plants.jurassicraft.cinnamon_fern.name=Cinnamon Fern
+plants.jurassicraft.bristle_fern.name=Bristle Fern
+plants.jurassicraft.tempskya.name=Tempskya
+plants.jurassicraft.woolly_stalked_begonia.name=Woolly-stalked Begonia
+plants.jurassicraft.largestipule_leather_root.name=Largestipule Leather-root
+plants.jurassicraft.rhacophyton.name=Rhacophyton
+plants.jurassicraft.graminidites_bambusoides.name=Graminidites Bambusoides
+plants.jurassicraft.enallhelia.name=Enallhelia
+plants.jurassicraft.aulopora.name=Aulopora
+plants.jurassicraft.cladochonus.name=Cladochonus
+plants.jurassicraft.lithostrotion.name=Lithostrotion
+plants.jurassicraft.stylophyllopsis.name=Stylophyllopsis
+plants.jurassicraft.hippurites_radiosus.name=Hippurites Radiosus
+plants.jurassicraft.heliconia.name=Heliconia
+plants.jurassicraft.rhamnus_salifocifus.name=Rhamnus Salifocifus
 
 //Containers ==================================================
 container.cleaning_station=Cleaning Station

@@ -71,7 +71,7 @@ public class AttractionSignEntity extends EntityHanging implements IEntityAdditi
                 }
             }
 
-            this.entityDropItem(new ItemStack(ItemHandler.ATTRACTION_SIGN, 1, this.type.ordinal()), 0.0F);
+            this.entityDropItem(new ItemStack(ItemHandler.ATTRACTION_SIGN.get(this.type)), 0.0F);
         }
     }
 
@@ -169,7 +169,7 @@ public class AttractionSignEntity extends EntityHanging implements IEntityAdditi
 
     @Override
     public ItemStack getPickedResult(RayTraceResult target) {
-        return new ItemStack(ItemHandler.ATTRACTION_SIGN, 1, this.type.ordinal());
+        return new ItemStack(ItemHandler.ATTRACTION_SIGN.get(this.type));
     }
 
     public enum AttractionSignType {

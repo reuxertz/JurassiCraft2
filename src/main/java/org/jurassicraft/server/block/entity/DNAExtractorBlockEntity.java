@@ -82,9 +82,6 @@ public class DNAExtractorBlockEntity extends MachineBaseBlockEntity {
                     disc.setTagCompound(nbt);
                 } else if (input.getItemDamage() == 1) {
                     List<Plant> possiblePlants = PlantHandler.getPrehistoricPlantsAndTrees();
-                    Plant plant = possiblePlants.get(rand.nextInt(possiblePlants.size()));
-
-                    int plantId = PlantHandler.getPlantId(plant);
 
                     disc = new ItemStack(ItemHandler.STORAGE_DISC);
 
@@ -94,7 +91,7 @@ public class DNAExtractorBlockEntity extends MachineBaseBlockEntity {
                         quality += 50;
                     }
 
-                    PlantDNA dna = new PlantDNA(plantId, quality);
+                    PlantDNA dna = new PlantDNA(possiblePlants.get(rand.nextInt(possiblePlants.size())), quality);
 
                     NBTTagCompound nbt = new NBTTagCompound();
                     dna.writeToNBT(nbt);

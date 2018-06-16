@@ -92,8 +92,8 @@ public enum WorldGenerator implements IWorldGenerator {
             if (random.nextInt(nestChance) == 0) {
                 BlockPos pos = new BlockPos(chunkX + 8 + random.nextInt(16), random.nextInt(20) + 30, chunkZ + 8 + random.nextInt(16));
 
-                IBlockState nest = BlockHandler.NEST_FOSSIL.getDefaultState().withProperty(NestFossilBlock.VARIANT, NestFossilBlock.Variant.values()[random.nextInt(NestFossilBlock.Variant.values().length)]);
-                IBlockState trackway = BlockHandler.FOSSILIZED_TRACKWAY.getDefaultState().withProperty(FossilizedTrackwayBlock.VARIANT, FossilizedTrackwayBlock.TrackwayType.values()[random.nextInt(FossilizedTrackwayBlock.TrackwayType.values().length)]).withProperty(FossilizedTrackwayBlock.FACING, EnumFacing.getHorizontal(random.nextInt(4)));
+                IBlockState nest = BlockHandler.NEST_FOSSIL.get(NestFossilBlock.Variant.values()[random.nextInt(NestFossilBlock.Variant.values().length)]).getDefaultState();
+                IBlockState trackway = BlockHandler.FOSSILIZED_TRACKWAY.get(FossilizedTrackwayBlock.TrackwayType.values()[random.nextInt(FossilizedTrackwayBlock.TrackwayType.values().length)]).getDefaultState().withProperty(FossilizedTrackwayBlock.FACING, EnumFacing.getHorizontal(random.nextInt(4)));
 
                 int size = random.nextInt(3) + 6;
 

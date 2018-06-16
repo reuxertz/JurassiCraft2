@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jurassicraft.server.api.DinosaurProvider;
 import org.jurassicraft.server.api.SynthesizableItem;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
@@ -16,13 +17,12 @@ import org.jurassicraft.server.genetics.DinoDNA;
 import org.jurassicraft.server.genetics.PlantDNA;
 import org.jurassicraft.server.genetics.StorageType;
 import org.jurassicraft.server.genetics.StorageTypeRegistry;
-import org.jurassicraft.server.plant.PlantHandler;
 import org.jurassicraft.server.tab.TabHandler;
 
 import java.util.List;
 import java.util.Random;
 
-public class StorageDiscItem extends Item implements SynthesizableItem, DinosaurProvider{
+public class StorageDiscItem extends Item implements SynthesizableItem, DinosaurProvider {
     public StorageDiscItem() {
         this.setCreativeTab(TabHandler.ITEMS);
     }
@@ -80,8 +80,8 @@ public class StorageDiscItem extends Item implements SynthesizableItem, Dinosaur
             list.add(stack);
         });
 
-        PlantHandler.getPlants().forEach(plant -> {
-            PlantDNA dna = new PlantDNA(PlantHandler.getPlantId(plant), -1);
+        JurassicraftRegisteries.PLANT_REGISTRY.forEach(plant -> {
+            PlantDNA dna = new PlantDNA(plant, -1);
             ItemStack stack = new ItemStack(this);
             NBTTagCompound nbt = new NBTTagCompound();
             dna.writeToNBT(nbt);

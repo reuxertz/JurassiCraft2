@@ -7,12 +7,12 @@
     "BCB"
   ],
   "key": {
-    "B": {
-      "item": "minecraft:iron_ingot",
-      "data": 0
-    },
     "C": {
       "item": "minecraft:comparator",
+      "data": 0
+    },
+    "B": {
+      "item": "minecraft:iron_ingot",
       "data": 0
     },
     "A": {
@@ -21,7 +21,6 @@
     }
   },
   "result": {
-    "item": "jurassicraft:cultivate_bottom",
-    "data": 1
+    "item": "jurassicraft:cultivate_bottom_orange"
   }
 }

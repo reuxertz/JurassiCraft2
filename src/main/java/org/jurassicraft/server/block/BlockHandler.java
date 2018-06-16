@@ -1,13 +1,16 @@
 package org.jurassicraft.server.block;
 
+import com.google.common.collect.Maps;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.api.NoItemBlock;
 import org.jurassicraft.server.api.SubBlocksBlock;
 import org.jurassicraft.server.block.entity.*;
 import org.jurassicraft.server.block.fence.ElectricFenceBaseBlock;
@@ -63,16 +66,16 @@ public class BlockHandler
     public static final Block REINFORCED_STONE = new BasicBlock(Material.ROCK).setHardness(2.0F);
     public static final Block REINFORCED_BRICKS = new BasicBlock(Material.ROCK).setHardness(3.0F);
 
-    public static final CultivatorTopBlock CULTIVATOR_TOP = new CultivatorTopBlock();
-    public static final CultivatorBottomBlock CULTIVATOR_BOTTOM = new CultivatorBottomBlock();
+    public static final Map<EnumDyeColor, CultivatorTopBlock> CULTIVATOR_TOP = Maps.newHashMap();
+    public static final Map<EnumDyeColor, CultivatorBottomBlock> CULTIVATOR_BOTTOM = Maps.newHashMap();
 
     public static final DisplayBlock DISPLAY_BLOCK = new DisplayBlock();
 
     public static final ClearGlassBlock CLEAR_GLASS = new ClearGlassBlock();
 
-    public static final FossilizedTrackwayBlock FOSSILIZED_TRACKWAY = new FossilizedTrackwayBlock();
-    public static final NestFossilBlock NEST_FOSSIL = new NestFossilBlock(false);
-    public static final NestFossilBlock ENCASED_NEST_FOSSIL = new NestFossilBlock(true);
+    public static final Map<FossilizedTrackwayBlock.TrackwayType, FossilizedTrackwayBlock> FOSSILIZED_TRACKWAY = Maps.newHashMap();
+    public static final Map<NestFossilBlock.Variant, NestFossilBlock> NEST_FOSSIL = Maps.newHashMap();
+    public static final Map<NestFossilBlock.Variant, NestFossilBlock> ENCASED_NEST_FOSSIL = Maps.newHashMap();
 
     public static final SmallRoyalFernBlock SMALL_ROYAL_FERN = new SmallRoyalFernBlock();
     public static final SmallChainFernBlock SMALL_CHAIN_FERN = new SmallChainFernBlock();
@@ -148,12 +151,36 @@ public class BlockHandler
     public static PaleoBaleBlock PALEO_BALE_LEAVES = new PaleoBaleBlock(PaleoBaleBlock.Variant.LEAVES);
     public static PaleoBaleBlock PALEO_BALE_OTHER = new PaleoBaleBlock(PaleoBaleBlock.Variant.OTHER);
 
+    static
+    {
+        for(EnumDyeColor color : EnumDyeColor.values()) {
+            CULTIVATOR_BOTTOM.put(color, new CultivatorBottomBlock(color));
+            CULTIVATOR_TOP.put(color, new CultivatorTopBlock(color));
+        }
+        for (FossilizedTrackwayBlock.TrackwayType trackwayType : FossilizedTrackwayBlock.TrackwayType.values()) {
+            FOSSILIZED_TRACKWAY.put(trackwayType, new FossilizedTrackwayBlock(trackwayType));
+        }
+
+        for(NestFossilBlock.Variant variant : NestFossilBlock.Variant.values()) {
+            NEST_FOSSIL.put(variant, new NestFossilBlock(variant, false));
+            ENCASED_NEST_FOSSIL.put(variant, new NestFossilBlock(variant, true));
+        }
+    }
+
     public static void init()
     {
+
+        registerBlock(FOSSIL, "Fossil Block");
+        registerBlock(ENCASED_FOSSIL, "Encased Fossil Block");
+
         registerBlock(PLANT_FOSSIL, "Plant Fossil Block");
-        registerBlock(FOSSILIZED_TRACKWAY, "Fossilized Trackway");
-        registerBlock(NEST_FOSSIL, "Nest Fossil");
-        registerBlock(ENCASED_NEST_FOSSIL, "Encased Nest Fossil");
+        for(FossilizedTrackwayBlock.TrackwayType type : FossilizedTrackwayBlock.TrackwayType.values()) {
+            registerBlock(FOSSILIZED_TRACKWAY.get(type), "Fossilized Trackway " + type.getName());
+        }
+        for (NestFossilBlock.Variant variant : NestFossilBlock.Variant.values()) {
+            registerBlock(NEST_FOSSIL.get(variant), "Nest Fossil " + variant.getName());
+            registerBlock(ENCASED_NEST_FOSSIL.get(variant), "Encased Nest Fossil " + variant.getName());
+        }
 
 
         for (TreeType type : TreeType.values())
@@ -223,8 +250,17 @@ public class BlockHandler
         registerBlock(SKELETON_ASSEMBLY, "Skeleton Assembly");
 //        registerBlock(JP_MAIN_GATE_BLOCK, "Jurassic Park Gate");
 
-        registerBlock(CultivatorBlockEntity.class, CULTIVATOR_BOTTOM, "Cultivate Bottom");
-        registerBlock(CULTIVATOR_TOP, "Cultivate Top");
+
+
+        for(EnumDyeColor color : EnumDyeColor.values()) { //TODO: make it so blockentities can be registered on their own
+            if(color == EnumDyeColor.WHITE) {
+                registerBlock(CultivatorBlockEntity.class, CULTIVATOR_BOTTOM.get(color), "Cultivate Bottom " + color.getDyeColorName());
+            } else {
+                registerBlock(CULTIVATOR_BOTTOM.get(color), "Cultivate Bottom " + color.getDyeColorName());
+            }
+            registerBlock(CULTIVATOR_TOP.get(color), "Cultivate Top " + color.getDyeColorName());
+        }
+
         registerBlock(CleaningStationBlockEntity.class, CLEANING_STATION, "Cleaning Station");
         registerBlock(FossilGrinderBlockEntity.class, FOSSIL_GRINDER, "Fossil Grinder");
         registerBlock(DNASequencerBlockEntity.class, DNA_SEQUENCER, "DNA Sequencer");
@@ -345,9 +381,14 @@ public class BlockHandler
 
     public static void registerBlock(Block block, String name)
     {
-        if(block instanceof SubBlocksBlock)
+        if(block instanceof SubBlocksBlock) {
             RegistryHandler.registerBlockWithCustomItem(block, ((SubBlocksBlock) block).getItemBlock(), name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_"));
-        else
+        }
+        else if(block instanceof NoItemBlock) {
+            RegistryHandler.registerBlock(block, name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_"));
+        } else {
             RegistryHandler.registerBlockWithItem(block, name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_"));
+
+        }
     }
 }

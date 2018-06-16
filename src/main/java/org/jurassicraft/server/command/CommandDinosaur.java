@@ -12,7 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
-import org.jurassicraft.server.item.DinosaurProvider;
+import org.jurassicraft.server.api.DinosaurProvider;
 
 import javax.annotation.Nullable;
 import java.util.List;

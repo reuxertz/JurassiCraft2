@@ -3,12 +3,10 @@
   "group": "jurassicraft:attraction_sign",
   "ingredients": [
     {
-      "item": "jurassicraft:attraction_sign",
-      "data": 14
+      "item": "jurassicraft:attraction_sign_triceratops_territorium_plants"
     }
   ],
   "result": {
-    "item": "jurassicraft:attraction_sign",
-    "data": 15
+    "item": "jurassicraft:attraction_sign_tyrannosaurus_kingdom"
   }
 }

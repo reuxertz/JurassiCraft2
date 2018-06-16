@@ -2,18 +2,21 @@ package org.jurassicraft.server.genetics;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
+import org.jurassicraft.server.plant.Plant;
 import org.jurassicraft.server.plant.PlantHandler;
+import org.jurassicraft.server.registries.JurassicraftRegisteries;
 import org.jurassicraft.server.util.LangHelper;
 
 import java.util.List;
 import java.util.Locale;
 
 public class PlantDNA {
-    private int plant;
+    private Plant plant;
     private int quality;
 
-    public PlantDNA(int plant, int quality) { //TODO
+    public PlantDNA(Plant plant, int quality) { //TODO
         this.plant = plant;
         this.quality = quality;
     }
@@ -23,12 +26,12 @@ public class PlantDNA {
     }
 
     public static PlantDNA readFromNBT(NBTTagCompound nbt) {
-        return new PlantDNA(nbt.getInteger("Plant"), nbt.getInteger("DNAQuality"));
+        return new PlantDNA(JurassicraftRegisteries.PLANT_REGISTRY.getValue(new ResourceLocation(nbt.getString("Plant"))), nbt.getInteger("DNAQuality"));
     }
 
     public void writeToNBT(NBTTagCompound nbt) {
         nbt.setInteger("DNAQuality", this.quality);
-        nbt.setInteger("Plant", this.plant);
+        nbt.setString("Plant", this.plant.getRegistryName().toString());
         nbt.setString("StorageId", "PlantDNA");
     }
 
@@ -36,12 +39,12 @@ public class PlantDNA {
         return this.quality;
     }
 
-    public int getPlant() {
+    public Plant getPlant() {
         return this.plant;
     }
 
     public void addInformation(ItemStack stack, List<String> tooltip) {
-        tooltip.add(TextFormatting.DARK_AQUA + new LangHelper("lore.plant.name").withProperty("plant", "plants." + PlantHandler.getPlantById(this.plant).getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_") + ".name").build());
+        tooltip.add(TextFormatting.DARK_AQUA + new LangHelper("lore.plant.name").withProperty("plant", "plants." + this.plant.getRegistryName().toString().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_") + ".name").build());
 
         TextFormatting formatting;
 
@@ -58,9 +61,5 @@ public class PlantDNA {
         }
 
         tooltip.add(formatting + new LangHelper("lore.dna_quality.name").withProperty("quality", (this.quality == -1 ? TextFormatting.OBFUSCATED.toString() : "") + this.quality + "").build());
-    }
-
-    public int getMetadata() {
-        return this.plant;
     }
 }

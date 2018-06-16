@@ -1,17 +1,12 @@
 package org.jurassicraft.server.item;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.EntityHandler;
+import net.minecraft.util.ResourceLocation;
 import org.jurassicraft.server.tab.TabHandler;
 import org.jurassicraft.server.util.LangHelper;
 
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
@@ -26,15 +21,14 @@ public class DNAItem extends DNAContainerItem {
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        String dinoName = this.getDinosaur(stack).getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
-
+        String dinoName = this.getValue(stack).getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
         return new LangHelper("item.dna.name").withProperty("dino", "entity.jurassicraft." + dinoName + ".name").build();
     }
 
-//    @Override
-//    public int getContainerId(ItemStack stack) {
-//        return EntityHandler.getDinosaurId(this.getDinosaur(stack));
-//    }
+    @Override
+    public String getFolderLocation(ResourceLocation res) {
+        return "item/dna/dinosaurs";
+    }
 
     @Override
     @SideOnly(Side.CLIENT)

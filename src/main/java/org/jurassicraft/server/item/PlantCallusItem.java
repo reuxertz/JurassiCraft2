@@ -1,14 +1,10 @@
 package org.jurassicraft.server.item;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-
+import net.minecraft.util.*;
+import org.jurassicraft.server.api.PlantProvider;
 import org.jurassicraft.server.block.plant.DoublePlantBlock;
 import org.jurassicraft.server.block.plant.JCBlockCropsBase;
 import org.jurassicraft.server.plant.Plant;
-import org.jurassicraft.server.plant.PlantHandler;
 import org.jurassicraft.server.tab.TabHandler;
 import org.jurassicraft.server.util.LangHelper;
 
@@ -19,14 +15,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class PlantCallusItem extends Item {
+public class PlantCallusItem extends Item implements PlantProvider {
     public PlantCallusItem() {
         super();
         this.setCreativeTab(TabHandler.PLANTS);
@@ -35,7 +27,8 @@ public class PlantCallusItem extends Item {
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        return new LangHelper("item.plant_callus.name").withProperty("plant", "plants." + PlantHandler.getPlantById(stack.getItemDamage()).getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_") + ".name").build();
+        ResourceLocation registryName = this.getValue(stack).getRegistryName();
+        return new LangHelper("item.plant_callus.name").withProperty("plant", "plants." + registryName.getResourceDomain() + "." + registryName.getResourcePath() + ".name").build();
     }
 
     @Override
@@ -43,7 +36,7 @@ public class PlantCallusItem extends Item {
     	ItemStack stack = player.getHeldItem(hand);
         if (side == EnumFacing.UP && player.canPlayerEdit(pos.offset(side), side, stack)) {
             if (world.isAirBlock(pos.offset(side)) && world.getBlockState(pos).getBlock() == Blocks.FARMLAND) {
-                Plant plant = PlantHandler.getPlantById(stack.getItemDamage());
+                Plant plant = this.getValue(stack);
 
                 if (plant != null) {
                     Block block = plant.getBlock();
@@ -68,14 +61,19 @@ public class PlantCallusItem extends Item {
     }
 
     @Override
+    public boolean shouldOverrideModel(Plant value) {
+        return false;
+    }
+
+    @Override
+    public boolean canBeInCreativeTab(Plant value) {
+        return true;
+    }
+
+    @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        List<Plant> plants = new LinkedList<>(PlantHandler.getPrehistoricPlantsAndTrees());
-        Collections.sort(plants);
-        if(this.isInCreativeTab(tab))
-        for (Plant plant : plants) {
-            if (plant.shouldRegister()) {
-                subItems.add(new ItemStack(this, 1, PlantHandler.getPlantId(plant)));
-            }
+        if(this.isInCreativeTab(tab)) {
+            subItems.addAll(this.getAllStacksOrdered());
         }
     }
 }

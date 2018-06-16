@@ -3,12 +3,10 @@
   "group": "jurassicraft:attraction_sign",
   "ingredients": [
     {
-      "item": "jurassicraft:attraction_sign",
-      "data": 17
+      "item": "jurassicraft:attraction_sign_aquarium"
     }
   ],
   "result": {
-    "item": "jurassicraft:attraction_sign",
-    "data": 0
+    "item": "jurassicraft:attraction_sign_aquarium_coral"
   }
 }

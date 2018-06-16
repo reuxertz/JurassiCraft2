@@ -1,14 +1,12 @@
 package org.jurassicraft.server.item;
 
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
 import net.minecraft.client.util.ITooltipFlag;
+import org.jurassicraft.server.api.DinosaurProvider;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.DinosaurEntity;
-import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.tab.TabHandler;
 import org.jurassicraft.server.util.LangHelper;
 
@@ -55,7 +53,7 @@ public class DinosaurSpawnEggItem extends Item implements DinosaurProvider {
     }
 
     public DinosaurEntity spawnDinosaur(World world, EntityPlayer player, ItemStack stack, double x, double y, double z) {
-        Dinosaur dinosaur = this.getDinosaur(stack);
+        Dinosaur dinosaur = this.getValue(stack);
         if (dinosaur != null) {
             Class<? extends DinosaurEntity> entityClass = dinosaur.getDinosaurClass();
             try {
@@ -106,7 +104,7 @@ public class DinosaurSpawnEggItem extends Item implements DinosaurProvider {
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        Dinosaur dinosaur = this.getDinosaur(stack);
+        Dinosaur dinosaur = this.getValue(stack);
 
         return new LangHelper("item.dino_spawn_egg.name").withProperty("dino", "entity.jurassicraft." + dinosaur.getName().replace(" ", "_").toLowerCase(Locale.ENGLISH) + ".name").build();
     }
@@ -134,7 +132,7 @@ public class DinosaurSpawnEggItem extends Item implements DinosaurProvider {
 
                 if (tile instanceof TileEntityMobSpawner) {
                     MobSpawnerBaseLogic spawnerLogic = ((TileEntityMobSpawner) tile).getSpawnerBaseLogic();
-                    spawnerLogic.setEntityId(EntityList.getKey(this.getDinosaur(stack).getDinosaurClass()));
+                    spawnerLogic.setEntityId(EntityList.getKey(this.getValue(stack).getDinosaurClass()));
                     tile.markDirty();
 
                     if (!player.capabilities.isCreativeMode) {

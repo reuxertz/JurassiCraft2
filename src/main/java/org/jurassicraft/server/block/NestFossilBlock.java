@@ -33,49 +33,25 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class NestFossilBlock extends Block implements SubBlocksBlock, CleanableItem {
-    public static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class);
-
     public boolean encased;
 
-    public NestFossilBlock(boolean encased) {
+    private final Variant variant;
+
+    public NestFossilBlock(Variant variant, boolean encased) {
         super(Material.ROCK);
+        this.variant = variant;
         this.encased = encased;
         this.setHardness(1.5F);
         this.setCreativeTab(TabHandler.FOSSILS);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, Variant.VARIANT_1));
     }
 
-    @Override
-    public IBlockState getStateFromMeta(int meta) {
-        return this.getDefaultState().withProperty(VARIANT, Variant.values()[meta & 3]);
-    }
-
-    @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(VARIANT).ordinal() & 3;
-    }
-
-    @Override
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, VARIANT);
+    public Variant getVariant() {
+        return variant;
     }
 
     @Override
     protected ItemStack getSilkTouchDrop(IBlockState state) {
         return new ItemStack(Item.getItemFromBlock(this), 1, this.damageDropped(state));
-    }
-
-    @Override
-    public int damageDropped(IBlockState state) {
-        return state.getValue(VARIANT).ordinal() & 3;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
-        for (Variant type : Variant.values()) {
-            list.add(new ItemStack(this, 1, type.ordinal()));
-        }
     }
 
     @Override
@@ -123,7 +99,7 @@ public class NestFossilBlock extends Block implements SubBlocksBlock, CleanableI
     @Override
     public ItemStack getCleanedItem(ItemStack stack, Random random) {
         if (random.nextBoolean()) { //50
-            return new ItemStack(ItemHandler.FOSSILIZED_EGG, random.nextInt(7) + 1, stack.getItemDamage());
+            return new ItemStack(ItemHandler.FOSSILIZED_EGG.get(this.variant), random.nextInt(7) + 1);
         }
 
         if (random.nextBoolean()) { //25
@@ -143,7 +119,7 @@ public class NestFossilBlock extends Block implements SubBlocksBlock, CleanableI
         List<Pair<Float, ItemStack>> list = Lists.newArrayList();
         float single = 100F/4F;
         for(int i = 0; i < 7; i++) {
-            list.add(Pair.of(50F/7F, new ItemStack(ItemHandler.FOSSILIZED_EGG, i + 1, inputItem.getItemDamage())));
+            list.add(Pair.of(50F/7F, new ItemStack(ItemHandler.FOSSILIZED_EGG.get(this.variant), i + 1)));
         }
         list.add(Pair.of(single, new ItemStack(Items.FLINT)));
         list.add(Pair.of(single, new ItemStack(Items.DYE, 1, 15)));

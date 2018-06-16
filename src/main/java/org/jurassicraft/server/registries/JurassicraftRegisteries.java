@@ -21,6 +21,7 @@ import org.jurassicraft.server.api.Hybrid;
 import org.jurassicraft.server.conf.JurassiCraftConfig;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.period.TimePeriod;
+import org.jurassicraft.server.plant.Plant;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -31,6 +32,8 @@ import java.util.List;
 public class JurassicraftRegisteries {
 
     public static IForgeRegistry<Dinosaur> DINOSAUR_REGISTRY;
+    public static IForgeRegistry<Plant> PLANT_REGISTRY;
+
 
     @SubscribeEvent
     public static void createRegisteries(RegistryEvent.NewRegistry event) {
@@ -40,6 +43,13 @@ public class JurassicraftRegisteries {
                 .setDefaultKey(new ResourceLocation("jurassicraft:velociraptor"))
                 .set(((key, isNetwork) -> Dinosaur.MISSING))
                 .addCallback(new DinosaurCallbackManager())
+                .create();
+
+        PLANT_REGISTRY = new RegistryBuilder<Plant>()
+                .setType(Plant.class)
+                .setName(new ResourceLocation(JurassiCraft.MODID, "plants"))
+                .setDefaultKey(new ResourceLocation("jurassicraft:ajuginucula_smithii"))
+                .set(((key, isNetwork) -> Plant.MISSING))
                 .create();
     }
 

@@ -3,12 +3,10 @@
   "group": "jurassicraft:attraction_sign",
   "ingredients": [
     {
-      "item": "jurassicraft:attraction_sign",
-      "data": 9
+      "item": "jurassicraft:attraction_sign_safari"
     }
   ],
   "result": {
-    "item": "jurassicraft:attraction_sign",
-    "data": 10
+    "item": "jurassicraft:attraction_sign_safari_plants"
   }
 }

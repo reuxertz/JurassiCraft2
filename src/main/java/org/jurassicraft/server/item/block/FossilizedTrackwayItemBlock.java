@@ -7,30 +7,22 @@ import org.jurassicraft.server.block.FossilizedTrackwayBlock;
 import org.jurassicraft.server.util.LangHelper;
 
 public class FossilizedTrackwayItemBlock extends ItemBlock {
-    public FossilizedTrackwayItemBlock(Block block) {
+
+    private final FossilizedTrackwayBlock.TrackwayType type;
+
+    public FossilizedTrackwayItemBlock(Block block, FossilizedTrackwayBlock.TrackwayType trackwayType) {
         super(block);
+        this.type = trackwayType;
         this.setMaxDamage(0);
-        this.setHasSubtypes(true);
     }
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        FossilizedTrackwayBlock.TrackwayType type = this.getType(stack);
         return new LangHelper("tile.fossilized_trackway.name").withProperty("variant", "trackway." + type.getName() + ".name").build();
-    }
-
-    private FossilizedTrackwayBlock.TrackwayType getType(ItemStack stack) {
-        FossilizedTrackwayBlock.TrackwayType[] values = FossilizedTrackwayBlock.TrackwayType.values();
-        return values[stack.getItemDamage() % values.length];
-    }
-
-    @Override
-    public int getMetadata(int metadata) {
-        return metadata;
     }
 
     @Override
     public String getUnlocalizedName(ItemStack stack) {
-        return super.getUnlocalizedName() + "." + this.getType(stack).getName();
+        return super.getUnlocalizedName() + "." + type.getName();
     }
 }

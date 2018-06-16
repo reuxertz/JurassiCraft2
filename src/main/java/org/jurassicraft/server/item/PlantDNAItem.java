@@ -1,30 +1,18 @@
 package org.jurassicraft.server.item;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.world.World;
-import org.jurassicraft.server.plant.Plant;
-import org.jurassicraft.server.plant.PlantHandler;
-import org.jurassicraft.server.tab.TabHandler;
-import org.jurassicraft.server.util.LangHelper;
-
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.ResourceLocation;
+import org.jurassicraft.server.api.PlantProvider;
+import org.jurassicraft.server.plant.Plant;
+import org.jurassicraft.server.tab.TabHandler;
+import org.jurassicraft.server.util.LangHelper;
 
-public class PlantDNAItem extends Item {
+public class PlantDNAItem extends Item implements PlantProvider {
     public PlantDNAItem() {
         super();
         this.setCreativeTab(TabHandler.PLANTS);
@@ -33,39 +21,25 @@ public class PlantDNAItem extends Item {
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        String plantName = this.getPlant(stack).getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
-
-        return new LangHelper("item.plant_dna.name").withProperty("plant", "plants." + plantName + ".name").build();
-    }
-
-    public Plant getPlant(ItemStack stack) {
-        Plant plant = PlantHandler.getPlantById(stack.getItemDamage());
-
-        if (plant == null) {
-            plant = PlantHandler.SMALL_ROYAL_FERN;
-        }
-
-        return plant;
+        ResourceLocation registryName = this.getValue(stack).getRegistryName();
+        return new LangHelper("item.plant_dna.name").withProperty("plant", "plants." + registryName.getResourceDomain() + "." + registryName.getResourcePath() + ".name").build();
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subtypes) {
-        List<Plant> plants = new LinkedList<>(PlantHandler.getPrehistoricPlantsAndTrees());
-
-        Map<Plant, Integer> ids = new HashMap<>();
-
-        for (Plant plant : plants) {
-            ids.put(plant, PlantHandler.getPlantId(plant));
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+        if(this.isInCreativeTab(tab)) {
+            subItems.addAll(this.getAllStacksOrdered());
         }
+    }
 
-        Collections.sort(plants);
-        if(this.isInCreativeTab(tab))
-        for (Plant plant : plants) {
-            if (plant.shouldRegister()) {
-                subtypes.add(new ItemStack(this, 1, ids.get(plant)));
-            }
-        }
+    @Override
+    public String getFolderLocation(ResourceLocation res) {
+        return "item/dna/plants";
+    }
+
+    @Override
+    public boolean shouldOverrideModel(Plant value) {
+        return value.isPrehistoric();
     }
 
     public int getDNAQuality(EntityPlayer player, ItemStack stack) {

@@ -1,30 +1,24 @@
 package org.jurassicraft.server.item;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 
-import net.minecraft.client.util.ITooltipFlag;
+import org.jurassicraft.server.api.DinosaurProvider;
 import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.genetics.GeneticsHelper;
 import org.jurassicraft.server.tab.TabHandler;
 import org.jurassicraft.server.util.LangHelper;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class DinosaurMeatItem extends ItemFood implements DinosaurProvider{
+public class DinosaurMeatItem extends ItemFood implements DinosaurProvider {
     public DinosaurMeatItem() {
         super(3, 0.3F, true);
         this.setCreativeTab(TabHandler.FOODS);
@@ -32,14 +26,14 @@ public class DinosaurMeatItem extends ItemFood implements DinosaurProvider{
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        Dinosaur dinosaur = this.getDinosaur(stack);
+        Dinosaur dinosaur = this.getValue(stack);
         return new LangHelper("item.dinosaur_meat.name").withProperty("dino", "entity.jurassicraft." + dinosaur.getName().replace(" ", "_").toLowerCase(Locale.ENGLISH) + ".name").build();
     }
 
     @Override
     protected void onFoodEaten(ItemStack stack, World world, EntityPlayer player) {
         if (!world.isRemote) {
-            this.getDinosaur(stack).applyMeatEffect(player, false);
+            this.getValue(stack).applyMeatEffect(player, false);
         }
     }
 

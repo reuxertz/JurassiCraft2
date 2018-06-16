@@ -1,18 +1,14 @@
 package org.jurassicraft.server.item;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 
+import org.jurassicraft.server.api.DinosaurProvider;
 import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.tab.TabHandler;
 import org.jurassicraft.server.util.LangHelper;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
@@ -23,7 +19,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class DinosaurEggItem extends DNAContainerItem implements DinosaurProvider{//TODO not let direct birth animals
+public class DinosaurEggItem extends DNAContainerItem implements DinosaurProvider {//TODO not let direct birth animals
     public DinosaurEggItem() {
         super();
         this.setCreativeTab(TabHandler.DNA);
@@ -32,7 +28,7 @@ public class DinosaurEggItem extends DNAContainerItem implements DinosaurProvide
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        String dinoName = this.getDinosaur(stack).getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
+        String dinoName = this.getValue(stack).getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
 
         return new LangHelper("item.egg.name").withProperty("dino", "entity.jurassicraft." + dinoName + ".name").build();
     }
@@ -65,7 +61,7 @@ public class DinosaurEggItem extends DNAContainerItem implements DinosaurProvide
 //
 //        if (player.canPlayerEdit(pos, side, stack) && !world.isRemote)
 //        {
-//            DinosaurEggEntity egg = new DinosaurEggEntity(world, getDinosaur(stack), getDNAQuality(player, stack), getGeneticCode(player, stack).toString());
+//            DinosaurEggEntity egg = new DinosaurEggEntity(world, getValue(stack), getDNAQuality(player, stack), getGeneticCode(player, stack).toString());
 //            egg.setPosition(pos.getX() + hitX, pos.getY(), pos.getZ() + hitZ);
 //            egg.rotationYaw = player.rotationYaw;
 //            world.spawnEntity(egg);

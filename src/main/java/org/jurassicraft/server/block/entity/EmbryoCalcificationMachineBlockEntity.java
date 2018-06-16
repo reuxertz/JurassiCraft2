@@ -3,8 +3,7 @@ package org.jurassicraft.server.block.entity;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.container.EmbryoCalcificationMachineContainer;
 import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.EntityHandler;
-import org.jurassicraft.server.item.DinosaurProvider;
+import org.jurassicraft.server.api.DinosaurProvider;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.item.SyringeItem;
 
@@ -32,7 +31,7 @@ public class EmbryoCalcificationMachineBlockEntity extends MachineBaseBlockEntit
         ItemStack egg = this.slots.get(1);
 
         if (!input.isEmpty() && input.getItem() instanceof SyringeItem && !egg.isEmpty() && egg.getItem() == Items.EGG) {
-            Dinosaur dino = DinosaurProvider.getFromStack(input).getDinosaur(input);
+            Dinosaur dino = DinosaurProvider.getFromStack(input).getValue(input);
 
             if (!dino.isMammal()) {
                 ItemStack output = new ItemStack(ItemHandler.EGG, 1, input.getItemDamage());

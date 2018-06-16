@@ -1,19 +1,15 @@
 package org.jurassicraft.server.item;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Random;
 
 import com.google.common.collect.Lists;
+import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jurassicraft.server.api.PlantProvider;
 import org.jurassicraft.server.api.SequencableItem;
 import org.jurassicraft.server.genetics.PlantDNA;
 import org.jurassicraft.server.plant.Plant;
-import org.jurassicraft.server.plant.PlantHandler;
 import org.jurassicraft.server.tab.TabHandler;
 import org.jurassicraft.server.util.LangHelper;
 
@@ -22,10 +18,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class PlantSoftTissueItem extends Item implements SequencableItem {
+public class PlantSoftTissueItem extends Item implements SequencableItem, PlantProvider {
     public PlantSoftTissueItem() {
         super();
         this.setHasSubtypes(true);
@@ -34,38 +28,25 @@ public class PlantSoftTissueItem extends Item implements SequencableItem {
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        getItemSubtypes(this);
-        String plantName = this.getPlant(stack).getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
-
-        return new LangHelper("item.plant_soft_tissue.name").withProperty("plant", "plants." + plantName + ".name").build();
+        ResourceLocation registryName = this.getValue(stack).getRegistryName();
+        return new LangHelper("item.plant_soft_tissue.name").withProperty("plant", "plants." + registryName.getResourceDomain() + "." + registryName.getResourcePath() + ".name").build();
     }
 
-    public Plant getPlant(ItemStack stack) {
-        Plant plant = PlantHandler.getPlantById(stack.getItemDamage());
-
-        if (plant == null) {
-            plant = PlantHandler.SMALL_ROYAL_FERN;
-        }
-
-        return plant;
-    }
-
-    @SideOnly(Side.CLIENT)
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subtypes) {
-        List<Plant> plants = new LinkedList<>(PlantHandler.getPrehistoricPlantsAndTrees());
-
-        Map<Plant, Integer> ids = new HashMap<>();
-
-        for (Plant plant : plants) {
-            ids.put(plant, PlantHandler.getPlantId(plant));
-        }
-        Collections.sort(plants);
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
         if(this.isInCreativeTab(tab)) {
-            for (Plant plant : plants) {
-                subtypes.add(new ItemStack(this, 1, ids.get(plant)));
-            }
+            subItems.addAll(this.getAllStacksOrdered());
         }
+    }
+
+    @Override
+    public boolean shouldOverrideModel(Plant value) {
+        return value.isPrehistoric();
+    }
+
+    @Override
+    public String getFolderLocation(ResourceLocation res) {
+        return "item/soft_tissue/plants";
     }
 
     @Override
@@ -79,7 +60,7 @@ public class PlantSoftTissueItem extends Item implements SequencableItem {
 
         if (nbt == null) {
             nbt = new NBTTagCompound();
-            PlantDNA dna = new PlantDNA(stack.getItemDamage(), SequencableItem.randomQuality(random));
+            PlantDNA dna = new PlantDNA(this.getValue(stack), SequencableItem.randomQuality(random));
             dna.writeToNBT(nbt);
         }
 
@@ -97,7 +78,7 @@ public class PlantSoftTissueItem extends Item implements SequencableItem {
     @Override
     public List<Pair<Float, ItemStack>> getChancedOutputs(ItemStack inputItem) {
         NBTTagCompound nbt = new NBTTagCompound();
-        PlantDNA dna = new PlantDNA(inputItem.getItemDamage(), -1);
+        PlantDNA dna = new PlantDNA(this.getValue(inputItem), -1);
         dna.writeToNBT(nbt);
         ItemStack output = new ItemStack(ItemHandler.STORAGE_DISC);
         output.setTagCompound(nbt);

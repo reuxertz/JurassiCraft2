@@ -7,20 +7,14 @@ import net.minecraft.item.ItemStack;
 import org.jurassicraft.server.util.LangHelper;
 
 public class CultivateItemBlock extends ItemBlock {
-    public CultivateItemBlock(Block block) {
+    private final EnumDyeColor color;
+    public CultivateItemBlock(Block block, EnumDyeColor color) {
         super(block);
-        this.setMaxDamage(0);
-        this.setHasSubtypes(true);
-    }
-
-    @Override
-    public int getMetadata(int metadata) {
-        return metadata;
+        this.color = color;
     }
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        EnumDyeColor color = EnumDyeColor.byMetadata(stack.getItemDamage());
-        return new LangHelper("tile.cultivate.name").withProperty("color", "color." + color.getName() + ".name").build();
+        return new LangHelper("tile.cultivate.name").withProperty("color", "color." + this.color.getName() + ".name").build();
     }
 }

@@ -22,13 +22,13 @@ import net.minecraft.world.storage.loot.functions.SetCount;
 import net.minecraft.world.storage.loot.functions.SetMetadata;
 import net.minecraft.world.storage.loot.functions.SetNBT;
 import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.api.DinosaurProvider;
+import org.jurassicraft.server.api.PlantProvider;
 import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.item.*;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
 import org.jurassicraft.server.genetics.DinoDNA;
 import org.jurassicraft.server.genetics.GeneticsHelper;
-import org.jurassicraft.server.item.DinosaurProvider;
-import org.jurassicraft.server.item.FossilItem;
-import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.plant.Plant;
 import org.jurassicraft.server.plant.PlantHandler;
 
@@ -53,6 +53,7 @@ public class Loot {
     public static final DinosaurData DINOSAUR_DATA = new DinosaurData();
     public static final PlantData PLANT_DATA = new PlantData();
     public static final RandomDNA RANDOM_DNA = new RandomDNA();
+    public static final AmberData AMBER_DATA = new AmberData();//ItemHandler.AMBER
     public static final RandomDNA FULL_DNA = new RandomDNA(true);
 
     private static long tableID = 0;
@@ -85,13 +86,15 @@ public class Loot {
     }
 
     public static void handleTable(LootTable table, ResourceLocation name) {
+        Item defaultAmber = ItemHandler.AMBER.get(AmberItem.AmberStorageType.MOSQUITO);
+
         if (name == LootTableList.GAMEPLAY_FISHING) {
             LootEntry gracilaria = Loot.entry(ItemHandler.GRACILARIA).weight(25).build();
             table.addPool(Loot.pool("gracilaria").rolls(1, 1).chance(0.1F).entry(gracilaria).build());
         } else if (name == LootTableList.CHESTS_VILLAGE_BLACKSMITH || name == LootTableList.CHESTS_NETHER_BRIDGE || name == LootTableList.CHESTS_SIMPLE_DUNGEON || name == LootTableList.CHESTS_STRONGHOLD_CORRIDOR || name == LootTableList.CHESTS_DESERT_PYRAMID || name == LootTableList.CHESTS_ABANDONED_MINESHAFT) {
             LootEntry plantFossil = Loot.entry(ItemHandler.PLANT_FOSSIL).weight(5).count(1, 3).build();
             LootEntry twig = Loot.entry(ItemHandler.TWIG_FOSSIL).weight(5).count(1, 3).build();
-            LootEntry amber = Loot.entry(ItemHandler.AMBER).weight(2).count(0, 1).data(0, 1).build();
+            LootEntry amber = Loot.entry(defaultAmber).function(AMBER_DATA).weight(2).count(0, 1).build();
             LootEntry skull = Loot.entry(ItemHandler.FOSSIL).weight(2).function(new FossilVarient("skull")).function(DINOSAUR_DATA).count(1, 2).build();///////////////////
 
             table.addPool(Loot.pool("fossils").rolls(1, 2).entries(plantFossil, twig, amber, skull).build());
@@ -99,17 +102,17 @@ public class Loot {
             LootEntry[] records = Loot.entries(ItemHandler.JURASSICRAFT_THEME_DISC, ItemHandler.DONT_MOVE_A_MUSCLE_DISC, ItemHandler.TROODONS_AND_RAPTORS_DISC).buildEntries();
             table.addPool(Loot.pool("records").rolls(0, 2).entries(records).build());
         } else if (name == Loot.VISITOR_GROUND_STORAGE) {
-            LootEntry amber = Loot.entry(ItemHandler.AMBER).data(0, 1).count(0, 3).build();
+            LootEntry amber = Loot.entry(defaultAmber).function(AMBER_DATA).count(0, 3).build();
             LootEntry wool = Loot.entry(Blocks.WOOL).data(0, 15).count(0, 64).build();
             table.addPool(Loot.pool("items").rolls(5, 6).entries(amber, wool).build());
         } else if (name == Loot.VISITOR_LABORATORY) {
             LootEntry softTissue = Loot.entry(ItemHandler.SOFT_TISSUE).count(0, 3).function(DINOSAUR_DATA).build();
             LootEntry plantSoftTissue = Loot.entry(ItemHandler.PLANT_SOFT_TISSUE).count(0, 3).function(PLANT_DATA).build();
-            LootEntry amber = Loot.entry(ItemHandler.AMBER).data(0, 1).count(0, 5).build();
+            LootEntry amber = Loot.entry(defaultAmber).function(AMBER_DATA).count(0, 5).build();
             LootEntry dna = Loot.entry(ItemHandler.DNA).function(DINOSAUR_DATA).function(RANDOM_DNA).build();
             table.addPool(Loot.pool("items").rolls(3, 4).entries(dna, softTissue, plantSoftTissue, amber).build());
         } else if (name == Loot.VISITOR_DINING_HALL) {
-            LootEntry amber = Loot.entry(ItemHandler.AMBER).weight(2).count(0, 1).data(0, 1).build();
+            LootEntry amber = Loot.entry(defaultAmber).function(AMBER_DATA).weight(2).count(0, 1).build();
             LootEntry tooth = Loot.entry(ItemHandler.FOSSIL).function(new FossilVarient("tooth")).weight(2).function(DINOSAUR_DATA).count(1, 2).build();
             LootEntry actionFigure = Loot.entry(ItemHandler.DISPLAY_BLOCK).function(DINOSAUR_DATA).weight(1).build();
             table.addPool(Loot.pool("items").rolls(8, 11).entries(amber, tooth, actionFigure).build());
@@ -275,6 +278,17 @@ public class Loot {
         }
     }
 
+    public static class AmberData extends LootFunction {
+        public AmberData() {
+            super(new LootCondition[0]);
+        }
+
+        @Override
+        public ItemStack apply(ItemStack stack, Random rand, LootContext context) {
+            return new ItemStack(ItemHandler.AMBER.get(AmberItem.AmberStorageType.values()[rand.nextInt(AmberItem.AmberStorageType.values().length)]));
+        }
+    }
+
     public static class PlantData extends LootFunction {
         public PlantData() {
             super(new LootCondition[0]);
@@ -288,7 +302,7 @@ public class Loot {
         public ItemStack apply(ItemStack stack, Random rand, LootContext context) {
             List<Plant> plants = PlantHandler.getPrehistoricPlants();
             Plant plant = plants.get(rand.nextInt(plants.size()));
-            stack.setItemDamage(PlantHandler.getPlantId(plant));
+            PlantProvider.getFromStack(stack).putValue(stack, plant);
             return stack;
         }
     }
@@ -315,7 +329,7 @@ public class Loot {
             if (this.full) {
                 quality = 100;
             }
-            DinoDNA dna = new DinoDNA(DinosaurProvider.getFromStack(stack).getDinosaur(stack), quality, GeneticsHelper.randomGenetics(rand));
+            DinoDNA dna = new DinoDNA(DinosaurProvider.getFromStack(stack).getValue(stack), quality, GeneticsHelper.randomGenetics(rand));
             NBTTagCompound compound = new NBTTagCompound();
             dna.writeToNBT(compound);
             stack.setTagCompound(compound);

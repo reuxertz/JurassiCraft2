@@ -20,14 +20,14 @@ public class SyringeItem extends DNAContainerItem {
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        String dinoName = getDinosaur(stack).getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
+        String dinoName = getValue(stack).getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
 
         return new LangHelper("item.syringe.name").withProperty("dino", "entity.jurassicraft." + dinoName + ".name").build();
     }
 
 //    @Override
 //    public int getContainerId(ItemStack stack) {
-//        return EntityHandler.getDinosaurId(getDinosaur(stack));
+//        return EntityHandler.getDinosaurId(getValue(stack));
 //    }
 
     @Override

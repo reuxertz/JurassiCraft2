@@ -9,6 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import org.jurassicraft.server.item.AmberItem;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.tab.TabHandler;
 
@@ -38,11 +39,7 @@ public class AmberBlock extends Block {
         }
 
         for (int i = 0; i < count + 1; i++) {
-            Item item = ItemHandler.AMBER;
-
-            if (item != null) {
-                ret.add(new ItemStack(item, 1, rand.nextBoolean() ? 1 : 0));
-            }
+            ret.add(new ItemStack(ItemHandler.AMBER.get(AmberItem.AmberStorageType.values()[rand.nextInt(AmberItem.AmberStorageType.values().length)])));
         }
 
         return ret;

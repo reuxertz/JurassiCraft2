@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 import org.jurassicraft.server.api.SubBlocksBlock;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
-import org.jurassicraft.server.item.DinosaurProvider;
+import org.jurassicraft.server.api.DinosaurProvider;
 import org.jurassicraft.server.item.block.FossilItemBlock;
 import org.jurassicraft.server.tab.TabHandler;
 
@@ -51,6 +51,11 @@ public class FossilBlock extends Block implements SubBlocksBlock, DinosaurProvid
     @Override
     public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         drops.add(this.getItemStack(this.getDinosaur(world, pos)));
+    }
+
+    @Override
+    public boolean shouldOverrideModel(Dinosaur value) {
+        return false;
     }
 
     @Override

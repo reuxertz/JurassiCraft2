@@ -58,20 +58,12 @@ public class RegistryHandler
     }
 
     public static void registerBlockWithItem(Block block, String registryname) {
-        block.setRegistryName(JurassiCraft.MODID, registryname);
-        block.setUnlocalizedName(registryname);
-        ItemBlock ib = new ItemBlock(block);
-        ib.setRegistryName(JurassiCraft.MODID, registryname);
-        blocksToReg.add(block);
-        itemsToReg.add(ib);
-        blockItems.put(block, ib);
+        registerBlockWithCustomItem(block, new ItemBlock(block), registryname);
     }
 
     public static void registerBlockWithCustomItem(Block block, ItemBlock iBlock, String registryname) {
-        block.setRegistryName(JurassiCraft.MODID, registryname);
-        block.setUnlocalizedName(registryname);
+        registerBlock(block, registryname);
         iBlock.setRegistryName(JurassiCraft.MODID, registryname);
-        blocksToReg.add(block);
         itemsToReg.add(iBlock);
         blockItems.put(block, iBlock);
     }

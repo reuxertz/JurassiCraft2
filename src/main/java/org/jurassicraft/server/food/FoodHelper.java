@@ -17,6 +17,7 @@ import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.plant.Plant;
 import org.jurassicraft.server.plant.PlantHandler;
+import org.jurassicraft.server.registries.JurassicraftRegisteries;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -66,7 +67,7 @@ public class FoodHelper {
         registerFood(BlockHandler.PALEO_BALE_LEAVES, FoodType.PLANT, 5000);
         registerFood(BlockHandler.PALEO_BALE_OTHER, FoodType.PLANT, 5000);
 
-        for (Plant plant : PlantHandler.getPlants()) {
+        for (Plant plant : JurassicraftRegisteries.PLANT_REGISTRY.getValuesCollection()) {
             registerFood(plant.getBlock(), FoodType.PLANT, plant.getHealAmount(), plant.getEffects());
         }
 

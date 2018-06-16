@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jurassicraft.server.api.DinosaurProvider;
 import org.jurassicraft.server.api.GrindableItem;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
@@ -38,7 +39,7 @@ public class FossilItem extends Item implements GrindableItem, DinosaurProvider 
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        Dinosaur dinosaur = this.getDinosaur(stack);
+        Dinosaur dinosaur = this.getValue(stack);
 
         if (dinosaur != null) {
             return new LangHelper("item." + this.getVarient(stack) + ".name").withProperty("dino", "entity.jurassicraft." + dinosaur.getName().replace(" ", "_").toLowerCase(Locale.ENGLISH) + ".name").build();
@@ -48,7 +49,7 @@ public class FossilItem extends Item implements GrindableItem, DinosaurProvider 
     }
 
     @Override
-    public Dinosaur getDinosaur(ItemStack stack) {
+    public Dinosaur getValue(ItemStack stack) {
         return getFossilInfomation(stack).getDinosaur();
     }
 
@@ -90,8 +91,8 @@ public class FossilItem extends Item implements GrindableItem, DinosaurProvider 
     }
 
     @Override
-    public Map<String, ResourceLocation> getModelResourceLocations(Dinosaur dinosaur) {
-        Map<String, ResourceLocation> map = Maps.newHashMap();
+    public Map<Object, ResourceLocation> getModelResourceLocations(Dinosaur dinosaur) {
+        Map<Object, ResourceLocation> map = Maps.newHashMap();
         ResourceLocation dinoreg = dinosaur.getRegistryName();
         for(String bone : dinosaur.getBones()) {
             map.put(bone, new ResourceLocation(dinoreg.getResourceDomain(), "item/" + (fresh ? "fresh_" : "") + "bones/" + dinoreg.getResourcePath()+ "/" + bone));
@@ -100,7 +101,7 @@ public class FossilItem extends Item implements GrindableItem, DinosaurProvider 
     }
 
     @Override
-    public String getVarient(ItemStack stack) {
+    public Object getVarient(ItemStack stack) {
         return getFossilInfomation(stack).getType();
     }
 

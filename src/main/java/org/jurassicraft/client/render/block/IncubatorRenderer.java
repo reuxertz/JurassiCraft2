@@ -10,8 +10,7 @@ import org.jurassicraft.client.render.RenderingHandler;
 import org.jurassicraft.client.render.entity.dinosaur.DinosaurRenderInfo;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.entity.IncubatorBlockEntity;
-import org.jurassicraft.server.entity.EntityHandler;
-import org.jurassicraft.server.item.DinosaurProvider;
+import org.jurassicraft.server.api.DinosaurProvider;
 
 public class IncubatorRenderer extends TileEntitySpecialRenderer<IncubatorBlockEntity> {
     private Minecraft mc = Minecraft.getMinecraft();
@@ -43,7 +42,7 @@ public class IncubatorRenderer extends TileEntitySpecialRenderer<IncubatorBlockE
             GlStateManager.translate(x, y + 0.05, z);
             GlStateManager.translate(xOffset, 1.2, zOffset);
             GlStateManager.scale(-0.5F, -0.5F, -0.5F);
-            DinosaurRenderInfo renderDef = RenderingHandler.INSTANCE.getRenderInfo(DinosaurProvider.getFromStack(stack).getDinosaur(stack));
+            DinosaurRenderInfo renderDef = RenderingHandler.INSTANCE.getRenderInfo(DinosaurProvider.getFromStack(stack).getValue(stack));
             this.mc.getTextureManager().bindTexture(renderDef.getEggTexture());
             renderDef.getEggModel().render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
             GlStateManager.popMatrix();

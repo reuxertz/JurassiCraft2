@@ -32,7 +32,7 @@ public class TwigFossilItem extends Item implements GrindableItem {
         int outputType = random.nextInt(4);
 
         if (outputType == 3) {
-            ItemStack output = new ItemStack(ItemHandler.PLANT_SOFT_TISSUE, 1, PlantHandler.getPlantId(TreeType.values()[random.nextInt(TreeType.values().length)].getPlant()));
+            ItemStack output = ItemHandler.PLANT_SOFT_TISSUE.getItemStack(TreeType.values()[random.nextInt(TreeType.values().length)].getPlant());
             output.setTagCompound(tag);
             return output;
         } else if (outputType < 2) {
@@ -49,7 +49,7 @@ public class TwigFossilItem extends Item implements GrindableItem {
         float single = 100F/4F;
         float treeSingle = single / TreeType.values().length;
         for(TreeType treeType : TreeType.values()) {
-            ItemStack output = new ItemStack(ItemHandler.PLANT_SOFT_TISSUE, 1, PlantHandler.getPlantId(treeType.getPlant()));
+            ItemStack output = ItemHandler.PLANT_SOFT_TISSUE.getItemStack(treeType.getPlant());
             output.setTagCompound(tag);
             list.add(Pair.of(treeSingle, output));
         }

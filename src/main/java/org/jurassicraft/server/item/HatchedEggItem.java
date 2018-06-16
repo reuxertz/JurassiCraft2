@@ -11,7 +11,6 @@ import net.minecraft.world.World;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.DinosaurEntity;
-import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.util.LangHelper;
 
 import java.util.Locale;
@@ -25,7 +24,7 @@ public class HatchedEggItem extends DNAContainerItem {
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        Dinosaur dinosaur = this.getDinosaur(stack);
+        Dinosaur dinosaur = this.getValue(stack);
         String dinoName = dinosaur.getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
 
         return new LangHelper(dinosaur.givesDirectBirth() ? "item.gestated.name" :"item.hatched_egg.name")
@@ -54,7 +53,7 @@ public class HatchedEggItem extends DNAContainerItem {
 
 //    @Override
 //    public int getContainerId(ItemStack stack) {
-//        return EntityHandler.getDinosaurId(this.getDinosaur(stack));
+//        return EntityHandler.getDinosaurId(this.getValue(stack));
 //    }
 
     @Override
@@ -70,7 +69,7 @@ public class HatchedEggItem extends DNAContainerItem {
 
         if (player.canPlayerEdit(pos, side, stack)) {
             if (!world.isRemote) {
-                Dinosaur dinosaur = this.getDinosaur(stack);
+                Dinosaur dinosaur = this.getValue(stack);
 
                 try {
                     DinosaurEntity entity = dinosaur.getDinosaurClass().getDeclaredConstructor(World.class).newInstance(world);

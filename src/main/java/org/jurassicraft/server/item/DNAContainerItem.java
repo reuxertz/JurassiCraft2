@@ -1,18 +1,11 @@
 package org.jurassicraft.server.item;
 
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import org.jurassicraft.server.api.DinosaurProvider;
 import org.jurassicraft.server.genetics.GeneticsHelper;
-import org.jurassicraft.server.util.LangHelper;
-
-import javax.annotation.Nullable;
-import java.util.List;
 
 public class DNAContainerItem extends Item implements DinosaurProvider {
 

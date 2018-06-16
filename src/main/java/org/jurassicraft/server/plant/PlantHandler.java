@@ -1,137 +1,120 @@
 package org.jurassicraft.server.plant;
 
+import com.google.common.collect.Lists;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.MobEffects;
+import net.minecraft.init.PotionTypes;
+import net.minecraft.potion.PotionEffect;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.block.BlockHandler;
+import org.jurassicraft.server.block.tree.TreeType;
+import org.jurassicraft.server.food.FoodHelper;
+import org.jurassicraft.server.registries.JurassicraftRegisteries;
+
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Mod.EventBusSubscriber(modid = JurassiCraft.MODID)
 public class PlantHandler {
-    public static final Plant AJUGINUCULA_SMITHII = new AjuginuculaSmithiiPlant();
-    public static final Plant SMALL_ROYAL_FERN = new SmallRoyalFernPlant();
-    public static final Plant CALAMITES = new CalamitesPlant();
-    public static final Plant SMALL_CHAIN_FERN = new SmallChainFernPlant();
-    public static final Plant SMALL_CYCAD = new SmallCycadPlant();
-    public static final Plant GINKGO = new GinkgoPlant();
-    public static final Plant CYCADEOIDEA = new BennettitaleanCycadeoideaPlant();
-    public static final Plant CRY_PANSY = new CryPansyPlant();
-    public static final Plant SCALY_TREE_FERN = new ScalyTreeFernPlant();
-    public static final Plant ZAMITES = new ZamitesPlant();
-    public static final Plant DICKSONIA = new DicksoniaPlant();
-    public static final Plant WILD_ONION = new WildOnionPlant();
-    public static final Plant DICROIDIUM_ZUBERI = new DicroidiumZuberiPlant();
-    public static final Plant DICTYOPHYLLUM = new DictyophyllumPlant();
-    public static final Plant WEST_INDIAN_LILAC = new WestIndianLilacPlant();
-    public static final Plant SERENNA_VERIFORMANS = new SerennaVeriformansPlant();
-    public static final Plant LADINIA_SIMPLEX = new LadiniaSimplexPlant();
-    public static final Plant ORONTIUM_MACKII = new OrontiumMackiiPlant();
-    public static final Plant UMALTOLEPIS = new UmaltolepisPlant();
-    public static final Plant LIRIODENDRITES = new LiriodendritesPlant();
-    public static final Plant RAPHAELIA = new RaphaeliaPlant();
-    public static final Plant ENCEPHALARTOS = new EncephalartosPlant();
-    public static final Plant PSARONIUS = new PsaroniusPlant();
+    public static final Plant AJUGINUCULA_SMITHII = new Plant(BlockHandler.AJUGINUCULA_SMITHII, 2000).withFoodEffects(new FoodHelper.FoodEffect(new PotionEffect(MobEffects.SPEED, 100), 100));
+    public static final Plant SMALL_ROYAL_FERN = new Plant(BlockHandler.SMALL_ROYAL_FERN, 2000);
+    public static final Plant CALAMITES = new Plant(BlockHandler.ANCIENT_SAPLINGS.get(TreeType.CALAMITES), 1000).withFoodEffects(new FoodHelper.FoodEffect(PotionTypes.POISON.getEffects().get(0), 5)).withTree(true);
+    public static final Plant SMALL_CHAIN_FERN = new Plant(BlockHandler.SMALL_CHAIN_FERN, 2000);
+    public static final Plant SMALL_CYCAD = new Plant(BlockHandler.SMALL_CYCAD, 2000).withFoodEffects(new FoodHelper.FoodEffect(PotionTypes.POISON.getEffects().get(0), 100));
+    public static final Plant GINKGO = new Plant(BlockHandler.ANCIENT_SAPLINGS.get(TreeType.GINKGO), 1000).withTree(true);
+    public static final Plant CYCADEOIDEA = new Plant(BlockHandler.CYCADEOIDEA, 2000);
+    public static final Plant CRY_PANSY = new Plant(BlockHandler.CRY_PANSY, 250);
+    public static final Plant SCALY_TREE_FERN = new Plant(BlockHandler.SCALY_TREE_FERN, 4000).withFoodEffects(new FoodHelper.FoodEffect(PotionTypes.POISON.getEffects().get(0), 100));
+    public static final Plant ZAMITES = new Plant(BlockHandler.ZAMITES, 4000);
+    public static final Plant DICKSONIA = new Plant(BlockHandler.DICKSONIA, 4000);
+    public static final Plant WILD_ONION = new Plant(BlockHandler.WILD_ONION, 3000);
+    public static final Plant DICROIDIUM_ZUBERI = new Plant(BlockHandler.DICROIDIUM_ZUBERI, 4000);
+    public static final Plant DICTYOPHYLLUM = new Plant(BlockHandler.DICTYOPHYLLUM, 2000).withFoodEffects(new FoodHelper.FoodEffect(PotionTypes.POISON.getEffects().get(0), 15));
+    public static final Plant WEST_INDIAN_LILAC = new Plant(BlockHandler.WEST_INDIAN_LILAC, 4000).withFoodEffects(new FoodHelper.FoodEffect(PotionTypes.STRONG_POISON.getEffects().get(0), 100)).withIsPrehistoric(false);
+    public static final Plant SERENNA_VERIFORMANS = new Plant(BlockHandler.SERENNA_VERIFORMANS, 4000).withFoodEffects(new FoodHelper.FoodEffect(PotionTypes.STRONG_POISON.getEffects().get(0), 100));
+    public static final Plant LADINIA_SIMPLEX = new Plant(BlockHandler.LADINIA_SIMPLEX, 2000).withFoodEffects(new FoodHelper.FoodEffect(PotionTypes.POISON.getEffects().get(0), 15));
+    public static final Plant ORONTIUM_MACKII = new Plant(BlockHandler.ORONTIUM_MACKII, 1500).withFoodEffects(new FoodHelper.FoodEffect(PotionTypes.WEAKNESS.getEffects().get(0), 50));
+    public static final Plant UMALTOLEPIS = new Plant(BlockHandler.UMALTOLEPIS, 4000);
+    public static final Plant LIRIODENDRITES = new Plant(BlockHandler.LIRIODENDRITES, 4000);
+    public static final Plant RAPHAELIA = new Plant(BlockHandler.RAPHAELIA, 2000);
+    public static final Plant ENCEPHALARTOS = new Plant(BlockHandler.ENCEPHALARTOS, 4000).withFoodEffects(new FoodHelper.FoodEffect(PotionTypes.POISON.getEffects().get(0), 35));
+    public static final Plant PSARONIUS = new Plant(BlockHandler.ANCIENT_SAPLINGS.get(TreeType.PSARONIUS), 1000).withTree(true);
+    public static final Plant PHOENIX = new Plant(BlockHandler.ANCIENT_SAPLINGS.get(TreeType.PHOENIX), 1000).withTree(true);
+    public static final Plant WILD_POTATO = new Plant(BlockHandler.WILD_POTATO_PLANT, 3000);
+    public static final Plant ARAUCARIA = new Plant(BlockHandler.ANCIENT_SAPLINGS.get(TreeType.ARAUCARIA), 1000).withTree(true);
+    public static final Plant BRISTLE_FERN = new Plant(BlockHandler.BRISTLE_FERN, 2000);
+    public static final Plant CINNAMON_FERN = new Plant(BlockHandler.CINNAMON_FERN, 2000);
+    public static final Plant TEMPSKYA = new Plant(BlockHandler.TEMPSKYA, 4000);
+    public static final Plant WOOLLY_STALKED_BEGONIA = new Plant(BlockHandler.WOOLLY_STALKED_BEGONIA, 2000);
+    public static final Plant LARGESTIPULE_LEATHER_ROOT = new Plant(BlockHandler.LARGESTIPULE_LEATHER_ROOT, 2000);
+    public static final Plant RHACOPHYTON = new Plant(BlockHandler.RHACOPHYTON, 4000);
+    public static final Plant GRAMINIDITES_BAMBUSOIDES = new Plant(BlockHandler.GRAMINIDITES_BAMBUSOIDES, 4000);
+    public static final Plant ENALLHELIA = new Plant(BlockHandler.ENALLHELIA, 2000);
+    public static final Plant AULOPORA = new Plant(BlockHandler.AULOPORA, 2000);
+    public static final Plant CLADOCHONUS = new Plant(BlockHandler.CLADOCHONUS, 2000);
+    public static final Plant LITHOSTROTION = new Plant(BlockHandler.LITHOSTROTION, 2000);
+    public static final Plant STYLOPHYLLOPSIS = new Plant(BlockHandler.STYLOPHYLLOPSIS, 2000);
+    public static final Plant HIPPURITES_RADIOSUS = new Plant(BlockHandler.HIPPURITES_RADIOSUS, 2000);
+    public static final Plant HELICONIA = new Plant(BlockHandler.HELICONIA, 4000).withIsPrehistoric(false);
+    public static final Plant RHAMNUS_SALIFOCIFUS = new Plant(BlockHandler.RHAMNUS_SALICIFOLIUS_PLANT, 3000);
 
-    public static final Plant PHOENIX = new PhoenixPlant();
-    public static final Plant WILD_POTATO = new WildPotatoPlant();
-    public static final Plant ARAUCARIA = new AraucariaPlant();
-    public static final Plant BRISTLE_FERN = new BristleFernPlant();
-    public static final Plant CINNAMON_FERN = new CinnamonFernPlant();
-    public static final Plant TEMPSKYA = new TempskyaPlant();
-    public static final Plant WOOLLY_STALKED_BEGONIA = new WoollyStalkedBegoniaPlant();
-    public static final Plant LARGESTIPULE_LEATHER_ROOT = new LargestipuleLeatherRootPlant();
-    public static final Plant RHACOPHYTON = new RhacophytonPlant();
-    public static final Plant GRAMINIDITES_BAMBUSOIDES = new GraminiditesBambusoidesPlant();
-    public static final Plant ENALLHELIA = new EnallheliaPlant();
-    public static final Plant AULOPORA = new AuloporaPlant();
-    public static final Plant CLADOCHONUS = new CladochonusPlant();
-    public static final Plant LITHOSTROTION = new LithostrotionPlant();
-    public static final Plant STYLOPHYLLOPSIS = new StylophyllopsisPlant();
-    public static final Plant HIPPURITES_RADIOSUS = new HippuritesRadiosusPlant();
-    public static final Plant HELICONIA = new HeliconiaPlant();
-    public static final Plant RHAMNUS_SALIFOCIFUS = new RhamnusSalifocifusPlant();
-
-    private static final List<Plant> PLANTS = new LinkedList<>();
-
-    public static void init() {
-        registerPlant(AJUGINUCULA_SMITHII);
-        registerPlant(SMALL_ROYAL_FERN);
-        registerPlant(CALAMITES);
-        registerPlant(SMALL_CHAIN_FERN);
-        registerPlant(SMALL_CYCAD);
-        registerPlant(GINKGO);
-        registerPlant(CYCADEOIDEA);
-        registerPlant(CRY_PANSY);
-        registerPlant(SCALY_TREE_FERN);
-        registerPlant(ZAMITES);
-        registerPlant(DICKSONIA);
-        registerPlant(WILD_ONION);
-        registerPlant(DICROIDIUM_ZUBERI);
-        registerPlant(DICTYOPHYLLUM);
-        registerPlant(WEST_INDIAN_LILAC);
-        registerPlant(SERENNA_VERIFORMANS);
-        registerPlant(LADINIA_SIMPLEX);
-        registerPlant(ORONTIUM_MACKII);
-        registerPlant(UMALTOLEPIS);
-        registerPlant(LIRIODENDRITES);
-        registerPlant(RAPHAELIA);
-        registerPlant(ENCEPHALARTOS);
-        registerPlant(PSARONIUS);
-        registerPlant(PHOENIX);
-        registerPlant(WILD_POTATO);
-        registerPlant(ARAUCARIA);
-        registerPlant(CINNAMON_FERN);
-        registerPlant(BRISTLE_FERN);
-        registerPlant(TEMPSKYA);
-        registerPlant(WOOLLY_STALKED_BEGONIA);
-        registerPlant(LARGESTIPULE_LEATHER_ROOT);
-        registerPlant(RHACOPHYTON);
-        registerPlant(GRAMINIDITES_BAMBUSOIDES);
-        registerPlant(ENALLHELIA);
-        registerPlant(AULOPORA);
-        registerPlant(CLADOCHONUS);
-        registerPlant(LITHOSTROTION);
-        registerPlant(STYLOPHYLLOPSIS);
-        registerPlant(HIPPURITES_RADIOSUS);
-        registerPlant(HELICONIA);
-        registerPlant(RHAMNUS_SALIFOCIFUS);
-    }
-
-    public static Plant getPlantById(int id) {
-        if (id >= PLANTS.size() || id < 0) {
-            return null;
-        }
-
-        return PLANTS.get(id);
-    }
-
-    public static int getPlantId(Plant plant) {
-        return PLANTS.indexOf(plant);
-    }
-
-    public static List<Plant> getPlants() {
-        return PLANTS;
-    }
-
-    public static void registerPlant(Plant plant) {
-        if (!PLANTS.contains(plant)) {
-            PLANTS.add(plant);
-        }
+    @SuppressWarnings("unused")
+    @SubscribeEvent
+    public static void onRegistryEvent(RegistryEvent.Register<Plant> event) {
+        event.getRegistry().registerAll(
+                AJUGINUCULA_SMITHII.setRegistryName("ajuginucula_smithii"),
+                SMALL_ROYAL_FERN.setRegistryName("small_royal_fern"),
+                CALAMITES.setRegistryName("calamites"),
+                SMALL_CHAIN_FERN.setRegistryName("small_chain_fern"),
+                SMALL_CYCAD.setRegistryName("small_cycad"),
+                GINKGO.setRegistryName("ginkgo"),
+                CYCADEOIDEA.setRegistryName("bennettitalean_cycadeoidea"),
+                CRY_PANSY.setRegistryName("cry_pansy"),
+                SCALY_TREE_FERN.setRegistryName("scaly_tree_fern"),
+                ZAMITES.setRegistryName("cycad_zamites"),
+                DICKSONIA.setRegistryName("dicksonia"),
+                WILD_ONION.setRegistryName("wild_onion"),
+                DICROIDIUM_ZUBERI.setRegistryName("dicroidium_zuberi"),
+                DICTYOPHYLLUM.setRegistryName("dictyophyllum"),
+                WEST_INDIAN_LILAC.setRegistryName("west_indian_lilac"),
+                SERENNA_VERIFORMANS.setRegistryName("serenna_veriformans"),
+                LADINIA_SIMPLEX.setRegistryName("ladinia_simplex"),
+                ORONTIUM_MACKII.setRegistryName("orontium_mackii"),
+                UMALTOLEPIS.setRegistryName("umaltolepis"),
+                LIRIODENDRITES.setRegistryName("liriodendrites"),
+                RAPHAELIA.setRegistryName("raphaelia"),
+                ENCEPHALARTOS.setRegistryName("encephalartos"),
+                PSARONIUS.setRegistryName("psaronius"),
+                PHOENIX.setRegistryName("phoenix"),
+                WILD_POTATO.setRegistryName("wild_potato"),
+                ARAUCARIA.setRegistryName("araucaria"),
+                BRISTLE_FERN.setRegistryName("bristle_fern"),
+                CINNAMON_FERN.setRegistryName("cinnamon_fern"),
+                TEMPSKYA.setRegistryName("tempskya"),
+                WOOLLY_STALKED_BEGONIA.setRegistryName("woolly_stalked_begonia"),
+                LARGESTIPULE_LEATHER_ROOT.setRegistryName("largestipule_leather_root"),
+                RHACOPHYTON.setRegistryName("rhacophyton"),
+                GRAMINIDITES_BAMBUSOIDES.setRegistryName("graminidites_bambusoides"),
+                ENALLHELIA.setRegistryName("enallhelia"),
+                AULOPORA.setRegistryName("aulopora"),
+                CLADOCHONUS.setRegistryName("cladochonus"),
+                LITHOSTROTION.setRegistryName("lithostrotion"),
+                STYLOPHYLLOPSIS.setRegistryName("stylophyllopsis"),
+                HIPPURITES_RADIOSUS.setRegistryName("hippurites_radiosus"),
+                HELICONIA.setRegistryName("heliconia"),
+                RHAMNUS_SALIFOCIFUS.setRegistryName("rhamnus_salifocifus")
+        );
     }
 
     public static List<Plant> getPrehistoricPlantsAndTrees() {
-        List<Plant> prehistoricPlants = new LinkedList<>();
-        for (Plant plant : PLANTS) {
-            if (plant.shouldRegister() && plant.isPrehistoric()) {
-                prehistoricPlants.add(plant);
-            }
-        }
-        return prehistoricPlants;
+        return JurassicraftRegisteries.PLANT_REGISTRY.getValuesCollection().stream().filter(Plant::isPrehistoric).collect(Collectors.toList());
     }
 
     public static List<Plant> getPrehistoricPlants() {
-        List<Plant> prehistoricPlants = new LinkedList<>();
-        for (Plant plant : PLANTS) {
-            if (plant.shouldRegister() && plant.isPrehistoric() && !plant.isTree()) {
-                prehistoricPlants.add(plant);
-            }
-        }
-        return prehistoricPlants;
+        return getPrehistoricPlantsAndTrees().stream().filter(plant -> !plant.isTree()).collect(Collectors.toList());
     }
 }

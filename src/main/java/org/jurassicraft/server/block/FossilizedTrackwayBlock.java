@@ -27,19 +27,21 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class FossilizedTrackwayBlock extends Block implements SubBlocksBlock {
-    public static final PropertyEnum<TrackwayType> VARIANT = PropertyEnum.create("variant", TrackwayType.class);
     public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
-    public FossilizedTrackwayBlock() {
+    private final TrackwayType trackwayType;
+
+    public FossilizedTrackwayBlock(TrackwayType trackwayType) {
         super(Material.ROCK);
+        this.trackwayType = trackwayType;
         this.setHardness(1.5F);
         this.setCreativeTab(TabHandler.FOSSILS);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, TrackwayType.BIPED_MEDIUM).withProperty(FACING, EnumFacing.NORTH));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
     }
 
     @Override
     public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-        return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite()).withProperty(VARIANT, TrackwayType.values()[meta]);
+        return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
     }
 
     @Override
@@ -50,22 +52,20 @@ public class FossilizedTrackwayBlock extends Block implements SubBlocksBlock {
     @Override
     public IBlockState getStateFromMeta(int meta) {
         EnumFacing facing = EnumFacing.getFront(meta >> 2 & 3);
-
         if (facing.getAxis() == EnumFacing.Axis.Y) {
             facing = EnumFacing.NORTH;
         }
-
-        return this.getDefaultState().withProperty(FACING, facing).withProperty(VARIANT, TrackwayType.values()[meta & 3]);
+        return this.getDefaultState().withProperty(FACING, facing);
     }
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return (state.getValue(FACING).getIndex() & 3) << 2 | (state.getValue(VARIANT).ordinal() & 3);
+        return (state.getValue(FACING).getIndex() & 3) << 2;
     }
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, FACING, VARIANT);
+        return new BlockStateContainer(this, FACING);
     }
 
     @Override
@@ -74,22 +74,8 @@ public class FossilizedTrackwayBlock extends Block implements SubBlocksBlock {
     }
 
     @Override
-    public int damageDropped(IBlockState state) {
-        return state.getValue(VARIANT).ordinal();
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
-        for (TrackwayType type : TrackwayType.values()) {
-            if(this.getCreativeTabToDisplayOn().equals(TabHandler.FOSSILS))
-                list.add(new ItemStack(this, 1, type.ordinal()));
-        }
-    }
-
-    @Override
     public ItemBlock getItemBlock() {
-        return new FossilizedTrackwayItemBlock(this);
+        return new FossilizedTrackwayItemBlock(this, this.trackwayType);
     }
 
     public enum TrackwayType implements IStringSerializable {

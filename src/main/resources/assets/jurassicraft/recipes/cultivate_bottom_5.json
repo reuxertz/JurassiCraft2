@@ -11,17 +11,16 @@
       "item": "minecraft:comparator",
       "data": 0
     },
-    "A": {
-      "item": "minecraft:stained_glass_pane",
-      "data": 5
-    },
     "B": {
       "item": "minecraft:iron_ingot",
       "data": 0
+    },
+    "A": {
+      "item": "minecraft:stained_glass_pane",
+      "data": 5
     }
   },
   "result": {
-    "item": "jurassicraft:cultivate_bottom",
-    "data": 5
+    "item": "jurassicraft:cultivate_bottom_lime"
   }
 }

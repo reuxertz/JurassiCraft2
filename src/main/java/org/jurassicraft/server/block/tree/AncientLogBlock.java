@@ -95,7 +95,7 @@ public class AncientLogBlock extends BlockLog implements GrindableItem {
         int outputType = random.nextInt(6);
 
         if (outputType == 5) {
-            ItemStack output = new ItemStack(ItemHandler.PLANT_SOFT_TISSUE, 1, PlantHandler.getPlantId(this.type.getPlant()));
+            ItemStack output = ItemHandler.PLANT_SOFT_TISSUE.getItemStack(this.type.getPlant());
             output.setTagCompound(tag);
             return output;
         } else if (outputType < 3) {
@@ -109,7 +109,7 @@ public class AncientLogBlock extends BlockLog implements GrindableItem {
     public List<Pair<Float, ItemStack>> getChancedOutputs(ItemStack inputItem) {
         float single = 100F/6F;
         NBTTagCompound tag = inputItem.getTagCompound();
-        ItemStack output = new ItemStack(ItemHandler.PLANT_SOFT_TISSUE, 1, PlantHandler.getPlantId(this.type.getPlant()));
+        ItemStack output = ItemHandler.PLANT_SOFT_TISSUE.getItemStack(this.type.getPlant());
         output.setTagCompound(tag);
         return Lists.newArrayList(Pair.of(single, output), Pair.of(50f, new ItemStack(Items.DYE, 1, 15)), Pair.of(single*2f, new ItemStack(Items.FLINT)));
     }

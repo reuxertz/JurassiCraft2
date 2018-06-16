@@ -18,7 +18,7 @@ public class EncasedFossilItemBlock extends ItemBlock {
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        Dinosaur dinosaur = ((EncasedFossilBlock) this.block).getDinosaur(stack);
+        Dinosaur dinosaur = ((EncasedFossilBlock) this.block).getValue(stack);
         return new LangHelper("tile.encased_fossil.name").withProperty("dinosaur", dinosaur.getLocalizationName()).build();
     }
 
@@ -29,7 +29,7 @@ public class EncasedFossilItemBlock extends ItemBlock {
 
     @Override
     public String getUnlocalizedName(ItemStack stack) {
-        Dinosaur dinosaur = ((EncasedFossilBlock) this.block).getDinosaur(stack);
+        Dinosaur dinosaur = ((EncasedFossilBlock) this.block).getValue(stack);
         return super.getUnlocalizedName() + "." + dinosaur.getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
     }
 }

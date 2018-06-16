@@ -51,7 +51,7 @@ public class PlasterAndBandageItem extends Item {
                 return EnumActionResult.SUCCESS;
             } else if (block instanceof NestFossilBlock && !((NestFossilBlock) block).encased) {
                 if (!world.isRemote) {
-                    world.setBlockState(pos, BlockHandler.ENCASED_NEST_FOSSIL.getDefaultState().withProperty(NestFossilBlock.VARIANT, state.getValue(NestFossilBlock.VARIANT)));
+                    world.setBlockState(pos, BlockHandler.ENCASED_NEST_FOSSIL.get(((NestFossilBlock)block).getVariant()).getDefaultState());
 
                     if (!player.capabilities.isCreativeMode) {
                         stack.shrink(1);

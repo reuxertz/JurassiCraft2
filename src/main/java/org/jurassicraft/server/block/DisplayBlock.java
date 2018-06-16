@@ -20,6 +20,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.server.api.NoItemBlock;
 import org.jurassicraft.server.block.entity.DisplayBlockEntity;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class DisplayBlock extends BlockContainer {
+public class DisplayBlock extends BlockContainer implements NoItemBlock {
     public DisplayBlock() {
         super(Material.WOOD);
         this.setSoundType(SoundType.WOOD);

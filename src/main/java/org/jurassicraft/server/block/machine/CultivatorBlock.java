@@ -27,20 +27,16 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class CultivatorBlock extends BlockContainer implements SubBlocksBlock {
-    public static final PropertyEnum<EnumDyeColor> COLOR = PropertyEnum.create("color", EnumDyeColor.class);
+public class CultivatorBlock extends BlockContainer {
 
-    public CultivatorBlock(String position) {
+    protected final EnumDyeColor color;
+
+    public CultivatorBlock(EnumDyeColor color, String position) {
         super(Material.IRON);
+        this.color = color;
         this.setUnlocalizedName("cultivator_" + position);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(COLOR, EnumDyeColor.WHITE));
         this.setHardness(2.0F);
         this.setResistance(5.0F);
-    }
-
-    @Override
-    public int damageDropped(IBlockState state) {
-        return state.getValue(COLOR).getMetadata();
     }
 
     @Override
@@ -56,46 +52,10 @@ public class CultivatorBlock extends BlockContainer implements SubBlocksBlock {
             InventoryHelper.dropInventoryItems(world, pos, (CultivatorBlockEntity) tile);
         }
     }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> subtypes) {
-        EnumDyeColor[] colors = EnumDyeColor.values();
-
-        for (EnumDyeColor color : colors) {
-            subtypes.add(new ItemStack(this, 1, color.getMetadata()));
-        }
-    }
-
-    @Override
-    public ItemBlock getItemBlock() {
-        return new CultivateItemBlock(this);
-    }
 
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
         return new CultivatorBlockEntity();
-    }
-
-    @Override
-    public MapColor getMapColor(IBlockState state, IBlockAccess worldIn, BlockPos pos)
-    {
-        return state.getMapColor(worldIn, pos);
-    }
-
-    @Override
-    public IBlockState getStateFromMeta(int meta) {
-        return this.getDefaultState().withProperty(COLOR, EnumDyeColor.byMetadata(meta));
-    }
-
-    @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(COLOR).getMetadata();
-    }
-
-    @Override
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, COLOR);
     }
 
     @Override

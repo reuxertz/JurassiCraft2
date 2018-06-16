@@ -34,7 +34,7 @@ public class PlantFossilItem extends Item implements GrindableItem {
 
         if (outputType == 3) {
             List<Plant> prehistoricPlants = PlantHandler.getPrehistoricPlants();
-            ItemStack output = new ItemStack(ItemHandler.PLANT_SOFT_TISSUE, 1, PlantHandler.getPlantId(prehistoricPlants.get(random.nextInt(prehistoricPlants.size()))));
+            ItemStack output = ItemHandler.PLANT_SOFT_TISSUE.getItemStack(prehistoricPlants.get(random.nextInt(prehistoricPlants.size())));
             output.setTagCompound(tag);
             return output;
         } else if (outputType < 2) {
@@ -52,7 +52,7 @@ public class PlantFossilItem extends Item implements GrindableItem {
         float single = 100F/4F;
         float plantSingle = single / prehistoricPlants.size();
         for(Plant plant : prehistoricPlants) {
-            ItemStack output = new ItemStack(ItemHandler.PLANT_SOFT_TISSUE, 1, PlantHandler.getPlantId(plant));
+            ItemStack output = ItemHandler.PLANT_SOFT_TISSUE.getItemStack(plant);
             output.setTagCompound(tag);
             list.add(Pair.of(plantSingle, output));
         }

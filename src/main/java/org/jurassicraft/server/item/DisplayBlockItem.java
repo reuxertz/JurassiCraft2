@@ -18,6 +18,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.server.api.DinosaurProvider;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.entity.DisplayBlockEntity;
 import org.jurassicraft.server.dinosaur.Dinosaur;
@@ -31,8 +32,6 @@ public class DisplayBlockItem extends Item implements DinosaurProvider {
     public DisplayBlockItem() {
         this.setCreativeTab(TabHandler.DECORATIONS);
     }
-
-
 
     @Override
     public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
@@ -67,7 +66,7 @@ public class DisplayBlockItem extends Item implements DinosaurProvider {
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        Dinosaur dinosaur = getDinosaur(stack);
+        Dinosaur dinosaur = getValue(stack);
         String dinoName = dinosaur.getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
         DisplayBlockProperties properties = getProperties(stack);
         if (!properties.getType().isSkeleton()) {
@@ -126,7 +125,7 @@ public class DisplayBlockItem extends Item implements DinosaurProvider {
     }
 
     @Override
-    public Dinosaur getDinosaur(ItemStack stack) {
+    public Dinosaur getValue(ItemStack stack) {
         return getProperties(stack).getDinosaur();
     }
 
@@ -136,17 +135,17 @@ public class DisplayBlockItem extends Item implements DinosaurProvider {
     }
 
     @Override
-    public Map<String, ResourceLocation> getModelResourceLocations(Dinosaur dinosaur) {
-        Map<String, ResourceLocation> map = Maps.newHashMap();
+    public Map<Object, ResourceLocation> getModelResourceLocations(Dinosaur dinosaur) {
+        Map<Object, ResourceLocation> map = Maps.newHashMap();
         for (DisplayBlockProperties.Type type : DisplayBlockProperties.Type.values()) {
-            map.put(type.toString(), new ResourceLocation(dinosaur.getRegistryName().getResourceDomain(), "item/" + type.modelPrefix + dinosaur.getRegistryName().getResourcePath()));
+            map.put(type, new ResourceLocation(dinosaur.getRegistryName().getResourceDomain(), "item/" + type.modelPrefix + dinosaur.getRegistryName().getResourcePath()));
         }
         return map;
     }
 
     @Override
-    public String getVarient(ItemStack stack) {
-        return getProperties(stack).getType().toString();
+    public Object getVarient(ItemStack stack) {
+        return getProperties(stack).getType();
     }
 
     public static class DisplayBlockProperties {

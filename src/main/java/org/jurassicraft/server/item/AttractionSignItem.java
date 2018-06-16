@@ -20,14 +20,17 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class AttractionSignItem extends Item {
-    public AttractionSignItem() {
+
+    private final AttractionSignEntity.AttractionSignType type;
+
+    public AttractionSignItem(AttractionSignEntity.AttractionSignType type) {
+        this.type = type;
         this.setCreativeTab(TabHandler.DECORATIONS);
-        this.setHasSubtypes(true);
     }
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        return new LangHelper("item.attraction_sign.name").withProperty("type", "attraction_sign." + (AttractionSignEntity.AttractionSignType.values()[stack.getItemDamage()].name().toLowerCase(Locale.ENGLISH)) + ".name").build();
+        return new LangHelper("item.attraction_sign.name").withProperty("type", "attraction_sign." + (this.type.name().toLowerCase(Locale.ENGLISH)) + ".name").build();
     }
 
     @Override
@@ -37,7 +40,7 @@ public class AttractionSignItem extends Item {
             BlockPos offset = pos.offset(side);
 
             if (player.canPlayerEdit(offset, side, stack)) {
-                AttractionSignEntity sign = new AttractionSignEntity(world, offset, side, AttractionSignEntity.AttractionSignType.values()[stack.getItemDamage()]);
+                AttractionSignEntity sign = new AttractionSignEntity(world, offset, side, this.type);
 
                 if (sign.onValidSurface()) {
                     if (!world.isRemote) {
@@ -52,14 +55,5 @@ public class AttractionSignItem extends Item {
         }
 
         return EnumActionResult.PASS;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        if(this.isInCreativeTab(tab))
-        for (AttractionSignEntity.AttractionSignType signType : AttractionSignEntity.AttractionSignType.values()) {
-            subItems.add(new ItemStack(this, 1, signType.ordinal()));
-        }
     }
 }

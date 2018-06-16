@@ -3,6 +3,7 @@ package org.jurassicraft.client.render;
 import java.util.Locale;
 import java.util.Map;
 
+import net.minecraft.item.ItemAir;
 import net.minecraft.item.ItemBlock;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.model.MultipartStateMap;
@@ -90,7 +91,7 @@ public enum RenderingHandler {
         RenderingHandler.INSTANCE.preInit();
 
         for (EnumDyeColor color : EnumDyeColor.values()) {
-            registerItemRenderer(Item.getItemFromBlock(CULTIVATOR_BOTTOM), color.getMetadata(), "cultivate/cultivate_bottom_" + color.getName().toLowerCase(Locale.ENGLISH));
+            registerItemRenderer(Item.getItemFromBlock(CULTIVATOR_BOTTOM.get(color)), "cultivate/cultivate_bottom_" + color.getName().toLowerCase(Locale.ENGLISH));
         }
 
         for (TreeType type : TreeType.values()) {
@@ -165,8 +166,10 @@ public enum RenderingHandler {
         registerBlockRenderer(REINFORCED_STONE, "reinforced_stone");
         registerBlockRenderer(REINFORCED_BRICKS, "reinforced_bricks");
 
-        registerBlockRenderer(CULTIVATOR_BOTTOM, "cultivate_bottom");
-        registerBlockRenderer(CULTIVATOR_TOP, "cultivate_top");
+//        for(EnumDyeColor color : EnumDyeColor.values()) {
+//            registerBlockRenderer(CULTIVATOR_BOTTOM.get(color), "cultivate_bottom_" + color.getDyeColorName());
+//            registerBlockRenderer(CULTIVATOR_TOP.get(color), "cultivate_top"); //Should this even be here
+//        }
 
         registerBlockRenderer(AMBER_ORE, "amber_ore");
         registerBlockRenderer(ICE_SHARD, "ice_shard");
@@ -184,7 +187,6 @@ public enum RenderingHandler {
         registerBlockRenderer(GYPSUM_STONE, "gypsum_stone");
         registerBlockRenderer(GYPSUM_COBBLESTONE, "gypsum_cobblestone");
         registerBlockRenderer(GYPSUM_BRICKS, "gypsum_bricks");
-        registerBlockRenderer(BlockHandler.DISPLAY_BLOCK, "display_block");
 
         registerBlockRenderer(MOSS, "moss");
         registerBlockRenderer(CLEAR_GLASS, "clear_glass");
@@ -205,12 +207,12 @@ public enum RenderingHandler {
         registerBlockRenderer(ENCEPHALARTOS, "encephalartos");
 
         for (FossilizedTrackwayBlock.TrackwayType trackwayType : FossilizedTrackwayBlock.TrackwayType.values()) {
-            registerBlockRenderer(FOSSILIZED_TRACKWAY, trackwayType.ordinal(), "fossilized_trackway_" + trackwayType.getName());
+            registerBlockRenderer(FOSSILIZED_TRACKWAY.get(trackwayType), "fossilized_trackway_" + trackwayType.getName());
         }
 
         for (NestFossilBlock.Variant variant : NestFossilBlock.Variant.values()) {
-            registerBlockRenderer(NEST_FOSSIL, variant.ordinal(), "nest_fossil_" + (variant.ordinal() + 1));
-            registerBlockRenderer(ENCASED_NEST_FOSSIL, variant.ordinal(), "encased_nest_fossil");
+            registerBlockRenderer(NEST_FOSSIL.get(variant), "nest_fossil_" + (variant.ordinal() + 1));
+            registerBlockRenderer(ENCASED_NEST_FOSSIL.get(variant), "encased_nest_fossil");
         }
 
         registerBlockRenderer(PALEO_BALE_CYCADEOIDEA, "paleo_bale_cycadeoidea");
@@ -266,14 +268,12 @@ public enum RenderingHandler {
         registerItemRenderer(LUNCH_BOX);
         registerItemRenderer(STAMP_SET);
 
-        registerItemRenderer(INGEN_JOURNAL);
-
         registerItemRenderer(SPAWN_EGG,"dino_spawn_egg");
 
         registerItemRenderer(PADDOCK_SIGN);
 
         for (AttractionSignEntity.AttractionSignType type : AttractionSignEntity.AttractionSignType.values()) {
-            registerItemRenderer(ATTRACTION_SIGN, type.ordinal(), "attraction_sign_" + type.name().toLowerCase(Locale.ENGLISH));
+            registerItemRenderer(ATTRACTION_SIGN.get(type), "attraction_sign_" + type.name().toLowerCase(Locale.ENGLISH));
         }
 
         registerItemRenderer(EMPTY_TEST_TUBE);
@@ -284,8 +284,9 @@ public enum RenderingHandler {
         registerItemRenderer(DNA_NUCLEOTIDES, "dna_base_material");
         registerItemRenderer(SEA_LAMPREY);
 
-        registerItemRenderer(AMBER, 0, "amber_mosquito");
-        registerItemRenderer(AMBER, 1, "amber_aphid");
+        for (AmberItem.AmberStorageType type : AmberItem.AmberStorageType.values()) {
+            registerItemRenderer(AMBER.get(type), "amber_" + type.getName());
+        }
 
 //        registerItemRenderer(HELICOPTER, "helicopter_spawner");
 
@@ -334,61 +335,25 @@ public enum RenderingHandler {
 
         registerItemRenderer(MURAL, "mural");
 
-//        for (Dinosaur dinosaur : EntityHandler.getDinosaurs().values()) {
-//            int meta = EntityHandler.getDinosaurId(dinosaur);
-
-//            String formattedName = dinosaur.getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
-
-//            for (Map.Entry<String, FossilItem> entry : ItemHandler.FOSSILS.entrySet()) {
-//                List<Dinosaur> dinosaursForType = FossilItem.fossilDinosaurs.get(entry.getKey());
-//                if (dinosaursForType.contains(dinosaur)) {
-//                    registerItemRenderer(entry.getValue());//"bones/" + formattedName + "_" + entry.getKey()
-//                }
-//            }
-//
-//            for (Map.Entry<String, FossilItem> entry : FRESH_FOSSIL.entrySet()) {
-//                List<Dinosaur> dinosaursForType = FossilItem.fossilDinosaurs.get(entry.getKey());
-//                if (dinosaursForType.contains(dinosaur)) {
-//                    registerItemRenderer(entry.getValue());//"fresh_bones/" + formattedName + "_" + entry.getKey()
-//                }
-//            }
-
-//            FRESH_FOSSIL.values().forEach(RenderingHandler::registerItemRenderer);/**/
-//            ItemHandler.FOSSILS.values().forEach(RenderingHandler::registerItemRenderer);
-
-
-            registerItemRenderer(ItemHandler.FOSSIL);
-            registerItemRenderer(FRESH_FOSSIL);
-            registerItemRenderer(DNA);//"dna/dna_" + formattedName
-            registerItemRenderer(DINOSAUR_MEAT);//"meat/meat_" + formattedName
-            registerItemRenderer(DINOSAUR_STEAK);//"meat/steak_" + formattedName
-            registerItemRenderer(SOFT_TISSUE);//"soft_tissue/soft_tissue_" + formattedName
-            registerItemRenderer(SYRINGE);//"syringe/syringe_" + formattedName
-            //registerItemRenderer(ACTION_FIGURE, meta, "action_figure/action_figure_" + formattedName);
-
-//            if (!dinosaur.givesDirectBirth()) {
-            registerItemRenderer(EGG);//"egg/egg_" + formattedName
-//            }
-
-            registerItemRenderer(HATCHED_EGG);//"hatched_egg/egg_" + formattedName
-//        }
-
-        for (Plant plant : PlantHandler.getPrehistoricPlantsAndTrees()) {
-            int meta = PlantHandler.getPlantId(plant);
-
-            String name = plant.getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
-
-            registerItemRenderer(PLANT_DNA, meta, "dna/plants/dna_" + name);
-            registerItemRenderer(PLANT_SOFT_TISSUE, meta, "soft_tissue/plants/soft_tissue_" + name);
-            registerItemRenderer(PLANT_CALLUS, meta, "plant_callus");
-        }
+        registerItemRenderer(ItemHandler.FOSSIL);
+        registerItemRenderer(FRESH_FOSSIL);
+        registerItemRenderer(DNA);
+        registerItemRenderer(DINOSAUR_MEAT);
+        registerItemRenderer(DINOSAUR_STEAK);
+        registerItemRenderer(SOFT_TISSUE);
+        registerItemRenderer(SYRINGE);
+        registerItemRenderer(EGG);
+        registerItemRenderer(HATCHED_EGG);
+        registerItemRenderer(PLANT_DNA);//, meta, "dna/plants/dna_" + name
+        registerItemRenderer(PLANT_SOFT_TISSUE);//, meta, "soft_tissue/plants/soft_tissue_" + name
+        registerItemRenderer(PLANT_CALLUS, "plant_callus");
 
         for (JournalItem.JournalType type : JournalItem.JournalType.values()) {
-            registerItemRenderer(INGEN_JOURNAL, type.getMetadata(), "ingen_journal");
+            registerItemRenderer(INGEN_JOURNAL.get(type), "ingen_journal"); //TODO: maybe have each journal a diffrent texture
         }
 
         for (NestFossilBlock.Variant variant : NestFossilBlock.Variant.values()) {
-            registerItemRenderer(FOSSILIZED_EGG, variant.ordinal(), "fossilized_egg_" + (variant.ordinal() + 1));
+            registerItemRenderer(FOSSILIZED_EGG.get(variant), "fossilized_egg_" + (variant.ordinal() + 1));
         }
 
         for (TreeType type : TreeType.values()) {
@@ -416,7 +381,7 @@ public enum RenderingHandler {
 
         registerItemRenderer(GOAT_RAW);
         registerItemRenderer(GOAT_COOKED);
-        
+
         registerItemRenderer(DART_GUN);
         registerItemRenderer(DART_TRANQUILIZER, "dart_colored");
         registerItemRenderer(DART_POISON_CYCASIN, "dart_colored");
@@ -478,7 +443,7 @@ public enum RenderingHandler {
 
         itemColors.registerItemColorHandler((stack, tintIndex) -> {
             DinosaurSpawnEggItem item = (DinosaurSpawnEggItem) stack.getItem();
-            Dinosaur dino = item.getDinosaur(stack);
+            Dinosaur dino = item.getValue(stack);
             if (dino != null) {
                 int mode = item.getMode(stack);
                 if (mode == 0) {
@@ -515,20 +480,12 @@ public enum RenderingHandler {
         registerBlockRenderer(block, block.getUnlocalizedName().substring("tile.".length()));
     }
 
-    public static void registerItemRenderer(Item item, int meta, String path) {
-        ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(JurassiCraft.MODID + ":" + path, "inventory"));
-    }
-
     public static void registerItemRenderer(Item item, String path) {
-        registerItemRenderer(item, 0, path);
-    }
-
-    public static void registerBlockRenderer(Block block, int meta, String path) {
-        registerItemRenderer(Item.getItemFromBlock(block), meta, path);
+        ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(JurassiCraft.MODID + ":" + path, "inventory"));
     }
 
     public static void registerBlockRenderer(Block block, String path) {
-        registerBlockRenderer(block, 0, path);
+        registerItemRenderer(Item.getItemFromBlock(block), path);
     }
 
     private static void registerRenderInfo(Dinosaur dinosaur, EntityAnimator<?> animator, float shadowSize) {

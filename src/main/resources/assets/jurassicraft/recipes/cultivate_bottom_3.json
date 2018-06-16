@@ -7,6 +7,10 @@
     "BCB"
   ],
   "key": {
+    "C": {
+      "item": "minecraft:comparator",
+      "data": 0
+    },
     "B": {
       "item": "minecraft:iron_ingot",
       "data": 0
@@ -14,14 +18,9 @@
     "A": {
       "item": "minecraft:stained_glass_pane",
       "data": 3
-    },
-    "C": {
-      "item": "minecraft:comparator",
-      "data": 0
     }
   },
   "result": {
-    "item": "jurassicraft:cultivate_bottom",
-    "data": 3
+    "item": "jurassicraft:cultivate_bottom_light_blue"
   }
 }

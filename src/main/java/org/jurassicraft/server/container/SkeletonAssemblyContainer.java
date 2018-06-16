@@ -14,7 +14,6 @@ import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.container.slot.FossilSlotCrafting;
 import org.jurassicraft.server.container.slot.SkeletonCraftingSlot;
 import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.item.DisplayBlockItem;
 import org.jurassicraft.server.item.FossilItem;
 import org.jurassicraft.server.item.ItemHandler;
@@ -113,7 +112,7 @@ public class SkeletonAssemblyContainer extends Container {
     private AssemblyData getAssemblyData(ItemStack stack) {
         if (stack != ItemStack.EMPTY && stack.getItem() instanceof FossilItem) {
             FossilItem item = (FossilItem) stack.getItem();
-            return new AssemblyData(item.getDinosaur(stack), item.isFresh());
+            return new AssemblyData(item.getValue(stack), item.isFresh());
         }
         return null;
     }

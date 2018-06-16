@@ -15,10 +15,6 @@ import org.jurassicraft.server.plant.PlantHandler;
 import java.util.Random;
 
 public interface EmbryoInput {
-    boolean isValid();
-
-    NBTTagCompound getTag();
-
     ItemStack getInputItemStack();
 
     ItemStack getOutputItemStack();
@@ -30,20 +26,6 @@ public interface EmbryoInput {
 
         public DinosaurInput(Dinosaur dinosaur) {
             this.dinosaur = dinosaur;
-        }
-
-        @Override
-        public boolean isValid() {
-            return true;
-        }
-
-
-        @Override
-        public NBTTagCompound getTag() {
-            DinoDNA dna = new DinoDNA(this.dinosaur, 100, GeneticsHelper.randomGenetics(new Random()));
-            NBTTagCompound tag = new NBTTagCompound();
-            dna.writeToNBT(tag);
-            return tag;
         }
 
         @Override
@@ -70,26 +52,13 @@ public interface EmbryoInput {
         }
 
         @Override
-        public boolean isValid() {
-            return this.plant.shouldRegister();
-        }
-
-        @Override
-        public NBTTagCompound getTag() {//TODO
-            PlantDNA dna = new PlantDNA(plant.getHealAmount(), 100);
-            NBTTagCompound tag = new NBTTagCompound();
-            dna.writeToNBT(tag);
-            return tag;
-        }
-
-        @Override
-        public ItemStack getInputItemStack() { //TODO:
-            return new ItemStack(ItemHandler.PLANT_DNA);
+        public ItemStack getInputItemStack() {
+            return ItemHandler.PLANT_DNA.getItemStack(this.plant);
         }
 
         @Override
         public ItemStack getOutputItemStack() {
-            return new ItemStack(ItemHandler.PLANT_CALLUS);
+            return ItemHandler.PLANT_CALLUS.getItemStack(this.plant);
         }
 
         @Override

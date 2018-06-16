@@ -133,7 +133,7 @@ public class ServerEventHandler {
 
                     float angle = (float) (rand.nextDouble() * 360.0F);
 
-                    IBlockState trackway = BlockHandler.FOSSILIZED_TRACKWAY.getDefaultState().withProperty(FossilizedTrackwayBlock.FACING, EnumFacing.fromAngle(angle)).withProperty(FossilizedTrackwayBlock.VARIANT, type);
+                    IBlockState trackway = BlockHandler.FOSSILIZED_TRACKWAY.get(type).getDefaultState().withProperty(FossilizedTrackwayBlock.FACING, EnumFacing.fromAngle(angle));
 
                     float xOffset = -MathHelper.sin((float) Math.toRadians(angle));
                     float zOffset = MathHelper.cos((float) Math.toRadians(angle));

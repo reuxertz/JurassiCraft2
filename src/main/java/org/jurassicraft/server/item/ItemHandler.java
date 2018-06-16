@@ -4,11 +4,14 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import com.google.common.collect.Maps;
 import net.minecraft.util.text.TextComponentTranslation;
 import org.jurassicraft.client.sound.SoundHandler;
 import org.jurassicraft.server.block.BlockHandler;
+import org.jurassicraft.server.block.NestFossilBlock;
 import org.jurassicraft.server.block.tree.TreeType;
 import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.item.AttractionSignEntity;
 import org.jurassicraft.server.item.block.AncientDoorItem;
 import org.jurassicraft.server.item.vehicles.HelicopterItem;
 import org.jurassicraft.server.item.vehicles.HelicopterModuleItem;
@@ -45,9 +48,9 @@ public class ItemHandler {
     public static final DinosaurSteakItem DINOSAUR_STEAK = new DinosaurSteakItem();
 
     public static final PaddockSignItem PADDOCK_SIGN = new PaddockSignItem();
-    public static final AttractionSignItem ATTRACTION_SIGN = new AttractionSignItem();
+    public static final Map<AttractionSignEntity.AttractionSignType, AttractionSignItem> ATTRACTION_SIGN = Maps.newHashMap();
 
-    public static final AmberItem AMBER = new AmberItem();
+    public static final Map<AmberItem.AmberStorageType, AmberItem> AMBER = Maps.newHashMap();
     public static final BasicItem PETRI_DISH = new BasicItem(TabHandler.ITEMS);
     public static final BasicItem PETRI_DISH_AGAR = new BasicItem(TabHandler.ITEMS);
     public static final BasicItem EMPTY_TEST_TUBE = new BasicItem(TabHandler.ITEMS);
@@ -164,7 +167,7 @@ public class ItemHandler {
     public static final FossilItem FOSSIL = new FossilItem(false);
     public static final FossilItem FRESH_FOSSIL = new FossilItem(true);
 
-    public static final FossilizedEggItem FOSSILIZED_EGG = new FossilizedEggItem();
+    public static final Map<NestFossilBlock.Variant, FossilizedEggItem> FOSSILIZED_EGG = Maps.newHashMap();
 
     public static final BasicItem GYPSUM_POWDER = new BasicItem(TabHandler.ITEMS);
 
@@ -189,7 +192,7 @@ public class ItemHandler {
     public static final BasicItem CAR_WINDSCREEN = new BasicItem(TabHandler.ITEMS);
     public static final BasicItem UNFINISHED_CAR = new BasicItem(TabHandler.ITEMS);
 
-    public static final JournalItem INGEN_JOURNAL = new JournalItem();
+    public static final Map<JournalItem.JournalType, JournalItem> INGEN_JOURNAL = Maps.newHashMap();
 
     public static final JeepWranglerItem JEEP_WRANGLER = new JeepWranglerItem();
     public static final FordExplorerItem FORD_EXPLORER = new FordExplorerItem();
@@ -276,35 +279,36 @@ public class ItemHandler {
     public static final Dart DART_POISON_CYCASIN = new Dart((entity, stack) -> entity.addPotionEffect(new PotionEffect(MobEffects.POISON, 2000)), 0xE2E1B8);
     public static final Dart DART_POISON_EXECUTIONER_CONCOCTION = new Dart((entity, stack) -> entity.setDeathIn(200), 0x000000);
     public static final Dart DART_TIPPED_POTION = new PotionDart();
-    
-    public static void init() {
-        registerItem(FOSSILIZED_EGG, "Fossilized Egg");
 
-//        JurassicraftRegisteries.DINOSAUR_REGISTRY.getValuesCollection().forEach(dinosaur -> {
-//            String[] boneTypes = dinosaur.getBones();
-//            for (String boneType : boneTypes) {
-//                if (!(dinosaur instanceof Hybrid)) {
-//                    if (!FOSSILS.containsKey(boneType)) {
-//                        FossilItem fossil = new FossilItem(boneType, false);
-//                        FOSSILS.put(boneType, fossil);
-//                        registerItem(fossil, boneType);
-//                    }
-//                }
-//
-//                if (!FRESH_FOSSIL.containsKey(boneType)) {
-//                    FossilItem fossil = new FossilItem(boneType, true);
-//                    FRESH_FOSSIL.put(boneType, fossil);
-//                    registerItem(fossil, boneType + " Fresh");
-//                }
-//            }
-//        });
+    static {
+        for(AttractionSignEntity.AttractionSignType type : AttractionSignEntity.AttractionSignType.values()) {
+            ATTRACTION_SIGN.put(type, new AttractionSignItem(type));
+        }
+        for(AmberItem.AmberStorageType type : AmberItem.AmberStorageType.values()) {
+            AMBER.put(type, new AmberItem(type));
+        }
+        for (JournalItem.JournalType journalType : JournalItem.JournalType.values()) {
+            INGEN_JOURNAL.put(journalType, new JournalItem(journalType));
+        }
+        for (NestFossilBlock.Variant variant : NestFossilBlock.Variant.values()) {
+            FOSSILIZED_EGG.put(variant, new FossilizedEggItem(variant));
+        }
+    }
+
+    public static void init() {
+
+        for (NestFossilBlock.Variant variant : NestFossilBlock.Variant.values()) {
+            registerItem(FOSSILIZED_EGG.get(variant), "Fossilized Egg " + variant.getName());
+        }
 
         registerItem(FOSSIL, "Fossil");
         registerItem(FRESH_FOSSIL, "Fresh Fossil");
 
         registerItem(SPAWN_EGG, "Dino Spawn Egg");
         registerItem(FIELD_GUIDE, "Field Guide");
-        registerItem(AMBER, "Amber");
+        for (AmberItem.AmberStorageType type : AmberItem.AmberStorageType.values()) {
+            registerItem(AMBER.get(type), "Amber " + type.getName());
+        }
         registerItem(SEA_LAMPREY, "Sea Lamprey");
         registerItem(PLASTER_AND_BANDAGE, "Plaster And Bandage");
         registerItem(EMPTY_TEST_TUBE, "Empty Test Tube");
@@ -321,7 +325,9 @@ public class ItemHandler {
         registerItem(PETRI_DISH_AGAR, "Petri Dish Agar");
         registerItem(PLANT_CELLS_PETRI_DISH, "Plant Cells Petri Dish");
         registerItem(PADDOCK_SIGN, "Paddock Sign");
-        registerItem(ATTRACTION_SIGN, "Attraction Sign");
+        for (AttractionSignEntity.AttractionSignType type : AttractionSignEntity.AttractionSignType.values()) {
+            registerItem(ATTRACTION_SIGN.get(type), "Attraction Sign " + type.name());
+        }
         registerItem(MURAL, "Mural");
         registerItem(DNA, "DNA");
         registerItem(SOFT_TISSUE, "Soft Tissue");
@@ -357,7 +363,7 @@ public class ItemHandler {
 
         registerItem(DISPLAY_BLOCK, "Display Block Item");
 
-       registerItem(DINO_SCANNER, "Dino Scanner");
+        registerItem(DINO_SCANNER, "Dino Scanner");
 
         registerItem(GYPSUM_POWDER, "Gypsum Powder");
 
@@ -412,8 +418,11 @@ public class ItemHandler {
         registerItem(LUNCH_BOX, "Lunch Box");
         registerItem(STAMP_SET, "Stamp Set");
 
-        registerItem(INGEN_JOURNAL, "InGen Journal");
-        
+        for (JournalItem.JournalType journalType : JournalItem.JournalType.values()) {
+            registerItem(INGEN_JOURNAL.get(journalType), "InGen Journal " + journalType.name());
+
+        }
+
         registerItem(DART_GUN, "Dart Gun");
         registerItem(DART_TRANQUILIZER, "Dart Tranquilizer");
         registerItem(DART_POISON_CYCASIN, "Dart Poison Cycasin");

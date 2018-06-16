@@ -3,12 +3,10 @@
   "group": "jurassicraft:attraction_sign",
   "ingredients": [
     {
-      "item": "jurassicraft:attraction_sign",
-      "data": 11
+      "item": "jurassicraft:attraction_sign_triceratops_territorium"
     }
   ],
   "result": {
-    "item": "jurassicraft:attraction_sign",
-    "data": 12
+    "item": "jurassicraft:attraction_sign_garden"
   }
 }

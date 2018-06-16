@@ -3,12 +3,10 @@
   "group": "jurassicraft:attraction_sign",
   "ingredients": [
     {
-      "item": "jurassicraft:attraction_sign",
-      "data": 2
+      "item": "jurassicraft:attraction_sign_aviary_plants"
     }
   ],
   "result": {
-    "item": "jurassicraft:attraction_sign",
-    "data": 3
+    "item": "jurassicraft:attraction_sign_gallimimus_valley"
   }
 }

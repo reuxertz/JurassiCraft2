@@ -5,6 +5,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -12,15 +14,22 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.api.SubBlocksBlock;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.entity.CultivatorBlockEntity;
+import org.jurassicraft.server.item.block.CultivateItemBlock;
 import org.jurassicraft.server.proxy.ServerProxy;
 import org.jurassicraft.server.tab.TabHandler;
 
-public class CultivatorBottomBlock extends CultivatorBlock {
-    public CultivatorBottomBlock() {
-        super("bottom");
+public class CultivatorBottomBlock extends CultivatorBlock implements SubBlocksBlock {
+    public CultivatorBottomBlock(EnumDyeColor color) {
+        super(color,"bottom");
         this.setCreativeTab(TabHandler.BLOCKS);
+    }
+
+    @Override
+    public ItemBlock getItemBlock() {
+        return new CultivateItemBlock(this, this.color);
     }
 
     @Override
@@ -68,7 +77,7 @@ public class CultivatorBottomBlock extends CultivatorBlock {
         Block block = world.getBlockState(topBlock).getBlock();
 
         if (block == Blocks.AIR) {
-            world.setBlockState(topBlock, BlockHandler.CULTIVATOR_TOP.getDefaultState().withProperty(COLOR, state.getValue(COLOR)));
+            world.setBlockState(topBlock, BlockHandler.CULTIVATOR_TOP.get(this.color).getDefaultState());
         }
     }
 

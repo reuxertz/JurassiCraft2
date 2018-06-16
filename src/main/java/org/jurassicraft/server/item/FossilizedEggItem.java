@@ -23,24 +23,17 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class FossilizedEggItem extends Item implements GrindableItem {
-    public FossilizedEggItem() {
-        super();
+
+    private final NestFossilBlock.Variant variant;
+
+    public FossilizedEggItem(NestFossilBlock.Variant variant) {
         this.setCreativeTab(TabHandler.FOSSILS);
-        this.setHasSubtypes(true);
+        this.variant = variant;
     }
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
         return new LangHelper("item.fossilized_egg.name").build();
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        if(this.isInCreativeTab(tab))
-        for (NestFossilBlock.Variant variant : NestFossilBlock.Variant.values()) {
-            subItems.add(new ItemStack(this, 1, variant.ordinal()));
-        }
     }
 
     @Override

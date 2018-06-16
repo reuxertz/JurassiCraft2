@@ -10,25 +10,26 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.Locale;
+
 public class AmberItem extends Item {
-    public AmberItem() {
-        super();
+    private final AmberStorageType type;
+
+    public AmberItem(AmberStorageType type) {
+        this.type = type;
         this.setCreativeTab(TabHandler.ITEMS);
-        this.setHasSubtypes(true);
     }
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        return new LangHelper("item.amber.name").withProperty("stored", "amber." + (stack.getItemDamage() == 0 ? "mosquito" : "aphid") + ".name").build();
+        return new LangHelper("item.amber.name").withProperty("stored", "amber." + type.getName() + ".name").build();
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        if(this.isInCreativeTab(tab))
-        {
-            subItems.add(new ItemStack(this, 1, 0));
-            subItems.add(new ItemStack(this, 1, 1));
+    public enum AmberStorageType {
+        MOSQUITO, APHID;
+
+        public String getName() {
+            return this.name().toLowerCase(Locale.ENGLISH);
         }
     }
 }

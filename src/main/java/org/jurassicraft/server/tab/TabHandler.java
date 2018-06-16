@@ -5,13 +5,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import org.jurassicraft.server.block.BlockHandler;
+import org.jurassicraft.server.item.AmberItem;
 import org.jurassicraft.server.item.ItemHandler;
 
 public class TabHandler {
     public static final CreativeTabs ITEMS = new CreativeTabs("jurassicraft.items") {
         @Override
         public ItemStack getTabIconItem() {
-            return new ItemStack(ItemHandler.AMBER);
+            return new ItemStack(ItemHandler.AMBER.get(AmberItem.AmberStorageType.MOSQUITO));
         }
     };
 

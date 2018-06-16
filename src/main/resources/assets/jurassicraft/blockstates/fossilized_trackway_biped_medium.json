@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "jurassicraft:fossilized_trackway_biped_medium"
+    },
+    "facing=south": {
+      "model": "jurassicraft:fossilized_trackway_biped_medium",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "jurassicraft:fossilized_trackway_biped_medium",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "jurassicraft:fossilized_trackway_biped_medium",
+      "y": 90
+    }
+  }
+}

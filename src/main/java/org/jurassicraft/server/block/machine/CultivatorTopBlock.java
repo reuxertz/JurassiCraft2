@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -12,16 +13,17 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import org.jurassicraft.server.api.NoItemBlock;
 import org.jurassicraft.server.block.BlockHandler;
 
-public class CultivatorTopBlock extends CultivatorBlock {
-    public CultivatorTopBlock() {
-        super("top");
+public class CultivatorTopBlock extends CultivatorBlock implements NoItemBlock {
+    public CultivatorTopBlock(EnumDyeColor color) {
+        super(color, "top");
     }
 
     @Override
     public ItemStack getPickBlock(IBlockState state, RayTraceResult result, World world, BlockPos pos, EntityPlayer player) {
-        Item item = Item.getItemFromBlock(BlockHandler.CULTIVATOR_BOTTOM);
+        Item item = Item.getItemFromBlock(BlockHandler.CULTIVATOR_BOTTOM.get(this.color));
 
         if (item == null) {
             return null;
@@ -44,7 +46,7 @@ public class CultivatorTopBlock extends CultivatorBlock {
         BlockPos bottomBlock = pos.add(0, -1, 0);
 
         if (world.getBlockState(bottomBlock).getBlock() != BlockHandler.CULTIVATOR_BOTTOM) {
-            world.setBlockState(bottomBlock, BlockHandler.CULTIVATOR_BOTTOM.getDefaultState().withProperty(COLOR, state.getValue(COLOR)));
+            world.setBlockState(bottomBlock, BlockHandler.CULTIVATOR_BOTTOM.get(this.color).getDefaultState());
         }
     }
 

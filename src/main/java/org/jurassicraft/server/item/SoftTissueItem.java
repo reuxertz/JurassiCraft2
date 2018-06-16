@@ -1,16 +1,14 @@
 package org.jurassicraft.server.item;
 
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
 import com.google.common.collect.Lists;
+import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jurassicraft.server.api.DinosaurProvider;
 import org.jurassicraft.server.api.SequencableItem;
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.genetics.DinoDNA;
 import org.jurassicraft.server.genetics.GeneticsHelper;
 import org.jurassicraft.server.tab.TabHandler;
@@ -24,14 +22,14 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class SoftTissueItem extends Item implements SequencableItem, DinosaurProvider{
+public class SoftTissueItem extends Item implements SequencableItem, DinosaurProvider {
     public SoftTissueItem() {
         this.setCreativeTab(TabHandler.DNA);
     }
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        String dinoName = this.getDinosaur(stack).getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
+        String dinoName = this.getValue(stack).getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
 
         return new LangHelper("item.soft_tissue.name").withProperty("dino", "entity.jurassicraft." + dinoName + ".name").build();
     }
@@ -42,6 +40,11 @@ public class SoftTissueItem extends Item implements SequencableItem, DinosaurPro
         if(this.isInCreativeTab(tab)) {
             subtypes.addAll(this.getAllStacksOrdered());
         }
+    }
+
+    @Override
+    public String getFolderLocation(ResourceLocation res) {
+        return "item/soft_tissue/dinosaurs";
     }
 
     @Override
@@ -56,7 +59,7 @@ public class SoftTissueItem extends Item implements SequencableItem, DinosaurPro
         if (nbt == null) {
             nbt = new NBTTagCompound();
             int quality = SequencableItem.randomQuality(random);
-            DinoDNA dna = new DinoDNA(DinosaurProvider.getFromStack(stack).getDinosaur(stack), quality, GeneticsHelper.randomGenetics(random));
+            DinoDNA dna = new DinoDNA(DinosaurProvider.getFromStack(stack).getValue(stack), quality, GeneticsHelper.randomGenetics(random));
             dna.writeToNBT(nbt);
         } else if (!nbt.hasKey("Dinosaur")) {
             nbt.setInteger("Dinosaur", stack.getItemDamage());
@@ -77,7 +80,7 @@ public class SoftTissueItem extends Item implements SequencableItem, DinosaurPro
     public List<Pair<Float, ItemStack>> getChancedOutputs(ItemStack inputItem) {
         List<Pair<Float, ItemStack>> list = Lists.newArrayList();
         NBTTagCompound nbt = new NBTTagCompound();
-        DinoDNA dna = new DinoDNA(DinosaurProvider.getFromStack(inputItem).getDinosaur(inputItem), -1, "");
+        DinoDNA dna = new DinoDNA(DinosaurProvider.getFromStack(inputItem).getValue(inputItem), -1, "");
         dna.writeToNBT(nbt);
         ItemStack output = new ItemStack(ItemHandler.STORAGE_DISC);
         output.setTagCompound(nbt);

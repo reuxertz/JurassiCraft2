@@ -18,7 +18,7 @@ public interface JurassicIngredientItem {
         }
         return Lists.newArrayList(new ItemStack((Item) this));
     }
-    List<Pair<Float, ItemStack>> getChancedOutputs(ItemStack inputItem);
+    List<Pair<Float, ItemStack>> getChancedOutputs(ItemStack inputItem); //TODO: merge get outputs and getChancedOutputs into one
 
     default List<ItemStack> getItemSubtypes(Item item) {
         NonNullList<ItemStack> list = NonNullList.create();
