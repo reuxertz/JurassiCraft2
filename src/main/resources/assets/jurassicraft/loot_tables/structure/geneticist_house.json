@@ -125,7 +125,7 @@
       "entries": [
         {
           "type": "item",
-          "name": "jurassicraft:amber",
+          "name": "jurassicraft:amber_mosquito",
           "functions": [
             {
               "function": "set_count",
@@ -133,16 +133,23 @@
                 "min": 1,
                 "max": 2
               }
-            },
+            }
+          ],
+          "weight": 2
+        },
+        {
+          "type": "item",
+          "name": "jurassicraft:amber_aphid",
+          "functions": [
             {
-              "function": "set_data",
-              "data": {
-                "min": 0,
-                "max": 1
+              "function": "set_count",
+              "count": {
+                "min": 1,
+                "max": 2
               }
             }
           ],
-          "weight": 1
+          "weight": 2
         },
         {
           "type": "item",

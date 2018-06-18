@@ -1,5 +1,6 @@
 package org.jurassicraft.server.api;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public interface StackNBTProvider<T extends Comparable<T>> {
+public interface StackNBTProvider<T> {
 
     List<T> getAllValues();
 
@@ -59,9 +60,9 @@ public interface StackNBTProvider<T extends Comparable<T>> {
     }
 
     default List<ItemStack> getAllStacksOrdered() {
-        List<T> list = getAllValues().stream().filter(this::canBeInCreativeTab).collect(Collectors.toList());
-        Collections.sort(list);
-        return list.stream().map(this::getItemStack).collect(Collectors.toList());
+        List<String> keys = Lists.newArrayList(this.getKeySet());
+        Collections.sort(keys);
+        return keys.stream().map(this::getValueFromName).map(this::getItemStack).collect(Collectors.toList());
     }
 
     Map<Object, ResourceLocation> getModelResourceLocations(T value);
@@ -98,6 +99,10 @@ public interface StackNBTProvider<T extends Comparable<T>> {
 
     default boolean shouldOverrideModel(T value) {
         return true;
+    }
+
+    default List<String> getKeySet() {
+        return this.getAllValues().stream().map(this::getRegistryNameFor).collect(Collectors.toList());
     }
 
     default boolean canBeInCreativeTab(T value) {

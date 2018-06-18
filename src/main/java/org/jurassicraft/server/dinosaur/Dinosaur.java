@@ -786,10 +786,6 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
     public void applyMeatEffect(EntityPlayer player, boolean cooked) {
     }
 
-    public final boolean isMissing() {
-        return this == MISSING;
-    }
-
     public final String phraseRegistryName() {
         return this.getRegistryName().toString().replace(':', '.');
     }

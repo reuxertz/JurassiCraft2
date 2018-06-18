@@ -10,6 +10,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import org.jurassicraft.server.api.StackNBTProvider;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
 import org.jurassicraft.server.api.DinosaurProvider;
@@ -17,10 +18,10 @@ import org.jurassicraft.server.api.DinosaurProvider;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class CommandDinosaur extends CommandBase {
+public class CommandSetNBT extends CommandBase {
     @Override
     public String getName() {
-        return "dinosauritem";
+        return "jcsetnbt";
     }
 
     @Override
@@ -33,10 +34,10 @@ public class CommandDinosaur extends CommandBase {
         if(sender.getCommandSenderEntity() instanceof EntityLivingBase && args.length != 0) {
             EntityLivingBase entityLivingBase = ((EntityLivingBase)sender.getCommandSenderEntity());
             ItemStack stack = entityLivingBase.getHeldItemMainhand();
-            if(stack.getItem() instanceof DinosaurProvider) {
-                Dinosaur dinosaur = JurassicraftRegisteries.DINOSAUR_REGISTRY.getValue(new ResourceLocation(args[0]));
-                if(!dinosaur.isMissing()) {
-                    entityLivingBase.setHeldItem(EnumHand.MAIN_HAND, ((DinosaurProvider)stack.getItem()).getItemStack(dinosaur));
+            if(stack.getItem() instanceof StackNBTProvider) {
+                StackNBTProvider provider = StackNBTProvider.getFromStack(stack);
+                if(provider != null) {
+                    entityLivingBase.setHeldItem(EnumHand.MAIN_HAND, provider.putValue(stack, provider.getValueFromName(args[0])));
                     sender.sendMessage(new TextComponentString("Compleated"));
                 }
             }
@@ -45,6 +46,14 @@ public class CommandDinosaur extends CommandBase {
 
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
-        return args.length == 1 ? getListOfStringsMatchingLastWord(args, JurassicraftRegisteries.DINOSAUR_REGISTRY.getKeys()) : Lists.newArrayList();
+        if(sender.getCommandSenderEntity() instanceof EntityLivingBase && args.length == 1) {
+            EntityLivingBase entityLivingBase = ((EntityLivingBase) sender.getCommandSenderEntity());
+            ItemStack stack = entityLivingBase.getHeldItemMainhand();
+            StackNBTProvider provider = StackNBTProvider.getFromStack(stack);
+            if(provider != null) {
+                return getListOfStringsMatchingLastWord(args, provider.getKeySet());
+            }
+        }
+        return Lists.newArrayList();
     }
 }

@@ -30,7 +30,7 @@ public class JsonPlantHandler {
         JsonObject json = jsonElement.getAsJsonObject();
         String blockName = JsonUtils.getString(json, "block");
         return new Plant(Objects.requireNonNull(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(blockName)), "Could not find block " + blockName), JsonUtils.getInt(json, "heal_amount"))
-                .withIsPrehistoric(JsonUtils.getBoolean(json, "prehistoric", false))
+                .withIsPrehistoric(JsonUtils.getBoolean(json, "prehistoric", true))
                 .withTreeType(JsonUtils.isString(json, "tree_type") ? TreeType.valueOf(JsonUtils.getString(json, "tree_type").toUpperCase(Locale.ENGLISH)) : null)
                 .withFoodEffects(getFoodEffects(json));
     }).create();

@@ -65,7 +65,7 @@ public class EncasedFossilBlock extends FossilBlock implements CleanableItem {
 
     @Override
     public boolean isCleanable(ItemStack stack) {
-        return !this.getValue(stack).isMissing();
+        return true;
     }
 
     @Override

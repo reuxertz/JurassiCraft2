@@ -22,6 +22,7 @@ import org.jurassicraft.server.registries.JurassicraftRegisteries;
 import org.jurassicraft.server.tab.TabHandler;
 import org.jurassicraft.server.util.LangHelper;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -161,6 +162,9 @@ public class FossilItem extends Item implements GrindableItem, DinosaurProvider 
     public static ItemStack putFossilInfomation(ItemStack stack, FossilInfomation infomation) {
         NBTTagCompound compound = stack.getOrCreateSubCompound("jurassicraft");
         NBTTagCompound nbt = compound.getCompoundTag("Fossil Info");
+        if(nbt == null) {
+            nbt = new NBTTagCompound();
+        }
         nbt.setString("Dinosaur", infomation.getDinosaur().getRegistryName().toString());
         nbt.setString("Bone Type", infomation.getType());
         compound.setTag("Fossil Info", nbt);
