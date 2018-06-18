@@ -1,0 +1,15 @@
+{
+  "block": "jurassicraft:west_indian_lilac",
+  "heal_amount": 4000,
+  "prehistoric": false,
+  "food_effects": [
+    {
+      "potion": {
+        "potion_name": "minecraft:poison",
+        "duration": 432,
+        "amplifier": 1
+      },
+      "chance": 100
+    }
+  ]
+}

@@ -1,13 +1,15 @@
 package org.jurassicraft.server.plant;
 
 import net.minecraft.block.Block;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
+import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.block.tree.TreeType;
 import org.jurassicraft.server.food.FoodHelper;
 
 public class Plant extends IForgeRegistryEntry.Impl<Plant> implements Comparable<Plant> {
-
-    public static Plant MISSING = PlantHandler.AJUGINUCULA_SMITHII;
+    @GameRegistry.ObjectHolder(JurassiCraft.MODID + ":ajuginucula_smithii")
+    public static Plant MISSING = null;
 
     private final Block block;
     private final int healAmount;
@@ -15,12 +17,6 @@ public class Plant extends IForgeRegistryEntry.Impl<Plant> implements Comparable
     private FoodHelper.FoodEffect[] foodEffects = new FoodHelper.FoodEffect[0];
     private boolean isPrehistoric = true;
     private TreeType treeType;
-
-    @Deprecated
-    public Plant(String name, Block block, int healAmount) {
-        this(block, healAmount);
-        this.setRegistryName(name);
-    }
 
     public Plant(Block block, int healAmount) {
         this.block = block;

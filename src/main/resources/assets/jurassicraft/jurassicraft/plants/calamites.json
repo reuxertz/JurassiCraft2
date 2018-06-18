@@ -1,0 +1,14 @@
+{
+  "block": "jurassicraft:calamites_sapling",
+  "heal_amount": 1000,
+  "tree_type": "calamites",
+  "food_effects": [
+    {
+      "potion": {
+        "potion_name": "minecraft:poison",
+        "duration": 900
+      },
+      "chance": 5
+    }
+  ]
+}

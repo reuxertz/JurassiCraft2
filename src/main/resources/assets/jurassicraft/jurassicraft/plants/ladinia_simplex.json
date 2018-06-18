@@ -1,0 +1,13 @@
+{
+  "block": "jurassicraft:ladinia_simplex",
+  "heal_amount": 2000,
+  "food_effects": [
+    {
+      "potion": {
+        "potion_name": "minecraft:poison",
+        "duration": 900
+      },
+      "chance": 15
+    }
+  ]
+}

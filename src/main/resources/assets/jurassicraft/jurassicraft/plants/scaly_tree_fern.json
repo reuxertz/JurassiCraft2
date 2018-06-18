@@ -1,0 +1,13 @@
+{
+  "block": "jurassicraft:scaly_tree_fern",
+  "heal_amount": 4000,
+  "food_effects": [
+    {
+      "potion": {
+        "potion_name": "minecraft:poison",
+        "duration": 900
+      },
+      "chance": 100
+    }
+  ]
+}
