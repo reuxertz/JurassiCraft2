@@ -9,12 +9,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import org.jurassicraft.server.api.IncubatorEnvironmentItem;
 import org.jurassicraft.server.block.entity.IncubatorBlockEntity;
-import org.jurassicraft.server.container.slot.CustomSlot;
+import org.jurassicraft.server.container.slot.CustomSlotOLD;
 import org.jurassicraft.server.item.ItemHandler;
 
 import java.util.function.Predicate;
 
-public class IncubatorContainer extends MachineContainer {
+public class IncubatorContainer extends MachineContainerOLD {
     private IncubatorBlockEntity incubator;
 
     public IncubatorContainer(InventoryPlayer playerInventory, TileEntity tileEntity) {
@@ -22,13 +22,13 @@ public class IncubatorContainer extends MachineContainer {
 
         this.incubator = (IncubatorBlockEntity) tileEntity;
         Predicate<ItemStack> eggPredicate = stack -> stack.getItem() == ItemHandler.EGG;
-        this.addSlotToContainer(new CustomSlot(this.incubator, 0, 33, 28, eggPredicate));
-        this.addSlotToContainer(new CustomSlot(this.incubator, 1, 56, 21, eggPredicate));
-        this.addSlotToContainer(new CustomSlot(this.incubator, 2, 79, 14, eggPredicate));
-        this.addSlotToContainer(new CustomSlot(this.incubator, 3, 102, 21, eggPredicate));
-        this.addSlotToContainer(new CustomSlot(this.incubator, 4, 125, 28, eggPredicate));
+        this.addSlotToContainer(new CustomSlotOLD(this.incubator, 0, 33, 28, eggPredicate));
+        this.addSlotToContainer(new CustomSlotOLD(this.incubator, 1, 56, 21, eggPredicate));
+        this.addSlotToContainer(new CustomSlotOLD(this.incubator, 2, 79, 14, eggPredicate));
+        this.addSlotToContainer(new CustomSlotOLD(this.incubator, 3, 102, 21, eggPredicate));
+        this.addSlotToContainer(new CustomSlotOLD(this.incubator, 4, 125, 28, eggPredicate));
 
-        this.addSlotToContainer(new CustomSlot(this.incubator, 5, 79, 49, stack -> stack.getItem() instanceof IncubatorEnvironmentItem || Block.getBlockFromItem(stack.getItem()) instanceof IncubatorEnvironmentItem));
+        this.addSlotToContainer(new CustomSlotOLD(this.incubator, 5, 79, 49, stack -> stack.getItem() instanceof IncubatorEnvironmentItem || Block.getBlockFromItem(stack.getItem()) instanceof IncubatorEnvironmentItem));
 
         int i;
 

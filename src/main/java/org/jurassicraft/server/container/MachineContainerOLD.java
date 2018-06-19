@@ -2,27 +2,47 @@ package org.jurassicraft.server.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jurassicraft.server.block.entity.MachineBaseBlockEntity;
-import org.jurassicraft.server.block.entity.MachineBaseItemHandler;
 
-public class MachineContainer extends Container {
+public abstract class MachineContainerOLD extends Container {
+    private int[] fields;
+    private IInventory inventory;
 
-    protected final MachineBaseBlockEntity blockEntity;
-    protected final MachineBaseItemHandler inventory;
-
-    public MachineContainer(MachineBaseBlockEntity blockEntity) {
-        this.blockEntity = blockEntity;
-        this.inventory = blockEntity.getInventory();
+    public MachineContainerOLD(IInventory inventory) {
+        this.inventory = inventory;
+        this.fields = new int[inventory.getFieldCount()];
     }
+
+    //TODO Crashing
+    /*
+    @Override
+    public void detectAndSendChanges() {
+        super.detectAndSendChanges();
+
+        for (IContainerListener listener : this.listeners) {
+            for (int fieldIndex = 0; fieldIndex < this.fields.length; fieldIndex++) {
+                int field = this.inventory.getField(fieldIndex);
+
+                if (field != this.fields[fieldIndex]) {
+                    listener.sendWindowProperty(this, fieldIndex, field);
+                }
+            }
+        }
+
+        for (int fieldIndex = 0; fieldIndex < this.fields.length; fieldIndex++) {
+            this.fields[fieldIndex] = this.inventory.getField(fieldIndex);
+        }
+    }
+    */
 
     @Override
     @SideOnly(Side.CLIENT)
     public void updateProgressBar(int id, int data) {
-        this.blockEntity.setField(id, data);
+        this.inventory.setField(id, data);
     }
 
     @Override
@@ -54,8 +74,7 @@ public class MachineContainer extends Container {
         return transferred;
     }
 
-    @Override
-    public boolean canInteractWith(EntityPlayer playerIn) {
-        return true;
+    public IInventory getInventoryTile() {
+        return inventory;
     }
 }

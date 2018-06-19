@@ -66,7 +66,6 @@ public class SoftTissueItem extends Item implements SequencableItem, DinosaurPro
 
         ItemStack output = new ItemStack(ItemHandler.STORAGE_DISC);
         output.setTagCompound(nbt);
-        ItemHandler.STORAGE_DISC.putValue(output, dinosaur);
         return output;
     }
 

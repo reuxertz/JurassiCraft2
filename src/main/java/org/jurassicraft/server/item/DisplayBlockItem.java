@@ -78,13 +78,14 @@ public class DisplayBlockItem extends Item implements DinosaurProvider {
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subtypes) {
-        List<Dinosaur> list = Lists.newArrayList(JurassicraftRegisteries.DINOSAUR_REGISTRY.getValuesCollection());
-        Collections.sort(list);
-
-        for(DisplayBlockProperties.Type type : DisplayBlockProperties.Type.values()) {
-            if(type.isCreativeTab()) {
-                for(Dinosaur dino : list) {
-                    subtypes.add(writeToStack(new ItemStack(this), new DisplayBlockProperties(dino, type)));
+        if(this.isInCreativeTab(tab)) {
+            List<Dinosaur> list = Lists.newArrayList(JurassicraftRegisteries.DINOSAUR_REGISTRY.getValuesCollection());
+            Collections.sort(list);
+            for(DisplayBlockProperties.Type type : DisplayBlockProperties.Type.values()) {
+                if(type.isCreativeTab()) {
+                    for(Dinosaur dino : list) {
+                        subtypes.add(writeToStack(new ItemStack(this), new DisplayBlockProperties(dino, type)));
+                    }
                 }
             }
         }

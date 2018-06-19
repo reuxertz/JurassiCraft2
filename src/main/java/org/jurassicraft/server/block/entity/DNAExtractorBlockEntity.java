@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class DNAExtractorBlockEntity extends MachineBaseBlockEntity {
+public class DNAExtractorBlockEntity extends MachineBaseBlockEntityOLD {
     private static final int[] INPUTS = new int[]{0, 1};
     private static final int[] OUTPUTS = new int[]{2, 3, 4, 5};
 

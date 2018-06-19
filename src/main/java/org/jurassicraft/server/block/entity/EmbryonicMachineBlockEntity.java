@@ -9,12 +9,11 @@ import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.api.DinosaurProvider;
 import org.jurassicraft.server.api.PlantProvider;
 import org.jurassicraft.server.container.EmbryonicMachineContainer;
-import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.item.DNAItem;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.item.PlantDNAItem;
 
-public class EmbryonicMachineBlockEntity extends MachineBaseBlockEntity {
+public class EmbryonicMachineBlockEntity extends MachineBaseBlockEntityOLD {
     private static final int[] INPUTS = new int[] { 0, 1, 2 };
     private static final int[] OUTPUTS = new int[] { 3, 4, 5, 6 };
 

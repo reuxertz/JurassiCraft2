@@ -23,15 +23,6 @@ public class DNASynthesizerRecipeWrapper implements IRecipeWrapper {
 
     @Override
     public void getIngredients(IIngredients ingredients) {
-//        int metadata = this.input.getMetadata();
-//        List<ItemStack> inputs = new ArrayList<>();
-//        ItemStack data = new ItemStack(ItemHandler.STORAGE_DISC);
-//        data.setTagCompound(this.input.getTag());
-//        inputs.add(data);
-//        ingredients.setInputs(ItemStack.class, inputs);
-//        ItemStack output = new ItemStack(this.input.getItem(), 1, metadata);
-//        ingredients.setOutput(ItemStack.class, output);
-
         ingredients.setInput(ItemStack.class, input.stack);
         List<ItemStack> list = Lists.newArrayList();
         input.item.getChancedOutputs(input.stack).forEach(pair -> {

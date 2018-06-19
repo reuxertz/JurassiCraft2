@@ -17,8 +17,10 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.IItemHandler;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.block.OrientedBlock;
+import org.jurassicraft.server.block.entity.BugCrateBlockEntity;
 import org.jurassicraft.server.block.entity.DNASequencerBlockEntity;
 import org.jurassicraft.server.proxy.ServerProxy;
 import org.jurassicraft.server.tab.TabHandler;
@@ -38,7 +40,7 @@ public class DNASequencerBlock extends OrientedBlock {
         if (stack.hasDisplayName()) {
             TileEntity tile = world.getTileEntity(pos);
             if (tile instanceof DNASequencerBlockEntity) {
-                ((DNASequencerBlockEntity) tile).setCustomInventoryName(stack.getDisplayName());
+//                ((DNASequencerBlockEntity) tile).setCustomInventoryName(stack.getDisplayName()); //TODO:
             }
         }
     }
@@ -47,7 +49,10 @@ public class DNASequencerBlock extends OrientedBlock {
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         TileEntity tile = worldIn.getTileEntity(pos);
         if (tile instanceof DNASequencerBlockEntity) {
-            InventoryHelper.dropInventoryItems(worldIn, pos, (DNASequencerBlockEntity) tile);
+            IItemHandler handler = ((DNASequencerBlockEntity)tile).getInventory();
+            for (int i = 0; i < handler.getSlots(); i++) {
+                InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), handler.getStackInSlot(i));
+            }
         }
         super.breakBlock(worldIn, pos, state);
     }
@@ -60,7 +65,8 @@ public class DNASequencerBlock extends OrientedBlock {
             TileEntity tile = world.getTileEntity(pos);
             if (tile instanceof DNASequencerBlockEntity) {
                 DNASequencerBlockEntity entity = (DNASequencerBlockEntity) tile;
-                if (entity.isUsableByPlayer(player)) {
+//                if (entity.isUsableByPlayer(player))
+                {
                     player.openGui(JurassiCraft.INSTANCE, ServerProxy.GUI_DNA_SEQUENCER_ID, world, pos.getX(), pos.getY(), pos.getZ());
                     return true;
                 }

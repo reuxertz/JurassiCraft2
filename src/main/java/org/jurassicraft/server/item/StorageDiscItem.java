@@ -12,6 +12,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.jurassicraft.server.api.DinosaurProvider;
 import org.jurassicraft.server.api.SynthesizableItem;
 import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.plant.Plant;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
 import org.jurassicraft.server.genetics.DinoDNA;
 import org.jurassicraft.server.genetics.PlantDNA;
@@ -22,7 +23,7 @@ import org.jurassicraft.server.tab.TabHandler;
 import java.util.List;
 import java.util.Random;
 
-public class StorageDiscItem extends Item implements SynthesizableItem, DinosaurProvider {
+public class StorageDiscItem extends Item implements SynthesizableItem { //TODO: make a plant storage disc
     public StorageDiscItem() {
         this.setCreativeTab(TabHandler.ITEMS);
     }
@@ -47,13 +48,8 @@ public class StorageDiscItem extends Item implements SynthesizableItem, Dinosaur
     }
 
     @Override
-    public boolean shouldOverrideModel(Dinosaur dinosaur) {
-        return false;
-    }
-
-    @Override
     public ItemStack getSynthesizedItem(ItemStack stack, Random random) {
-        NBTTagCompound tag = stack.getTagCompound();
+        NBTTagCompound tag = stack.getOrCreateSubCompound("jurassicraft").getCompoundTag("dna");
         StorageType type = StorageTypeRegistry.getStorageType(tag.getString("StorageId"));
         type.readFromNBT(tag);
         return type.createItem();
@@ -61,7 +57,7 @@ public class StorageDiscItem extends Item implements SynthesizableItem, Dinosaur
 
     @Override
     public List<Pair<Float, ItemStack>> getChancedOutputs(ItemStack inputItem) {
-        NBTTagCompound tag = inputItem.getTagCompound();
+        NBTTagCompound tag = inputItem.getOrCreateSubCompound("jurassicraft").getCompoundTag("dna");
         StorageType type = StorageTypeRegistry.getStorageType(tag.getString("StorageId"));
         type.readFromNBT(tag);
         return Lists.newArrayList(Pair.of(100F, type.createItem()));
@@ -76,7 +72,7 @@ public class StorageDiscItem extends Item implements SynthesizableItem, Dinosaur
             ItemStack stack = new ItemStack(this);
             NBTTagCompound nbt = new NBTTagCompound();
             dna.writeToNBT(nbt);
-            stack.setTagCompound(nbt);
+            stack.getOrCreateSubCompound("jurassicraft").setTag("dna", nbt);
             list.add(stack);
         });
 
@@ -85,9 +81,8 @@ public class StorageDiscItem extends Item implements SynthesizableItem, Dinosaur
             ItemStack stack = new ItemStack(this);
             NBTTagCompound nbt = new NBTTagCompound();
             dna.writeToNBT(nbt);
-            stack.setTagCompound(nbt);
+            stack.getOrCreateSubCompound("jurassicraft").setTag("dna", nbt);
             list.add(stack);
-
         });
         return list;
     }

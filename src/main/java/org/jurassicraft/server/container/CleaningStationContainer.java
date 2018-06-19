@@ -9,7 +9,7 @@ import org.jurassicraft.server.container.slot.CleanableItemSlot;
 import org.jurassicraft.server.container.slot.FossilSlot;
 import org.jurassicraft.server.container.slot.WaterBucketSlot;
 
-public class CleaningStationContainer extends MachineContainer {
+public class CleaningStationContainer extends MachineContainerOLD {
     private final IInventory tileCleaningStation;
 
     public CleaningStationContainer(InventoryPlayer invPlayer, IInventory cleaningStation) {

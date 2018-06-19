@@ -14,7 +14,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
-public class EmbryoCalcificationMachineBlockEntity extends MachineBaseBlockEntity {
+public class EmbryoCalcificationMachineBlockEntity extends MachineBaseBlockEntityOLD {
     private static final int[] INPUTS = new int[] { 0, 1 };
     private static final int[] OUTPUTS = new int[] { 2 };
 

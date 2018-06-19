@@ -16,7 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 
-public class IncubatorBlockEntity extends MachineBaseBlockEntity implements TemperatureControl {
+public class IncubatorBlockEntity extends MachineBaseBlockEntityOLD implements TemperatureControl {
     private static final int[] INPUTS = new int[] { 0, 1, 2, 3, 4 };
     private static final int[] ENVIRONMENT = new int[] { 5 };
 

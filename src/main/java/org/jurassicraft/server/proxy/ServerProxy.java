@@ -16,18 +16,7 @@ import org.jurassicraft.server.block.entity.EmbryonicMachineBlockEntity;
 import org.jurassicraft.server.block.entity.FeederBlockEntity;
 import org.jurassicraft.server.block.entity.FossilGrinderBlockEntity;
 import org.jurassicraft.server.block.entity.IncubatorBlockEntity;
-import org.jurassicraft.server.container.CleaningStationContainer;
-import org.jurassicraft.server.container.CultivateContainer;
-import org.jurassicraft.server.container.DNACombinatorHybridizerContainer;
-import org.jurassicraft.server.container.DNAExtractorContainer;
-import org.jurassicraft.server.container.DNASequencerContainer;
-import org.jurassicraft.server.container.DNASynthesizerContainer;
-import org.jurassicraft.server.container.EmbryoCalcificationMachineContainer;
-import org.jurassicraft.server.container.EmbryonicMachineContainer;
-import org.jurassicraft.server.container.FeederContainer;
-import org.jurassicraft.server.container.FossilGrinderContainer;
-import org.jurassicraft.server.container.IncubatorContainer;
-import org.jurassicraft.server.container.SkeletonAssemblyContainer;
+import org.jurassicraft.server.container.*;
 import org.jurassicraft.server.datafixers.JurassiCraftDataFixers;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.DinosaurSerializers;
@@ -150,7 +139,7 @@ public class ServerProxy implements IGuiHandler {
                     break;
                 case GUI_DNA_SEQUENCER_ID:
                     if (tile instanceof DNASequencerBlockEntity)
-                        return new DNASequencerContainer(player.inventory, tile);
+                        return new DNASequencerContainer(player.inventory, (DNASequencerBlockEntity)tile);
                     break;
                 case GUI_EMBRYONIC_MACHINE_ID:
                     if (tile instanceof EmbryonicMachineBlockEntity)
@@ -186,7 +175,7 @@ public class ServerProxy implements IGuiHandler {
                     break;
                 case GUI_BUG_CRATE:
                     if (tile instanceof BugCrateBlockEntity)
-                        return ((BugCrateBlockEntity) tile).createContainer(player.inventory, player);
+                        return new BugCrateContainer(player.inventory, (BugCrateBlockEntity)tile);
                     break;
                 default:
                     return null;

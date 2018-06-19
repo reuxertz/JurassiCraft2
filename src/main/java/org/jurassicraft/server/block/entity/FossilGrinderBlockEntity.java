@@ -12,7 +12,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
-public class FossilGrinderBlockEntity extends MachineBaseBlockEntity {
+public class FossilGrinderBlockEntity extends MachineBaseBlockEntityOLD {
     private static final int[] INPUTS = new int[] { 0, 1, 2, 3, 4, 5 };
     private static final int[] OUTPUTS = new int[] { 6, 7, 8, 9, 10, 11 };
 

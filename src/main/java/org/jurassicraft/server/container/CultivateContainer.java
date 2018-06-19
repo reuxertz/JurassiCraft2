@@ -11,7 +11,7 @@ import org.jurassicraft.server.container.slot.NutrientSlot;
 import org.jurassicraft.server.container.slot.OutputSlot;
 import org.jurassicraft.server.container.slot.WaterBucketSlot;
 
-public class CultivateContainer extends MachineContainer {
+public class CultivateContainer extends MachineContainerOLD {
     private CultivatorBlockEntity cultivator;
 
     public CultivateContainer(InventoryPlayer playerInventory, TileEntity tileEntity) {

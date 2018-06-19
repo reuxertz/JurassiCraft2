@@ -6,10 +6,10 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.tileentity.TileEntity;
 import org.jurassicraft.server.block.entity.FossilGrinderBlockEntity;
-import org.jurassicraft.server.container.slot.CustomSlot;
+import org.jurassicraft.server.container.slot.CustomSlotOLD;
 import org.jurassicraft.server.container.slot.GrindableItemSlot;
 
-public class FossilGrinderContainer extends MachineContainer {
+public class FossilGrinderContainer extends MachineContainerOLD {
     private FossilGrinderBlockEntity fossilGrinder;
 
     public FossilGrinderContainer(InventoryPlayer playerInventory, TileEntity tileEntity) {
@@ -25,7 +25,7 @@ public class FossilGrinderContainer extends MachineContainer {
 
         for (int row = 0; row < 3; row++) {
             for (int column = 0; column < 2; column++) {
-                this.addSlotToContainer(new CustomSlot(this.fossilGrinder, row + (column * 3) + 6, row * 18 + 93 + 15, column * 18 + 26, stack -> false));
+                this.addSlotToContainer(new CustomSlotOLD(this.fossilGrinder, row + (column * 3) + 6, row * 18 + 93 + 15, column * 18 + 26, stack -> false));
             }
         }
 

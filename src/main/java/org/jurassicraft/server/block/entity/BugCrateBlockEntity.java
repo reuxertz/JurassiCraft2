@@ -16,17 +16,15 @@ public class BugCrateBlockEntity extends MachineBaseBlockEntity {
     private static final int[] INPUTS = new int[] { 0, 1, 2, 3, 4, 5 };
     private static final int[] OUTPUTS = new int[] { 6, 7, 8 };
 
-    private NonNullList<ItemStack> slots = NonNullList.withSize(9, ItemStack.EMPTY);
-
     @Override
-    protected int getProcess(int slot) {
+    protected int getProcessFromSlot(int slot) {
         return 0;
     }
 
     @Override
     protected boolean canProcess(int process) {
         for (int i = 0; i < 3; i++) {
-            ItemStack stack = this.getStackInSlot(i);
+            ItemStack stack = this.inventory.getStackInSlot(i);
             BreedableBug bug = BreedableBug.getBug(stack);
             if (bug != null && !this.getBestFood(bug).isEmpty()) {
                 return true;
@@ -38,19 +36,19 @@ public class BugCrateBlockEntity extends MachineBaseBlockEntity {
     @Override
     protected void processItem(int process) {
         for (int i = 0; i < 3; i++) {
-            ItemStack stack = this.getStackInSlot(i);
+            ItemStack stack = this.inventory.getStackInSlot(i);
             BreedableBug bug = BreedableBug.getBug(stack);
             if (bug != null) {
                 ItemStack food = this.getBestFood(bug);
                 if (!food.isEmpty()) {
                     ItemStack output = new ItemStack((Item) bug, bug.getBreedings(food));
-                    for (int slot = 0; slot < this.slots.size(); slot++) {
-                        if (this.slots.get(slot) == food) {
+                    for (int slot = 0; slot < this.inventory.getSlots(); slot++) {
+                        if (this.inventory.getStackInSlot(slot) == food) {
                             this.decreaseStackSize(slot);
                             break;
                         }
                     }
-                    int outputSlot = this.getOutputSlot(output);
+                    int outputSlot = this.getOutputSlot(output, 0);
                     if (outputSlot != -1) {
                         this.mergeStack(outputSlot, output);
                     } else {
@@ -67,7 +65,7 @@ public class BugCrateBlockEntity extends MachineBaseBlockEntity {
         ItemStack best = ItemStack.EMPTY;
         int highestBreedings = Integer.MIN_VALUE;
         for (int i = 3; i < 6; i++) {
-            ItemStack food = this.getStackInSlot(i);
+            ItemStack food = this.inventory.getStackInSlot(i);
             if (!food.isEmpty()) {
                 int breedings = bug.getBreedings(food);
                 if (breedings > 0 && breedings > highestBreedings) {
@@ -77,11 +75,6 @@ public class BugCrateBlockEntity extends MachineBaseBlockEntity {
             }
         }
         return best;
-    }
-
-    @Override
-    protected int getMainOutput(int process) {
-        return 0;
     }
 
     @Override
@@ -102,75 +95,17 @@ public class BugCrateBlockEntity extends MachineBaseBlockEntity {
     }
 
     @Override
-    protected int[] getInputs() {
-        return INPUTS;
-    }
-
-    @Override
     protected int[] getInputs(int process) {
         return INPUTS;
     }
 
     @Override
-    protected int[] getOutputs() {
+    protected int[] getOutputs(int process) {
         return OUTPUTS;
     }
 
     @Override
-    protected NonNullList<ItemStack> getSlots() {
-        return this.slots;
+    protected int getInventorySize() {
+        return 9;
     }
-
-    @Override
-    protected void setSlots(NonNullList<ItemStack> slots) {
-        this.slots = slots;
-    }
-
-    @Override
-    public Container createContainer(InventoryPlayer playerInventory, EntityPlayer player) {
-        return new BugCrateContainer(playerInventory, this);
-    }
-
-    @Override
-    public String getGuiID() {
-        return JurassiCraft.MODID + ":";
-    }
-
-    @Override
-    public String getName() {
-        return this.hasCustomName() ? this.customName : "container.bug_crate";
-    }
-
-    @Override
-    public void setInventorySlotContents(int index, ItemStack stack) {
-        NonNullList<ItemStack> slots = this.getSlots();
-        boolean stacksEqual = !stack.isEmpty()&& stack.isItemEqual(slots.get(index)) && ItemStack.areItemStackTagsEqual(stack, slots.get(index));
-        slots.set(index, stack);
-        if (!stack.isEmpty() && stack.getCount() > this.getInventoryStackLimit()) {
-            stack.setCount(this.getInventoryStackLimit());
-        }
-        if (!stacksEqual) {
-            int process = this.getProcess(index);
-            if (process >= 0 && process < this.getProcessCount()) {
-                int prevTotalProcessTime = this.totalProcessTime[process];
-                for (int i = 0; i < 3; i++) {
-                    ItemStack foodStack = this.getStackInSlot(i);
-                    BreedableBug bug = BreedableBug.getBug(foodStack);
-                    if (bug != null && this.getBestFood(bug) != null) {
-                        this.totalProcessTime[process] = this.getStackProcessTime(foodStack);
-                        break;
-                    }
-                }
-                if (prevTotalProcessTime != this.totalProcessTime[process]) {
-                    this.processTime[process] = 0;
-                }
-                this.markDirty();
-            }
-        }
-    }
-
-	@Override
-	public boolean isEmpty() {
-		return false;
-	}
 }

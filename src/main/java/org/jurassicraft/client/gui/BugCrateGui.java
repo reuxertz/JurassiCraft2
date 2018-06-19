@@ -1,5 +1,6 @@
 package org.jurassicraft.client.gui;
 
+import net.minecraft.client.resources.I18n;
 import org.jurassicraft.server.block.entity.BugCrateBlockEntity;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -9,15 +10,16 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.server.container.BugCrateContainer;
 
 @SideOnly(Side.CLIENT)
 public class BugCrateGui extends GuiContainer {
     private static final ResourceLocation TEXTURE = new ResourceLocation("jurassicraft:textures/gui/bug_crate.png");
     private final InventoryPlayer playerInventory;
-    private IInventory crate;
+    private BugCrateBlockEntity crate;
 
     public BugCrateGui(InventoryPlayer playerInventory, BugCrateBlockEntity crate) {
-        super(crate.createContainer(playerInventory, playerInventory.player));
+        super(new BugCrateContainer(playerInventory, crate));
         this.playerInventory = playerInventory;
         this.crate = crate;
     }
@@ -31,7 +33,7 @@ public class BugCrateGui extends GuiContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        String name = this.crate.getDisplayName().getUnformattedText();
+        String name = I18n.format("container.bug_crate");
         this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 6, 0x404040);
         this.fontRenderer.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, 0x404040);
     }

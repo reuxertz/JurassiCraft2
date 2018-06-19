@@ -6,12 +6,12 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.tileentity.TileEntity;
 import org.jurassicraft.server.block.entity.EmbryonicMachineBlockEntity;
-import org.jurassicraft.server.container.slot.CustomSlot;
+import org.jurassicraft.server.container.slot.CustomSlotOLD;
 import org.jurassicraft.server.container.slot.PetriDishSlot;
 import org.jurassicraft.server.container.slot.TestTubeSlot;
 import org.jurassicraft.server.item.ItemHandler;
 
-public class EmbryonicMachineContainer extends MachineContainer {
+public class EmbryonicMachineContainer extends MachineContainerOLD {
     private EmbryonicMachineBlockEntity embryonicMachine;
 
     public EmbryonicMachineContainer(InventoryPlayer playerInventory, TileEntity tileEntity) {
@@ -20,7 +20,7 @@ public class EmbryonicMachineContainer extends MachineContainer {
         this.embryonicMachine = (EmbryonicMachineBlockEntity) tileEntity;
         this.addSlotToContainer(new TestTubeSlot(this.embryonicMachine, 0, 24, 49));
         this.addSlotToContainer(new PetriDishSlot(this.embryonicMachine, 1, 50, 49));
-        this.addSlotToContainer(new CustomSlot(this.embryonicMachine, 2, 50, 13, stack -> stack.getItem() == ItemHandler.EMPTY_SYRINGE));
+        this.addSlotToContainer(new CustomSlotOLD(this.embryonicMachine, 2, 50, 13, stack -> stack.getItem() == ItemHandler.EMPTY_SYRINGE));
 
         int i;
 

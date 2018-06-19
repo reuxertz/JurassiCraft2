@@ -6,11 +6,11 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.tileentity.TileEntity;
 import org.jurassicraft.server.block.entity.DNASynthesizerBlockEntity;
-import org.jurassicraft.server.container.slot.CustomSlot;
+import org.jurassicraft.server.container.slot.CustomSlotOLD;
 import org.jurassicraft.server.container.slot.SynthesizableItemSlot;
 import org.jurassicraft.server.item.ItemHandler;
 
-public class DNASynthesizerContainer extends MachineContainer {
+public class DNASynthesizerContainer extends MachineContainerOLD {
     private DNASynthesizerBlockEntity dnaSynthesizer;
 
     public DNASynthesizerContainer(InventoryPlayer playerInventory, TileEntity tileEntity) {
@@ -18,8 +18,8 @@ public class DNASynthesizerContainer extends MachineContainer {
 
         this.dnaSynthesizer = (DNASynthesizerBlockEntity) tileEntity;
         this.addSlotToContainer(new SynthesizableItemSlot(this.dnaSynthesizer, 0, 38, 22));
-        this.addSlotToContainer(new CustomSlot(this.dnaSynthesizer, 1, 24, 49, stack -> stack.getItem() == ItemHandler.EMPTY_TEST_TUBE));
-        this.addSlotToContainer(new CustomSlot(this.dnaSynthesizer, 2, 50, 49, stack -> stack.getItem() == ItemHandler.DNA_NUCLEOTIDES));
+        this.addSlotToContainer(new CustomSlotOLD(this.dnaSynthesizer, 1, 24, 49, stack -> stack.getItem() == ItemHandler.EMPTY_TEST_TUBE));
+        this.addSlotToContainer(new CustomSlotOLD(this.dnaSynthesizer, 2, 50, 49, stack -> stack.getItem() == ItemHandler.DNA_NUCLEOTIDES));
 
         int i;
 

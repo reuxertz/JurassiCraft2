@@ -39,7 +39,7 @@ public class DNASequencerTransferHandler implements IRecipeTransferHandler<DNASe
     @Override
     public IRecipeTransferError transferRecipe(DNASequencerContainer container, IRecipeLayout recipeLayout, EntityPlayer player, boolean maxTransfer, boolean doTransfer) {
 
-        DNASequencerBlockEntity blockEntity = (DNASequencerBlockEntity) container.getInventoryTile();
+        DNASequencerBlockEntity blockEntity = (DNASequencerBlockEntity) container.getDnaSequencer();
         int nextProcessID = 0;
         boolean canBeProcessed = false;
         for(int i = 0; i < 3; i++) {

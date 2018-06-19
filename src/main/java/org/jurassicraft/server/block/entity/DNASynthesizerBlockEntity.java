@@ -12,7 +12,7 @@ import org.jurassicraft.server.item.ItemHandler;
 
 import java.util.Random;
 
-public class DNASynthesizerBlockEntity extends MachineBaseBlockEntity {
+public class DNASynthesizerBlockEntity extends MachineBaseBlockEntityOLD {
     private static final int[] INPUTS = new int[] { 0, 1, 2 };
     private static final int[] OUTPUTS = new int[] { 3, 4, 5, 6 };
 

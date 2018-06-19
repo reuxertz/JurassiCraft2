@@ -1,5 +1,7 @@
 package org.jurassicraft.server.block;
 
+import net.minecraft.inventory.ItemStackHelper;
+import net.minecraftforge.items.IItemHandler;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.block.entity.BugCrateBlockEntity;
 import org.jurassicraft.server.proxy.ServerProxy;
@@ -32,7 +34,7 @@ public class BugCrateBlock extends OrientedBlock {
         if (stack.hasDisplayName()) {
             TileEntity tile = world.getTileEntity(pos);
             if (tile instanceof BugCrateBlockEntity) {
-                ((BugCrateBlockEntity) tile).setCustomInventoryName(stack.getDisplayName());
+//                ((BugCrateBlockEntity) tile).setCustomInventoryName(stack.getDisplayName());//TODO:
             }
         }
     }
@@ -41,7 +43,10 @@ public class BugCrateBlock extends OrientedBlock {
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         TileEntity tile = worldIn.getTileEntity(pos);
         if (tile instanceof BugCrateBlockEntity) {
-            InventoryHelper.dropInventoryItems(worldIn, pos, (BugCrateBlockEntity) tile);
+            IItemHandler handler = ((BugCrateBlockEntity)tile).getInventory();
+            for (int i = 0; i < handler.getSlots(); i++) {
+                InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), handler.getStackInSlot(i));
+            }
         }
         super.breakBlock(worldIn, pos, state);
     }
@@ -54,7 +59,8 @@ public class BugCrateBlock extends OrientedBlock {
             TileEntity tile = world.getTileEntity(pos);
             if (tile instanceof BugCrateBlockEntity) {
                 BugCrateBlockEntity entity = (BugCrateBlockEntity) tile;
-                if (entity.isUsableByPlayer(player)) {
+//                if (entity.isUsableByPlayer(player)) //TODO:
+                {
                     player.openGui(JurassiCraft.INSTANCE, ServerProxy.GUI_BUG_CRATE, world, pos.getX(), pos.getY(), pos.getZ());
                     return true;
                 }

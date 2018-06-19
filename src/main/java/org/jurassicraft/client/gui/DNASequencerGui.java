@@ -2,12 +2,14 @@ package org.jurassicraft.client.gui;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.server.block.entity.DNASequencerBlockEntity;
 import org.jurassicraft.server.container.DNASequencerContainer;
 
 @SideOnly(Side.CLIENT)
@@ -15,10 +17,10 @@ public class DNASequencerGui extends GuiContainer {
     private static final ResourceLocation TEXTURE = new ResourceLocation("jurassicraft:textures/gui/dna_sequencer.png");
 
     private final InventoryPlayer playerInventory;
-    private IInventory dnaSequencer;
+    private DNASequencerBlockEntity dnaSequencer;
 
-    public DNASequencerGui(InventoryPlayer playerInv, IInventory dnaSequencer) {
-        super(new DNASequencerContainer(playerInv, (TileEntity) dnaSequencer));
+    public DNASequencerGui(InventoryPlayer playerInv, DNASequencerBlockEntity dnaSequencer) {
+        super(new DNASequencerContainer(playerInv, dnaSequencer));
         this.playerInventory = playerInv;
         this.dnaSequencer = dnaSequencer;
     }
@@ -32,7 +34,7 @@ public class DNASequencerGui extends GuiContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        String s = this.dnaSequencer.getDisplayName().getUnformattedText();
+        String s = I18n.format("container.dna_sequencer");
         this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6, 4210752);
         this.fontRenderer.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, 4210752);
     }
@@ -54,7 +56,6 @@ public class DNASequencerGui extends GuiContainer {
     private int getProgress(int scale, int index) {
         int progress = this.dnaSequencer.getField(index);
         int maxProgress = this.dnaSequencer.getField(index + 3);
-
         return maxProgress != 0 && progress != 0 ? progress * scale / maxProgress : 0;
     }
 }

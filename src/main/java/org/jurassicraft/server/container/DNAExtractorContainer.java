@@ -7,20 +7,20 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.tileentity.TileEntity;
 import org.jurassicraft.server.block.entity.DNAExtractorBlockEntity;
 import org.jurassicraft.server.container.slot.DNAExtractionSlot;
-import org.jurassicraft.server.container.slot.StorageSlot;
+import org.jurassicraft.server.container.slot.StorageSlotOLD;
 
-public class DNAExtractorContainer extends MachineContainer {
+public class DNAExtractorContainer extends MachineContainerOLD {
     private DNAExtractorBlockEntity extractor;
 
     public DNAExtractorContainer(InventoryPlayer playerInventory, TileEntity tileEntity) {
         super((IInventory) tileEntity);
         this.extractor = (DNAExtractorBlockEntity) tileEntity;
-        this.addSlotToContainer(new StorageSlot(this.extractor, 1, 55, 47, false));
+        this.addSlotToContainer(new StorageSlotOLD(this.extractor, 1, 55, 47, false));
         this.addSlotToContainer(new DNAExtractionSlot(this.extractor, 0, 55, 26));
-        this.addSlotToContainer(new StorageSlot(this.extractor, 2, 108, 28, true));
-        this.addSlotToContainer(new StorageSlot(this.extractor, 3, 126, 28, true));
-        this.addSlotToContainer(new StorageSlot(this.extractor, 4, 108, 46, true));
-        this.addSlotToContainer(new StorageSlot(this.extractor, 5, 126, 46, true));
+        this.addSlotToContainer(new StorageSlotOLD(this.extractor, 2, 108, 28, true));
+        this.addSlotToContainer(new StorageSlotOLD(this.extractor, 3, 126, 28, true));
+        this.addSlotToContainer(new StorageSlotOLD(this.extractor, 4, 108, 46, true));
+        this.addSlotToContainer(new StorageSlotOLD(this.extractor, 5, 126, 46, true));
 
         int i;
 

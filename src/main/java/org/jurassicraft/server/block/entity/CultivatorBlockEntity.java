@@ -22,7 +22,7 @@ import org.jurassicraft.server.message.CultivatorSyncNutrients;
 
 import java.util.Random;
 
-public class CultivatorBlockEntity extends MachineBaseBlockEntity implements TemperatureControl {
+public class CultivatorBlockEntity extends MachineBaseBlockEntityOLD implements TemperatureControl {
     private static final int[] INPUTS = new int[] { 0, 1, 2, 3 };
     private static final int[] OUTPUTS = new int[] { 4 };
     public static final int MAX_NUTRIENTS = 3000;

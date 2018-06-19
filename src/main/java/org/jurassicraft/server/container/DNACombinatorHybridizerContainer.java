@@ -6,9 +6,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.tileentity.TileEntity;
 import org.jurassicraft.server.block.entity.DNACombinatorHybridizerBlockEntity;
-import org.jurassicraft.server.container.slot.StorageSlot;
+import org.jurassicraft.server.container.slot.StorageSlotOLD;
 
-public class DNACombinatorHybridizerContainer extends MachineContainer {
+public class DNACombinatorHybridizerContainer extends MachineContainerOLD {
     private DNACombinatorHybridizerBlockEntity dnaHybridizer;
     private InventoryPlayer playerInventory;
 
@@ -24,19 +24,19 @@ public class DNACombinatorHybridizerContainer extends MachineContainer {
         this.inventoryItemStacks.clear();
 
         if (mode) {
-            this.addSlotToContainer(new StorageSlot(this.dnaHybridizer, 0, 10, 17, true));
-            this.addSlotToContainer(new StorageSlot(this.dnaHybridizer, 1, 30, 17, true));
-            this.addSlotToContainer(new StorageSlot(this.dnaHybridizer, 2, 50, 17, true));
-            this.addSlotToContainer(new StorageSlot(this.dnaHybridizer, 3, 70, 17, true));
-            this.addSlotToContainer(new StorageSlot(this.dnaHybridizer, 4, 90, 17, true));
-            this.addSlotToContainer(new StorageSlot(this.dnaHybridizer, 5, 110, 17, true));
-            this.addSlotToContainer(new StorageSlot(this.dnaHybridizer, 6, 130, 17, true));
-            this.addSlotToContainer(new StorageSlot(this.dnaHybridizer, 7, 150, 17, true));
-            this.addSlotToContainer(new StorageSlot(this.dnaHybridizer, 10, 80, 56, true));
+            this.addSlotToContainer(new StorageSlotOLD(this.dnaHybridizer, 0, 10, 17, true));
+            this.addSlotToContainer(new StorageSlotOLD(this.dnaHybridizer, 1, 30, 17, true));
+            this.addSlotToContainer(new StorageSlotOLD(this.dnaHybridizer, 2, 50, 17, true));
+            this.addSlotToContainer(new StorageSlotOLD(this.dnaHybridizer, 3, 70, 17, true));
+            this.addSlotToContainer(new StorageSlotOLD(this.dnaHybridizer, 4, 90, 17, true));
+            this.addSlotToContainer(new StorageSlotOLD(this.dnaHybridizer, 5, 110, 17, true));
+            this.addSlotToContainer(new StorageSlotOLD(this.dnaHybridizer, 6, 130, 17, true));
+            this.addSlotToContainer(new StorageSlotOLD(this.dnaHybridizer, 7, 150, 17, true));
+            this.addSlotToContainer(new StorageSlotOLD(this.dnaHybridizer, 10, 80, 56, true));
         } else {
-            this.addSlotToContainer(new StorageSlot(this.dnaHybridizer, 8, 55, 13, true));
-            this.addSlotToContainer(new StorageSlot(this.dnaHybridizer, 9, 105, 13, true));
-            this.addSlotToContainer(new StorageSlot(this.dnaHybridizer, 11, 81, 60, true));
+            this.addSlotToContainer(new StorageSlotOLD(this.dnaHybridizer, 8, 55, 13, true));
+            this.addSlotToContainer(new StorageSlotOLD(this.dnaHybridizer, 9, 105, 13, true));
+            this.addSlotToContainer(new StorageSlotOLD(this.dnaHybridizer, 11, 81, 60, true));
         }
 
         int i;
