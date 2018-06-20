@@ -1,6 +1,5 @@
 package org.jurassicraft.server.item;
 
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -11,9 +10,6 @@ import org.apache.logging.log4j.Logger;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.tab.TabHandler;
 
-/**
- * Copyright 2016 Andrew O. Mellinger
- */
 public class DinoScannerItem extends Item {
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -27,10 +23,7 @@ public class DinoScannerItem extends Item {
     public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target, EnumHand hand) {
         if (target instanceof DinosaurEntity && !player.getEntityWorld().isRemote) {
             DinosaurEntity dinosaur = (DinosaurEntity) target;
-
-            // NOTE: Shift key is already used for some sort of inventory thing.
-            // Command key on mac
-            if (GuiScreen.isCtrlKeyDown()) {
+            if (player.isSneaking()) {
                 int food = dinosaur.getMetabolism().getEnergy();
                 dinosaur.getMetabolism().setEnergy(food - 5000);
                 LOGGER.info("food: " + dinosaur.getMetabolism().getEnergy() + "/" + dinosaur.getMetabolism().getMaxEnergy() +
