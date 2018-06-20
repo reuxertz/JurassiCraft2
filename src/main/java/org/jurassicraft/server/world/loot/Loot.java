@@ -21,6 +21,7 @@ import net.minecraft.world.storage.loot.functions.LootFunction;
 import net.minecraft.world.storage.loot.functions.SetCount;
 import net.minecraft.world.storage.loot.functions.SetMetadata;
 import net.minecraft.world.storage.loot.functions.SetNBT;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
@@ -82,7 +83,17 @@ public class Loot {
         return builders;
     }
 
+    @SuppressWarnings("unchecked")
     public static void handleTable(LootTable table, ResourceLocation name) {
+        boolean frozen = false;
+        if(table.isFrozen()) {//Some mods like to replace the loot tables which ends up with the loot table being frozen.
+            frozen = true;
+            ReflectionHelper.setPrivateValue(LootTable.class, table,false, "isFrozen");
+            for (LootPool lootPool : ((List<LootPool>) ReflectionHelper.getPrivateValue(LootTable.class, table, "pools", "field_186466_c"))) { //Unfreeze all the pools
+                ReflectionHelper.setPrivateValue(LootPool.class, lootPool,false, "isFrozen");
+            }
+        }
+
         if (name == LootTableList.GAMEPLAY_FISHING) {
             LootEntry gracilaria = Loot.entry(ItemHandler.GRACILARIA).weight(25).build();
             table.addPool(Loot.pool("gracilaria").rolls(1, 1).chance(0.1F).entry(gracilaria).build());
@@ -111,6 +122,9 @@ public class Loot {
             LootEntry tooth = Loot.entry(ItemHandler.FOSSILS.get("tooth")).weight(2).function(DINOSAUR_DATA).count(1, 2).build();
             LootEntry actionFigure = Loot.entry(ItemHandler.DISPLAY_BLOCK).function(DINOSAUR_DATA).weight(1).build();
             table.addPool(Loot.pool("items").rolls(8, 11).entries(amber, tooth, actionFigure).build());
+        }
+        if(frozen) { //If the table was originally frozen, then freeze it.
+            table.freeze();
         }
     }
     public static class PoolBuilder {
