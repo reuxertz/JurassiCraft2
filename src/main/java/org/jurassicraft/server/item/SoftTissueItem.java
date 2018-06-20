@@ -55,17 +55,13 @@ public class SoftTissueItem extends Item implements SequencableItem, DinosaurPro
 
     @Override
     public ItemStack getSequenceOutput(ItemStack stack, Random random) {
-        NBTTagCompound nbt = stack.getTagCompound();
+        NBTTagCompound nbt = stack.getOrCreateSubCompound("jurassicraft").getCompoundTag("dna");
         Dinosaur dinosaur = DinosaurProvider.getFromStack(stack).getValue(stack);
-        if (nbt == null) {
-            nbt = new NBTTagCompound();
-            int quality = SequencableItem.randomQuality(random);
-            DinoDNA dna = new DinoDNA(dinosaur, quality, GeneticsHelper.randomGenetics(random));
-            dna.writeToNBT(nbt);
-        }
-
+        int quality = SequencableItem.randomQuality(random);
+        DinoDNA dna = new DinoDNA(dinosaur, quality, GeneticsHelper.randomGenetics(random));
+        dna.writeToNBT(nbt);
         ItemStack output = new ItemStack(ItemHandler.STORAGE_DISC);
-        output.setTagCompound(nbt);
+        output.getOrCreateSubCompound("jurassicraft").setTag("dna", nbt);
         return output;
     }
 
@@ -77,11 +73,11 @@ public class SoftTissueItem extends Item implements SequencableItem, DinosaurPro
     @Override
     public List<Pair<Float, ItemStack>> getChancedOutputs(ItemStack inputItem) {
         List<Pair<Float, ItemStack>> list = Lists.newArrayList();
-        NBTTagCompound nbt = new NBTTagCompound();
-        DinoDNA dna = new DinoDNA(DinosaurProvider.getFromStack(inputItem).getValue(inputItem), -1, "");
+        NBTTagCompound nbt = inputItem.getOrCreateSubCompound("jurassicraft").getCompoundTag("dna");
+        DinoDNA dna = new DinoDNA(this.getValue(inputItem), -1, "");
         dna.writeToNBT(nbt);
         ItemStack output = new ItemStack(ItemHandler.STORAGE_DISC);
-        output.setTagCompound(nbt);
+        output.getOrCreateSubCompound("jurassicraft").setTag("dna", nbt);
         list.add(Pair.of(100F, output));
         return list;
     }

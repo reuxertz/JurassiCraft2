@@ -28,6 +28,15 @@ public class MachineBaseItemHandler extends ItemStackHandler {
     protected void onContentsChanged(int slot) {
         ItemStack stack = this.getStackInSlot(slot);
         int process = blockEntity.getProcessFromSlot(slot);
+        loop:
+        {
+            for (int i : blockEntity.getInputs(process)) {
+                if(i == slot) {
+                    break loop;
+                }
+            }
+            return;
+        }
         if (!blockEntity.isProcessing(process) && blockEntity.canProcess(process) && process >= 0 && process < blockEntity.getProcessCount()) {
             blockEntity.totalProcessTime[process] = blockEntity.getStackProcessTime(stack);
             if (!blockEntity.canProcess(process)) {

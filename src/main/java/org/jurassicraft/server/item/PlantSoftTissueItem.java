@@ -56,17 +56,11 @@ public class PlantSoftTissueItem extends Item implements SequencableItem, PlantP
 
     @Override
     public ItemStack getSequenceOutput(ItemStack stack, Random random) {
-        NBTTagCompound nbt = stack.getTagCompound();
-
-        if (nbt == null) {
-            nbt = new NBTTagCompound();
-            PlantDNA dna = new PlantDNA(this.getValue(stack), SequencableItem.randomQuality(random));
-            dna.writeToNBT(nbt);
-        }
-
+        NBTTagCompound nbt = stack.getOrCreateSubCompound("jurassicraft").getCompoundTag("dna");
+        PlantDNA dna = new PlantDNA(this.getValue(stack), SequencableItem.randomQuality(random));
+        dna.writeToNBT(nbt);
         ItemStack output = new ItemStack(ItemHandler.STORAGE_DISC);
-        output.setTagCompound(nbt);
-
+        output.getOrCreateSubCompound("jurassicraft").setTag("dna", nbt);
         return output;
     }
 
@@ -77,11 +71,11 @@ public class PlantSoftTissueItem extends Item implements SequencableItem, PlantP
 
     @Override
     public List<Pair<Float, ItemStack>> getChancedOutputs(ItemStack inputItem) {
-        NBTTagCompound nbt = new NBTTagCompound();
+        NBTTagCompound nbt = inputItem.getOrCreateSubCompound("jurassicraft").getCompoundTag("dna");
         PlantDNA dna = new PlantDNA(this.getValue(inputItem), -1);
         dna.writeToNBT(nbt);
         ItemStack output = new ItemStack(ItemHandler.STORAGE_DISC);
-        output.setTagCompound(nbt);
+        output.getOrCreateSubCompound("jurassicraft").setTag("dna", nbt);
         return Lists.newArrayList(Pair.of(100F, output));
     }
 }

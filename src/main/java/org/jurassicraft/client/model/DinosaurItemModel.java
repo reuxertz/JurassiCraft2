@@ -37,7 +37,7 @@ public class DinosaurItemModel<T extends IForgeRegistryEntry.Impl<T> & Comparabl
 
     @Override
     public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
-        return model.getQuads(state, side, rand);//Not really needed
+        return (model == null ? DinosaurModelHandler.MISSING_MODEL : model).getQuads(state, side, rand);
     }
 
     @Override
