@@ -3,26 +3,27 @@ package org.jurassicraft.server.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IContainerListener;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
+import org.jurassicraft.server.block.entity.CleaningStationBlockEntity;
 import org.jurassicraft.server.container.slot.CleanableItemSlot;
 import org.jurassicraft.server.container.slot.FossilSlot;
 import org.jurassicraft.server.container.slot.WaterBucketSlot;
+import org.jurassicraft.server.container.slot.WaterBucketSlotOLD;
 
-public class CleaningStationContainer extends MachineContainerOLD {
-    private final IInventory tileCleaningStation;
+public class CleaningStationContainer extends MachineContainer {
+    private final CleaningStationBlockEntity tileEntity;
 
-    public CleaningStationContainer(InventoryPlayer invPlayer, IInventory cleaningStation) {
+    public CleaningStationContainer(InventoryPlayer invPlayer, CleaningStationBlockEntity cleaningStation) {
         super(cleaningStation);
-        this.tileCleaningStation = cleaningStation;
-        this.addSlotToContainer(new CleanableItemSlot(cleaningStation, 0, 56, 17));
-        this.addSlotToContainer(new WaterBucketSlot(cleaningStation, 1, 56, 53));
+        this.tileEntity = cleaningStation;
+        this.addSlotToContainer(new CleanableItemSlot(tileEntity.getInventory(), 0, 56, 17));
+        this.addSlotToContainer(new WaterBucketSlot(cleaningStation.getInventory(), 1, 56, 53));
 
         int i;
 
         for (i = 0; i < 3; i++) {
             for (int j = 0; j < 2; j++) {
-                this.addSlotToContainer(new FossilSlot(cleaningStation, i + (j * 3) + 2, i * 18 + 93 + 15, j * 18 + 26));
+                this.addSlotToContainer(new FossilSlot(cleaningStation.getInventory(), i + (j * 3) + 2, i * 18 + 93 + 15, j * 18 + 26));
             }
         }
 
@@ -37,14 +38,4 @@ public class CleaningStationContainer extends MachineContainerOLD {
         }
     }
 
-    @Override
-    public void addListener(IContainerListener listener) {
-        super.addListener(listener);
-        listener.sendAllWindowProperties(this, this.tileCleaningStation);
-    }
-
-    @Override
-    public boolean canInteractWith(EntityPlayer player) {
-        return this.tileCleaningStation.isUsableByPlayer(player);
-    }
 }

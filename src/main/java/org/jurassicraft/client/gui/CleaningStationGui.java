@@ -2,8 +2,8 @@ package org.jurassicraft.client.gui;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -15,12 +15,12 @@ public class CleaningStationGui extends GuiContainer {
     private static final ResourceLocation TEXTURE = new ResourceLocation("jurassicraft:textures/gui/cleaning_station.png");
 
     private final InventoryPlayer playerInventory;
-    private IInventory inventory;
+    private CleaningStationBlockEntity tileEntity;
 
-    public CleaningStationGui(InventoryPlayer playerInv, IInventory inventory) {
-        super(new CleaningStationContainer(playerInv, inventory));
+    public CleaningStationGui(InventoryPlayer playerInv, CleaningStationBlockEntity tileEntity) {
+        super(new CleaningStationContainer(playerInv, tileEntity));
         this.playerInventory = playerInv;
-        this.inventory = inventory;
+        this.tileEntity = tileEntity;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class CleaningStationGui extends GuiContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        String name = this.inventory.getDisplayName().getUnformattedText();
+        String name = I18n.format("container.cleaning_station");
         this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 6, 4210752);
         this.fontRenderer.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, 4210752);
     }
@@ -46,9 +46,9 @@ public class CleaningStationGui extends GuiContainer {
         this.drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize);
         int progress;
 
-        if (CleaningStationBlockEntity.isCleaning(this.inventory)) {
-            progress = this.func_175382_i(51);
-            this.drawTexturedModalRect(x + 46, y + 18 + 51 - progress, 176, 81 - progress, 14, progress + 1);
+        if (this.tileEntity.getWaterLevel() > 0) {
+            progress = this.getWaterLevel(51);
+            this.drawTexturedModalRect(x + 46, y + 18 + 51 - progress, 176, 81 - progress + 1, 14, progress + 1);
         }
 
         progress = this.getProgress(24);
@@ -56,18 +56,12 @@ public class CleaningStationGui extends GuiContainer {
     }
 
     private int getProgress(int scale) {
-        int j = this.inventory.getField(2);
-        int k = this.inventory.getField(3);
+        int j = this.tileEntity.getField(0);
+        int k = this.tileEntity.getField(1);
         return k != 0 && j != 0 ? j * scale / k : 0;
     }
 
-    private int func_175382_i(int p_175382_1_) {
-        int j = this.inventory.getField(1);
-
-        if (j == 0) {
-            j = 200;
-        }
-
-        return this.inventory.getField(0) * p_175382_1_ / j;
+    private int getWaterLevel(int scale) {
+        return (int)((this.tileEntity.getWaterLevel() / 200F) * scale);
     }
 }

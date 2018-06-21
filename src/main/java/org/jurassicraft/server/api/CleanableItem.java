@@ -26,11 +26,11 @@ public interface CleanableItem extends JurassicIngredientItem {
         return null;
     }
 
-    static boolean isCleanableItem(ItemStack stack) {
-        return getCleanableItem(stack) != null;
-    }
-
     boolean isCleanable(ItemStack stack);
 
     ItemStack getCleanedItem(ItemStack stack, Random random);
+
+    default int getCleanTime(ItemStack stack) {
+        return 200;
+    }
 }

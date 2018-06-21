@@ -44,9 +44,9 @@ public class CleaningStationRenderer extends TileEntitySpecialRenderer<CleaningS
 
             RenderItem renderItem = this.mc.getRenderItem();
 
-            ItemStack cleanable = tileEntity.getStackInSlot(0);
+            ItemStack cleanable = tileEntity.getInventory().getStackInSlot(0);
 
-            if (cleanable != null) {
+            if (!cleanable.isEmpty()) {
                 renderItem.renderItem(cleanable, renderItem.getItemModelMesher().getItemModel(cleanable));
             }
 

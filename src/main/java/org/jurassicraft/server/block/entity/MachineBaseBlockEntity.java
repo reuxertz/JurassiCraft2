@@ -7,16 +7,12 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 
-public abstract class MachineBaseBlockEntity extends TileEntity implements ITickable {
+public abstract class MachineBaseBlockEntity extends TileEntity implements ITickable { //TODO: fix issues with process being done in 0 ticks
 
     protected MachineBaseItemHandler inventory = new MachineBaseItemHandler(this, this.getInventorySize());
 
     protected int[] processTime = new int[this.getProcessCount()];
     protected int[] totalProcessTime = new int[this.getProcessCount()];
-
-    protected int getProcessCount() {
-        return 0;
-    }
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
@@ -57,7 +53,6 @@ public abstract class MachineBaseBlockEntity extends TileEntity implements ITick
 
             if (hasInput && this.canProcess(process)) {
                 this.processTime[process]++;
-
                 if (this.processTime[process] >= this.totalProcessTime[process]) {
                     this.processTime[process] = 0;
                     int total = 0;
@@ -107,12 +102,18 @@ public abstract class MachineBaseBlockEntity extends TileEntity implements ITick
         }
     }
 
+    protected static boolean isStackable(ItemStack slotStack, ItemStack insertingStack) {
+        return slotStack.isEmpty() || (ItemStack.areItemsEqual(slotStack, insertingStack)
+                && ItemStack.areItemStackTagsEqual(slotStack, insertingStack)
+                && slotStack.getItemDamage() == insertingStack.getItemDamage()
+                && slotStack.getMaxStackSize() - slotStack.getCount() >= insertingStack.getCount());
+    }
+
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
         return true;
     }
 
     protected void decreaseStackSize(int slot) {
-
         this.inventory.getStackInSlot(slot).shrink(1);
 
         if (this.inventory.getStackInSlot(slot).getCount() <= 0) {
@@ -165,6 +166,8 @@ public abstract class MachineBaseBlockEntity extends TileEntity implements ITick
     public NBTTagCompound getUpdateTag() {
         return this.writeToNBT(new NBTTagCompound());
     }
+
+    protected abstract int getProcessCount();
 
     @Override
     public void onDataPacket(NetworkManager networkManager, SPacketUpdateTileEntity packet) {
