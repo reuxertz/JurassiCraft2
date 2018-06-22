@@ -199,7 +199,7 @@ public class FoodHelper {
     }
 
     public static int getHealAmount(Item item) {
-        return HEAL_AMOUNTS.get(new FoodKey(item));
+        return HEAL_AMOUNTS.getOrDefault(new FoodKey(item), 0);
     }
 
     public static void applyEatEffects(DinosaurEntity entity, Item item) {
