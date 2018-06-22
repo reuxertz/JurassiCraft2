@@ -39,7 +39,7 @@ public class ChangeTemperatureMessage extends AbstractMessage<ChangeTemperatureM
         TileEntity tile = player.world.getTileEntity(message.pos);
         if (tile instanceof TemperatureControl) {
             TemperatureControl control = (TemperatureControl) tile;
-            if (control.isUsableByPlayer(player) && message.index >= 0 && message.index < control.getTemperatureCount()) {
+            if (message.index >= 0 && message.index < control.getTemperatureCount()) {
                 control.setTemperature(message.index, message.temperature);
                 JurassiCraft.NETWORK_WRAPPER.sendToAll(new ChangeTemperatureMessage(message.pos, message.index, message.temperature));
             }

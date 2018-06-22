@@ -57,7 +57,7 @@ public class CultivateGui extends GuiContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int i, int j) {
-        String name = this.cultivator.getDisplayName().getUnformattedText();
+        String name = I18n.format("container.cultivator");
         this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2 - 45, 10, 4210752);
         this.fontRenderer.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, 4210752);
 

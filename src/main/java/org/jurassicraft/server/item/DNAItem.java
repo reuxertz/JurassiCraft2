@@ -13,11 +13,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class DNAItem extends DNAContainerItem {
-    public DNAItem() {
-        super();
-        this.setCreativeTab(TabHandler.DNA);
-        this.setHasSubtypes(true);
-    }
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
@@ -28,13 +23,5 @@ public class DNAItem extends DNAContainerItem {
     @Override
     public String getFolderLocation(ResourceLocation res) {
         return "item/dna/dinosaurs";
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subtypes) {
-        if(this.isInCreativeTab(tab)) {
-            subtypes.addAll(this.getAllStacksOrdered());
-        }
     }
 }

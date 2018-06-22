@@ -13,6 +13,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.TRSRTransformation;
 import org.jurassicraft.client.event.DinosaurModelHandler;
+import org.jurassicraft.server.item.HatchedEggItem;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -59,10 +60,10 @@ public interface StackNBTProvider<T> {
         return getAllValues().stream().map(this::getItemStack).collect(Collectors.toList());
     }
 
-    default List<ItemStack> getAllStacksOrdered() {
+    default List<ItemStack> getAllStacksOrdered() {//Rename to create tab thing
         List<String> keys = Lists.newArrayList(this.getKeySet());
         Collections.sort(keys);
-        return keys.stream().map(this::getValueFromName).map(this::getItemStack).collect(Collectors.toList());
+        return keys.stream().map(this::getValueFromName).filter(this::canBeInCreativeTab).map(this::getItemStack).collect(Collectors.toList());
     }
 
     Map<Object, ResourceLocation> getModelResourceLocations(T value);

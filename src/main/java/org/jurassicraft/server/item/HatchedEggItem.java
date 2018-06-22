@@ -17,8 +17,6 @@ import java.util.Locale;
 
 public class HatchedEggItem extends DNAContainerItem {
     public HatchedEggItem() {
-        super();
-        this.setHasSubtypes(true);
         this.setMaxStackSize(1);
     }
 
@@ -50,11 +48,6 @@ public class HatchedEggItem extends DNAContainerItem {
 
         return gender;
     }
-
-//    @Override
-//    public int getContainerId(ItemStack stack) {
-//        return EntityHandler.getDinosaurId(this.getValue(stack));
-//    }
 
     @Override
     public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {

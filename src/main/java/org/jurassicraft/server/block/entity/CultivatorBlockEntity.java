@@ -22,11 +22,10 @@ import org.jurassicraft.server.message.CultivatorSyncNutrients;
 
 import java.util.Random;
 
-public class CultivatorBlockEntity extends MachineBaseBlockEntityOLD implements TemperatureControl {
+public class CultivatorBlockEntity extends MachineBaseBlockEntity implements TemperatureControl {
     private static final int[] INPUTS = new int[] { 0, 1, 2, 3 };
     private static final int[] OUTPUTS = new int[] { 4 };
     public static final int MAX_NUTRIENTS = 3000;
-    private NonNullList<ItemStack> slots = NonNullList.withSize(5, ItemStack.EMPTY);
     private int waterLevel;
     private int lipids;
     private int proximates;
@@ -37,16 +36,22 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntityOLD implements 
     private DinosaurEntity dinosaurEntity; //Used for rendering entities
 
     @Override
-    protected int getProcess(int slot) {
+    protected int getProcessFromSlot(int slot) {
         return 0;
     }
 
     @Override
+    protected int getInventorySize() {
+        return 5;
+    }
+
+    @Override
     protected boolean canProcess(int process) {
-    	ItemStack itemstack = this.slots.get(0);
+    	ItemStack itemstack = this.inventory.getStackInSlot(0);
         if (itemstack.getItem() == ItemHandler.SYRINGE && this.waterLevel == 2) {
             DinosaurProvider provider = DinosaurProvider.getFromStack(itemstack);
-            if(provider.isMissing()) {
+//            if(provider.isMissing()) //TODO: wtf
+            {
                 Dinosaur dino = provider.getValue(itemstack);
                 if (dino != null && dino.getBirthType() == Dinosaur.BirthType.LIVE_BIRTH) {
                     return this.lipids >= dino.getLipids() && this.minerals >= dino.getMinerals() && this.proximates >= dino.getProximates() && this.vitamins >= dino.getVitamins();
@@ -59,7 +64,7 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntityOLD implements 
 
     @Override
     protected void processItem(int process) {
-        ItemStack syringe = this.slots.get(0);
+        ItemStack syringe = this.inventory.getStackInSlot(0);
         Dinosaur dinosaur = DinosaurProvider.getFromStack(syringe).getValue(syringe);
 
         if (dinosaur != null) {
@@ -69,7 +74,8 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntityOLD implements 
             this.proximates -= dinosaur.getProximates();
             this.waterLevel--;
 
-            ItemStack hatchedEgg = ItemHandler.EGG.getItemStack(DinosaurProvider.getFromStack(syringe).getValue(syringe));
+
+            ItemStack hatchedEgg = new ItemStack(ItemHandler.HATCHED_EGG);
 
             NBTTagCompound compound = new NBTTagCompound();
             compound.setBoolean("Gender", this.temperature > 50);
@@ -81,8 +87,7 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntityOLD implements 
             }
 
             hatchedEgg.setTagCompound(compound);
-
-            this.slots.set(0, hatchedEgg);
+            this.inventory.setStackInSlot(0, ItemHandler.HATCHED_EGG.putValue(hatchedEgg, DinosaurProvider.getFromStack(syringe).getValue(syringe)));
         }
     }
 
@@ -91,24 +96,24 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntityOLD implements 
         super.update();
         boolean sync = false;
         if (!this.world.isRemote) {
-            if (this.waterLevel < 2 && this.slots.get(2).getItem() == Items.WATER_BUCKET) {
-                if (this.slots.get(3).getCount() < 16) {
-                    this.slots.get(2).shrink(1);
+            if (this.waterLevel < 2 && this.inventory.getStackInSlot(2).getItem() == Items.WATER_BUCKET) {
+                if (this.inventory.getStackInSlot(3).getCount() < 16) {
+                    this.inventory.getStackInSlot(2).shrink(1);
 
                     this.waterLevel++;
 
-                    ItemStack stack = this.slots.get(3);
+                    ItemStack stack = this.inventory.getStackInSlot(3);
                     if (stack.getItem() == Items.BUCKET) {
                         stack.grow(1);
                     } else {
-                        this.slots.set(3, new ItemStack(Items.BUCKET));
+                        this.inventory.setStackInSlot(3, new ItemStack(Items.BUCKET));
                     }
 
                     sync = true;
                 }
             }
 
-            ItemStack stack = this.slots.get(1);
+            ItemStack stack = this.inventory.getStackInSlot(1);
             if (!stack.isEmpty()) {
                 if ((this.proximates < MAX_NUTRIENTS) || (this.minerals < MAX_NUTRIENTS) || (this.vitamins < MAX_NUTRIENTS) || (this.lipids < MAX_NUTRIENTS)) {
                     this.consumeNutrients();
@@ -125,12 +130,12 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntityOLD implements 
     }
 
     private void consumeNutrients() {
-        ItemStack foodStack = this.slots.get(1);
+        ItemStack foodStack = this.inventory.getStackInSlot(1);
         FoodNutrients nutrients = FoodNutrients.get(foodStack.getItem());
 
         if (nutrients != null) {
             if (foodStack.getItem() instanceof ItemBucketMilk) {
-            	this.slots.set(1, new ItemStack(Items.BUCKET));
+            	this.inventory.setStackInSlot(1, new ItemStack(Items.BUCKET));
             } else {
                 foodStack.shrink(1);
                 if (foodStack.getCount() <= 0) {
@@ -170,9 +175,9 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntityOLD implements 
     }
 
     @Override
-    protected void onSlotUpdate() {
-        super.onSlotUpdate();
-        if(this.getStackInSlot(0).isEmpty()) {
+    protected void onSlotUpdate(int slot) {
+        super.onSlotUpdate(slot);
+        if(this.inventory.getStackInSlot(0).isEmpty()) {
             this.dinosaurEntity = null;
         }
     }
@@ -192,20 +197,13 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntityOLD implements 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         compound = super.writeToNBT(compound);
-
         compound.setShort("WaterLevel", (short) this.waterLevel);
         compound.setInteger("Lipids", this.lipids);
         compound.setInteger("Minerals", this.minerals);
         compound.setInteger("Vitamins", this.vitamins);
         compound.setInteger("Proximates", this.proximates);
         compound.setInteger("Temperature", this.temperature);
-        ItemStackHelper.saveAllItems(compound, this.slots);
         return compound;
-    }
-
-    @Override
-    protected int getMainOutput(int process) {
-        return 4;
     }
 
     @Override
@@ -219,22 +217,17 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntityOLD implements 
     }
 
     @Override
-    protected int[] getInputs() {
-        return INPUTS;
-    }
-
-    @Override
     protected int[] getInputs(int process) {
         return INPUTS;
     }
 
     @Override
-    protected int[] getOutputs() {
+    protected int[] getOutputs(int process) {
         return OUTPUTS;
     }
 
     public DinosaurEntity getDinosaurEntity() {
-        if(this.getStackInSlot(0).isEmpty()){
+        if(this.inventory.getStackInSlot(0).isEmpty()){
             return null;
         }
         return dinosaurEntity == null ? createEntity() : dinosaurEntity;
@@ -242,7 +235,7 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntityOLD implements 
 
     private DinosaurEntity createEntity() {
         try {
-            ItemStack stack = this.getStackInSlot(0);
+            ItemStack stack = this.inventory.getStackInSlot(0);
             this.dinosaurEntity = DinosaurProvider.getFromStack(stack).getValue(stack).getDinosaurClass().getDeclaredConstructor(World.class).newInstance(this.world);
             this.dinosaurEntity.setMale(this.temperature > 50);
             this.dinosaurEntity.setFullyGrown();
@@ -251,21 +244,6 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntityOLD implements 
             throw new RuntimeException("Unable to create dinosaur entity", e);
         }
         return dinosaurEntity;
-    }
-
-    @Override
-    public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn) {
-        return new CultivateContainer(playerInventory, this);
-    }
-
-    @Override
-    public String getGuiID() {
-        return JurassiCraft.MODID + ":cultivator";
-    }
-
-    @Override
-    public String getName() {
-        return this.hasCustomName() ? this.customName : "container.cultivator";
     }
 
     public int getWaterLevel() {
@@ -359,7 +337,7 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntityOLD implements 
     }
 
     public Dinosaur getDinosaur() {
-    	ItemStack stack = this.slots.get(0);
+    	ItemStack stack = this.inventory.getStackInSlot(0);
         if (!stack.isEmpty()) {
             return DinosaurProvider.getFromStack(stack).getValue(stack);
         }
@@ -380,22 +358,4 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntityOLD implements 
     public int getTemperatureCount() {
         return 1;
     }
-
-	@Override
-	public boolean isEmpty() {
-		return false;
-	}
-
-	@Override
-	protected NonNullList<ItemStack> getSlots() {
-//        NonNullList<ItemStack> slots = NonNullList.withSize(5, ItemStack.EMPTY);
-		return slots;
-	}
-
-	@Override
-	protected void setSlots(NonNullList<ItemStack> slot) {
-//		ItemStack stack = this.slots.get(1);
-//		stack.grow(slot.size());
-		this.slots = slot;
-	}
 }

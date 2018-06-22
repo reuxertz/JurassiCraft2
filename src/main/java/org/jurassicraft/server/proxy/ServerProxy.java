@@ -167,7 +167,7 @@ public class ServerProxy implements IGuiHandler {
                     break;
                 case GUI_CULTIVATOR_ID:
                     if (tile instanceof CultivatorBlockEntity)
-                        return new CultivateContainer(player.inventory, tile);
+                        return new CultivateContainer(player.inventory, (CultivatorBlockEntity)tile);
                     break;
                 case GUI_FEEDER_ID:
                     if (tile instanceof FeederBlockEntity)

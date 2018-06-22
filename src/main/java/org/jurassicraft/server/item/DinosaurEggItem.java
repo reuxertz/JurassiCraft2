@@ -21,8 +21,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class DinosaurEggItem extends DNAContainerItem implements DinosaurProvider {//TODO not let direct birth animals
     public DinosaurEggItem() {
-        super();
-        this.setCreativeTab(TabHandler.DNA);
         this.setMaxStackSize(1);
     }
 
@@ -36,44 +34,5 @@ public class DinosaurEggItem extends DNAContainerItem implements DinosaurProvide
     @Override
     public boolean shouldOverrideModel(Dinosaur dinosaur) {
         return dinosaur.getBirthType() == Dinosaur.BirthType.EGG_LAYING;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subtypes) {
-        if(this.isInCreativeTab(tab)) {
-            subtypes.addAll(this.getAllStacksOrdered());
-        }
-    }
-
-    @Override
-    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-//        pos = pos.offset(side);
-//
-//        if (side == EnumFacing.EAST || side == EnumFacing.WEST)
-//        {
-//            hitX = 1.0F - hitX;
-//        }
-//        else if (side == EnumFacing.NORTH || side == EnumFacing.SOUTH)
-//        {
-//            hitZ = 1.0F - hitZ;
-//        }
-//
-//        if (player.canPlayerEdit(pos, side, stack) && !world.isRemote)
-//        {
-//            DinosaurEggEntity egg = new DinosaurEggEntity(world, getValue(stack), getDNAQuality(player, stack), getGeneticCode(player, stack).toString());
-//            egg.setPosition(pos.getX() + hitX, pos.getY(), pos.getZ() + hitZ);
-//            egg.rotationYaw = player.rotationYaw;
-//            world.spawnEntity(egg);
-//
-//            if (!player.capabilities.isCreativeMode)
-//            {
-//                stack.stackSize--;
-//            }
-//
-//            return EnumActionResult.SUCCESS;
-//        }
-
-        return EnumActionResult.PASS;
     }
 }

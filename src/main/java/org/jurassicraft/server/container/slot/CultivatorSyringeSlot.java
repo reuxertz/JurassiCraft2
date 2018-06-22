@@ -3,12 +3,14 @@ package org.jurassicraft.server.container.slot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.api.DinosaurProvider;
 import org.jurassicraft.server.item.SyringeItem;
 
-public class CultivatorSyringeSlot extends Slot {
-    public CultivatorSyringeSlot(IInventory inventory, int slotIndex, int xPosition, int yPosition) {
+public class CultivatorSyringeSlot extends SlotItemHandler {
+    public CultivatorSyringeSlot(IItemHandler inventory, int slotIndex, int xPosition, int yPosition) {
         super(inventory, slotIndex, xPosition, yPosition);
     }
 

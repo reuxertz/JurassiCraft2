@@ -1,6 +1,7 @@
 package org.jurassicraft.server.block.machine;
 
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.items.IItemHandler;
 import org.jurassicraft.server.api.SubBlocksBlock;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.entity.CultivatorBlockEntity;
@@ -45,13 +46,16 @@ public class CultivatorBlock extends BlockContainer {
         	//TODO Verify Working
         	pos = pos.down();
         }
-
         TileEntity tile = world.getTileEntity(pos);
 
         if (tile instanceof CultivatorBlockEntity) {
-            InventoryHelper.dropInventoryItems(world, pos, (CultivatorBlockEntity) tile);
+            IItemHandler handler = ((CultivatorBlockEntity)tile).getInventory();
+            for (int i = 0; i < handler.getSlots(); i++) {
+                InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), handler.getStackInSlot(i));
+            }
         }
     }
+
 
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {

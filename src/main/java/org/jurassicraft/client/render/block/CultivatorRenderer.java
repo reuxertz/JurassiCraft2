@@ -36,7 +36,7 @@ public class CultivatorRenderer extends TileEntitySpecialRenderer<CultivatorBloc
 //        if(tileEntity.isProcessing(0))
         {
             long timer = getWorld().getTotalWorldTime();
-            ItemStack stack = tileEntity.getStackInSlot(0);
+            ItemStack stack = tileEntity.getInventory().getStackInSlot(0);
             GlStateManager.rotate((timer * 4F) % 360, 0 , 1, 0);
             GlStateManager.translate(0, Math.sin(timer / 7D) * 0.5f, 0);
             this.mc.getRenderItem().renderItem(stack, ItemCameraTransforms.TransformType.GROUND);
