@@ -21,23 +21,26 @@ import org.jurassicraft.server.item.ItemHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntityOLD {
+public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntity {
     private static final int[] HYBRIDIZER_INPUTS = new int[] { 0, 1, 2, 3, 4, 5, 6, 7 };
     private static final int[] COMBINATOR_INPUTS = new int[] { 8, 9 };
     private static final int[] HYBRIDIZER_OUTPUTS = new int[] { 10 };
     private static final int[] COMBINATOR_OUTPUTS = new int[] { 11 };
-
-    private NonNullList<ItemStack> slots = NonNullList.withSize(12, ItemStack.EMPTY);
-
+    
     private boolean hybridizerMode;
 
     @Override
-    protected int getProcess(int slot) {
+    protected int getProcessFromSlot(int slot) {
         return 0;
     }
 
+    @Override
+    protected int getInventorySize() {
+        return 12;
+    }
+
     private Dinosaur getHybrid() {
-        return this.getHybrid(this.slots.get(0), this.slots.get(1), this.slots.get(2), this.slots.get(3), this.slots.get(4), this.slots.get(5), this.slots.get(6), this.slots.get(7));
+        return this.getHybrid(this.inventory.getStackInSlot(0), this.inventory.getStackInSlot(1), this.inventory.getStackInSlot(2), this.inventory.getStackInSlot(3), this.inventory.getStackInSlot(4), this.inventory.getStackInSlot(5), this.inventory.getStackInSlot(6), this.inventory.getStackInSlot(7));
     }
 
     private Dinosaur getHybrid(ItemStack... discs) {
@@ -98,10 +101,10 @@ public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntityOL
     @Override
     protected boolean canProcess(int process) {
         if (this.hybridizerMode) {
-            return this.slots.get(10).isEmpty() && this.getHybrid() != null;
+            return this.inventory.getStackInSlot(10).isEmpty() && this.getHybrid() != null;
         } else {
-            if (!this.slots.get(8).isEmpty() && this.slots.get(8).getItem() == ItemHandler.STORAGE_DISC && !this.slots.get(9).isEmpty() && this.slots.get(9).getItem() == ItemHandler.STORAGE_DISC) {
-                if (this.slots.get(8).getTagCompound() != null && this.slots.get(9).getTagCompound() != null && this.slots.get(11).isEmpty() && this.slots.get(8).getItemDamage() == this.slots.get(9).getItemDamage() && this.slots.get(8).getTagCompound().getString("StorageId").equals(this.slots.get(9).getTagCompound().getString("StorageId"))) {
+            if (!this.inventory.getStackInSlot(8).isEmpty() && this.inventory.getStackInSlot(8).getItem() == ItemHandler.STORAGE_DISC && !this.inventory.getStackInSlot(9).isEmpty() && this.inventory.getStackInSlot(9).getItem() == ItemHandler.STORAGE_DISC) {
+                if (this.inventory.getStackInSlot(8).getTagCompound() != null && this.inventory.getStackInSlot(9).getTagCompound() != null && this.inventory.getStackInSlot(11).isEmpty() && this.inventory.getStackInSlot(8).getItemDamage() == this.inventory.getStackInSlot(9).getItemDamage() && this.inventory.getStackInSlot(8).getTagCompound().getString("StorageId").equals(this.inventory.getStackInSlot(9).getTagCompound().getString("StorageId"))) {
                     return true;
                 }
             }
@@ -112,71 +115,64 @@ public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntityOL
 
     @Override
     protected void processItem(int process) {
-        if (this.canProcess(process)) {
-            if (this.hybridizerMode) {
-                Dinosaur hybrid = this.getHybrid();
+        if (this.hybridizerMode) {
+            Dinosaur hybrid = this.getHybrid();
 
-                NBTTagCompound nbt = new NBTTagCompound();
+            NBTTagCompound nbt = new NBTTagCompound();
 
-                DinoDNA dna = new DinoDNA(hybrid, 100, this.slots.get(0).getTagCompound().getString("Genetics"));
-                dna.writeToNBT(nbt);
+            DinoDNA dna = new DinoDNA(hybrid, 100, this.inventory.getStackInSlot(0).getOrCreateSubCompound("jurassicraft").getCompoundTag("dna").getString("Genetics"));
+            dna.writeToNBT(nbt);
 
-                ItemStack output = new ItemStack(ItemHandler.STORAGE_DISC);
-                output.getOrCreateSubCompound("jurassicraft").setTag("dna", nbt);
+            ItemStack output = new ItemStack(ItemHandler.STORAGE_DISC);
+            output.getOrCreateSubCompound("jurassicraft").setTag("dna", nbt);
 
-                this.mergeStack(this.getOutputSlot(output), output);
+            this.mergeStack(this.getOutputSlot(output, process), output);
 
-                for (int i = 0; i < 8; i++) {
-                    this.decreaseStackSize(i);
-                }
-            } else {
-                ItemStack output = new ItemStack(ItemHandler.STORAGE_DISC);
-
-                String storageId = this.slots.get(8).getTagCompound().getString("StorageId");
-
-                if (storageId.equals("DinoDNA")) {
-                    DinoDNA dna1 = DinoDNA.readFromNBT(this.slots.get(8).getOrCreateSubCompound("jurassicraft").getCompoundTag("dna"));
-                    DinoDNA dna2 = DinoDNA.readFromNBT(this.slots.get(9).getOrCreateSubCompound("jurassicraft").getCompoundTag("dna"));
-
-                    int newQuality = dna1.getDNAQuality() + dna2.getDNAQuality();
-
-                    if (newQuality > 100) {
-                        newQuality = 100;
-                    }
-
-                    DinoDNA newDNA = new DinoDNA(dna1.getDinosaur(), newQuality, dna1.getGenetics());
-
-                    NBTTagCompound outputTag = new NBTTagCompound();
-                    newDNA.writeToNBT(outputTag);
-                    output.setTagCompound(outputTag);
-                } else if (storageId.equals("PlantDNA")) {
-                    PlantDNA dna1 = PlantDNA.readFromNBT(this.slots.get(8).getTagCompound());
-                    PlantDNA dna2 = PlantDNA.readFromNBT(this.slots.get(9).getTagCompound());
-
-                    int newQuality = dna1.getDNAQuality() + dna2.getDNAQuality();
-
-                    if (newQuality > 100) {
-                        newQuality = 100;
-                    }
-
-                    PlantDNA newDNA = new PlantDNA(dna1.getPlant(), newQuality);
-
-                    NBTTagCompound outputTag = new NBTTagCompound();
-                    newDNA.writeToNBT(outputTag);
-                    output.setTagCompound(outputTag);
-                }
-
-                this.mergeStack(11, output);
-
-                this.decreaseStackSize(8);
-                this.decreaseStackSize(9);
+            for (int i = 0; i < 8; i++) {
+                this.decreaseStackSize(i);
             }
-        }
-    }
+        } else {
+            ItemStack output = new ItemStack(ItemHandler.STORAGE_DISC);
 
-    @Override
-    protected int getMainOutput(int process) {
-        return this.hybridizerMode ? 10 : 11;
+            String storageId = this.inventory.getStackInSlot(8).getOrCreateSubCompound("jurassicraft").getCompoundTag("dna").getString("StorageId");
+
+            if (storageId.equals("DinoDNA")) { //TODO: generilize DinoDNA and PlantDNA
+                DinoDNA dna1 = DinoDNA.readFromNBT(this.inventory.getStackInSlot(8).getOrCreateSubCompound("jurassicraft").getCompoundTag("dna"));
+                DinoDNA dna2 = DinoDNA.readFromNBT(this.inventory.getStackInSlot(9).getOrCreateSubCompound("jurassicraft").getCompoundTag("dna"));
+
+                int newQuality = dna1.getDNAQuality() + dna2.getDNAQuality();
+
+                if (newQuality > 100) {
+                    newQuality = 100;
+                }
+
+                DinoDNA newDNA = new DinoDNA(dna1.getDinosaur(), newQuality, dna1.getGenetics());
+
+                NBTTagCompound outputTag = new NBTTagCompound();
+                newDNA.writeToNBT(outputTag);
+                output.getOrCreateSubCompound("jurassicraft").setTag("dna", outputTag);
+            } else if (storageId.equals("PlantDNA")) {
+                PlantDNA dna1 = PlantDNA.readFromNBT(this.inventory.getStackInSlot(8).getOrCreateSubCompound("jurassicraft").getCompoundTag("dna"));
+                PlantDNA dna2 = PlantDNA.readFromNBT(this.inventory.getStackInSlot(9).getOrCreateSubCompound("jurassicraft").getCompoundTag("dna"));
+
+                int newQuality = dna1.getDNAQuality() + dna2.getDNAQuality();
+
+                if (newQuality > 100) {
+                    newQuality = 100;
+                }
+
+                PlantDNA newDNA = new PlantDNA(dna1.getPlant(), newQuality);
+
+                NBTTagCompound outputTag = new NBTTagCompound();
+                newDNA.writeToNBT(outputTag);
+                output.setTagCompound(outputTag);
+            }
+
+            this.mergeStack(11, output);
+
+            this.decreaseStackSize(8);
+            this.decreaseStackSize(9);
+        }
     }
 
     @Override
@@ -190,58 +186,25 @@ public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntityOL
     }
 
     @Override
-    protected int[] getInputs() {
+    protected int[] getInputs(int process) {
         return this.hybridizerMode ? HYBRIDIZER_INPUTS : COMBINATOR_INPUTS;
     }
 
     @Override
-    protected int[] getInputs(int process) {
-        return this.getInputs();
-    }
-
-    @Override
-    protected int[] getOutputs() {
+    protected int[] getOutputs(int process) {
         return this.hybridizerMode ? HYBRIDIZER_OUTPUTS : COMBINATOR_OUTPUTS;
-    }
-
-    @Override
-    protected NonNullList<ItemStack> getSlots() {
-        return this.slots;
-    }
-
-    @Override
-    protected void setSlots(NonNullList<ItemStack> slots) {
-        this.slots = slots;
-    }
-
-    @Override
-    public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn) {
-        return new DNACombinatorHybridizerContainer(playerInventory, this);
-    }
-
-    @Override
-    public String getGuiID() {
-        return JurassiCraft.MODID + ":dna_combinator_hybridizer";
-    }
-
-    @Override
-    public String getName() {
-        return this.hasCustomName() ? this.customName : "container.dna_combinator_hybridizer";
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
-
         this.hybridizerMode = nbt.getBoolean("HybridizerMode");
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         nbt = super.writeToNBT(nbt);
-
         nbt.setBoolean("HybridizerMode", this.hybridizerMode);
-
         return nbt;
     }
 
@@ -254,15 +217,5 @@ public class DNACombinatorHybridizerBlockEntity extends MachineBaseBlockEntityOL
         this.processTime[0] = 0;
         this.world.markBlockRangeForRenderUpdate(this.pos, this.pos);
     }
-
-    @Override
-    public ITextComponent getDisplayName() {
-        return this.hasCustomName() ? new TextComponentString(this.getName()) : new TextComponentTranslation(this.hybridizerMode ? "container.dna_hybridizer" : "container.dna_combinator");
-    }
-
-	@Override
-	public boolean isEmpty() {
-		return false;
-	}
 
 }

@@ -159,7 +159,7 @@ public class ServerProxy implements IGuiHandler {
                     break;
                 case GUI_DNA_COMBINATOR_HYBRIDIZER_ID:
                     if (tile instanceof DNACombinatorHybridizerBlockEntity)
-                        return new DNACombinatorHybridizerContainer(player.inventory, tile);
+                        return new DNACombinatorHybridizerContainer(player.inventory, (DNACombinatorHybridizerBlockEntity) tile);
                     break;
                 case GUI_DNA_EXTRACTOR_ID:
                     if (tile instanceof DNAExtractorBlockEntity)

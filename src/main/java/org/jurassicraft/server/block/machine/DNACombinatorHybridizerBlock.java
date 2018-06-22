@@ -19,8 +19,10 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.IItemHandler;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.block.OrientedBlock;
+import org.jurassicraft.server.block.entity.BugCrateBlockEntity;
 import org.jurassicraft.server.block.entity.DNACombinatorHybridizerBlockEntity;
 import org.jurassicraft.server.proxy.ServerProxy;
 import org.jurassicraft.server.tab.TabHandler;
@@ -36,28 +38,17 @@ public class DNACombinatorHybridizerBlock extends OrientedBlock {
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        super.onBlockPlacedBy(world, pos, state, placer, stack);
-
-        if (stack.hasDisplayName()) {
-            TileEntity tileentity = world.getTileEntity(pos);
-
-            if (tileentity instanceof DNACombinatorHybridizerBlockEntity) {
-                ((DNACombinatorHybridizerBlockEntity) tileentity).setCustomInventoryName(stack.getDisplayName());
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        TileEntity tile = worldIn.getTileEntity(pos);
+        if (tile instanceof BugCrateBlockEntity) {
+            IItemHandler handler = ((DNACombinatorHybridizerBlockEntity)tile).getInventory();
+            for (int i = 0; i < handler.getSlots(); i++) {
+                InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), handler.getStackInSlot(i));
             }
         }
+        super.breakBlock(worldIn, pos, state);
     }
 
-    @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        TileEntity tileentity = world.getTileEntity(pos);
-
-        if (tileentity instanceof DNACombinatorHybridizerBlockEntity) {
-            InventoryHelper.dropInventoryItems(world, pos, (DNACombinatorHybridizerBlockEntity) tileentity);
-        }
-
-        super.breakBlock(world, pos, state);
-    }
 
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
@@ -72,12 +63,8 @@ public class DNACombinatorHybridizerBlock extends OrientedBlock {
             TileEntity tileEntity = world.getTileEntity(pos);
 
             if (tileEntity instanceof DNACombinatorHybridizerBlockEntity) {
-                DNACombinatorHybridizerBlockEntity embryonicMachine = (DNACombinatorHybridizerBlockEntity) tileEntity;
-
-                if (embryonicMachine.isUsableByPlayer(player)) {
-                    player.openGui(JurassiCraft.INSTANCE, ServerProxy.GUI_DNA_COMBINATOR_HYBRIDIZER_ID, world, pos.getX(), pos.getY(), pos.getZ());
-                    return true;
-                }
+                player.openGui(JurassiCraft.INSTANCE, ServerProxy.GUI_DNA_COMBINATOR_HYBRIDIZER_ID, world, pos.getX(), pos.getY(), pos.getZ());
+                return true;
             }
         }
         return false;

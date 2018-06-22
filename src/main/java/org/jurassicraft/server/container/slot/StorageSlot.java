@@ -24,10 +24,6 @@ public class StorageSlot extends SlotItemHandler {
 
     @Override
     public boolean isItemValid(ItemStack stack) {
-        if (this.stored) {
-            return stack.getItem() == ItemHandler.STORAGE_DISC && (stack.getTagCompound() != null && stack.getTagCompound().hasKey("DNAQuality"));
-        } else {
-            return stack.getItem() == ItemHandler.STORAGE_DISC && (stack.getTagCompound() == null || !stack.getTagCompound().hasKey("DNAQuality"));
-        }
+        return stack.getItem() == ItemHandler.STORAGE_DISC && stack.getOrCreateSubCompound("jurassicraft").hasKey("dna", 10) == stored;
     }
 }
