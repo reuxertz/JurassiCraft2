@@ -91,7 +91,7 @@ public enum RenderingHandler {
         RenderingHandler.INSTANCE.preInit();
 
         for (EnumDyeColor color : EnumDyeColor.values()) {
-            registerItemRenderer(Item.getItemFromBlock(CULTIVATOR_BOTTOM.get(color)), "cultivate/cultivate_bottom_" + color.getName().toLowerCase(Locale.ENGLISH));
+            registerItemRenderer(Item.getItemFromBlock(CULTIVATOR_BOTTOM.get(color)), "cultivate/" + color.getName().toLowerCase(Locale.ENGLISH));
         }
 
         for (TreeType type : TreeType.values()) {
