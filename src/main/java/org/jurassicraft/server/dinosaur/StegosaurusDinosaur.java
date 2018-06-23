@@ -37,7 +37,7 @@ public class StegosaurusDinosaur extends Dinosaur{
         this.setDefendOwner(true);
         this.setMaxHerdSize(15);
         this.setAttackBias(400.0);
-        this.setBreeding(false, 2, 6, 48, false, true);
+        this.setBreeding(BirthType.EGG_LAYING, 2, 6, 48, false, true);
         
         ArrayList<Biome> biomeList = new ArrayList<Biome>();
         biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.PLAINS));

@@ -36,7 +36,7 @@ public class TriceratopsDinosaur extends Dinosaur {
         this.setImprintable(true);
         this.setDefendOwner(true);
         this.setAttackBias(400.0);
-        this.setBreeding(false, 2, 6, 48, false, true);
+        this.setBreeding(BirthType.EGG_LAYING, 2, 6, 48, false, true);
         String[][] recipe = {
                 {"", "", "","","horn"},
                 {"tail_vertebrae", "pelvis", "ribcage","neck_vertebrae","skull"},

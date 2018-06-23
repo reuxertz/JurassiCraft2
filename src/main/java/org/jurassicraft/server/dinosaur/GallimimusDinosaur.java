@@ -35,7 +35,7 @@ public class GallimimusDinosaur extends Dinosaur {
         this.setImprintable(true);
         this.setFlee(true);
         this.setFlockSpeed(1.4F);
-        this.setBreeding(false, 2, 6, 20, false, true);
+        this.setBreeding(BirthType.EGG_LAYING, 2, 6, 20, false, true);
         this.setJumpHeight(3);
         String[][] recipe =
                 {{"", "", "", "neck_vertebrae", "skull"},

@@ -39,7 +39,7 @@ public class VelociraptorDinosaur extends Dinosaur {
         this.setMaxHerdSize(18);
         this.setAttackBias(600.0);
         this.setCanClimb(true);
-        this.setBreeding(false,1, 7, 28, false, true);
+        this.setBreeding(BirthType.EGG_LAYING,1, 7, 28, false, true);
         this.setJumpHeight(3);
         String[][] recipe = {
                 {"", "","neck_vertebrae","skull"},

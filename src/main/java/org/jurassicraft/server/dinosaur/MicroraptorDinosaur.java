@@ -38,7 +38,7 @@ public class MicroraptorDinosaur extends Dinosaur {
         this.setMaxHerdSize(16);
         this.setAttackBias(400.0);
         this.setCanClimb(true);
-        this.setBreeding(false, 1, 5, 15, false, true);
+        this.setBreeding(BirthType.EGG_LAYING, 1, 5, 15, false, true);
         this.setJumpHeight(2);
         this.setRandomFlock(false);
         String[][] recipe =

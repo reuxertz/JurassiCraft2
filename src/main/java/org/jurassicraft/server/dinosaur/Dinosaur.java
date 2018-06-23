@@ -95,7 +95,6 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
     private int minClutch = 2;
     private int maxClutch = 6;
     private boolean defendOffspring;
-    private boolean directBirth;
     private int jumpHeight;
 
     private String[][] recipe;
@@ -316,8 +315,8 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
         return this;
     }
 
-    public void setBreeding(boolean directBirth, int minClutch, int maxClutch, int breedCooldown, boolean breedAroundOffspring, boolean defendOffspring) {
-        this.directBirth = directBirth;
+    public void setBreeding(BirthType birthType, int minClutch, int maxClutch, int breedCooldown, boolean breedAroundOffspring, boolean defendOffspring) {
+        this.birthType = birthType;
         this.minClutch = minClutch;
         this.maxClutch = maxClutch;
         this.breedCooldown = breedCooldown * 20 * 60;
@@ -440,10 +439,6 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
         }
 
         return texture + ".png";
-    }
-
-    public void setBirthType(BirthType birthType) {
-        this.birthType = birthType;
     }
 
     public BirthType getBirthType() {
@@ -751,10 +746,6 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
 
     public boolean shouldDefendOffspring() {
         return this.defendOffspring;
-    }
-
-    public boolean givesDirectBirth() {
-        return this.directBirth || this.isMammal;
     }
 
     public List<GrowthStage> getSupportedStages() {

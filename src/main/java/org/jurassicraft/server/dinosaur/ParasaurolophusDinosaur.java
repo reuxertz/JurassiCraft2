@@ -35,7 +35,7 @@ public class ParasaurolophusDinosaur extends Dinosaur {
         this.setImprintable(true);
         this.setFlockSpeed(1.5F);
         this.setAttackBias(-100.0);
-        this.setBreeding(false, 4, 6, 40, false, true);
+        this.setBreeding(BirthType.EGG_LAYING, 4, 6, 40, false, true);
 
         String[][] recipe = {
                 {"tail_vertebrae", "pelvis", "ribcage","neck_vertebrae","skull"},

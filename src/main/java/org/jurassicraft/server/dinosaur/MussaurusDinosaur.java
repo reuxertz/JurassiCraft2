@@ -36,7 +36,7 @@ public class MussaurusDinosaur extends Dinosaur {
         this.setMaxHerdSize(20);
         this.setAttackBias(-500.0);
         this.setOffset(0.0F, 0.0F, 0.5F);
-        this.setBreeding(false, 2, 8, 15, false, true);
+        this.setBreeding(BirthType.EGG_LAYING, 2, 8, 15, false, true);
         String[][] recipe = {
                         {"", "pelvis", "","",""},
                         {"tail_vertebrae", "ribcage", "shoulder", "neck_vertebrae", "skull"},

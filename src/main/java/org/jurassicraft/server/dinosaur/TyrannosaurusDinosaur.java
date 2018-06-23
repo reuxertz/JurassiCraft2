@@ -34,7 +34,7 @@ public class TyrannosaurusDinosaur extends Dinosaur {
         this.setScale(2.4F, 0.35F);
         this.setMaxHerdSize(3);
         this.setAttackBias(1000.0);
-        this.setBreeding(false, 2, 4, 60, false, true);
+        this.setBreeding(BirthType.EGG_LAYING, 2, 4, 60, false, true);
 
         String[][] recipe = {
                 {"", "", "","neck_vertebrae","skull"},

@@ -37,7 +37,6 @@ public class CoelacanthDinosaur extends Dinosaur {
         this.setStorage(9);
         this.setDiet(Diet.PISCIVORE.get().withModule(new Diet.DietModule(FoodType.FILTER)));
         this.setSleepTime(SleepTime.NO_SLEEP);
-        this.setBirthType(BirthType.LIVE_BIRTH);
         this.setBones("anal_fin", "caudal_fin", "first_dorsal_fin", "pectoral_fin_bones", "pelvic_fin_bones", "second_dorsal_fin", "skull", "spine", "teeth");
         this.setHeadCubeName("Head");
         this.setScale(1.8F, 0.22F);
@@ -46,7 +45,7 @@ public class CoelacanthDinosaur extends Dinosaur {
         this.setAttackBias(100.0);
         this.setMarineAnimal(true);
         this.setMovementType(MovementType.DEEP_WATER);
-        this.setBreeding(true, 1, 3, 15, true, false);
+        this.setBreeding(BirthType.LIVE_BIRTH, 1, 3, 15, true, false);
         this.setRandomFlock(false);
         String[][] recipe =     {{"", "second_dorsal_fin", "first_dorsal_fin", ""},
                 {"caudal_fin", "spine", "pectoral_fin_bones","skull"},

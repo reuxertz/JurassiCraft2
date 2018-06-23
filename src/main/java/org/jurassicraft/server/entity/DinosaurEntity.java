@@ -704,7 +704,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
             if (this.isPregnant()) {
                 if (--this.pregnantTime <= 0) {
                     this.getNavigator().clearPath();
-                    this.setAnimation(this.dinosaur.givesDirectBirth() ? EntityAnimation.GIVING_BIRTH.get() : EntityAnimation.LAYING_EGG.get());
+                    this.setAnimation(this.dinosaur.getBirthType() == Dinosaur.BirthType.LIVE_BIRTH ? EntityAnimation.GIVING_BIRTH.get() : EntityAnimation.LAYING_EGG.get());
                     if(this.family != null) {
                         this.family.setHome(this.getPosition(), 6000);
                     }
@@ -714,7 +714,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
             if ((this.getAnimation() == EntityAnimation.LAYING_EGG.get() || this.getAnimation() == EntityAnimation.GIVING_BIRTH.get()) && this.animationTick == this.getAnimationLength() / 2) {
         	    for (DinosaurEntity child : this.children) {
                     Entity entity;
-                    if (this.dinosaur.givesDirectBirth()) {
+                    if (this.dinosaur.getBirthType() == Dinosaur.BirthType.LIVE_BIRTH) {
                         entity = child;
                         child.setAge(0);
                         if(this.family != null) {
