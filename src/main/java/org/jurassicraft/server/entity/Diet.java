@@ -49,8 +49,8 @@ public class Diet {
             this.type = type;
         }
 
-        public DietModule withCondition(Function<DinosaurEntity, Boolean> condition) {
-            this.condition = condition;
+        public DietModule withCondition(Function<DinosaurEntity, Boolean> conditionIn) {
+            this.condition = dinosaurEntity -> this.condition.apply(dinosaurEntity) && conditionIn.apply(dinosaurEntity);
             return this;
         }
 
