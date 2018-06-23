@@ -1,5 +1,6 @@
 package org.jurassicraft.server.entity;
 
+import com.google.common.collect.Lists;
 import net.minecraft.item.Item;
 import org.jurassicraft.server.food.FoodHelper;
 import org.jurassicraft.server.food.FoodType;
@@ -7,13 +8,14 @@ import org.jurassicraft.server.food.FoodType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class Diet {
     public static final Supplier<Diet> CARNIVORE = () -> new Diet()
             .withModule(new DietModule(FoodType.MEAT))
             .withModule(new DietModule(FoodType.INSECT)
-                    .withCondition(entity -> entity.getAgePercentage() < 25));
+                    .withCondition(DietConditionType.INFANT));
     public static final Supplier<Diet> HERBIVORE = () -> new Diet()
             .withModule(new DietModule(FoodType.PLANT));
     public static final Supplier<Diet> INSECTIVORE = () -> new Diet()
@@ -42,20 +44,41 @@ public class Diet {
     }
 
     public static class DietModule {
-        private Function<DinosaurEntity, Boolean> condition = dinosaur -> true;
+        private List<Predicate<DinosaurEntity>> conditions = Lists.newArrayList();
         private FoodType type;
 
         public DietModule(FoodType type) {
             this.type = type;
         }
 
-        public DietModule withCondition(Function<DinosaurEntity, Boolean> conditionIn) {
-            this.condition = dinosaurEntity -> this.condition.apply(dinosaurEntity) && conditionIn.apply(dinosaurEntity);
+        public DietModule withCondition(Predicate<DinosaurEntity> condition) {
+            this.conditions.add(condition);
             return this;
         }
 
         public boolean canEat(DinosaurEntity entity, Item item) {
-            return this.condition.apply(entity) && FoodHelper.getFoodType(item) == type;
+            return this.runConditions(entity) && FoodHelper.getFoodType(item) == type;
+        }
+
+        public boolean runConditions(DinosaurEntity entity) {
+            for (Predicate<DinosaurEntity> condition : conditions) {
+                if(!condition.test(entity)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public List<DietConditionType> getTypes() {
+            List<DietConditionType> types = Lists.newArrayList();
+            for (Predicate<DinosaurEntity> condition : conditions) {
+                for (DietConditionType dietConditionType : DietConditionType.values()) {
+                    if(condition == dietConditionType) {
+                        types.add(dietConditionType);
+                    }
+                }
+            }
+            return types;
         }
 
         public FoodType getFoodType() {
@@ -63,7 +86,7 @@ public class Diet {
         }
 
         public boolean applies(DinosaurEntity entity) {
-            return this.condition.apply(entity);
+            return this.runConditions(entity);
         }
     }
 }
