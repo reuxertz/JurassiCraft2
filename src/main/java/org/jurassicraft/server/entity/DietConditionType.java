@@ -3,7 +3,7 @@ package org.jurassicraft.server.entity;
 import java.util.function.Predicate;
 
 
-public enum DietConditionType implements Predicate<DinosaurEntity> {
+public enum DietConditionType {
     INFANT(entity -> entity.getAgePercentage() < 25)
     ;
 
@@ -13,8 +13,7 @@ public enum DietConditionType implements Predicate<DinosaurEntity> {
         this.predicate = preticate;
     }
 
-    @Override
-    public boolean test(DinosaurEntity dinosaurEntity) {
+    public boolean apply(DinosaurEntity dinosaurEntity) {
         return this.predicate.test(dinosaurEntity);
     }
 }

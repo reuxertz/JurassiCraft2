@@ -6,6 +6,8 @@ import org.jurassicraft.server.food.FoodHelper;
 import org.jurassicraft.server.food.FoodType;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -44,14 +46,14 @@ public class Diet {
     }
 
     public static class DietModule {
-        private List<Predicate<DinosaurEntity>> conditions = Lists.newArrayList();
+        private List<DietConditionType> conditions = Lists.newArrayList();
         private FoodType type;
 
         public DietModule(FoodType type) {
             this.type = type;
         }
 
-        public DietModule withCondition(Predicate<DinosaurEntity> condition) {
+        public DietModule withCondition(DietConditionType condition) {
             this.conditions.add(condition);
             return this;
         }
@@ -61,24 +63,16 @@ public class Diet {
         }
 
         public boolean runConditions(DinosaurEntity entity) {
-            for (Predicate<DinosaurEntity> condition : conditions) {
-                if(!condition.test(entity)) {
+            for (DietConditionType condition : conditions) {
+                if(!condition.apply(entity)) {
                     return false;
                 }
             }
             return true;
         }
 
-        public List<DietConditionType> getTypes() {
-            List<DietConditionType> types = Lists.newArrayList();
-            for (Predicate<DinosaurEntity> condition : conditions) {
-                for (DietConditionType dietConditionType : DietConditionType.values()) {
-                    if(condition == dietConditionType) {
-                        types.add(dietConditionType);
-                    }
-                }
-            }
-            return types;
+        public Collection<DietConditionType> getTypes() {
+            return Collections.unmodifiableCollection(this.conditions);
         }
 
         public FoodType getFoodType() {
