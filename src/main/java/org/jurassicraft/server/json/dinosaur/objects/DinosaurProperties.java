@@ -92,7 +92,7 @@ public class DinosaurProperties {
         public JsonElement serialize(DinosaurProperties src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject json = new JsonObject();
             json.addProperty("name", src.getName());
-            json.addProperty("entity", src.getEntityClass().toString());
+            json.addProperty("entity", src.getEntityClass().getCanonicalName());
             json.addProperty("time_period", src.getTimePeriod().toString().toLowerCase(Locale.ENGLISH));
             json.add("male", context.serialize(src.getMaleSpawnEgg()));
             json.add("female", context.serialize(src.getMaleSpawnEgg()));
