@@ -17,10 +17,10 @@ public class DinosaurStatistics {
     private final AdultBabyValue eyeHeight;
     private final AdultBabyValue scale;
     private final int jumpHeight;
-    private final float attackSpeed;
+    private final double attackSpeed;
     private final int itemStorage;
 
-    public static class Deserializer implements JsonDeserializer<DinosaurStatistics> {
+    public static class JsonHandler implements JsonDeserializer<DinosaurStatistics>, JsonSerializer<DinosaurStatistics> {
 
         @Override
         public DinosaurStatistics deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
@@ -41,6 +41,21 @@ public class DinosaurStatistics {
                     JsonUtils.getInt(json, "item_storage")
             );
         }
-    }
 
+        @Override
+        public JsonElement serialize(DinosaurStatistics src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject json = new JsonObject();
+            json.add("speed", context.serialize(src.getSpeed()));
+            json.add("health", context.serialize(src.getHealth()));
+            json.add("strength", context.serialize(src.getStrength()));
+            json.add("size_x", context.serialize(src.getSizeX()));
+            json.add("size_y", context.serialize(src.getSizeY()));
+            json.add("eye_height", context.serialize(src.getEyeHeight()));
+            json.add("scale", context.serialize(src.getScale()));
+            json.addProperty("jump_height", src.getJumpHeight());
+            json.addProperty("attack_speed", src.getAttackSpeed());
+            json.addProperty("item_storage", src.getItemStorage());
+            return json;
+        }
+    }
 }

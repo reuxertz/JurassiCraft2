@@ -29,7 +29,7 @@ public class DinosaurProperties {
 
     //TODO: model
 
-    public static class Deserializer implements JsonDeserializer<DinosaurProperties> {
+    public static class JsonHandler implements JsonDeserializer<DinosaurProperties>, JsonSerializer<DinosaurProperties> {
 
         @Override
         @SuppressWarnings("unchecked")
@@ -77,17 +77,48 @@ public class DinosaurProperties {
                     JsonUtils.getString(json, "name"),
                     clazz,
                     TimePeriod.valueOf(JsonUtils.getString(json, "time_period").toUpperCase(Locale.ENGLISH)),
-
                     context.deserialize(JsonUtils.getJsonObject(spawnEggInfo, "male"), SpawnEggInfo.class),
                     context.deserialize(JsonUtils.getJsonObject(spawnEggInfo, "female"), SpawnEggInfo.class),
-
                     context.deserialize(JsonUtils.getJsonObject(json, "statistics"), DinosaurStatistics.class),
                     context.deserialize(JsonUtils.getJsonObject(json, "traits"), DinosaurTraits.class),
                     context.deserialize(JsonUtils.getJsonObject(json, "spawning"), DinosaurSpawningInfo.class),
-                    context.deserialize(JsonUtils.getJsonObject(json, "breeding"), DinosaurSpawningInfo.class),
+                    context.deserialize(JsonUtils.getJsonObject(json, "breeding"), DinosaurBreeding.class),
                     createStringList(JsonUtils.getJsonArray(json, "bones")),
                     skeleton_recipe
             );
+        }
+
+        @Override
+        public JsonElement serialize(DinosaurProperties src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject json = new JsonObject();
+            json.addProperty("name", src.getName());
+            json.addProperty("entity", src.getEntityClass().toString());
+            json.addProperty("time_period", src.getTimePeriod().toString().toLowerCase(Locale.ENGLISH));
+            json.add("male", context.serialize(src.getMaleSpawnEgg()));
+            json.add("female", context.serialize(src.getMaleSpawnEgg()));
+            json.add("statistics", context.serialize(src.getStatistics()));
+            json.add("traits", context.serialize(src.getTraits()));
+            json.add("spawning", context.serialize(src.getSpawningInfo()));
+            json.add("breeding", context.serialize(src.getBreeding()));
+
+
+            JsonArray bones = new JsonArray();
+            for (String bone : src.getBones()) {
+                bones.add(bone);
+            }
+            json.add("bones", bones);
+
+
+            JsonArray skeletonRecipe = new JsonArray();
+            for (String[] strings : src.getSkeletonRecipe()) {
+                JsonArray innerArray = new JsonArray();
+                for (String string : strings) {
+                    innerArray.add(string);
+                }
+                skeletonRecipe.add(innerArray);
+            }
+            json.add("skeleton_recipe", skeletonRecipe);
+            return json;
         }
 
         private String[] createStringList(JsonArray array) {

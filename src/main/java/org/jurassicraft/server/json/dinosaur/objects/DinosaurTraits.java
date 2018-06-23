@@ -23,7 +23,7 @@ public class DinosaurTraits {
     private final double attackBias;
     private final boolean canClimb;
 
-    public static class Deserializer implements JsonDeserializer<DinosaurTraits> {
+    public static class JsonHandler implements JsonDeserializer<DinosaurTraits>, JsonSerializer<DinosaurTraits> {
 
         @Override
         public DinosaurTraits deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
@@ -42,6 +42,21 @@ public class DinosaurTraits {
                     JsonUtils.getFloat(json, "attack_bias"),
                     JsonUtils.getBoolean(json, "can_climb")
             );
+        }
+
+        @Override
+        public JsonElement serialize(DinosaurTraits src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject json = new JsonObject();
+            json.addProperty("type", src.getType().toString().toLowerCase(Locale.ENGLISH));
+            json.add("diet", context.serialize(src.getDiet()));
+            json.addProperty("sleep_type", src.getSleepType().toString().toLowerCase(Locale.ENGLISH));
+            json.addProperty("imprintable", src.isImprintable());
+            json.addProperty("defend_owner", src.isDefendOwner());
+            json.addProperty("maximum_age", (src.getMaxAge() * 8) / 24000); //Convert from ticks to days
+            json.addProperty("max_herd_size", src.getMaxHerdSize());
+            json.addProperty("attack_bias", src.getAttackBias());
+            json.addProperty("can_climb", src.isCanClimb());
+            return json;
         }
     }
 }

@@ -9,9 +9,9 @@ import java.util.function.BiConsumer;
 
 @Data
 public class AdultBabyValue {
-    private final float adult;
-    private final float baby;
-    public static class Deserializer implements JsonDeserializer<AdultBabyValue> {
+    private final double baby;
+    private final double adult;
+    public static class JsonHandler implements JsonDeserializer<AdultBabyValue>, JsonSerializer<AdultBabyValue> {
 
         @Override
         public AdultBabyValue deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
@@ -19,12 +19,20 @@ public class AdultBabyValue {
                 throw new JsonParseException("Expected Json Object, found " + JsonUtils.toString(element));
             }
             JsonObject json = element.getAsJsonObject();
-            return new AdultBabyValue(JsonUtils.getFloat(json, "baby"), JsonUtils.getFloat(json, "adult"));
+            return new AdultBabyValue(Math.round(JsonUtils.getFloat(json, "baby") * 100F) / 100F, Math.round(JsonUtils.getFloat(json, "adult") * 100F) / 100F);
+        }
+
+        @Override
+        public JsonElement serialize(AdultBabyValue src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject json = new JsonObject();
+            json.addProperty("adult", (float)src.adult);
+            json.addProperty("baby", (float)src.baby);
+            return json;
         }
     }
 
-    public void apply(BiConsumer<Integer, Integer> consumer) {
-
+    public void apply(BiConsumer<Float, Float> consumer) {
+        consumer.accept((float)baby, (float)adult);
     }
 
 }

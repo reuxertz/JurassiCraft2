@@ -11,7 +11,7 @@ public class SpawnEggInfo {
     private final int primary;
     private final int secondary;
 
-    public static class Deserializer implements JsonDeserializer<SpawnEggInfo> {
+    public static class JsonHandler implements JsonDeserializer<SpawnEggInfo>, JsonSerializer<SpawnEggInfo>{
         @Override
         public SpawnEggInfo deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             if(!json.isJsonArray()) {
@@ -22,6 +22,14 @@ public class SpawnEggInfo {
                 throw new JsonSyntaxException("Expected array size to be 2, found " + array.size());
             }
             return new SpawnEggInfo(getInt(array.get(0)), getInt(array.get(1)));
+        }
+
+        @Override
+        public JsonElement serialize(SpawnEggInfo src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonArray json = new JsonArray();
+            json.add("0x" + Integer.toHexString(src.primary));
+            json.add("0x" + Integer.toHexString(src.secondary));
+            return json;
         }
 
         private int getInt(JsonElement json) throws JsonParseException {

@@ -37,7 +37,7 @@ public class BrachiosaurusDinosaur extends Dinosaur {
         this.setMaxHerdSize(4);
         //TODO Verify L48-L50 works
         //this.setSpawn(5, BiomeDictionary.getBiomesForType(BiomeDictionary.Type.FOREST));
-        this.setBreeding(false, 4, 8, 72, true, false);
+        this.setBreeding(BirthType.EGG_LAYING, 4, 8, 72, true, false);
         String[][] recipe =     {{"", "", "", "", "skull"},
                                  {"", "", "", "neck_vertebrae","tooth"},
                                  {"tail_vertebrae","pelvis","ribcage","shoulder",""},
@@ -45,7 +45,6 @@ public class BrachiosaurusDinosaur extends Dinosaur {
         this.setRecipe(recipe);
         
         ArrayList<Biome> biomeList = new ArrayList<Biome>();
-        biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.FOREST));
-        this.setSpawn(5, biomeList.toArray(new Biome[biomeList.size()]));
+        this.setSpawn(5, BiomeDictionary.Type.FOREST);
     }
 }

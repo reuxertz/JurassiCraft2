@@ -46,7 +46,7 @@ public class AlligatorGarDinosaur extends Dinosaur
         this.setAttackBias(100.0);
         this.setMarineAnimal(true);
         this.setMovementType(MovementType.NEAR_SURFACE);
-        this.setBreeding(true, 1, 3, 15, true, false);
+        this.setBreeding(BirthType.LIVE_BIRTH, 1, 3, 15, true, false);
         this.setRandomFlock(false);
         String[][] recipe = {{"", "second_dorsal_fin", "first_dorsal_fin", ""},
                 {"caudal_fin", "spine", "pectoral_fin_bones", "skull"},
@@ -54,8 +54,7 @@ public class AlligatorGarDinosaur extends Dinosaur
         this.setRecipe(recipe);
 
         ArrayList<Biome> biomeList = new ArrayList<Biome>();
-        biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.OCEAN));
-        this.setSpawn(5, biomeList.toArray(new Biome[biomeList.size()]));
+        this.setSpawn(5, BiomeDictionary.Type.OCEAN);
     }
 
     @Override
