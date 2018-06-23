@@ -15,6 +15,7 @@ import org.apache.commons.io.IOUtils;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.block.tree.TreeType;
 import org.jurassicraft.server.food.FoodHelper;
+import org.jurassicraft.server.json.JsonUtil;
 import org.jurassicraft.server.plant.Plant;
 
 import java.io.BufferedReader;
@@ -34,39 +35,6 @@ public class JsonPlantHandler {
                 .withTreeType(JsonUtils.isString(json, "tree_type") ? TreeType.valueOf(JsonUtils.getString(json, "tree_type").toUpperCase(Locale.ENGLISH)) : null)
                 .withFoodEffects(getFoodEffects(json));
     }).create();
-
-    @SubscribeEvent
-    public static void onPlantRegistry(RegistryEvent.Register<Plant> event) {
-        Loader.instance().getIndexedModList().forEach((s, mod) -> {
-            Loader.instance().setActiveModContainer(mod);
-            CraftingHelper.findFiles(mod, "assets/" + mod.getModId() + "/jurassicraft/plants", null,
-            (root, file) -> {
-                if (!"json".equals(FilenameUtils.getExtension(file.toString()))) {
-                    return true;
-                }
-                String relative = root.relativize(file).toString();
-                ResourceLocation key = new ResourceLocation(mod.getModId(), FilenameUtils.removeExtension(relative).replaceAll("\\\\", "/"));
-                BufferedReader reader = null;
-                try {
-                    reader = Files.newBufferedReader(file);
-                    event.getRegistry().register(JsonUtils.fromJson(GSON, reader, Plant.class).setRegistryName(key));
-                }
-                catch (JsonParseException e) {
-                    JurassiCraft.getLogger().error("Parsing error loading plant: " + key, e);
-                    return false;
-                }
-                catch (IOException e) {
-                    JurassiCraft.getLogger().error("Couldn't read plant " + key + " from " + file, e);
-                    return false;
-                }
-                finally {
-                    IOUtils.closeQuietly(reader);
-                }
-                return true;
-            }, true, true);
-        });
-        Loader.instance().setActiveModContainer(Loader.instance().getIndexedModList().get(JurassiCraft.MODID));
-    }
 
     private static FoodHelper.FoodEffect[] getFoodEffects(JsonObject json) {
         if(!json.has("food_effects")) {
@@ -90,5 +58,10 @@ public class JsonPlantHandler {
         return array;
     }
 
+
+    @SubscribeEvent
+    public static void onPlantRegistry(RegistryEvent.Register<Plant> event) {
+        JsonUtil.getAllRegister(event.getRegistry(), GSON, "plants");
+    }
 
 }

@@ -38,7 +38,8 @@ public class StegosaurusDinosaur extends Dinosaur{
         this.setMaxHerdSize(15);
         this.setAttackBias(400.0);
         this.setBreeding(BirthType.EGG_LAYING, 2, 6, 48, false, true);
-
+        this.setShadowSize(0.65F);
+        this.setAnimatorClassName("org.jurassicraft.client.model.animation.entity.StegosaurusAnimator");
         this.setSpawn(5, BiomeDictionary.Type.PLAINS, BiomeDictionary.Type.SPARSE, BiomeDictionary.Type.FOREST);
     }
 }

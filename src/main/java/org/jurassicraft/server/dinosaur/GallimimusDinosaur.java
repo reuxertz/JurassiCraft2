@@ -44,6 +44,8 @@ public class GallimimusDinosaur extends Dinosaur {
                 {"", "leg_bones", "leg_bones", "arm_bones", ""},
                 {"", "foot_bones", "foot_bones", "", ""}};
         this.setRecipe(recipe);
+        this.setShadowSize(0.65F);
+        this.setAnimatorClassName("org.jurassicraft.client.model.animation.entity.GallimimusAnimator");
         this.setSpawn(25, BiomeDictionary.Type.PLAINS, BiomeDictionary.Type.DRY);
     }
 }

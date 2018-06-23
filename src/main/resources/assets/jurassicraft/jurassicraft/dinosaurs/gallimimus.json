@@ -1,0 +1,119 @@
+{
+  "name": "Gallimimus",
+  "entity": "org.jurassicraft.server.entity.dinosaur.GallimimusEntity",
+  "time_period": "cretaceous",
+  "head_cube_name": "Head Base",
+  "dinosaur_animator_class": "org.jurassicraft.client.model.animation.entity.GallimimusAnimator",
+  "shadow_size": 0.65,
+  "spawn_egg": {
+    "male": [
+      "0xd5ba86",
+      "0xd16918"
+    ],
+    "female": [
+      "0xccba94",
+      "0xab733d"
+    ]
+  },
+  "statistics": {
+    "speed": {
+      "adult": 0.3,
+      "baby": 0.2
+    },
+    "health": {
+      "adult": 30.0,
+      "baby": 5.0
+    },
+    "strength": {
+      "adult": 5.0,
+      "baby": 1.0
+    },
+    "size_x": {
+      "adult": 1.2,
+      "baby": 0.3
+    },
+    "size_y": {
+      "adult": 2.25,
+      "baby": 0.55
+    },
+    "eye_height": {
+      "adult": 2.7,
+      "baby": 0.58
+    },
+    "scale": {
+      "adult": 0.85,
+      "baby": 0.2
+    },
+    "jump_height": 3,
+    "attack_speed": 1.0,
+    "item_storage": 27
+  },
+  "traits": {
+    "type": "scared",
+    "diet": [],
+    "sleep_type": "diurnal",
+    "imprintable": true,
+    "defend_owner": false,
+    "maximum_age": 35,
+    "max_herd_size": 32,
+    "attack_bias": 200.0,
+    "can_climb": false,
+    "flock_speed": 1.4
+  },
+  "spawning": {
+    "chance": 25,
+    "biomes": [
+      "plains",
+      "dry"
+    ]
+  },
+  "breeding": {
+    "birth_type": "egg_laying",
+    "min_clutch": 2,
+    "max_clutch": 6,
+    "breeding_cooldown": 24000,
+    "breed_near_offspring": false,
+    "defend_offspring": true
+  },
+  "bones": [
+    "skull",
+    "tail_vertebrae",
+    "shoulder",
+    "ribcage",
+    "pelvis",
+    "neck_vertebrae",
+    "leg_bones",
+    "foot_bones",
+    "arm_bones"
+  ],
+  "skeleton_recipe": [
+    [
+      "",
+      "",
+      "",
+      "neck_vertebrae",
+      "skull"
+    ],
+    [
+      "tail_vertebrae",
+      "pelvis",
+      "ribcage",
+      "shoulder",
+      ""
+    ],
+    [
+      "",
+      "leg_bones",
+      "leg_bones",
+      "arm_bones",
+      ""
+    ],
+    [
+      "",
+      "foot_bones",
+      "foot_bones",
+      "",
+      ""
+    ]
+  ]
+}

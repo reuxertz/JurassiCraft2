@@ -1,14 +1,10 @@
 package org.jurassicraft.server.dinosaur;
 
-import java.util.ArrayList;
-
+import net.minecraftforge.common.BiomeDictionary;
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.entity.SleepTime;
 import org.jurassicraft.server.entity.dinosaur.DilophosaurusEntity;
 import org.jurassicraft.server.period.TimePeriod;
-
-import net.minecraft.world.biome.Biome;
-import net.minecraftforge.common.BiomeDictionary;
 
 public class DilophosaurusDinosaur extends Dinosaur {
     public DilophosaurusDinosaur() {
@@ -42,6 +38,8 @@ public class DilophosaurusDinosaur extends Dinosaur {
                                 {"tail_vertebrae", "pelvis", "ribcage","shoulder","tooth"},
                                  {"leg_bones", "leg_bones", "", "", "arm_bones"}};
         this.setRecipe(recipe);
+        this.setShadowSize(0.65F);
+        this.setAnimatorClassName("org.jurassicraft.client.model.animation.entity.DilophosaurusAnimator");
         this.setSpawn(10, BiomeDictionary.Type.FOREST);
     }
 }

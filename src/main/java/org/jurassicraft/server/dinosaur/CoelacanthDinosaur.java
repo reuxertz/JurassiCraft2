@@ -51,8 +51,8 @@ public class CoelacanthDinosaur extends Dinosaur {
                 {"caudal_fin", "spine", "pectoral_fin_bones","skull"},
                 {"anal_fin","","pelvic_fin_bones","teeth"}};
         this.setRecipe(recipe);
-        
-        ArrayList<Biome> biomeList = new ArrayList<Biome>();
+        this.setShadowSize(0F);
+        this.setAnimatorClassName("org.jurassicraft.client.model.animation.entity.CoelacanthAnimator");
         this.setSpawn(5, BiomeDictionary.Type.OCEAN);
     }
 

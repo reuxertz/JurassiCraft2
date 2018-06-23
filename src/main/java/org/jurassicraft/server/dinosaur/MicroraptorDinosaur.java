@@ -47,6 +47,8 @@ public class MicroraptorDinosaur extends Dinosaur {
                 {"", "leg_bones", "leg_bones", "arm_bones", ""},
                 {"", "foot_bones", "foot_bones", "", ""}};
         this.setRecipe(recipe);
+        this.setShadowSize(0.45F);
+        this.setAnimatorClassName("org.jurassicraft.client.model.animation.entity.MicroraptorAnimator");
         this.setSpawn(10, BiomeDictionary.Type.JUNGLE, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE);
     }
 }

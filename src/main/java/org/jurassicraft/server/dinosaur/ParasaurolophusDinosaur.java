@@ -42,6 +42,8 @@ public class ParasaurolophusDinosaur extends Dinosaur {
                 {"hind_leg_bones", "hind_leg_bones", "", "shoulder_bone", "teeth"},
                 {"", "", "", "front_leg_bones", "front_leg_bones"}};
         this.setRecipe(recipe);
+        this.setShadowSize(0.65F);
+        this.setAnimatorClassName("org.jurassicraft.client.model.animation.entity.ParasaurolophusAnimator");
         this.setSpawn(15, BiomeDictionary.Type.PLAINS, BiomeDictionary.Type.FOREST);
     }
 }

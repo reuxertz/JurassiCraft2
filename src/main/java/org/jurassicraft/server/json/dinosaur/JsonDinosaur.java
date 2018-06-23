@@ -9,11 +9,13 @@ public class JsonDinosaur extends Dinosaur {
         this.setName(properties.getName());
         this.setDinosaurClass(properties.getEntityClass());
         this.setTimePeriod(properties.getTimePeriod());
+        this.setHeadCubeName(properties.getHeadCubeName());
+        this.setAnimatorClassName(properties.getDinosaurAnimatorClassName());
 
         SpawnEggInfo male = properties.getMaleSpawnEgg();
         this.setEggColorMale(male.getPrimary(), male.getSecondary());
 
-        SpawnEggInfo female = properties.getMaleSpawnEgg();
+        SpawnEggInfo female = properties.getFemaleSpawnEgg();
         this.setEggColorFemale(female.getPrimary(), female.getSecondary());
 
         DinosaurStatistics statistics = properties.getStatistics();
@@ -37,6 +39,7 @@ public class JsonDinosaur extends Dinosaur {
         this.setMaximumAge(this.fromDays(traits.getMaxAge()));
         this.setAttackBias(traits.getAttackBias());
         this.setCanClimb(traits.isCanClimb());
+        this.setFlockSpeed((float)traits.getFlockSpeed());
 
         DinosaurSpawningInfo spawningInfo = properties.getSpawningInfo();
         this.setSpawn(spawningInfo.getChance(), spawningInfo.getBiomes());

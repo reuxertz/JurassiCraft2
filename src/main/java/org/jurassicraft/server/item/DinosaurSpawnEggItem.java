@@ -52,6 +52,11 @@ public class DinosaurSpawnEggItem extends Item implements DinosaurProvider {
         return false;
     }
 
+    @Override
+    public boolean canBeInCreativeTab(Dinosaur value) {
+        return true;
+    }
+
     public DinosaurEntity spawnDinosaur(World world, EntityPlayer player, ItemStack stack, double x, double y, double z) {
         Dinosaur dinosaur = this.getValue(stack);
         if (dinosaur != null) {

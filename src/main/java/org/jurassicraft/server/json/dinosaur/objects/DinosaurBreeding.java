@@ -26,7 +26,7 @@ public class DinosaurBreeding {
             }
             JsonObject json = element.getAsJsonObject();
             return new DinosaurBreeding(
-                    Dinosaur.BirthType.valueOf(JsonUtils.getString(json, "birth_type".toUpperCase(Locale.ENGLISH))),
+                    Dinosaur.BirthType.valueOf(JsonUtils.getString(json, "birth_type").toUpperCase(Locale.ENGLISH)),
                     JsonUtils.getInt(json, "min_clutch"),
                     JsonUtils.getInt(json, "max_clutch"),
                     JsonUtils.getInt(json, "breeding_cooldown"),

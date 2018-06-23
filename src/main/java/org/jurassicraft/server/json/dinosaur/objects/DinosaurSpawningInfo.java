@@ -27,7 +27,7 @@ public class DinosaurSpawningInfo {
             List<BiomeDictionary.Type> biomes = Lists.newArrayList();
             for(JsonElement jsonElement : JsonUtils.getJsonArray(json, "biomes")) {
                 for (BiomeDictionary.Type type : BiomeDictionary.Type.getAll()) {
-                    if(type.getName().equalsIgnoreCase(JsonUtils.getString(json, "biomes"))) {
+                    if(type.getName().equalsIgnoreCase(JsonUtils.getString(jsonElement, "biomes"))) {
                         biomes.add(type);
                         break;
                     }

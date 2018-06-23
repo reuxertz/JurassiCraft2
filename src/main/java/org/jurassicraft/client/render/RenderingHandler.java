@@ -71,6 +71,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.server.registries.JurassicraftRegisteries;
 
 import static org.jurassicraft.server.item.ItemHandler.*;
 import static org.jurassicraft.server.block.BlockHandler.*;
@@ -395,18 +396,26 @@ public enum RenderingHandler {
 
     public void preInit() {
         TabulaModelHandler.INSTANCE.addDomain(JurassiCraft.MODID);
-        registerRenderInfo(EntityHandler.BRACHIOSAURUS, new BrachiosaurusAnimator(), 1.5F);
-        registerRenderInfo(EntityHandler.COELACANTH, new CoelacanthAnimator(), 0.0F);
+//        registerRenderInfo(EntityHandler.BRACHIOSAURUS, new BrachiosaurusAnimator(), 1.5F);
+//        registerRenderInfo(EntityHandler.COELACANTH, new CoelacanthAnimator(), 0.0F);
 //        registerRenderInfo(EntityHandler.ALLIGATORGAR, new AlligatorGarAnimator(), 0.0F);
-        registerRenderInfo(EntityHandler.DILOPHOSAURUS, new DilophosaurusAnimator(), 0.65F);
-        registerRenderInfo(EntityHandler.GALLIMIMUS, new GallimimusAnimator(), 0.65F);
-        registerRenderInfo(EntityHandler.PARASAUROLOPHUS, new ParasaurolophusAnimator(), 0.65F);
-        registerRenderInfo(EntityHandler.MICRORAPTOR, new MicroraptorAnimator(), 0.45F);
-        registerRenderInfo(EntityHandler.MUSSAURUS, new MussaurusAnimator(), 0.8F);
-        registerRenderInfo(EntityHandler.TRICERATOPS, new TriceratopsAnimator(), 0.65F);
-        registerRenderInfo(EntityHandler.TYRANNOSAURUS, new TyrannosaurusAnimator(), 0.65F);
-        registerRenderInfo(EntityHandler.VELOCIRAPTOR, new VelociraptorAnimator(), 0.45F);
-        //registerRenderInfo(EntityHandler.STEGOSAURUS, new StegosaurusAnimator(), 0.65F);
+//        registerRenderInfo(EntityHandler.DILOPHOSAURUS, new DilophosaurusAnimator(), 0.65F);
+//        registerRenderInfo(EntityHandler.GALLIMIMUS, new GallimimusAnimator(), 0.65F);
+//        registerRenderInfo(EntityHandler.PARASAUROLOPHUS, new ParasaurolophusAnimator(), 0.65F);
+//        registerRenderInfo(EntityHandler.MICRORAPTOR, new MicroraptorAnimator(), 0.45F);
+//        registerRenderInfo(EntityHandler.MUSSAURUS, new MussaurusAnimator(), 0.8F);
+//        registerRenderInfo(EntityHandler.TRICERATOPS, new TriceratopsAnimator(), 0.65F);
+//        registerRenderInfo(EntityHandler.TYRANNOSAURUS, new TyrannosaurusAnimator(), 0.65F);
+//        registerRenderInfo(EntityHandler.VELOCIRAPTOR, new VelociraptorAnimator(), 0.45F);
+//        registerRenderInfo(EntityHandler.STEGOSAURUS, new StegosaurusAnimator(), 0.65F);
+
+        for(Dinosaur dinosaur : JurassicraftRegisteries.DINOSAUR_REGISTRY.getValuesCollection()) {
+            try {
+                registerRenderInfo(dinosaur, (EntityAnimator)Class.forName(dinosaur.getAnimatorClassName()).newInstance(), dinosaur.getShadowSize());
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | ClassCastException e) {
+                e.printStackTrace();
+            }
+        }
 
         RenderingRegistry.registerEntityRenderingHandler(PaddockSignEntity.class, new PaddockSignRenderer());
         RenderingRegistry.registerEntityRenderingHandler(AttractionSignEntity.class, new AttractionSignRenderer());

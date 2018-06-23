@@ -38,6 +38,7 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
 
     private String name;
     private Class<? extends DinosaurEntity> entityClass;
+    private String animatorClassName;
     private DinosaurType dinosaurType;
     private int primaryEggColorMale, primaryEggColorFemale;
     private int secondaryEggColorMale, secondaryEggColorFemale;
@@ -58,6 +59,7 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
     private String[] bones;
     private int maximumAge;
     private String headCubeName;
+    private float shadowSize;
     private MovementType movementType = MovementType.NEAR_SURFACE;
     private BirthType birthType = BirthType.EGG_LAYING;
     private boolean isImprintable;
@@ -542,6 +544,14 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
         this.bones = bones;
     }
 
+    public void setAnimatorClassName(String animatorClassName) {
+        this.animatorClassName = animatorClassName;
+    }
+
+    public String getAnimatorClassName() {
+        return animatorClassName;
+    }
+
     @Override
     public boolean equals(Object object) {
         return object instanceof Dinosaur && ((Dinosaur) object).getName().equalsIgnoreCase(this.getName());
@@ -553,6 +563,14 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
 
     public void setHeadCubeName(String headCubeName) {
         this.headCubeName = headCubeName;
+    }
+
+    public void setShadowSize(float shadowSize) {
+        this.shadowSize = shadowSize;
+    }
+
+    public float getShadowSize() {
+        return shadowSize;
     }
 
     public double[] getCubePosition(String cubeName, GrowthStage stage) {

@@ -6,6 +6,7 @@ import net.minecraft.util.JsonUtils;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.entity.SleepTime;
+import org.jurassicraft.server.json.JsonUtil;
 
 import java.lang.reflect.Type;
 import java.util.Locale;
@@ -22,6 +23,7 @@ public class DinosaurTraits {
     private final int maxHerdSize;
     private final double attackBias;
     private final boolean canClimb;
+    private final double flockSpeed;
 
     public static class JsonHandler implements JsonDeserializer<DinosaurTraits>, JsonSerializer<DinosaurTraits> {
 
@@ -40,7 +42,8 @@ public class DinosaurTraits {
                     JsonUtils.getInt(json, "maximum_age"),
                     JsonUtils.getInt(json, "max_herd_size"),
                     JsonUtils.getFloat(json, "attack_bias"),
-                    JsonUtils.getBoolean(json, "can_climb")
+                    JsonUtils.getBoolean(json, "can_climb"),
+                    JsonUtils.getFloat(json, "flock_speed")
             );
         }
 
@@ -56,6 +59,7 @@ public class DinosaurTraits {
             json.addProperty("max_herd_size", src.getMaxHerdSize());
             json.addProperty("attack_bias", src.getAttackBias());
             json.addProperty("can_climb", src.isCanClimb());
+            json.addProperty("flock_speed", (float)src.getFlockSpeed());
             return json;
         }
     }

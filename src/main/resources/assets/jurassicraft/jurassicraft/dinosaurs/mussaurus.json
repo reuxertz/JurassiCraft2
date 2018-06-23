@@ -1,0 +1,112 @@
+{
+  "name": "Mussaurus",
+  "entity": "org.jurassicraft.server.entity.dinosaur.MussaurusEntity",
+  "time_period": "triassic",
+  "head_cube_name": "Head1",
+  "dinosaur_animator_class": "org.jurassicraft.client.model.animation.entity.MussaurusAnimator",
+  "shadow_size": 0.8,
+  "spawn_egg": {
+    "male": [
+      "0x6f9845",
+      "0x211f16"
+    ],
+    "female": [
+      "0x526024",
+      "0x222611"
+    ]
+  },
+  "statistics": {
+    "speed": {
+      "adult": 0.32,
+      "baby": 0.25
+    },
+    "health": {
+      "adult": 15.0,
+      "baby": 2.0
+    },
+    "strength": {
+      "adult": 2.0,
+      "baby": 1.0
+    },
+    "size_x": {
+      "adult": 1.0,
+      "baby": 0.25
+    },
+    "size_y": {
+      "adult": 0.9,
+      "baby": 0.2
+    },
+    "eye_height": {
+      "adult": 1.2,
+      "baby": 0.25
+    },
+    "scale": {
+      "adult": 0.6,
+      "baby": 0.1
+    },
+    "jump_height": 0,
+    "attack_speed": 1.0,
+    "item_storage": 9
+  },
+  "traits": {
+    "type": "scared",
+    "diet": [],
+    "sleep_type": "diurnal",
+    "imprintable": true,
+    "defend_owner": false,
+    "maximum_age": 30,
+    "max_herd_size": 20,
+    "attack_bias": -500.0,
+    "can_climb": false,
+    "flock_speed": 1.25
+  },
+  "spawning": {
+    "chance": 15,
+    "biomes": [
+      "plains",
+      "forest"
+    ]
+  },
+  "breeding": {
+    "birth_type": "egg_laying",
+    "min_clutch": 2,
+    "max_clutch": 8,
+    "breeding_cooldown": 18000,
+    "breed_near_offspring": false,
+    "defend_offspring": true
+  },
+  "bones": [
+    "arm_bones",
+    "leg_bones",
+    "neck_vertebrae",
+    "pelvis",
+    "ribcage",
+    "shoulder",
+    "skull",
+    "tail_vertebrae",
+    "teeth"
+  ],
+  "skeleton_recipe": [
+    [
+      "",
+      "pelvis",
+      "",
+      "",
+      ""
+    ],
+    [
+      "tail_vertebrae",
+      "ribcage",
+      "shoulder",
+      "neck_vertebrae",
+      "skull"
+    ],
+    [
+      "leg_bones",
+      "leg_bones",
+      "arm_bones",
+      "arm_bones",
+      "teeth"
+    ]
+  ]
+}

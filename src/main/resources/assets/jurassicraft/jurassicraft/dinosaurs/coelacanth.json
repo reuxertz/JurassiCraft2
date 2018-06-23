@@ -1,0 +1,108 @@
+{
+  "name": "Coelacanth",
+  "entity": "org.jurassicraft.server.entity.dinosaur.CoelacanthEntity",
+  "time_period": "devonian",
+  "head_cube_name": "Head",
+  "dinosaur_animator_class": "org.jurassicraft.client.model.animation.entity.CoelacanthAnimator",
+  "shadow_size": 0.0,
+  "spawn_egg": {
+    "male": [
+      "0x707b94",
+      "0x3b4963"
+    ],
+    "female": [
+      "0x7c775e",
+      "0x4d4a3b"
+    ]
+  },
+  "statistics": {
+    "speed": {
+      "adult": 0.4,
+      "baby": 0.2
+    },
+    "health": {
+      "adult": 10.0,
+      "baby": 3.0
+    },
+    "strength": {
+      "adult": 3.0,
+      "baby": 0.5
+    },
+    "size_x": {
+      "adult": 1.0,
+      "baby": 0.1
+    },
+    "size_y": {
+      "adult": 1.0,
+      "baby": 0.1
+    },
+    "eye_height": {
+      "adult": 1.8,
+      "baby": 0.35
+    },
+    "scale": {
+      "adult": 1.8,
+      "baby": 0.22
+    },
+    "jump_height": 0,
+    "attack_speed": 1.5,
+    "item_storage": 9
+  },
+  "traits": {
+    "type": "passive",
+    "diet": [],
+    "sleep_type": "no_sleep",
+    "imprintable": false,
+    "defend_owner": false,
+    "maximum_age": 30,
+    "max_herd_size": 1,
+    "attack_bias": 100.0,
+    "can_climb": false,
+    "flock_speed": 0.8
+  },
+  "spawning": {
+    "chance": 5,
+    "biomes": [
+      "ocean"
+    ]
+  },
+  "breeding": {
+    "birth_type": "live_birth",
+    "min_clutch": 1,
+    "max_clutch": 3,
+    "breeding_cooldown": 18000,
+    "breed_near_offspring": true,
+    "defend_offspring": false
+  },
+  "bones": [
+    "anal_fin",
+    "caudal_fin",
+    "first_dorsal_fin",
+    "pectoral_fin_bones",
+    "pelvic_fin_bones",
+    "second_dorsal_fin",
+    "skull",
+    "spine",
+    "teeth"
+  ],
+  "skeleton_recipe": [
+    [
+      "",
+      "second_dorsal_fin",
+      "first_dorsal_fin",
+      ""
+    ],
+    [
+      "caudal_fin",
+      "spine",
+      "pectoral_fin_bones",
+      "skull"
+    ],
+    [
+      "anal_fin",
+      "",
+      "pelvic_fin_bones",
+      "teeth"
+    ]
+  ]
+}

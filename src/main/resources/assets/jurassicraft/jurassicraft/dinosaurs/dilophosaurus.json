@@ -1,0 +1,111 @@
+{
+  "name": "Dilophosaurus",
+  "entity": "org.jurassicraft.server.entity.dinosaur.DilophosaurusEntity",
+  "time_period": "jurassic",
+  "head_cube_name": "Head",
+  "dinosaur_animator_class": "org.jurassicraft.client.model.animation.entity.DilophosaurusAnimator",
+  "shadow_size": 0.65,
+  "spawn_egg": {
+    "male": [
+      "0x6b7834",
+      "0x2a2e30"
+    ],
+    "female": [
+      "0x62712e",
+      "0x30241c"
+    ]
+  },
+  "statistics": {
+    "speed": {
+      "adult": 0.4,
+      "baby": 0.35
+    },
+    "health": {
+      "adult": 30.0,
+      "baby": 10.0
+    },
+    "strength": {
+      "adult": 6.0,
+      "baby": 2.0
+    },
+    "size_x": {
+      "adult": 1.2,
+      "baby": 0.4
+    },
+    "size_y": {
+      "adult": 1.9,
+      "baby": 0.5
+    },
+    "eye_height": {
+      "adult": 1.8,
+      "baby": 0.35
+    },
+    "scale": {
+      "adult": 0.95,
+      "baby": 0.22
+    },
+    "jump_height": 0,
+    "attack_speed": 1.0,
+    "item_storage": 27
+  },
+  "traits": {
+    "type": "aggressive",
+    "diet": [],
+    "sleep_type": "crepuscular",
+    "imprintable": true,
+    "defend_owner": true,
+    "maximum_age": 40,
+    "max_herd_size": 10,
+    "attack_bias": 1200.0,
+    "can_climb": false,
+    "flock_speed": 0.8
+  },
+  "spawning": {
+    "chance": 10,
+    "biomes": [
+      "forest"
+    ]
+  },
+  "breeding": {
+    "birth_type": "egg_laying",
+    "min_clutch": 2,
+    "max_clutch": 4,
+    "breeding_cooldown": 28800,
+    "breed_near_offspring": false,
+    "defend_offspring": true
+  },
+  "bones": [
+    "skull",
+    "tooth",
+    "arm_bones",
+    "leg_bones",
+    "neck",
+    "pelvis",
+    "ribcage",
+    "shoulder",
+    "tail_vertebrae"
+  ],
+  "skeleton_recipe": [
+    [
+      "",
+      "",
+      "",
+      "neck",
+      "skull"
+    ],
+    [
+      "tail_vertebrae",
+      "pelvis",
+      "ribcage",
+      "shoulder",
+      "tooth"
+    ],
+    [
+      "leg_bones",
+      "leg_bones",
+      "",
+      "",
+      "arm_bones"
+    ]
+  ]
+}

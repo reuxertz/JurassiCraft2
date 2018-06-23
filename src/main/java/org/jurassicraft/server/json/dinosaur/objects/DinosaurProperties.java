@@ -4,6 +4,7 @@ import com.google.gson.*;
 import lombok.Data;
 import net.minecraft.util.JsonUtils;
 import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.json.JsonUtil;
 import org.jurassicraft.server.period.TimePeriod;
 
 import java.lang.reflect.Type;
@@ -15,6 +16,9 @@ public class DinosaurProperties {
     private final String name;
     private final Class<? extends DinosaurEntity> entityClass;
     private final TimePeriod timePeriod;
+    private final String headCubeName;
+    private final String dinosaurAnimatorClassName;
+    private final float shadowSize;
 
     private final SpawnEggInfo maleSpawnEgg;
     private final SpawnEggInfo femaleSpawnEgg;
@@ -77,8 +81,11 @@ public class DinosaurProperties {
                     JsonUtils.getString(json, "name"),
                     clazz,
                     TimePeriod.valueOf(JsonUtils.getString(json, "time_period").toUpperCase(Locale.ENGLISH)),
-                    context.deserialize(JsonUtils.getJsonObject(spawnEggInfo, "male"), SpawnEggInfo.class),
-                    context.deserialize(JsonUtils.getJsonObject(spawnEggInfo, "female"), SpawnEggInfo.class),
+                    JsonUtils.getString(json, "head_cube_name"),
+                    JsonUtils.getString(json, "dinosaur_animator_class"),
+                    JsonUtils.getFloat(json, "shadow_size"),
+                    context.deserialize(JsonUtils.getJsonArray(spawnEggInfo, "male"), SpawnEggInfo.class),
+                    context.deserialize(JsonUtils.getJsonArray(spawnEggInfo, "female"), SpawnEggInfo.class),
                     context.deserialize(JsonUtils.getJsonObject(json, "statistics"), DinosaurStatistics.class),
                     context.deserialize(JsonUtils.getJsonObject(json, "traits"), DinosaurTraits.class),
                     context.deserialize(JsonUtils.getJsonObject(json, "spawning"), DinosaurSpawningInfo.class),
@@ -93,16 +100,18 @@ public class DinosaurProperties {
             JsonObject json = new JsonObject();
             JsonObject spawnEgg = new JsonObject();
             spawnEgg.add("male", context.serialize(src.getMaleSpawnEgg()));
-            spawnEgg.add("female", context.serialize(src.getMaleSpawnEgg()));
+            spawnEgg.add("female", context.serialize(src.getFemaleSpawnEgg()));
             json.addProperty("name", src.getName());
             json.addProperty("entity", src.getEntityClass().getCanonicalName());
             json.addProperty("time_period", src.getTimePeriod().toString().toLowerCase(Locale.ENGLISH));
+            json.addProperty("head_cube_name", src.getHeadCubeName());
+            json.addProperty("dinosaur_animator_class", src.getDinosaurAnimatorClassName());
+            json.addProperty("shadow_size", src.getShadowSize());
             json.add("spawn_egg", spawnEgg);
             json.add("statistics", context.serialize(src.getStatistics()));
             json.add("traits", context.serialize(src.getTraits()));
             json.add("spawning", context.serialize(src.getSpawningInfo()));
             json.add("breeding", context.serialize(src.getBreeding()));
-
 
             JsonArray bones = new JsonArray();
             for (String bone : src.getBones()) {

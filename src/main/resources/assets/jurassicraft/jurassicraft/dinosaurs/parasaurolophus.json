@@ -1,0 +1,112 @@
+{
+  "name": "Parasaurolophus",
+  "entity": "org.jurassicraft.server.entity.dinosaur.ParasaurolophusEntity",
+  "time_period": "cretaceous",
+  "head_cube_name": "Head",
+  "dinosaur_animator_class": "org.jurassicraft.client.model.animation.entity.ParasaurolophusAnimator",
+  "shadow_size": 0.65,
+  "spawn_egg": {
+    "male": [
+      "0x9f8138",
+      "0x422306"
+    ],
+    "female": [
+      "0x5f653e",
+      "0x3c3f44"
+    ]
+  },
+  "statistics": {
+    "speed": {
+      "adult": 0.41,
+      "baby": 0.35
+    },
+    "health": {
+      "adult": 55.0,
+      "baby": 10.0
+    },
+    "strength": {
+      "adult": 8.0,
+      "baby": 2.0
+    },
+    "size_x": {
+      "adult": 2.5,
+      "baby": 0.5
+    },
+    "size_y": {
+      "adult": 3.5,
+      "baby": 0.8
+    },
+    "eye_height": {
+      "adult": 2.45,
+      "baby": 0.45
+    },
+    "scale": {
+      "adult": 1.6,
+      "baby": 0.4
+    },
+    "jump_height": 0,
+    "attack_speed": 1.0,
+    "item_storage": 36
+  },
+  "traits": {
+    "type": "passive",
+    "diet": [],
+    "sleep_type": "diurnal",
+    "imprintable": true,
+    "defend_owner": false,
+    "maximum_age": 45,
+    "max_herd_size": 32,
+    "attack_bias": -100.0,
+    "can_climb": false,
+    "flock_speed": 1.5
+  },
+  "spawning": {
+    "chance": 15,
+    "biomes": [
+      "plains",
+      "forest"
+    ]
+  },
+  "breeding": {
+    "birth_type": "egg_laying",
+    "min_clutch": 4,
+    "max_clutch": 6,
+    "breeding_cooldown": 48000,
+    "breed_near_offspring": false,
+    "defend_offspring": true
+  },
+  "bones": [
+    "ribcage",
+    "front_leg_bones",
+    "hind_leg_bones",
+    "neck_vertebrae",
+    "pelvis",
+    "shoulder_bone",
+    "skull",
+    "tail_vertebrae",
+    "teeth"
+  ],
+  "skeleton_recipe": [
+    [
+      "tail_vertebrae",
+      "pelvis",
+      "ribcage",
+      "neck_vertebrae",
+      "skull"
+    ],
+    [
+      "hind_leg_bones",
+      "hind_leg_bones",
+      "",
+      "shoulder_bone",
+      "teeth"
+    ],
+    [
+      "",
+      "",
+      "",
+      "front_leg_bones",
+      "front_leg_bones"
+    ]
+  ]
+}

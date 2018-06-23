@@ -43,8 +43,8 @@ public class BrachiosaurusDinosaur extends Dinosaur {
                                  {"tail_vertebrae","pelvis","ribcage","shoulder",""},
                                  {"","hind_leg_bones","hind_leg_bones","front_leg_bones","front_leg_bones"}};
         this.setRecipe(recipe);
-        
-        ArrayList<Biome> biomeList = new ArrayList<Biome>();
+        this.setShadowSize(1.5F);
+        this.setAnimatorClassName("org.jurassicraft.client.model.animation.entity.BrachiosaurusAnimator");
         this.setSpawn(5, BiomeDictionary.Type.FOREST);
     }
 }

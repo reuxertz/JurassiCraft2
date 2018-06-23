@@ -42,6 +42,8 @@ public class TyrannosaurusDinosaur extends Dinosaur {
                 {"", "leg_bones", "leg_bones", "arm_bones", ""},
                 {"", "foot_bones", "foot_bones", "", ""}};
         this.setRecipe(recipe);
+        this.setShadowSize(0.65F);
+        this.setAnimatorClassName("org.jurassicraft.client.model.animation.entity.TyrannosaurusAnimator");
         this.setSpawn(5, BiomeDictionary.Type.PLAINS, BiomeDictionary.Type.FOREST);
     }
 }

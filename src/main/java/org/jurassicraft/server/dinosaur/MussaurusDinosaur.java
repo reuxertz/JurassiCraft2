@@ -42,6 +42,8 @@ public class MussaurusDinosaur extends Dinosaur {
                         {"tail_vertebrae", "ribcage", "shoulder", "neck_vertebrae", "skull"},
                         {"leg_bones", "leg_bones", "arm_bones", "arm_bones", "teeth"}};
         this.setRecipe(recipe);
+        this.setShadowSize(0.8F);
+        this.setAnimatorClassName("org.jurassicraft.client.model.animation.entity.MussaurusAnimator");
         this.setSpawn(15, BiomeDictionary.Type.PLAINS, BiomeDictionary.Type.FOREST);
         
     }

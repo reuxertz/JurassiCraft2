@@ -1,0 +1,121 @@
+{
+  "name": "Microraptor",
+  "entity": "org.jurassicraft.server.entity.dinosaur.MicroraptorEntity",
+  "time_period": "cretaceous",
+  "head_cube_name": "Head",
+  "dinosaur_animator_class": "org.jurassicraft.client.model.animation.entity.MicroraptorAnimator",
+  "shadow_size": 0.45,
+  "spawn_egg": {
+    "male": [
+      "0x142146",
+      "0x101625"
+    ],
+    "female": [
+      "0x0e1423",
+      "0x121827"
+    ]
+  },
+  "statistics": {
+    "speed": {
+      "adult": 0.2,
+      "baby": 0.15
+    },
+    "health": {
+      "adult": 10.0,
+      "baby": 4.0
+    },
+    "strength": {
+      "adult": 2.0,
+      "baby": 0.5
+    },
+    "size_x": {
+      "adult": 0.7,
+      "baby": 0.2
+    },
+    "size_y": {
+      "adult": 0.6,
+      "baby": 0.25
+    },
+    "eye_height": {
+      "adult": 0.5,
+      "baby": 0.2
+    },
+    "scale": {
+      "adult": 0.4,
+      "baby": 0.15
+    },
+    "jump_height": 2,
+    "attack_speed": 1.3,
+    "item_storage": 9
+  },
+  "traits": {
+    "type": "aggressive",
+    "diet": [],
+    "sleep_type": "diurnal",
+    "imprintable": true,
+    "defend_owner": true,
+    "maximum_age": 30,
+    "max_herd_size": 16,
+    "attack_bias": 400.0,
+    "can_climb": true,
+    "flock_speed": 0.8
+  },
+  "spawning": {
+    "chance": 10,
+    "biomes": [
+      "jungle",
+      "forest",
+      "dense"
+    ]
+  },
+  "breeding": {
+    "birth_type": "egg_laying",
+    "min_clutch": 1,
+    "max_clutch": 5,
+    "breeding_cooldown": 18000,
+    "breed_near_offspring": false,
+    "defend_offspring": true
+  },
+  "bones": [
+    "tooth",
+    "arm_bones",
+    "foot_bones",
+    "leg_bones",
+    "neck_vertebrae",
+    "pelvis",
+    "ribcage",
+    "shoulder",
+    "skull",
+    "tail_vertebrae"
+  ],
+  "skeleton_recipe": [
+    [
+      "",
+      "",
+      "",
+      "neck_vertebrae",
+      "skull"
+    ],
+    [
+      "tail_vertebrae",
+      "pelvis",
+      "ribcage",
+      "shoulder",
+      "tooth"
+    ],
+    [
+      "",
+      "leg_bones",
+      "leg_bones",
+      "arm_bones",
+      ""
+    ],
+    [
+      "",
+      "foot_bones",
+      "foot_bones",
+      "",
+      ""
+    ]
+  ]
+}

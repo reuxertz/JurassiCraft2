@@ -43,6 +43,8 @@ public class TriceratopsDinosaur extends Dinosaur {
                 {"hind_leg_bones", "hind_leg_bones", "", "shoulder_bone", "tooth"},
                 {"", "", "", "front_leg_bones", "front_leg_bones"}};
         this.setRecipe(recipe);
+        this.setShadowSize(0.65F);
+        this.setAnimatorClassName("org.jurassicraft.client.model.animation.entity.TriceratopsAnimator");
         this.setSpawn(10, BiomeDictionary.Type.PLAINS, BiomeDictionary.Type.SPARSE, BiomeDictionary.Type.FOREST);
     }
 }
