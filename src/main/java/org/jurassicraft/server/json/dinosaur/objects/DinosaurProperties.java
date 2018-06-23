@@ -91,11 +91,13 @@ public class DinosaurProperties {
         @Override
         public JsonElement serialize(DinosaurProperties src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject json = new JsonObject();
+            JsonObject spawnEgg = new JsonObject();
+            spawnEgg.add("male", context.serialize(src.getMaleSpawnEgg()));
+            spawnEgg.add("female", context.serialize(src.getMaleSpawnEgg()));
             json.addProperty("name", src.getName());
             json.addProperty("entity", src.getEntityClass().getCanonicalName());
             json.addProperty("time_period", src.getTimePeriod().toString().toLowerCase(Locale.ENGLISH));
-            json.add("male", context.serialize(src.getMaleSpawnEgg()));
-            json.add("female", context.serialize(src.getMaleSpawnEgg()));
+            json.add("spawn_egg", spawnEgg);
             json.add("statistics", context.serialize(src.getStatistics()));
             json.add("traits", context.serialize(src.getTraits()));
             json.add("spawning", context.serialize(src.getSpawningInfo()));
