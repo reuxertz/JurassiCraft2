@@ -3,6 +3,7 @@ package org.jurassicraft.server.dinosaur;
 import java.util.ArrayList;
 
 import org.jurassicraft.server.entity.Diet;
+import org.jurassicraft.server.entity.DietConditionType;
 import org.jurassicraft.server.entity.dinosaur.GallimimusEntity;
 import org.jurassicraft.server.food.FoodType;
 import org.jurassicraft.server.period.TimePeriod;
@@ -28,7 +29,7 @@ public class GallimimusDinosaur extends Dinosaur {
         this.setSizeX(0.3F, 1.2F);
         this.setSizeY(0.55F, 2.25F);
         this.setStorage(27);
-        this.setDiet(Diet.HERBIVORE.get().withModule(new Diet.DietModule(FoodType.INSECT).withCondition(entity -> entity.getAgePercentage() < 25)));
+        this.setDiet(Diet.HERBIVORE.get().withModule(new Diet.DietModule(FoodType.INSECT).withCondition(DietConditionType.INFANT)));
         this.setBones("skull", "tail_vertebrae", "shoulder", "ribcage", "pelvis", "neck_vertebrae", "leg_bones", "foot_bones", "arm_bones");
         this.setHeadCubeName("Head Base");
         this.setScale(0.85F, 0.2F);
@@ -43,11 +44,6 @@ public class GallimimusDinosaur extends Dinosaur {
                 {"", "leg_bones", "leg_bones", "arm_bones", ""},
                 {"", "foot_bones", "foot_bones", "", ""}};
         this.setRecipe(recipe);
-        
-        ArrayList<Biome> biomeList = new ArrayList<Biome>();
-        biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.PLAINS));
-        biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.DRY));
-        
-        this.setSpawn(25, biomeList.toArray(new Biome[biomeList.size()]));
+        this.setSpawn(25, BiomeDictionary.Type.PLAINS, BiomeDictionary.Type.DRY);
     }
 }

@@ -42,10 +42,6 @@ public class TyrannosaurusDinosaur extends Dinosaur {
                 {"", "leg_bones", "leg_bones", "arm_bones", ""},
                 {"", "foot_bones", "foot_bones", "", ""}};
         this.setRecipe(recipe);
-        
-        ArrayList<Biome> biomeList = new ArrayList<Biome>();
-        biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.PLAINS));
-        biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.FOREST));
-        this.setSpawn(5, biomeList.toArray(new Biome[biomeList.size()]));
+        this.setSpawn(5, BiomeDictionary.Type.PLAINS, BiomeDictionary.Type.FOREST);
     }
 }

@@ -43,11 +43,6 @@ public class TriceratopsDinosaur extends Dinosaur {
                 {"hind_leg_bones", "hind_leg_bones", "", "shoulder_bone", "tooth"},
                 {"", "", "", "front_leg_bones", "front_leg_bones"}};
         this.setRecipe(recipe);
-        
-        ArrayList<Biome> biomeList = new ArrayList<Biome>();
-        biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.PLAINS));
-        biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.SPARSE));
-        biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.FOREST));
-        this.setSpawn(10, biomeList.toArray(new Biome[biomeList.size()]));
+        this.setSpawn(10, BiomeDictionary.Type.PLAINS, BiomeDictionary.Type.SPARSE, BiomeDictionary.Type.FOREST);
     }
 }

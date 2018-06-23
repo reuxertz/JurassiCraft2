@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.vecmathimpl.Matrix4d;
 import javax.vecmathimpl.Vector3d;
 
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.model.animation.PoseHandler;
@@ -88,6 +89,7 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
 
     private int spawnChance;
     private Biome[] spawnBiomes;
+    private BiomeDictionary.Type[] biomeTypes;
     private boolean canClimb;
 
     private int breedCooldown;
@@ -691,17 +693,22 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
         return this.maxHerdSize;
     }
 
-    public void setSpawn(int chance, Biome[]... allBiomes) {
+    public void setSpawn(int chance, BiomeDictionary.Type... allBiomes) {
         this.spawnChance = chance;
         List<Biome> spawnBiomes = new LinkedList<>();
-        for (Biome[] biomes : allBiomes) {
-            for (Biome biome : biomes) {
+        for (BiomeDictionary.Type type : allBiomes) {
+            for (Biome biome : BiomeDictionary.getBiomes(type)) {
                 if (!spawnBiomes.contains(biome)) {
                     spawnBiomes.add(biome);
                 }
             }
         }
         this.spawnBiomes = spawnBiomes.toArray(new Biome[0]);
+        this.biomeTypes = allBiomes;
+    }
+
+    public BiomeDictionary.Type[] getBiomeTypes() {
+        return biomeTypes;
     }
 
     public int getSpawnChance() {

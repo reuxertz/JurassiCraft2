@@ -42,11 +42,7 @@ public class MussaurusDinosaur extends Dinosaur {
                         {"tail_vertebrae", "ribcage", "shoulder", "neck_vertebrae", "skull"},
                         {"leg_bones", "leg_bones", "arm_bones", "arm_bones", "teeth"}};
         this.setRecipe(recipe);
-        
-        ArrayList<Biome> biomeList = new ArrayList<Biome>();
-        biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.PLAINS));
-        biomeList.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.FOREST));
-        this.setSpawn(15, biomeList.toArray(new Biome[biomeList.size()]));
+        this.setSpawn(15, BiomeDictionary.Type.PLAINS, BiomeDictionary.Type.FOREST);
         
     }
 }
