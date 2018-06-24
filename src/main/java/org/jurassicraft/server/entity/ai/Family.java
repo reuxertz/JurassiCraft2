@@ -7,6 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.GrowthStage;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -96,13 +97,11 @@ public class Family {
             DinosaurEntity mother = null;
             for (DinosaurEntity member : members) {
                 if (this.parents.contains(member.getUniqueID())) {
-                    if (!member.shouldSleep() && member.getBreedCooldown() <= 0 && !member.isBreeding()) {
-                        if (member.getHealth() >= member.getMaxHealth()) {
-                            if (member.isMale()) {
-                                father = member;
-                            } else {
-                                mother = member;
-                            }
+                    if (!member.shouldSleep() && member.getBreedCooldown() <= 0 && !member.isBreeding() && member.getHealth() >= member.getMaxHealth() && member.getGrowthStage() == GrowthStage.ADULT) {
+                        if (member.isMale()) {
+                            father = member;
+                        } else {
+                            mother = member;
                         }
                     }
                 }
