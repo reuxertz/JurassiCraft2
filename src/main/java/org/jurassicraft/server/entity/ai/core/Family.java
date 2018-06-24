@@ -7,6 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.GrowthStage;
 
 import java.util.*;
 
@@ -105,25 +106,16 @@ public class Family
                 }
             }
         }
-        if (entity.getRNG().nextInt(50) == 0 && (entity.getDinosaur().shouldBreedAroundOffspring() || this.children.isEmpty()))
-        {
+        if (entity.getRNG().nextInt(50) == 0 && (entity.getDinosaur().shouldBreedAroundOffspring() || this.children.isEmpty())) {
             DinosaurEntity father = null;
             DinosaurEntity mother = null;
-            for (DinosaurEntity member : members)
-            {
-                if (this.parents.contains(member.getUniqueID()))
-                {
-                    if (!member.shouldSleep() && member.getBreedCooldown() <= 0 && !member.isBreeding())
-                    {
-                        if (member.getHealth() >= member.getMaxHealth())
-                        {
-                            if (member.isMale())
-                            {
-                                father = member;
-                            } else
-                            {
-                                mother = member;
-                            }
+            for (DinosaurEntity member : members) {
+                if (this.parents.contains(member.getUniqueID())) {
+                    if (!member.shouldSleep() && member.getBreedCooldown() <= 0 && !member.isBreeding() && member.getHealth() >= member.getMaxHealth() && member.getGrowthStage() == GrowthStage.ADULT) {
+                        if (member.isMale()) {
+                            father = member;
+                        } else {
+                            mother = member;
                         }
                     }
                 }
@@ -141,6 +133,30 @@ public class Family
         }
         return false;
     }
+
+    //if (entity.getRNG().nextInt(50) == 0 && (entity.getDinosaur().shouldBreedAroundOffspring() || this.children.isEmpty())) {
+    //            DinosaurEntity father = null;
+    //            DinosaurEntity mother = null;
+    //            for (DinosaurEntity member : members) {
+    //                if (this.parents.contains(member.getUniqueID())) {
+    //                    if (!member.shouldSleep() && member.getBreedCooldown() <= 0 && !member.isBreeding() && member.getHealth() >= member.getMaxHealth() && member.getGrowthStage() == GrowthStage.ADULT) {
+    //                        if (member.isMale()) {
+    //                            father = member;
+    //                        } else {
+    //                            mother = member;
+    //                        }
+    //                    }
+    //                }
+    //            }
+    //            if (father != null && mother != null) {
+    //                if (father.getDistanceSq(mother) < 128) {
+    //                    father.getNavigator().tryMoveToEntityLiving(mother, 1.0);
+    //                    mother.getNavigator().tryMoveToEntityLiving(father, 1.0);
+    //                    father.breed(mother);
+    //                    mother.breed(father);
+    //                }
+    //            }
+    //        }
 
     private DinosaurEntity get(World world, UUID uuid)
     {
