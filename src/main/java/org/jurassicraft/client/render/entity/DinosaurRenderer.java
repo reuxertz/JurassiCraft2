@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.client.model.AnimatableModel;
 import org.jurassicraft.client.render.entity.dinosaur.DinosaurRenderInfo;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.DinosaurEntity;
@@ -71,7 +72,10 @@ public class DinosaurRenderer extends RenderLiving<DinosaurEntity> {
 
     @Override
     public void doRender(DinosaurEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
-        this.mainModel = this.renderInfo.getModel(entity.getGrowthStage());
+        AnimatableModel model = this.renderInfo.getModel(entity.getGrowthStage());
+        this.mainModel = model;
+        model.partialTicks = partialTicks;
+        model.location = this.getEntityTexture(entity);
         super.doRender(entity, x, y, z, entityYaw, partialTicks);
     }
 

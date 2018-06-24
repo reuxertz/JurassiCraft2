@@ -15,22 +15,22 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 @SideOnly(Side.CLIENT)
-public abstract class EntityAnimator<ENTITY extends EntityLivingBase & Animatable> implements ITabulaModelAnimator<ENTITY> {
-    protected EnumMap<GrowthStage, Map<ENTITY, JabelarAnimationHandler<ENTITY>>> animationHandlers = new EnumMap<>(GrowthStage.class);
+public abstract class EntityAnimator<E extends EntityLivingBase & Animatable> implements ITabulaModelAnimator<E> {
+    protected EnumMap<GrowthStage, Map<E, JabelarAnimationHandler<E>>> animationHandlers = new EnumMap<>(GrowthStage.class);
 
-    private JabelarAnimationHandler<ENTITY> getAnimationHelper(ENTITY entity, AnimatableModel model, boolean useInertialTweens) {
+    private JabelarAnimationHandler<E> getAnimationHelper(E entity, AnimatableModel model, boolean useInertialTweens) {
         GrowthStage growth = entity.getGrowthStage();
-        Map<ENTITY, JabelarAnimationHandler<ENTITY>> growthToRender = this.animationHandlers.get(growth);
+        Map<E, JabelarAnimationHandler<E>> growthToRender = this.animationHandlers.get(growth);
 
         if (growthToRender == null) {
             growthToRender = new WeakHashMap<>();
             this.animationHandlers.put(growth, growthToRender);
         }
 
-        JabelarAnimationHandler<ENTITY> render = growthToRender.get(entity);
+        JabelarAnimationHandler<E> render = growthToRender.get(entity);
 
         if (render == null) {
-            render = entity.<ENTITY>getPoseHandler().createAnimationHandler(entity, model, growth, useInertialTweens);
+            render = entity.<E>getPoseHandler().createAnimationHandler(entity, model, growth, useInertialTweens);
             growthToRender.put(entity, render);
         }
 
@@ -38,7 +38,7 @@ public abstract class EntityAnimator<ENTITY extends EntityLivingBase & Animatabl
     }
 
     @Override
-    public final void setRotationAngles(TabulaModel model, ENTITY entity, float limbSwing, float limbSwingAmount, float ticks, float rotationYaw, float rotationPitch, float scale) {
+    public final void setRotationAngles(TabulaModel model, E entity, float limbSwing, float limbSwingAmount, float ticks, float rotationYaw, float rotationPitch, float scale) {
         this.getAnimationHelper(entity, (AnimatableModel) model, entity.shouldUseInertia()).performAnimations(entity, limbSwing, limbSwingAmount, ticks);
         for(int i = 0;true;i++) {
             AdvancedModelRenderer cube = model.getCube("neck" + i++);
@@ -50,13 +50,13 @@ public abstract class EntityAnimator<ENTITY extends EntityLivingBase & Animatabl
                 cube.scaleX *= j;
                 cube.scaleY *= j;
                 cube.scaleZ *= j;
-
+            } else {
+                break;
             }
-            break;
         }
         this.performAnimations((AnimatableModel) model, entity, limbSwing, limbSwingAmount, ticks, rotationYaw, rotationPitch, scale);
     }
 
-    protected void performAnimations(AnimatableModel parModel, ENTITY entity, float limbSwing, float limbSwingAmount, float ticks, float rotationYaw, float rotationPitch, float scale) {
+    protected void performAnimations(AnimatableModel parModel, E entity, float limbSwing, float limbSwingAmount, float ticks, float rotationYaw, float rotationPitch, float scale) {
     }
 }

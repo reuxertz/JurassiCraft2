@@ -161,6 +161,9 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     @SideOnly(Side.CLIENT)
     public ChainBuffer tailBuffer;
 
+    @SideOnly(Side.CLIENT)
+    private boolean forceRender;
+
     public Herd herd;
     public Family family;
     public Set<Relationship> relationships = new HashSet<>();
@@ -193,6 +196,9 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     private final LegSolver legSolver;
 
     private boolean isSkeleton;
+
+    private UUID inMouthEntity; //The entity of whose mouth this is inside
+    private UUID entityInMouth; //The entity inside this entities mouth
 
     public DinosaurEntity(World world) {
         super(world);
@@ -283,6 +289,11 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         this.ignoreFrustumCheck = true;
         this.setSkeleton(false);
                 
+    }
+
+    public void pickUpEntityInMouth(DinosaurEntity entity) {
+        entity.inMouthEntity = this.getUniqueID();
+        this.entityInMouth = entity.getUniqueID();
     }
 
     @Nullable
@@ -691,7 +702,16 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-
+        if(this.inMouthEntity != null) {
+            List<Entity> eList = this.world.getEntities(DinosaurEntity.class, e -> this.inMouthEntity.equals(e.getUniqueID()));
+            if(!eList.isEmpty()) {
+                Entity e = eList.get(0);
+                this.setPosition(e.posX, e.posY, e.posZ);
+                this.setRotation(0, 0);
+                this.setRotationYawHead(0);
+                this.setAnimation(EntityAnimation.SLEEPING.get());
+            }
+        }
         if (this.breedCooldown > 0) {
             this.breedCooldown--;
         }
@@ -1106,6 +1126,16 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         this.tailBuffer.calculateChainSwingBuffer(68.0F, 3, 7.0F, this);
     }
 
+    @Nullable
+    public UUID getEntityInMouth() {
+        return entityInMouth;
+    }
+
+    @Nullable
+    public UUID getInMouthEntity() {
+        return inMouthEntity;
+    }
+
     @Override
     public boolean isMovementBlocked() {
         return this.isCarcass() || this.isSleeping() || (this.animation != null && EntityAnimation.getAnimation(this.animation).doesBlockMovement());
@@ -1457,6 +1487,12 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
 
         nbt.setInteger("TranquilizerTicks", tranquilizerTicks);
         nbt.setInteger("TicksUntilDeath", ticksUntilDeath);
+        if(entityInMouth != null) {
+            nbt.setUniqueId("EntityInMouth", entityInMouth);
+        }
+        if(inMouthEntity != null) {
+            nbt.setUniqueId("InMouthEntity", inMouthEntity);
+        }
         return nbt;
     }
 
@@ -1516,9 +1552,11 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
             }
         }
         
-        tranquilizerTicks = nbt.getInteger("TranquilizerTicks");
-        ticksUntilDeath = nbt.getInteger("TicksUntilDeath");
-        
+        this.tranquilizerTicks = nbt.getInteger("TranquilizerTicks");
+        this.ticksUntilDeath = nbt.getInteger("TicksUntilDeath");
+        this.entityInMouth = nbt.hasUniqueId("EntityInMouth") ? nbt.getUniqueId("EntityInMouth") : null;
+        this.inMouthEntity = nbt.hasUniqueId("InMouthEntity") ? nbt.getUniqueId("InMouthEntity") : null;
+
         this.updateAttributes();
         this.updateBounds();
 
@@ -1756,6 +1794,20 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
 
     public EntityAIBase getAttackAI() {
         return new DinosaurAttackMeleeEntityAI(this, this.dinosaur.getAttackSpeed(), false);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void forceRender() {
+        this.forceRender = true;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public boolean shouldForceRender() {
+        if(this.forceRender) {
+            this.forceRender = false;
+            return true;
+        }
+        return false;
     }
 
     public List<Class<? extends EntityLivingBase>> getAttackTargets() {

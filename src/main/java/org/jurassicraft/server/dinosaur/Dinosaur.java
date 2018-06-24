@@ -103,6 +103,8 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
 
     private String[][] recipe;
 
+    private String jawCubeName = "Lower Teeth Front"; //TODO: make json based
+
     public static Matrix4d getParentRotationMatrix(TabulaModelContainer model, TabulaCubeContainer cube, boolean includeParents, boolean ignoreSelf, float rot) {
         List<TabulaCubeContainer> parentCubes = new ArrayList<>();
 
@@ -534,6 +536,14 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
 
     public void setSleepTime(SleepTime sleepTime) {
         this.sleepTime = sleepTime;
+    }
+
+    public void setJawCubeName(String jawCubeName) {
+        this.jawCubeName = jawCubeName;
+    }
+
+    public String getJawCubeName() {
+        return jawCubeName;
     }
 
     public String[] getBones() {

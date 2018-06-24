@@ -1,12 +1,14 @@
 package org.jurassicraft.server.entity.dinosaur;
 
 import net.ilexiconn.llibrary.server.animation.Animation;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import org.jurassicraft.client.model.animation.EntityAnimation;
 import org.jurassicraft.client.sound.SoundHandler;
@@ -39,6 +41,17 @@ public class VelociraptorEntity extends DinosaurEntity {
         this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
     }
 
+    @Override
+    public void onUpdate() {
+        super.onUpdate();
+        if(this.getEntityInMouth() == null) {
+            for(Entity entity: this.world.getEntitiesWithinAABBExcludingEntity(this, new AxisAlignedBB(this.getPosition().add(-10,-10,-10), this.getPosition().add(10,10,10)))) {
+                if(entity instanceof MicroraptorEntity) {
+                    this.pickUpEntityInMouth((MicroraptorEntity)entity);
+                }
+            }
+        }
+    }
 
     @Override
     public SoundEvent getSoundForAnimation(Animation animation) {

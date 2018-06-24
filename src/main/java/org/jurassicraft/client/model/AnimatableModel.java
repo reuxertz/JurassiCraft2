@@ -4,16 +4,23 @@ import net.ilexiconn.llibrary.client.model.tabula.ITabulaModelAnimator;
 import net.ilexiconn.llibrary.client.model.tabula.container.TabulaModelContainer;
 import net.ilexiconn.llibrary.client.model.tools.AdvancedModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.server.api.Animatable;
+import org.jurassicraft.server.entity.DinosaurEntity;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 @SideOnly(Side.CLIENT)
 public class AnimatableModel extends FixedTabulaModel {
+
+    public float partialTicks;
+    public ResourceLocation location;
+
     public AnimatableModel(TabulaModelContainer model) {
         this(model, null);
     }
@@ -33,6 +40,29 @@ public class AnimatableModel extends FixedTabulaModel {
         }
 
         super.setRotationAngles(limbSwing, limbSwingAmount, rotation, rotationYaw, rotationPitch, partialTicks, entity);
+    }
+
+    @Override
+    public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+        if(entityIn instanceof DinosaurEntity) {
+            UUID inMouthEntity = ((DinosaurEntity) entityIn).getInMouthEntity();
+            UUID entityInMouth = ((DinosaurEntity) entityIn).getEntityInMouth();
+            if(entityInMouth != null) {
+                AdvancedModelRenderer box = this.getCube(((DinosaurEntity)entityIn).getDinosaur().getJawCubeName());
+                if(box instanceof FixedModelRenderer) {
+                    FixedModelRenderer renderer = (FixedModelRenderer)box;
+                    for (DinosaurEntity entity : entityIn.world.getEntities(DinosaurEntity.class, e -> entityInMouth.equals(e.getUniqueID()))) {
+                        renderer.entityInJaw = entity;
+                        renderer.partialTicks = partialTicks;
+                        renderer.location = location;
+                        break;
+                    }
+                }
+            } else if(inMouthEntity != null && !entityIn.world.getEntities(DinosaurEntity.class, e -> inMouthEntity.equals(e.getUniqueID())).isEmpty() && !((DinosaurEntity)entityIn).shouldForceRender()) {
+                return;
+            }
+        }
+        super.render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
     }
 
     public String[] getCubeIdentifierArray() {

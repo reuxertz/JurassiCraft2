@@ -65,7 +65,7 @@ public class DinosaurRenderInfo implements IRenderFactory<DinosaurEntity> {
         }
     }
 
-    public ModelBase getModel(GrowthStage stage) {
+    public AnimatableModel getModel(GrowthStage stage) {
         switch (stage) {
             case INFANT:
                 return this.modelInfant;
