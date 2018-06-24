@@ -26,7 +26,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 public class JurassiCraft {
     public static final String MODID = "jurassicraft";
     public static final String NAME = "JurassiCraft";
-    public static final String VERSION = "2.1.7";
+    public static final String VERSION = "2.1.8";
 
     public static final String LLIBRARY_VERSION = "1.7.7";
     @SidedProxy(serverSide = "org.jurassicraft.server.proxy.ServerProxy", clientSide = "org.jurassicraft.client.proxy.ClientProxy")
