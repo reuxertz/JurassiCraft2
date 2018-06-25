@@ -3,7 +3,7 @@
   "entity": "org.jurassicraft.server.entity.dinosaur.VelociraptorEntity",
   "time_period": "cretaceous",
   "head_cube_name": "Head",
-  "dinosaur_animator_class": "org.jurassicraft.client.model.animation.entity.VelociraptorAnimator",
+  "model_location": "jurassicraft:jurassicraft/models/velociraptor",
   "shadow_size": 1.5,
   "spawn_egg": {
     "male": [

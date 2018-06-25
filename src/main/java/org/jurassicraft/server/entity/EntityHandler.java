@@ -71,21 +71,5 @@ public class EntityHandler {
         ResourceLocation registryName = new ResourceLocation("jurassicraft:entities." + formattedName);
         EntityRegistry.registerModEntity(registryName, entity, "jurassicraft." + formattedName, entityId++, JurassiCraft.INSTANCE, 1024, 1, true, primary, secondary);
     }
-    
-//    @SubscribeEvent
-//    public static void onDinoRegistry(RegistryEvent.Register<Dinosaur> event) {
-//        event.getRegistry().registerAll(
-//                VELOCIRAPTOR.setRegistryName("velociraptor"),
-//                COELACANTH.setRegistryName("coelacanth"),
-//                MICRORAPTOR.setRegistryName("microraptor"),
-//                BRACHIOSAURUS.setRegistryName("brachiosaurus"),
-//                MUSSAURUS.setRegistryName("mussaurus"),
-//                DILOPHOSAURUS.setRegistryName("dilophosaurus"),
-//                GALLIMIMUS.setRegistryName("gallimimus"),
-//                PARASAUROLOPHUS.setRegistryName("parasaurolophus"),
-//                TRICERATOPS.setRegistryName("triceratops"),
-//                TYRANNOSAURUS.setRegistryName("tyrannosaurus")
-//        );
-//    }
 
 }

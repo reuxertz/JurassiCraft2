@@ -1,10 +1,9 @@
 package org.jurassicraft.server.dinosaur;
 
-import net.minecraft.world.biome.Biome;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.BiomeDictionary;
 
-import java.util.ArrayList;
-
+import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.entity.SleepTime;
 import org.jurassicraft.server.entity.dinosaur.VelociraptorEntity;
@@ -48,7 +47,8 @@ public class VelociraptorDinosaur extends Dinosaur {
                 {"foot_bones", "foot_bones", "", ""}};
         this.setRecipe(recipe);
         this.setShadowSize(1.5F);
-        this.setAnimatorClassName("org.jurassicraft.client.model.animation.entity.VelociraptorAnimator");
+//        this.setAnimatorClassName("org.jurassicraft.client.model.animation.entity.VelociraptorAnimator");
+        this.setModelHandlerLocation(new ResourceLocation(JurassiCraft.MODID, "jurassicraft/models/velociraptor"));
         this.setSpawn(10, BiomeDictionary.Type.JUNGLE, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE);
     }
 }

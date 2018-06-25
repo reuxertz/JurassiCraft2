@@ -4,7 +4,6 @@ import com.google.gson.*;
 import lombok.Data;
 import net.minecraft.util.JsonUtils;
 import org.jurassicraft.server.entity.DinosaurEntity;
-import org.jurassicraft.server.json.JsonUtil;
 import org.jurassicraft.server.period.TimePeriod;
 
 import java.lang.reflect.Type;
@@ -17,7 +16,9 @@ public class DinosaurProperties {
     private final Class<? extends DinosaurEntity> entityClass;
     private final TimePeriod timePeriod;
     private final String headCubeName;
+    @Deprecated
     private final String dinosaurAnimatorClassName;
+    private final String dinosaurModelLocation;
     private final float shadowSize;
 
     private final SpawnEggInfo maleSpawnEgg;
@@ -82,7 +83,8 @@ public class DinosaurProperties {
                     clazz,
                     TimePeriod.valueOf(JsonUtils.getString(json, "time_period").toUpperCase(Locale.ENGLISH)),
                     JsonUtils.getString(json, "head_cube_name"),
-                    JsonUtils.getString(json, "dinosaur_animator_class"),
+                    JsonUtils.isString(json, "dinosaur_animator_class") ? JsonUtils.getString(json, "dinosaur_animator_class") : null,
+                    JsonUtils.isString(json, "model_location") ? JsonUtils.getString(json, "model_location") : null,
                     JsonUtils.getFloat(json, "shadow_size"),
                     context.deserialize(JsonUtils.getJsonArray(spawnEggInfo, "male"), SpawnEggInfo.class),
                     context.deserialize(JsonUtils.getJsonArray(spawnEggInfo, "female"), SpawnEggInfo.class),
@@ -105,7 +107,11 @@ public class DinosaurProperties {
             json.addProperty("entity", src.getEntityClass().getCanonicalName());
             json.addProperty("time_period", src.getTimePeriod().toString().toLowerCase(Locale.ENGLISH));
             json.addProperty("head_cube_name", src.getHeadCubeName());
-            json.addProperty("dinosaur_animator_class", src.getDinosaurAnimatorClassName());
+            if(src.getDinosaurModelLocation() != null && !src.getDinosaurModelLocation().isEmpty()) {
+                json.addProperty("model_location", src.getDinosaurModelLocation());
+            } else {
+                json.addProperty("dinosaur_animator_class", src.getDinosaurAnimatorClassName());
+            }
             json.addProperty("shadow_size", src.getShadowSize());
             json.add("spawn_egg", spawnEgg);
             json.add("statistics", context.serialize(src.getStatistics()));

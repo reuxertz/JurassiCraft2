@@ -38,7 +38,9 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
 
     private String name;
     private Class<? extends DinosaurEntity> entityClass;
+    @Deprecated
     private String animatorClassName;
+    private ResourceLocation modelHandlerLocation;
     private DinosaurType dinosaurType;
     private int primaryEggColorMale, primaryEggColorFemale;
     private int secondaryEggColorMale, secondaryEggColorFemale;
@@ -560,6 +562,14 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
 
     public String getAnimatorClassName() {
         return animatorClassName;
+    }
+
+    public ResourceLocation getModelHandlerLocation() {
+        return modelHandlerLocation;
+    }
+
+    public void setModelHandlerLocation(ResourceLocation modelHandlerLocation) {
+        this.modelHandlerLocation = modelHandlerLocation;
     }
 
     @Override

@@ -1,0 +1,94 @@
+{
+  "head_cuboid": "Head",
+  "animator": {
+    "global_speed": 1.0,
+    "global_degree": 1.0,
+    "constants": [{
+      "key": "tail_parts",
+      "names": ["tail6", "tail5", "tail4", "tail3", "tail2", "tail1"]
+    },
+      {
+        "key": "body_parts",
+        "names": ["body3", "body2", "body1", "neck1", "neck2", "neck3", "neck4", "Head"]
+      },
+      {
+        "key": "left_arm_parts",
+        "names": ["Left hand", "Left forearm", "Left arm"]
+      },
+      {
+        "key": "right_arm_parts",
+        "names": ["Right hand", "Right forearm", "Right arm"]
+      }
+    ],
+    "animations": [{
+      "type": "limb_swing",
+      "bob": [{
+        "names": ["body3", "Right thigh", "Left thigh"],
+        "speed": 0.5,
+        "degree": 1.0
+      }],
+      "chain_wave": [{
+        "constant": "tail_parts",
+        "speed": 0.5,
+        "degree": 0.05,
+        "root_offset": 1
+      },
+        {
+          "constant": "body_parts",
+          "speed": 0.5,
+          "degree": 0.025,
+          "root_offset": 3
+        }
+      ],
+      "chain_swing": [{
+        "constant": "tail_parts",
+        "speed": 0.5,
+        "degree": 0.1,
+        "root_offset": 2
+      }]
+    },
+      {
+        "type": "idle_tick",
+        "chain_wave": [{
+          "constant": "tail_parts",
+          "speed": 0.1,
+          "degree": 0.05,
+          "root_offset": 2
+        },
+          {
+            "constant": "body_parts",
+            "speed": 0.1,
+            "degree": -0.03,
+            "root_offset": 5
+          },
+          {
+            "constant": "right_arm_parts",
+            "speed": 0.1,
+            "degree": -0.1,
+            "root_offset": 4
+          },
+          {
+            "constant": "left_arm_parts",
+            "speed": 0.1,
+            "degree": -0.1,
+            "root_offset": 4
+          }
+        ]
+      },
+      {
+        "type": "look",
+        "look": [{
+          "names": ["neck1", "Head"],
+          "divisor": 2.0
+        }]
+      },
+      {
+        "type": "tail_buffer",
+        "buffer_swing": [{
+          "constant": "tail_parts"
+        }]
+      }
+    ]
+  },
+  "shadow_size": 0.45
+}

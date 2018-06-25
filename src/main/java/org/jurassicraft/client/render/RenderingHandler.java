@@ -1,55 +1,6 @@
 package org.jurassicraft.client.render;
 
-import java.util.Locale;
-import java.util.Map;
-
-import net.minecraft.item.ItemAir;
-import net.minecraft.item.ItemBlock;
-import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.client.model.MultipartStateMap;
-import org.jurassicraft.client.model.animation.EntityAnimator;
-import org.jurassicraft.client.model.animation.entity.BrachiosaurusAnimator;
-import org.jurassicraft.client.model.animation.entity.CoelacanthAnimator;
-import org.jurassicraft.client.model.animation.entity.DilophosaurusAnimator;
-import org.jurassicraft.client.model.animation.entity.GallimimusAnimator;
-import org.jurassicraft.client.model.animation.entity.MicroraptorAnimator;
-import org.jurassicraft.client.model.animation.entity.MussaurusAnimator;
-import org.jurassicraft.client.model.animation.entity.ParasaurolophusAnimator;
-import org.jurassicraft.client.model.animation.entity.TriceratopsAnimator;
-import org.jurassicraft.client.model.animation.entity.TyrannosaurusAnimator;
-import org.jurassicraft.client.model.animation.entity.VelociraptorAnimator;
-import org.jurassicraft.client.render.block.*;
-import org.jurassicraft.client.render.entity.AttractionSignRenderer;
-import org.jurassicraft.client.render.entity.DinosaurEggRenderer;
-import org.jurassicraft.client.render.entity.FordExplorerRenderer;
-import org.jurassicraft.client.render.entity.GoatRenderer;
-import org.jurassicraft.client.render.entity.HelicopterRenderer;
-import org.jurassicraft.client.render.entity.JeepWranglerRenderer;
-import org.jurassicraft.client.render.entity.MuralRenderer;
-import org.jurassicraft.client.render.entity.NullRenderer;
-import org.jurassicraft.client.render.entity.PaddockSignRenderer;
-import org.jurassicraft.client.render.entity.VenomRenderer;
-import org.jurassicraft.client.render.entity.dinosaur.DinosaurRenderInfo;
-import org.jurassicraft.server.block.*;
-import org.jurassicraft.server.block.entity.*;
-import org.jurassicraft.server.block.plant.AncientCoralBlock;
-import org.jurassicraft.server.block.tree.AncientLeavesBlock;
-import org.jurassicraft.server.block.tree.TreeType;
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.*;
-import org.jurassicraft.server.entity.item.AttractionSignEntity;
-import org.jurassicraft.server.entity.item.DinosaurEggEntity;
-import org.jurassicraft.server.entity.item.MuralEntity;
-import org.jurassicraft.server.entity.item.PaddockSignEntity;
-import org.jurassicraft.server.entity.vehicle.FordExplorerEntity;
-import org.jurassicraft.server.entity.vehicle.HelicopterBaseEntity;
-import org.jurassicraft.server.entity.vehicle.JeepWranglerEntity;
-import org.jurassicraft.server.item.*;
-import org.jurassicraft.server.plant.Plant;
-import org.jurassicraft.server.plant.PlantHandler;
-
 import com.google.common.collect.Maps;
-
 import net.ilexiconn.llibrary.client.model.tabula.TabulaModelHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
@@ -61,6 +12,8 @@ import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.ColorizerFoliage;
 import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -71,10 +24,42 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.client.model.MultipartStateMap;
+import org.jurassicraft.client.model.animation.EntityAnimator;
+import org.jurassicraft.client.render.block.*;
+import org.jurassicraft.client.render.entity.*;
+import org.jurassicraft.client.render.entity.dinosaur.DinosaurRenderInfo;
+import org.jurassicraft.server.block.BlockHandler;
+import org.jurassicraft.server.block.FossilizedTrackwayBlock;
+import org.jurassicraft.server.block.NestFossilBlock;
+import org.jurassicraft.server.block.TourRailBlock;
+import org.jurassicraft.server.block.entity.*;
+import org.jurassicraft.server.block.plant.AncientCoralBlock;
+import org.jurassicraft.server.block.tree.AncientLeavesBlock;
+import org.jurassicraft.server.block.tree.TreeType;
+import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.GoatEntity;
+import org.jurassicraft.server.entity.TranquilizerDartEntity;
+import org.jurassicraft.server.entity.VenomEntity;
+import org.jurassicraft.server.entity.item.AttractionSignEntity;
+import org.jurassicraft.server.entity.item.DinosaurEggEntity;
+import org.jurassicraft.server.entity.item.MuralEntity;
+import org.jurassicraft.server.entity.item.PaddockSignEntity;
+import org.jurassicraft.server.entity.vehicle.FordExplorerEntity;
+import org.jurassicraft.server.entity.vehicle.HelicopterBaseEntity;
+import org.jurassicraft.server.entity.vehicle.JeepWranglerEntity;
+import org.jurassicraft.server.item.*;
+import org.jurassicraft.server.json.dinosaur.model.objects.JsonDinosaurModel;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
 
-import static org.jurassicraft.server.item.ItemHandler.*;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Locale;
+import java.util.Map;
+
 import static org.jurassicraft.server.block.BlockHandler.*;
+import static org.jurassicraft.server.item.ItemHandler.*;
 
 @SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber(modid=JurassiCraft.MODID, value = Side.CLIENT)
@@ -410,6 +395,18 @@ public enum RenderingHandler {
 //        registerRenderInfo(EntityHandler.STEGOSAURUS, new StegosaurusAnimator(), 0.65F);
 
         for(Dinosaur dinosaur : JurassicraftRegisteries.DINOSAUR_REGISTRY.getValuesCollection()) {
+            ResourceLocation location = dinosaur.getModelHandlerLocation();
+            if(location != null) {
+                try {
+                    JsonDinosaurModel model = JsonDinosaurModel.GSON.fromJson(new InputStreamReader(Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(location.getResourceDomain(), location.getResourcePath() + ".json")).getInputStream()), JsonDinosaurModel.class);
+                    //TODO: register model stuff here
+                    System.out.println("Registered " + dinosaur.getRegistryName() + " json animator");
+                    registerRenderInfo(dinosaur, model.getAnimator(), model.getShadowSize());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                continue;
+            }
             try {
                 registerRenderInfo(dinosaur, (EntityAnimator)Class.forName(dinosaur.getAnimatorClassName()).newInstance(), dinosaur.getShadowSize());
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | ClassCastException e) {
