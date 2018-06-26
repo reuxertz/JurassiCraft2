@@ -164,7 +164,6 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
         super.readFromNBT(compound);
 
         NBTTagList itemList = compound.getTagList("Items", 10);
-        ItemStack[] slots = new ItemStack[this.slots.size()];
 
         for (int i = 0; i < itemList.tagCount(); ++i) {
             NBTTagCompound item = itemList.getCompoundTagAt(i);
@@ -172,41 +171,38 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
 
             byte slot = item.getByte("Slot");
 
-            if (slot >= 0 && slot < slots.length) {
-                slots[slot] = stack;
+            if (slot >= 0 && slot < slots.size()) {
+                slots.set(slot, stack);
             }
         }
 
         if (compound.hasKey("CustomName", 8)) {
             this.customName = compound.getString("CustomName");
         }
-        
-        this.slots = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         compound = super.writeToNBT(compound);
-        
 
         NBTTagList itemList = new NBTTagList();
 
         for (int slot = 0; slot < this.getSizeInventory(); ++slot) {
-            if (!this.slots.isEmpty()) {
-                NBTTagCompound itemTag = new NBTTagCompound();
+            if (!this.slots.get(slot).isEmpty()) {
+                NBTTagCompound itemTag = this.slots.get(slot).serializeNBT();
                 itemTag.setByte("Slot", (byte) slot);
-                super.writeToNBT(compound);
                 itemList.appendTag(itemTag);
             }
         }
         compound.setTag("Items", itemList);
-        
+
         if (this.hasCustomName()) {
             compound.setString("CustomName", this.customName);
         }
-        
+
         return compound;
     }
+
 
     @Override
     public void update() {
