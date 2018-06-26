@@ -3,12 +3,11 @@ package org.jurassicraft.server.json.dinosaur.objects;
 import com.google.gson.*;
 import net.minecraft.util.JsonUtils;
 import org.jurassicraft.server.entity.Diet;
-import org.jurassicraft.server.entity.DietConditionType;
+import org.jurassicraft.server.entity.DietCondition;
 import org.jurassicraft.server.food.FoodType;
 
 import java.lang.reflect.Type;
 import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
 
 public class JsonDiet implements JsonDeserializer<Diet>, JsonSerializer<Diet> {
@@ -29,7 +28,7 @@ public class JsonDiet implements JsonDeserializer<Diet>, JsonSerializer<Diet> {
                     if(!conditionElement.isJsonPrimitive() || !conditionElement.getAsJsonPrimitive().isString()) {
                         throw new JsonParseException("Expected Json Object, found " + JsonUtils.toString(conditionElement));
                     }
-                    module.withCondition(DietConditionType.valueOf(conditionElement.getAsString().toUpperCase(Locale.ENGLISH)));
+                    module.withCondition(DietCondition.getCondition(conditionElement.getAsString().toUpperCase(Locale.ENGLISH)));
                 }
             }
             diet.withModule(module);
@@ -43,14 +42,15 @@ public class JsonDiet implements JsonDeserializer<Diet>, JsonSerializer<Diet> {
         for (Diet.DietModule module : src.getModules()) {
             JsonObject json = new JsonObject();
             json.addProperty("type", module.getFoodType().toString().toLowerCase(Locale.ENGLISH));
-            Collection<DietConditionType> typeList = module.getTypes();
+            Collection<DietCondition> typeList = module.getTypes();
             if(!typeList.isEmpty()) {
                 JsonArray conditions = new JsonArray();
-                for (DietConditionType dietConditionType : typeList) {
-                    conditions.add(dietConditionType.toString().toLowerCase(Locale.ENGLISH));
+                for (DietCondition dietConditionType : typeList) {
+                    conditions.add(dietConditionType.getName().toLowerCase(Locale.ENGLISH));
                 }
                 json.add("conditions", conditions);
             }
+            array.add(json);
         }
         return array;
     }

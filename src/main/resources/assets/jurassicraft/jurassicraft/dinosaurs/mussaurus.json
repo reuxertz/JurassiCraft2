@@ -50,7 +50,11 @@
   },
   "traits": {
     "type": "scared",
-    "diet": [],
+    "diet": [
+      {
+        "type": "plant"
+      }
+    ],
     "sleep_type": "diurnal",
     "imprintable": true,
     "defend_owner": false,

@@ -9,15 +9,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class Diet {
     public static final Supplier<Diet> CARNIVORE = () -> new Diet()
             .withModule(new DietModule(FoodType.MEAT))
             .withModule(new DietModule(FoodType.INSECT)
-                    .withCondition(DietConditionType.INFANT));
+                    .withCondition(DietCondition.INFANT));
     public static final Supplier<Diet> HERBIVORE = () -> new Diet()
             .withModule(new DietModule(FoodType.PLANT));
     public static final Supplier<Diet> INSECTIVORE = () -> new Diet()
@@ -46,14 +44,14 @@ public class Diet {
     }
 
     public static class DietModule {
-        private List<DietConditionType> conditions = Lists.newArrayList();
+        private List<DietCondition> conditions = Lists.newArrayList();
         private FoodType type;
 
         public DietModule(FoodType type) {
             this.type = type;
         }
 
-        public DietModule withCondition(DietConditionType condition) {
+        public DietModule withCondition(DietCondition condition) {
             this.conditions.add(condition);
             return this;
         }
@@ -63,7 +61,7 @@ public class Diet {
         }
 
         public boolean runConditions(DinosaurEntity entity) {
-            for (DietConditionType condition : conditions) {
+            for (DietCondition condition : conditions) {
                 if(!condition.apply(entity)) {
                     return false;
                 }
@@ -71,7 +69,7 @@ public class Diet {
             return true;
         }
 
-        public Collection<DietConditionType> getTypes() {
+        public Collection<DietCondition> getTypes() {
             return Collections.unmodifiableCollection(this.conditions);
         }
 

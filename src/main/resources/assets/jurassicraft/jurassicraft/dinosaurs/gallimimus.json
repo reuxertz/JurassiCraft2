@@ -50,7 +50,17 @@
   },
   "traits": {
     "type": "scared",
-    "diet": [],
+    "diet": [
+      {
+        "type": "plant"
+      },
+      {
+        "type": "insect",
+        "conditions": [
+          "infant"
+        ]
+      }
+    ],
     "sleep_type": "diurnal",
     "imprintable": true,
     "defend_owner": false,

@@ -1,14 +1,11 @@
 package org.jurassicraft.server.dinosaur;
 
-import java.util.ArrayList;
-
 import org.jurassicraft.server.entity.Diet;
-import org.jurassicraft.server.entity.DietConditionType;
+import org.jurassicraft.server.entity.DietCondition;
 import org.jurassicraft.server.entity.dinosaur.GallimimusEntity;
 import org.jurassicraft.server.food.FoodType;
 import org.jurassicraft.server.period.TimePeriod;
 
-import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 
 public class GallimimusDinosaur extends Dinosaur {
@@ -29,7 +26,7 @@ public class GallimimusDinosaur extends Dinosaur {
         this.setSizeX(0.3F, 1.2F);
         this.setSizeY(0.55F, 2.25F);
         this.setStorage(27);
-        this.setDiet(Diet.HERBIVORE.get().withModule(new Diet.DietModule(FoodType.INSECT).withCondition(DietConditionType.INFANT)));
+        this.setDiet(Diet.HERBIVORE.get().withModule(new Diet.DietModule(FoodType.INSECT).withCondition(DietCondition.INFANT)));
         this.setBones("skull", "tail_vertebrae", "shoulder", "ribcage", "pelvis", "neck_vertebrae", "leg_bones", "foot_bones", "arm_bones");
         this.setHeadCubeName("Head Base");
         this.setScale(0.85F, 0.2F);

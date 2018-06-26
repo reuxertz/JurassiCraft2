@@ -50,7 +50,11 @@
   },
   "traits": {
     "type": "neutral",
-    "diet": [],
+    "diet": [
+      {
+        "type": "plant"
+      }
+    ],
     "sleep_type": "diurnal",
     "imprintable": false,
     "defend_owner": false,

@@ -50,7 +50,14 @@
   },
   "traits": {
     "type": "aggressive",
-    "diet": [],
+    "diet": [
+      {
+        "type": "insect"
+      },
+      {
+        "type": "meat"
+      }
+    ],
     "sleep_type": "diurnal",
     "imprintable": true,
     "defend_owner": true,

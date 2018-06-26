@@ -50,7 +50,14 @@
   },
   "traits": {
     "type": "passive",
-    "diet": [],
+    "diet": [
+      {
+        "type": "fish"
+      },
+      {
+        "type": "filter"
+      }
+    ],
     "sleep_type": "no_sleep",
     "imprintable": false,
     "defend_owner": false,
