@@ -402,7 +402,7 @@ public enum RenderingHandler {
                     JsonDinosaurModel model = DinosaurJsonHandler.GSON.fromJson(new InputStreamReader(Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(location.getResourceDomain(), location.getResourcePath() + ".json")).getInputStream()), JsonDinosaurModel.class);
                     //TODO: register model stuff here
                     System.out.println("Registered " + dinosaur.getRegistryName() + " json animator");
-                    registerRenderInfo(dinosaur, model.getAnimator(), model.getShadowSize());
+                    registerRenderInfo(dinosaur, new EntityTaublaAnimator(model.getAnimator()), model.getShadowSize());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

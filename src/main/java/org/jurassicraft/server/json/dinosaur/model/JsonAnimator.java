@@ -18,7 +18,7 @@ import java.util.List;
  * @author Wyn Price
  */
 @Data
-public class JsonAnimator implements ITabulaModelAnimator {
+public class JsonAnimator implements ITabulaModelAnimator<Entity> {
 
     private final float globalSpeed;
     private final float globalDegree;
