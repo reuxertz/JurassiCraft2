@@ -431,13 +431,13 @@ public enum RenderingHandler {
 
     public void init() {
         BlockColors blockColors = mc.getBlockColors();
-        blockColors.registerBlockColorHandler((state, access, pos, tintIndex) -> pos != null ? BiomeColorHelper.getGrassColorAtPos(access, pos) : 0xFFFFFF, MOSS);
+        blockColors.registerBlockColorHandler((state, access, pos, tintIndex) -> pos != null && access != null ? BiomeColorHelper.getGrassColorAtPos(access, pos) : 0xFFFFFF, MOSS);
 
         for (Map.Entry<TreeType, AncientLeavesBlock> entry : ANCIENT_LEAVES.entrySet()) {
-            blockColors.registerBlockColorHandler((state, access, pos, tintIndex) -> pos == null ? ColorizerFoliage.getFoliageColorBasic() : BiomeColorHelper.getFoliageColorAtPos(access, pos), entry.getValue());
+            blockColors.registerBlockColorHandler((state, access, pos, tintIndex) -> pos == null || access == null ? ColorizerFoliage.getFoliageColorBasic() : BiomeColorHelper.getFoliageColorAtPos(access, pos), entry.getValue());
         }
 
-        blockColors.registerBlockColorHandler((state, access, pos, tintIndex) -> pos == null ? ColorizerFoliage.getFoliageColorBasic() : BiomeColorHelper.getFoliageColorAtPos(access, pos), MOSS);
+        blockColors.registerBlockColorHandler((state, access, pos, tintIndex) -> pos == null || access == null ? ColorizerFoliage.getFoliageColorBasic() : BiomeColorHelper.getFoliageColorAtPos(access, pos), MOSS);
         blockColors.registerBlockColorHandler((state, access, pos, tintIndex) -> tintIndex == 1 ? ((TourRailBlock)state.getBlock()).getSpeedType().getColor() : -1, BlockHandler.TOUR_RAIL_SLOW, BlockHandler.TOUR_RAIL_MEDIUM, BlockHandler.TOUR_RAIL_FAST);
 
         ItemColors itemColors = mc.getItemColors();
@@ -505,6 +505,6 @@ public enum RenderingHandler {
     }
 
     public DinosaurRenderInfo getRenderInfo(Dinosaur dino) {
-        return this.renderInfos.get(dino);
+        return renderInfos.get(dino);
     }
 }
