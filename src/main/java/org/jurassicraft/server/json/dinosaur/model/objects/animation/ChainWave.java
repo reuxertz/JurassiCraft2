@@ -6,21 +6,14 @@ import net.ilexiconn.llibrary.client.model.tabula.TabulaModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.JsonUtils;
 import org.jurassicraft.server.json.dinosaur.model.JsonAnimator;
-import org.jurassicraft.server.json.dinosaur.model.objects.JsonAnimationModule;
 import org.jurassicraft.server.json.dinosaur.model.objects.AnimationInfoBase;
+import org.jurassicraft.server.json.dinosaur.model.objects.JsonAnimationModule;
 
 public abstract class ChainWave extends JsonAnimationModule<ChainWave.Info> {
 
     private ChainWave(JsonArray array, JsonAnimator animator) {
         super(array, animator);
     }
-
-    @Override
-    public void performAnimation(TabulaModel model, Entity entity, Info info, float limbSwing, float limbSwingAmount, float ticks, float rotationYaw, float rotationPitch, float scale) {
-        model.chainWave(info.getRenderers(model), info.speed, info.degree, info.rootOffset, ticks, 0.25F);
-    }
-
-    protected abstract void runOnInfo(TabulaModel model, Info info, float ticks, float limbSwing, float limbSwingAmount);
 
     @Override
     public Info createValue(JsonObject json, JsonAnimator animator) {
@@ -47,10 +40,9 @@ public abstract class ChainWave extends JsonAnimationModule<ChainWave.Info> {
         }
 
         @Override
-        protected void runOnInfo(TabulaModel model, Info info, float ticks, float limbSwing, float limbSwingAmount) {
+        public void performAnimation(TabulaModel model, Entity entity, Info info, float limbSwing, float limbSwingAmount, float ticks, float rotationYaw, float rotationPitch, float scale) {
             model.chainSwing(info.getRenderers(model), info.speed, info.degree, info.rootOffset, ticks, 0.25F);
         }
-
     }
 
     public static class LimbSwing extends ChainWave {
@@ -60,7 +52,7 @@ public abstract class ChainWave extends JsonAnimationModule<ChainWave.Info> {
         }
 
         @Override
-        protected void runOnInfo(TabulaModel model, Info info, float ticks, float limbSwing, float limbSwingAmount) {
+        public void performAnimation(TabulaModel model, Entity entity, Info info, float limbSwing, float limbSwingAmount, float ticks, float rotationYaw, float rotationPitch, float scale) {
             model.chainSwing(info.getRenderers(model), info.speed * this.animator.getGlobalSpeed(), info.degree * this.animator.getGlobalDegree(), info.rootOffset, limbSwing, limbSwingAmount);
         }
     }
