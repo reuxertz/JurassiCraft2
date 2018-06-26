@@ -20,21 +20,7 @@ public abstract class EntityAnimator<E extends EntityLivingBase & Animatable> im
 
     private JabelarAnimationHandler<E> getAnimationHelper(E entity, AnimatableModel model, boolean useInertialTweens) {
         GrowthStage growth = entity.getGrowthStage();
-        Map<E, JabelarAnimationHandler<E>> growthToRender = this.animationHandlers.get(growth);
-
-        if (growthToRender == null) {
-            growthToRender = new WeakHashMap<>();
-            this.animationHandlers.put(growth, growthToRender);
-        }
-
-        JabelarAnimationHandler<E> render = growthToRender.get(entity);
-
-        if (render == null) {
-            render = entity.<E>getPoseHandler().createAnimationHandler(entity, model, growth, useInertialTweens);
-            growthToRender.put(entity, render);
-        }
-
-        return render;
+        return this.animationHandlers.computeIfAbsent(growth, e -> new WeakHashMap<>()).computeIfAbsent(entity, e -> e.<E>getPoseHandler().createAnimationHandler(entity, model, growth, useInertialTweens));
     }
 
     @Override

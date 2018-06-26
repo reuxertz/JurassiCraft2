@@ -9,15 +9,15 @@ import org.jurassicraft.server.json.dinosaur.model.JsonAnimator;
 import org.jurassicraft.server.json.dinosaur.model.objects.JsonAnimationModule;
 import org.jurassicraft.server.json.dinosaur.model.objects.AnimationInfoBase;
 
-public class ChainSwing extends JsonAnimationModule<ChainSwing.Info> {
+public class Facing extends JsonAnimationModule<Facing.Info> {
 
-    public ChainSwing(JsonArray array, JsonAnimator animator) {
+    public Facing(JsonArray array, JsonAnimator animator) {
         super(array, animator);
     }
 
     @Override
     public void performAnimation(TabulaModel model, Entity entity, Info info, float limbSwing, float limbSwingAmount, float ticks, float rotationYaw, float rotationPitch, float scale) {
-        model.chainSwing(info.getRenderers(model), info.speed, info.degree, info.rootOffset, ticks, 0.25F);
+        model.faceTarget(rotationYaw, rotationPitch, info.divisor, info.getRenderers(model));
     }
 
     @Override
@@ -26,15 +26,12 @@ public class ChainSwing extends JsonAnimationModule<ChainSwing.Info> {
     }
 
     public static class Info extends AnimationInfoBase {
-        private final float speed;
-        private final float degree;
-        private final float rootOffset;
+
+        private final float divisor;
 
         protected Info(JsonObject json, JsonAnimator animator) {
             super(json, animator);
-            this.speed = JsonUtils.getFloat(json, "speed");
-            this.degree = JsonUtils.getFloat(json, "degree");
-            this.rootOffset = JsonUtils.getFloat(json, "root_offset");
+            this.divisor = JsonUtils.getFloat(json, "divisor");
         }
     }
 }

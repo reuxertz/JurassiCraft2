@@ -50,7 +50,7 @@ public class GrazeEntityAI extends EntityAIBase {
 
             MetabolismContainer metabolism = this.dinosaur.getMetabolism();
 
-            // Look in increasing layers (e.g. boxes) around the head. Traversers... are like ogres?
+            // Facing in increasing layers (e.g. boxes) around the head. Traversers... are like ogres?
             OnionTraverser traverser = new OnionTraverser(head, LOOK_RADIUS);
             this.target = null;
 

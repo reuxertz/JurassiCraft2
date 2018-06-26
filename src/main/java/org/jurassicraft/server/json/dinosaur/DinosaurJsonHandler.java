@@ -8,6 +8,10 @@ import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.dinosaur.*;
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.json.JsonUtil;
+import org.jurassicraft.server.json.dinosaur.model.JsonAnimator;
+import org.jurassicraft.server.json.dinosaur.model.JsonDinosaurModel;
+import org.jurassicraft.server.json.dinosaur.model.objects.Constants;
+import org.jurassicraft.server.json.dinosaur.model.objects.JsonAnimationType;
 import org.jurassicraft.server.json.dinosaur.objects.*;
 
 import java.io.File;
@@ -29,6 +33,12 @@ public class DinosaurJsonHandler {
             .registerTypeAdapter(DinosaurTraits.class, new DinosaurTraits.JsonHandler())
             .registerTypeAdapter(Diet.class, new JsonDiet())
             .registerTypeAdapter(SpawnEggInfo.class, new SpawnEggInfo.JsonHandler())
+
+            //Model Stuff
+            .registerTypeAdapter(JsonDinosaurModel.class, new JsonDinosaurModel.Deserializer())
+            .registerTypeAdapter(JsonAnimator.class, new JsonAnimator.Deserializer())
+            .registerTypeAdapter(Constants.class, new Constants.Deserializer())
+            .registerTypeAdapter(JsonAnimationType.class, new JsonAnimationType.Deserializer())
             .create();
 
     @SubscribeEvent

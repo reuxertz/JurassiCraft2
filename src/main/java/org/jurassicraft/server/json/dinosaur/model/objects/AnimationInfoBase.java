@@ -3,10 +3,11 @@ package org.jurassicraft.server.json.dinosaur.model.objects;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.ilexiconn.llibrary.client.model.tabula.TabulaModel;
 import net.ilexiconn.llibrary.client.model.tools.AdvancedModelRenderer;
 import net.minecraft.util.JsonUtils;
 import org.jurassicraft.client.model.AnimatableModel;
-import org.jurassicraft.server.json.dinosaur.model.JsonDinosaurAnimator;
+import org.jurassicraft.server.json.dinosaur.model.JsonAnimator;
 
 import java.util.List;
 import java.util.Objects;
@@ -15,11 +16,11 @@ public class AnimationInfoBase {
 
     final List<String> animationPartNames;
 
-    public AnimationInfoBase(JsonObject json, JsonDinosaurAnimator animator) {
+    public AnimationInfoBase(JsonObject json, JsonAnimator animator) {
         this.animationPartNames = getParts(json, animator.getConstants());
     }
 
-    public AdvancedModelRenderer[] getRenderers(AnimatableModel model) {
+    public AdvancedModelRenderer[] getRenderers(TabulaModel model) {
         return this.animationPartNames.stream().map(model::getCube).filter(Objects::nonNull).toArray(AdvancedModelRenderer[]::new);
     }
 

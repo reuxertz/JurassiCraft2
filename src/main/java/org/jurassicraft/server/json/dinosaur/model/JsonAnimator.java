@@ -3,50 +3,53 @@ package org.jurassicraft.server.json.dinosaur.model;
 import com.google.common.collect.Lists;
 import com.google.gson.*;
 import lombok.Data;
+import net.ilexiconn.llibrary.client.model.tabula.ITabulaModelAnimator;
+import net.ilexiconn.llibrary.client.model.tabula.TabulaModel;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.JsonUtils;
-import org.jurassicraft.client.model.AnimatableModel;
-import org.jurassicraft.client.model.animation.EntityAnimator;
-import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.json.dinosaur.model.objects.Constants;
-import org.jurassicraft.server.json.dinosaur.model.objects.DinosaurJsonAnimation;
+import org.jurassicraft.server.json.dinosaur.model.objects.JsonAnimationType;
 
 import java.lang.reflect.Type;
 import java.util.List;
 
+/**
+ * The Json handler for
+ * @author Wyn Price
+ */
 @Data
-public class JsonDinosaurAnimator extends EntityAnimator<DinosaurEntity> {
-
+public class JsonAnimator implements ITabulaModelAnimator {
 
     private final float globalSpeed;
     private final float globalDegree;
     private final Constants constants;
-    private final List<DinosaurJsonAnimation> animationList;
+    private final List<JsonAnimationType> animationList;
 
     @Override
-    protected void performAnimations(AnimatableModel model, DinosaurEntity entity, float limbSwing, float limbSwingAmount, float ticks, float rotationYaw, float rotationPitch, float scale) {
-        for (DinosaurJsonAnimation animation : animationList) {
+    public void setRotationAngles(TabulaModel model, Entity entity, float limbSwing, float limbSwingAmount, float ticks, float rotationYaw, float rotationPitch, float scale) {
+        for (JsonAnimationType animation : animationList) {
             animation.performAnimations(model, entity, limbSwing, limbSwingAmount, ticks, rotationYaw, rotationPitch, scale);
         }
     }
 
-    public static final class Deserializer implements JsonDeserializer<JsonDinosaurAnimator> {
+    public static final class Deserializer implements JsonDeserializer<JsonAnimator> {
         @Override
-        public JsonDinosaurAnimator deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        public JsonAnimator deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             if(!element.isJsonObject()) {
                 throw new JsonParseException("Expected a json object, found " + JsonUtils.toString(element));
             }
             JsonObject json = element.getAsJsonObject();
-            List<DinosaurJsonAnimation> animationList = Lists.newArrayList();
+            List<JsonAnimationType> animationList = Lists.newArrayList();
             for (JsonElement jsonElement : JsonUtils.getJsonArray(json, "animations")) {
-                animationList.add(context.deserialize(jsonElement, DinosaurJsonAnimation.class));
+                animationList.add(context.deserialize(jsonElement, JsonAnimationType.class));
             }
-            JsonDinosaurAnimator animator = new JsonDinosaurAnimator(
+            JsonAnimator animator = new JsonAnimator(
                     JsonUtils.getFloat(json, "global_speed"),
                     JsonUtils.getFloat(json, "global_degree"),
                     context.deserialize(JsonUtils.getJsonArray(json, "constants"), Constants.class),
                     animationList
             );
-            for (DinosaurJsonAnimation dinosaurJsonAnimation : animationList) {
+            for (JsonAnimationType dinosaurJsonAnimation : animationList) {
                 dinosaurJsonAnimation.runFactories(animator);
             }
             return animator;

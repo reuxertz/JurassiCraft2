@@ -50,7 +50,8 @@ import org.jurassicraft.server.entity.vehicle.FordExplorerEntity;
 import org.jurassicraft.server.entity.vehicle.HelicopterBaseEntity;
 import org.jurassicraft.server.entity.vehicle.JeepWranglerEntity;
 import org.jurassicraft.server.item.*;
-import org.jurassicraft.server.json.dinosaur.model.objects.JsonDinosaurModel;
+import org.jurassicraft.server.json.dinosaur.DinosaurJsonHandler;
+import org.jurassicraft.server.json.dinosaur.model.JsonDinosaurModel;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
 
 import java.io.IOException;
@@ -398,7 +399,7 @@ public enum RenderingHandler {
             ResourceLocation location = dinosaur.getModelHandlerLocation();
             if(location != null) {
                 try {
-                    JsonDinosaurModel model = JsonDinosaurModel.GSON.fromJson(new InputStreamReader(Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(location.getResourceDomain(), location.getResourcePath() + ".json")).getInputStream()), JsonDinosaurModel.class);
+                    JsonDinosaurModel model = DinosaurJsonHandler.GSON.fromJson(new InputStreamReader(Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(location.getResourceDomain(), location.getResourcePath() + ".json")).getInputStream()), JsonDinosaurModel.class);
                     //TODO: register model stuff here
                     System.out.println("Registered " + dinosaur.getRegistryName() + " json animator");
                     registerRenderInfo(dinosaur, model.getAnimator(), model.getShadowSize());
