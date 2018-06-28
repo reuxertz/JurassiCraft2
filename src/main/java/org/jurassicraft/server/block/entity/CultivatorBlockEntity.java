@@ -66,7 +66,7 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
             this.proximates -= dinosaur.getProximates();
             this.waterLevel--;
 
-            ItemStack hatchedEgg = new ItemStack(ItemHandler.EGG, 1, syringe.getItemDamage());
+            ItemStack hatchedEgg = new ItemStack(ItemHandler.HATCHED_EGG, 1, syringe.getItemDamage());
 
             NBTTagCompound compound = new NBTTagCompound();
             compound.setBoolean("Gender", this.temperature > 50);
