@@ -30,6 +30,7 @@ public class StegosaurusDinosaur extends Dinosaur{
         this.setStorage(36);
         this.setDiet(Diet.HERBIVORE.get());
         this.setBones("front_leg_bones", "hind_leg_bones", "horn", "neck_vertebrae", "pelvis", "ribcage", "shoulder_bone", "skull", "tail_vertebrae", "tooth");
+        this.setRecipe(new String[][] {{}});
         this.setHeadCubeName("Head");
         this.setScale(1.35F, 0.325F);
         this.setOffset(0.0F, 0.45F, 0.0F);

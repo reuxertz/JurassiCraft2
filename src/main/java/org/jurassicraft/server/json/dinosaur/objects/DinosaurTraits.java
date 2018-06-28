@@ -1,7 +1,9 @@
 package org.jurassicraft.server.json.dinosaur.objects;
 
 import com.google.gson.*;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 import net.minecraft.util.JsonUtils;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.Diet;
@@ -12,18 +14,19 @@ import java.lang.reflect.Type;
 import java.util.Locale;
 
 @Data
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class DinosaurTraits {
 
-    private final Dinosaur.DinosaurType type;
-    private final Diet diet;
-    private final SleepTime sleepType;
-    private final boolean imprintable;
-    private final boolean defendOwner;
-    private final int maxAge;
-    private final int maxHerdSize;
-    private final double attackBias;
-    private final boolean canClimb;
-    private final double flockSpeed;
+    Dinosaur.DinosaurType type;
+    Diet diet;
+    SleepTime sleepType;
+    boolean imprintable;
+    boolean defendOwner;
+    int maxAge;
+    int maxHerdSize;
+    double attackBias;
+    boolean canClimb;
+    double flockSpeed;
 
     public static class JsonHandler implements JsonDeserializer<DinosaurTraits>, JsonSerializer<DinosaurTraits> {
 

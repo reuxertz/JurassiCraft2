@@ -45,7 +45,9 @@ public class DinosaurJsonHandler {
     public static void onDinosaurRegistry(RegistryEvent.Register<Dinosaur> event) {
         JsonUtil.getAllRegister(event.getRegistry(), GSON, "dinosaurs");
 
-        if(Boolean.TRUE) { //Debug stuff. Dont use unless you know what youre doing
+        event.getRegistry().register(new StegosaurusDinosaur().setRegistryName("stegosaurus"));
+
+        if(Boolean.FALSE) { //Debug stuff. Dont use unless you know what youre doing
             File folder = new File(new File(".").getAbsoluteFile().getParentFile().getParentFile(), "src\\main\\resources\\assets\\jurassicraft\\jurassicraft\\dinosaurs");
             for (Dinosaur dinosaur : new Dinosaur[]{
                     new BrachiosaurusDinosaur(),
@@ -83,7 +85,7 @@ public class DinosaurJsonHandler {
                     dino.getPeriod(),
                     dino.getHeadCubeName(),
                     dino.getAnimatorClassName() != null ? dino.getAnimatorClassName() : "", //TODO: remove this line when all dinosaur animators are turned into json
-                    dino.getModelHandlerLocation() != null ? dino.getModelHandlerLocation().toString() : "",
+                    dino.getAnimatorClassName() != null ? "" : dino.getRegistryName().toString(),
                     dino.getShadowSize(),
                     new SpawnEggInfo(dino.getEggPrimaryColorMale(), dino.getEggSecondaryColorMale()),
                     new SpawnEggInfo(dino.getEggPrimaryColorFemale(), dino.getEggSecondaryColorFemale()),

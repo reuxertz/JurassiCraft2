@@ -396,17 +396,17 @@ public enum RenderingHandler {
 //        registerRenderInfo(EntityHandler.STEGOSAURUS, new StegosaurusAnimator(), 0.65F);
 
         for(Dinosaur dinosaur : JurassicraftRegisteries.DINOSAUR_REGISTRY.getValuesCollection()) {
-            ResourceLocation location = dinosaur.getModelHandlerLocation();
+            ResourceLocation location = dinosaur.getRegistryName();
             if(location != null) {
                 try {
-                    JsonDinosaurModel model = DinosaurJsonHandler.GSON.fromJson(new InputStreamReader(Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(location.getResourceDomain(), location.getResourcePath() + ".json")).getInputStream()), JsonDinosaurModel.class);
+                    JsonDinosaurModel model = DinosaurJsonHandler.GSON.fromJson(new InputStreamReader(Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(location.getResourceDomain(), "jurassicraft/models/" + location.getResourcePath() + ".json")).getInputStream()), JsonDinosaurModel.class);
                     //TODO: register model stuff here
                     System.out.println("Registered " + dinosaur.getRegistryName() + " json animator");
                     registerRenderInfo(dinosaur, new EntityTaublaAnimator(model.getAnimator()), model.getShadowSize());
+                    continue;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                continue;
             }
             try {
                 registerRenderInfo(dinosaur, (EntityAnimator)Class.forName(dinosaur.getAnimatorClassName()).newInstance(), dinosaur.getShadowSize());

@@ -133,7 +133,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
 
     private final InventoryDinosaur inventory;
     private final MetabolismContainer metabolism;
-    protected Dinosaur dinosaur;
+    protected final Dinosaur dinosaur;
     protected int dinosaurAge;
     protected int prevAge;
     protected EntityAITasks animationTasks;
@@ -202,6 +202,8 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
 
     public DinosaurEntity(World world) {
         super(world);
+        this.dinosaur = JurassicraftRegisteries.DINOSAUR_REGISTRY.getValuesCollection().stream().filter(dino -> dino.getDinosaurClass() == this.getClass()).findFirst().orElse(Dinosaur.MISSING);
+
         this.moveHelper = new DinosaurMoveHelper(this);
         this.jumpHelper = new DinosaurJumpHelper(this);
 
@@ -606,7 +608,6 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
 
-        this.dinosaur = JurassicraftRegisteries.DINOSAUR_REGISTRY.getValuesCollection().stream().filter(dino -> dino.getDinosaurClass() == this.getClass()).findFirst().orElse(Dinosaur.MISSING);
         this.attributes = DinosaurAttributes.create(this);
 
         this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
@@ -1311,6 +1312,10 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     @Override
     public Animation getAnimation() {
         return this.animation;
+    }
+
+    public LegSolver getLegSolver() {
+        return legSolver;
     }
 
     @Override

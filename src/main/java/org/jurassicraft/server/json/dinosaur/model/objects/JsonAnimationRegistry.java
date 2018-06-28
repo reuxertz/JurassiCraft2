@@ -33,6 +33,7 @@ public class JsonAnimationRegistry {
         factoryMap.put("idle_tick", createWithDefault("chain_wave", ChainWave.IdleTick::new));
         factoryMap.put("look", createWithDefault("facing", Facing::new));
         factoryMap.put("tail_buffer", createWithDefault("buffer_swing", BufferSwing::new));
+        factoryMap.put("leg_articulation", createWithDefault("quadruped", ArticulateQuadruped::new));
 
     }
 

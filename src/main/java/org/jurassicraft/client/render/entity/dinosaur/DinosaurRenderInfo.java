@@ -1,6 +1,7 @@
 package org.jurassicraft.client.render.entity.dinosaur;
 
 import net.ilexiconn.llibrary.client.model.tabula.TabulaModel;
+import net.ilexiconn.llibrary.client.model.tabula.container.TabulaModelContainer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -103,7 +104,8 @@ public class DinosaurRenderInfo implements IRenderFactory<DinosaurEntity> {
         if (!this.dinosaur.doesSupportGrowthStage(stage)) {
             return this.getModelAdult();
         }
-        return new AnimatableModel(this.dinosaur.getModelContainer(stage), this.getModelAnimator(stage));
+        TabulaModelContainer container = this.dinosaur.getModelContainer(stage);
+        return container == null ? this.getModelAdult() : new AnimatableModel(container, this.getModelAnimator(stage));
     }
 
     public Dinosaur getDinosaur() {

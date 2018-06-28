@@ -2,7 +2,9 @@ package org.jurassicraft.server.json.dinosaur.objects;
 
 import com.google.common.collect.Lists;
 import com.google.gson.*;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 import net.minecraft.util.JsonUtils;
 import net.minecraftforge.common.BiomeDictionary;
 
@@ -11,10 +13,11 @@ import java.util.List;
 import java.util.Locale;
 
 @Data
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class DinosaurSpawningInfo {
 
-    private final int chance;
-    private final BiomeDictionary.Type[] biomes;
+    int chance;
+    BiomeDictionary.Type[] biomes;
 
     public static class JsonHandler implements JsonDeserializer<DinosaurSpawningInfo>, JsonSerializer<DinosaurSpawningInfo> {
 

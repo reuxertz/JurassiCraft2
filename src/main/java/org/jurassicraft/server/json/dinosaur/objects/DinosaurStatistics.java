@@ -1,24 +1,27 @@
 package org.jurassicraft.server.json.dinosaur.objects;
 
 import com.google.gson.*;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 import net.minecraft.util.JsonUtils;
 
 import java.lang.reflect.Type;
 
 @Data
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class DinosaurStatistics {
 
-    private final AdultBabyValue speed;
-    private final AdultBabyValue health;
-    private final AdultBabyValue strength;
-    private final AdultBabyValue sizeX;
-    private final AdultBabyValue sizeY;
-    private final AdultBabyValue eyeHeight;
-    private final AdultBabyValue scale;
-    private final int jumpHeight;
-    private final double attackSpeed;
-    private final int itemStorage;
+    AdultBabyValue speed;
+    AdultBabyValue health;
+    AdultBabyValue strength;
+    AdultBabyValue sizeX;
+    AdultBabyValue sizeY;
+    AdultBabyValue eyeHeight;
+    AdultBabyValue scale;
+    int jumpHeight;
+    double attackSpeed;
+    int itemStorage;
 
     public static class JsonHandler implements JsonDeserializer<DinosaurStatistics>, JsonSerializer<DinosaurStatistics> {
 

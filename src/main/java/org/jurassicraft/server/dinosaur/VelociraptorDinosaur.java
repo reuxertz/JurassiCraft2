@@ -47,8 +47,6 @@ public class VelociraptorDinosaur extends Dinosaur {
                 {"foot_bones", "foot_bones", "", ""}};
         this.setRecipe(recipe);
         this.setShadowSize(1.5F);
-//        this.setAnimatorClassName("org.jurassicraft.client.model.animation.entity.VelociraptorAnimator");
-        this.setModelHandlerLocation(new ResourceLocation(JurassiCraft.MODID, "jurassicraft/models/velociraptor"));
         this.setSpawn(10, BiomeDictionary.Type.JUNGLE, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE);
     }
 }

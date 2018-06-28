@@ -1,7 +1,9 @@
 package org.jurassicraft.server.json.dinosaur.objects;
 
 import com.google.gson.*;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 import net.minecraft.util.JsonUtils;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.period.TimePeriod;
@@ -10,27 +12,29 @@ import java.lang.reflect.Type;
 import java.util.Locale;
 
 @Data
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+
 public class DinosaurProperties {
 
-    private final String name;
-    private final Class<? extends DinosaurEntity> entityClass;
-    private final TimePeriod timePeriod;
-    private final String headCubeName;
+    String name;
+    Class<? extends DinosaurEntity> entityClass;
+    TimePeriod timePeriod;
+    String headCubeName;
     @Deprecated
-    private final String dinosaurAnimatorClassName;
-    private final String dinosaurModelLocation;
-    private final float shadowSize;
+    String dinosaurAnimatorClassName;
+    String dinosaurModelLocation;
+    float shadowSize;
 
-    private final SpawnEggInfo maleSpawnEgg;
-    private final SpawnEggInfo femaleSpawnEgg;
+    SpawnEggInfo maleSpawnEgg;
+    SpawnEggInfo femaleSpawnEgg;
 
-    private final DinosaurStatistics statistics;
-    private final DinosaurTraits traits;
-    private final DinosaurSpawningInfo spawningInfo;
-    private final DinosaurBreeding breeding;
+    DinosaurStatistics statistics;
+    DinosaurTraits traits;
+    DinosaurSpawningInfo spawningInfo;
+    DinosaurBreeding breeding;
 
-    private final String[] bones;
-    private final String[][] skeletonRecipe;
+    String[] bones;
+    String[][] skeletonRecipe;
 
     //TODO: model
 

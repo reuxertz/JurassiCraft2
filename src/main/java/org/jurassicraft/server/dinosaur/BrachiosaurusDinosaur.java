@@ -2,6 +2,8 @@ package org.jurassicraft.server.dinosaur;
 
 import java.util.ArrayList;
 
+import net.minecraft.util.ResourceLocation;
+import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.entity.GrowthStage;
 import org.jurassicraft.server.entity.dinosaur.BrachiosaurusEntity;
@@ -44,7 +46,6 @@ public class BrachiosaurusDinosaur extends Dinosaur {
                                  {"","hind_leg_bones","hind_leg_bones","front_leg_bones","front_leg_bones"}};
         this.setRecipe(recipe);
         this.setShadowSize(1.5F);
-        this.setAnimatorClassName("org.jurassicraft.client.model.animation.entity.BrachiosaurusAnimator");
         this.setSpawn(5, BiomeDictionary.Type.FOREST);
     }
 }

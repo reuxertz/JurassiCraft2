@@ -12,9 +12,6 @@ public class JsonDinosaur extends Dinosaur {
         this.setTimePeriod(properties.getTimePeriod());
         this.setHeadCubeName(properties.getHeadCubeName());
         this.setAnimatorClassName(properties.getDinosaurAnimatorClassName());
-        if(properties.getDinosaurModelLocation() != null) {
-            this.setModelHandlerLocation(new ResourceLocation(properties.getDinosaurModelLocation()));
-        }
 
         SpawnEggInfo male = properties.getMaleSpawnEgg();
         this.setEggColorMale(male.getPrimary(), male.getSecondary());

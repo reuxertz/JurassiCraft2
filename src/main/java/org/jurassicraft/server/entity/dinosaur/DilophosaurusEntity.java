@@ -37,9 +37,9 @@ public class DilophosaurusEntity extends DinosaurEntity implements IRangedAttack
 
     @Override
     public void attackEntityWithRangedAttack(EntityLivingBase target, float distance) {
-	if(target instanceof EntityPlayer && ((EntityPlayer)target).isCreative()) {
-	    return;
-	}
+        if(target instanceof EntityPlayer && ((EntityPlayer)target).isCreative()) {
+            return;
+	    }
         VenomEntity venom = new VenomEntity(this.world, this);
         double deltaX = target.posX - venom.posX;
         double deltaY = target.posY + (double) target.getEyeHeight() - 1.100000023841858D - venom.posY;

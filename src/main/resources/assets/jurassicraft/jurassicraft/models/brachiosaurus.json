@@ -1,0 +1,63 @@
+{
+  "head_cuboid": "head",
+  "animator": {
+    "global_speed": 0.4,
+    "global_degree": 0.5,
+    "constants": [{
+      "key": "tail_parts",
+      "names": ["tail5", "tail4", "tail3", "tail2", "tail1"]
+    },
+      {
+        "key": "end_tail_parts",
+        "names": ["tail5", "tail4", "tail3"]
+      },
+      {
+        "key": "neck_parts",
+        "names": ["head", "neck7", "neck6", "neck5", "neck4", "neck3", "neck2", "Neck 1"]
+      }
+    ],
+    "animations": [{
+      "type": "leg_articulation",
+      "quadruped": {
+        "root": "hips",
+        "neck": "Neck 1",
+        "back_left_thigh": "top leg left",
+        "back_left_calf": "bottom leg left",
+        "back_right_thigh": "top leg right",
+        "back_right_calf": "bottom leg right",
+        "front_left_thigh": "front left top leg",
+        "front_left_calf": "bottom front left leg",
+        "front_right_thigh": "front right top leg",
+        "front_right_calf": "bottom front right leg",
+        "rotation_back_thigh": 0.25,
+        "rotation_back_calf": 0.4,
+        "rotation_front_thigh": -0.2,
+        "rotation_front_calf": -0.3
+      }
+    },
+      {
+        "type": "idle_tick",
+        "chain_wave": [{
+          "constant": "end_tail_parts",
+          "speed": 0.25,
+          "degree": 1,
+          "root_offset": 3
+        },
+          {
+            "constant": "neck_parts",
+            "speed": 0.25,
+            "degree": 0.25,
+            "root_offset": -3
+          }
+        ]
+      },
+      {
+        "type": "tail_buffer",
+        "buffer_swing": [{
+          "constant": "tail_parts"
+        }]
+      }
+    ]
+  },
+  "shadow_size": 1.5
+}

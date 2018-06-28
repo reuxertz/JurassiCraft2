@@ -1,7 +1,9 @@
 package org.jurassicraft.server.json.dinosaur.objects;
 
 import com.google.gson.*;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 import net.minecraft.util.JsonUtils;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 
@@ -9,14 +11,15 @@ import java.lang.reflect.Type;
 import java.util.Locale;
 
 @Data
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class DinosaurBreeding {
 
-    private final Dinosaur.BirthType birthType;
-    private final int minClutch;
-    private final int maxClutch;
-    private final int breedingCooldown;
-    private final boolean breedNearOffsprring;
-    private final boolean defendOffspring;
+   Dinosaur.BirthType birthType;
+   int minClutch;
+   int maxClutch;
+   int breedingCooldown;
+   boolean breedNearOffsprring;
+   boolean defendOffspring;
 
     public static class JsonHandler implements JsonDeserializer<DinosaurBreeding>, JsonSerializer<DinosaurBreeding> {
         @Override
