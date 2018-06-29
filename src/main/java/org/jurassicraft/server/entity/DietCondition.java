@@ -7,17 +7,11 @@ import java.util.function.Predicate;
 
 
 public class DietCondition {
-    public static final DietCondition INFANT = new DietCondition("infant", entity -> entity.getAgePercentage() < 25);
 
     private static final List<DietCondition> conditions = Lists.newArrayList();
 
-    public static void registerCondition(DietCondition diet) {
-        if(getCondition(diet.getName()) != null) {
-            throw new IllegalArgumentException("Condition with name " + diet.getName() + " has already been registered");
-        }
-        conditions.add(diet);
-    }
-    
+    public static final DietCondition INFANT = new DietCondition("infant", entity -> entity.getAgePercentage() < 25);
+
     public static DietCondition getCondition(String name) {
         for (DietCondition condition : conditions) {
             if(condition.getName().equalsIgnoreCase(name)) {
@@ -33,6 +27,11 @@ public class DietCondition {
     DietCondition(String name, Predicate<DinosaurEntity> preticate) {
         this.name = name;
         this.predicate = preticate;
+
+        if(getCondition(name) != null) {
+            throw new IllegalArgumentException("Condition with name " + name + " has already been registered");
+        }
+        conditions.add(this);
     }
 
     public String getName() {
