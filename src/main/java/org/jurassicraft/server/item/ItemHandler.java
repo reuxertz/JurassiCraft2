@@ -280,6 +280,8 @@ public class ItemHandler {
     public static final Dart DART_POISON_EXECUTIONER_CONCOCTION = new Dart((entity, stack) -> entity.setDeathIn(200), 0x000000);
     public static final Dart DART_TIPPED_POTION = new PotionDart();
 
+    public static final TrackingTablet TRACKING_TABLET = new TrackingTablet();
+
     static {
         for(AttractionSignEntity.AttractionSignType type : AttractionSignEntity.AttractionSignType.values()) {
             ATTRACTION_SIGN.put(type, new AttractionSignItem(type));
@@ -428,7 +430,9 @@ public class ItemHandler {
         registerItem(DART_POISON_CYCASIN, "Dart Poison Cycasin");
         registerItem(DART_POISON_EXECUTIONER_CONCOCTION, "Dart Poison Executioner Concoction");
         registerItem(DART_TIPPED_POTION, "Dart Tipped Potion");
-        
+
+        registerItem(TRACKING_TABLET, "Tracking Tablet");
+
         for (TreeType type : TreeType.values()) {
             registerTreeType(type);
         }

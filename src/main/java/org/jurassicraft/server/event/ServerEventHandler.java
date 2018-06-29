@@ -1,9 +1,12 @@
 package org.jurassicraft.server.event;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemMapBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.Packet;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -21,12 +24,14 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.FossilizedTrackwayBlock;
 import org.jurassicraft.server.block.plant.DoublePlantBlock;
 import org.jurassicraft.server.conf.JurassiCraftConfig;
 import org.jurassicraft.server.item.ItemHandler;
+import org.jurassicraft.server.item.TrackingTablet;
 import org.jurassicraft.server.util.GameRuleHandler;
 import org.jurassicraft.server.world.WorldGenCoal;
 import org.jurassicraft.server.world.loot.Loot;
@@ -185,6 +190,21 @@ public class ServerEventHandler {
             }
             if (bugs.size() > 0) {
                 event.getDrops().add(new ItemStack(bugs.get(rand.nextInt(bugs.size()))));
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerTick(TickEvent.PlayerTickEvent event) {
+        EntityPlayer player = event.player;
+        if(!player.world.isRemote) {
+            for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
+                ItemStack itemstack = player.inventory.getStackInSlot(i);
+                if(itemstack.getItem() instanceof TrackingTablet) {
+                    TrackingTablet.TrackingInfo info = new TrackingTablet.TrackingInfo(itemstack);
+                    info.update(player.world, player.getPosition());
+                    info.putInStack(itemstack);
+                }
             }
         }
     }
