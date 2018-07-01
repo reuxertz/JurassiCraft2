@@ -705,11 +705,13 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         if (!this.isMale() && !this.world.isRemote) {
             if (this.isPregnant()) {
                 if (--this.pregnantTime <= 0) {
-                    this.getNavigator().clearPath();
+                    if(!this.navigator.noPath()) {
+                        this.navigator.clearPath();
+                    } else if (this.navigator.noPath()) {
                     this.setAnimation(this.dinosaur.givesDirectBirth() ? EntityAnimation.GIVING_BIRTH.get() : EntityAnimation.LAYING_EGG.get());
                     if(this.family != null) {
                         this.family.setHome(this.getPosition(), 6000);
-                    }
+                    }}
 //                    this.children.clear(); //Why was this even here? 
                 }
             }
