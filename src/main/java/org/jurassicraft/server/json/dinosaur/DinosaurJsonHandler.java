@@ -45,7 +45,7 @@ public class DinosaurJsonHandler {
     public static void onDinosaurRegistry(RegistryEvent.Register<Dinosaur> event) {
         JsonUtil.getAllRegister(event.getRegistry(), GSON, "dinosaurs");
 
-        event.getRegistry().register(new StegosaurusDinosaur().setRegistryName("stegosaurus"));
+//        event.getRegistry().register(new StegosaurusDinosaur().setRegistryName("stegosaurus"));
 
         if(Boolean.FALSE) { //Debug stuff. Dont use unless you know what youre doing
             File folder = new File(new File(".").getAbsoluteFile().getParentFile().getParentFile(), "src\\main\\resources\\assets\\jurassicraft\\jurassicraft\\dinosaurs");

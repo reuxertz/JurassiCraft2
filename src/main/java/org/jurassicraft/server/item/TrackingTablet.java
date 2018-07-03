@@ -1,10 +1,10 @@
 package org.jurassicraft.server.item;
 
 import com.google.common.collect.Lists;
+import lombok.AccessLevel;
 import lombok.Data;
-import net.minecraft.block.state.IBlockState;
+import lombok.experimental.FieldDefaults;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -24,17 +24,20 @@ import org.jurassicraft.client.gui.TrackingTabletGui;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
+import org.jurassicraft.server.util.TrackingMapUploader;
 
 import java.util.List;
 
 public class TrackingTablet extends Item {
 
-    public static final int DISTANCE = 128; //Maybe have diffrent tiers of tracking tablets with diffrent ranges?
+    public static final int DISTANCE = 1024; //Maybe have diffrent tiers of tracking tablets with diffrent ranges?
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
         if(worldIn.isRemote) {
             this.openGui(playerIn.getHeldItem(handIn));
+        } else {
+            new TrackingMapUploader(playerIn, playerIn.getPosition());
         }
         return super.onItemRightClick(worldIn, playerIn, handIn);
     }
@@ -99,56 +102,15 @@ public class TrackingTablet extends Item {
                 this.dinosaurInfos.add(DinosaurInfo.fromEntity(entity));
             }
         }
-
-        @SideOnly(Side.CLIENT)
-        public DynamicTexture createDynamicTexture(EntityPlayer player) {
-            DynamicTexture texture = new DynamicTexture(128, 128);
-            BlockPos playerPos = player.getPosition();
-            World world = player.world;
-            int scale = DISTANCE / 64;
-            int i = 0;
-            for (int z = -DISTANCE; z < DISTANCE; z+=scale) {
-                for (int x = -DISTANCE; x < DISTANCE; x+=scale) {
-                    int r = 0;
-                    int g = 0;
-                    int b = 0;
-                    for (int scaleX = 0; scaleX < scale; scaleX++) {
-                        for (int scaleZ = 0; scaleZ < scale; scaleZ++) {
-                            int y = 256;
-                            while(y >= 0) {
-                                BlockPos pos = new BlockPos(playerPos.getX() + x + scaleX, y, playerPos.getZ() + z + scaleZ);
-                                IBlockState state = world.getBlockState(pos);
-                                int c = state.getMapColor(world, pos).getMapColor(  0);
-//                                BlockColors bc = Minecraft.getMinecraft().getBlockColors();
-//                                if(state.getBlock() == Blocks.GRASS || state.getBlock() == Blocks.LEAVES || state.getBlock() == Blocks.LEAVES2) {
-//                                    c = bc.colorMultiplier(state, world, pos, 0);
-//                                }
-                                if(c != -16777216) {
-                                    r += (c >> 16) & 0xFF;
-                                    g += (c >> 8) & 0xFF;
-                                    b += c & 0xFF;
-                                    break;
-                                }
-                                y--;
-                            }
-                        }
-                    }
-                    int s = (scale * scale);
-                    texture.getTextureData()[i++] = (((r / s) << 16) | ((g / s) << 8) | (b / s));
-                }
-            }
-            texture.updateDynamicTexture();
-            return texture;
-        }
-
     }
 
     @Data
+    @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
     public static class DinosaurInfo {
-        private final BlockPos pos;
-        private final Dinosaur dinosaur;
-        private final boolean male;
-        private final int growthPercentage;
+       BlockPos pos;
+       Dinosaur dinosaur;
+       boolean male;
+       int growthPercentage;
 
         public static DinosaurInfo fromEntity(DinosaurEntity entity) {
             return new DinosaurInfo(entity.getPosition(), entity.getDinosaur(), entity.isMale(), entity.getAgePercentage());
