@@ -1,5 +1,6 @@
 package org.jurassicraft.server.world.loot;
 
+import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -256,7 +257,7 @@ public class Loot {
 
         @Override
         public ItemStack apply(ItemStack stack, Random rand, LootContext context) {
-            return stack.getItem() instanceof FossilItem ? ((FossilItem)stack.getItem()).createNewStack(new FossilItem.FossilInfomation(Dinosaur.MISSING, varient)) : stack;
+            return stack.getItem() instanceof FossilItem ? ((FossilItem)stack.getItem()).createNewStack(new FossilItem.FossilInfomation(Lists.newArrayList(JurassicraftRegisteries.DINOSAUR_REGISTRY.getValuesCollection()).get(rand.nextInt(JurassicraftRegisteries.DINOSAUR_REGISTRY.getValuesCollection().size())), varient)) : stack;
         }
     }
 
