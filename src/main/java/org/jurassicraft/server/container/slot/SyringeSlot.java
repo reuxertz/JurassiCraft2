@@ -3,6 +3,8 @@ package org.jurassicraft.server.container.slot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+
+import org.jurassicraft.server.dinosaur.Dinosaur.BirthType;
 import org.jurassicraft.server.item.SyringeItem;
 
 public class SyringeSlot extends Slot {
@@ -12,6 +14,6 @@ public class SyringeSlot extends Slot {
 
     @Override
     public boolean isItemValid(ItemStack stack) {
-        return stack.getItem() instanceof SyringeItem;
+        return stack.getItem() instanceof SyringeItem && SyringeItem.getDinosaur(stack).getBirthType() == BirthType.EGG_LAYING;
     }
 }
