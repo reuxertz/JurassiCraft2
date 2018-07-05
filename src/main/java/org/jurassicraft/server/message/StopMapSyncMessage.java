@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import org.jurassicraft.server.util.TrackingMapUploader;
+import org.jurassicraft.server.util.TrackingMapIterator;
 
 public class StopMapSyncMessage extends AbstractMessage<StopMapSyncMessage> {
     @Override
@@ -16,8 +16,8 @@ public class StopMapSyncMessage extends AbstractMessage<StopMapSyncMessage> {
 
     @Override
     public void onServerReceived(MinecraftServer server, StopMapSyncMessage message, EntityPlayer player, MessageContext messageContext) {
-        if(TrackingMapUploader.playerMap.containsKey(player)) {
-            TrackingMapUploader.playerMap.get(player).markFinished();
+        if(TrackingMapIterator.playerMap.containsKey(player)) {
+            TrackingMapIterator.playerMap.get(player).markFinished();
         }
     }
 

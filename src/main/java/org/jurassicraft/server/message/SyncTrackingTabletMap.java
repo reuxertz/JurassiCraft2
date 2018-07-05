@@ -1,5 +1,6 @@
 package org.jurassicraft.server.message;
 
+import com.google.common.collect.Lists;
 import io.netty.buffer.ByteBuf;
 import net.ilexiconn.llibrary.server.network.AbstractMessage;
 import net.minecraft.client.Minecraft;
@@ -13,8 +14,7 @@ import java.util.List;
 
 public class SyncTrackingTabletMap extends AbstractMessage<SyncTrackingTabletMap> {
 
-    private List<Integer> input;
-    private int[] output;
+    private List<Integer> list;
 
     private int offset;
 
@@ -22,8 +22,8 @@ public class SyncTrackingTabletMap extends AbstractMessage<SyncTrackingTabletMap
     public SyncTrackingTabletMap(){
     }
 
-    public SyncTrackingTabletMap(List<Integer> input, int offset) {
-        this.input = input;
+    public SyncTrackingTabletMap(List<Integer> list, int offset) {
+        this.list = list;
         this.offset = offset;
     }
 
@@ -31,7 +31,7 @@ public class SyncTrackingTabletMap extends AbstractMessage<SyncTrackingTabletMap
     public void onClientReceived(Minecraft client, SyncTrackingTabletMap message, EntityPlayer player, MessageContext messageContext) {
         GuiScreen screen = client.currentScreen;
         if(screen instanceof TrackingTabletGui) {
-            ((TrackingTabletGui)screen).upload(message.output, message.offset);
+            ((TrackingTabletGui)screen).upload(message.list, message.offset);
         }
     }
 
@@ -43,16 +43,17 @@ public class SyncTrackingTabletMap extends AbstractMessage<SyncTrackingTabletMap
     @Override
     public void fromBytes(ByteBuf buf) {
         this.offset = buf.readInt();
-        this.output = new int[buf.readInt()];
-        for (int i = 0; i < this.output.length; i++) {
-            this.output[i] = buf.readInt();
+        this.list = Lists.newArrayList();
+        int size = buf.readInt();
+        for (int i = 0; i < size; i++) {
+            this.list.add(buf.readInt());
         }
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(this.offset);
-        buf.writeInt(this.input.size());
-        this.input.forEach(buf::writeInt);
+        buf.writeInt(this.list.size());
+        this.list.forEach(buf::writeInt);
     }
 }

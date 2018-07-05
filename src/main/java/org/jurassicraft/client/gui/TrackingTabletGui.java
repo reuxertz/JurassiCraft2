@@ -8,19 +8,19 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.item.TrackingTablet;
 import org.jurassicraft.server.message.StopMapSyncMessage;
+import org.jurassicraft.server.util.TrackingMapIterator;
 import org.lwjgl.input.Mouse;
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 
@@ -28,8 +28,8 @@ public class TrackingTabletGui extends GuiScreen {
 
     private final Minecraft mc = Minecraft.getMinecraft();
 
-    private final ItemStack stack;//TODO: do i even need this?
     private final DynamicTexture texture;
+    private final EnumHand hand;
     private final List<RenderDinosaurInfo> renderList = Lists.newArrayList();
     private ResourceLocation location;
 
@@ -37,11 +37,18 @@ public class TrackingTabletGui extends GuiScreen {
     private Vec2d currentOffset = new Vec2d(0, 0);
     private float zoomedScale = 1f;
 
-    public TrackingTabletGui(ItemStack stack) {
-        this.stack = stack;
-        TrackingTablet.TrackingInfo info = new TrackingTablet.TrackingInfo(this.stack);
+    private boolean startRecieved;
+    private AnimatedTexture loadingTexture;
+
+    public TrackingTabletGui(EnumHand hand, TrackingMapIterator mapIterator) {
+        this.hand = hand;
         this.location = mc.getTextureManager().getDynamicTextureLocation("tracking_tablet", texture = new DynamicTexture(TrackingTablet.DISTANCE * 2, TrackingTablet.DISTANCE * 2));
         refreshDinosaurs();
+    }
+
+    @Override
+    public void initGui() {
+        this.loadingTexture = new AnimatedTexture(new ResourceLocation(JurassiCraft.MODID, "textures/gui/map_loading.png"), this.width / 2 - 50, this.height / 2 - 50, 100, 100, 100D);
     }
 
     @Override
@@ -51,7 +58,7 @@ public class TrackingTabletGui extends GuiScreen {
 
     public void refreshDinosaurs() {
         this.renderList.clear();
-        TrackingTablet.TrackingInfo info = new TrackingTablet.TrackingInfo(mc.player.getHeldItem(EnumHand.MAIN_HAND));
+        TrackingTablet.TrackingInfo info = new TrackingTablet.TrackingInfo(mc.player.getHeldItem(hand));
         for (TrackingTablet.DinosaurInfo dinosaurInfo : info.getDinosaurInfos()) {
             renderList.add(new RenderDinosaurInfo(mc.player, dinosaurInfo));
         }
@@ -59,47 +66,57 @@ public class TrackingTabletGui extends GuiScreen {
 
     @Override
     public void onGuiClosed() {
-        JurassiCraft.NETWORK_WRAPPER.sendToServer(new StopMapSyncMessage());
         mc.getTextureManager().deleteTexture(this.location);
+        JurassiCraft.NETWORK_WRAPPER.sendToServer(new StopMapSyncMessage());
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         refreshDinosaurs();
         this.drawDefaultBackground();
-        mc.getTextureManager().bindTexture(this.location);
-        int i = (int)(256 * zoomedScale);
-        double xOffset = -currentOffset.x;
-        double zOffset = -currentOffset.y;
-        drawModalRectWithCustomSizedTexture(this.width / 2 + (xOffset - 128) * zoomedScale, this.height / 2 + (zOffset - 128) * zoomedScale, 0, 0, i, i, i, i);
-        for (RenderDinosaurInfo r : renderList) {
-            ResourceLocation location = r.info.getDinosaur().getRegistryName();
-            mc.getTextureManager().bindTexture(new ResourceLocation(location.getResourceDomain(), "textures/gui/mapicons/" + location.getResourcePath() + ".png"));
-            drawModalRectWithCustomSizedTexture(this.width / 2 + (xOffset + r.x) * zoomedScale - 4, this.height / 2 + (zOffset + r.z) * zoomedScale - 4, 0, 0, 8, 8, 8, 8);
-        }
+        if(startRecieved) {
+            mc.getTextureManager().bindTexture(this.location);
+            int i = (int)(256 * this.zoomedScale);
+            double xOffset = -currentOffset.x;
+            double zOffset = -currentOffset.y;
 
-        int relX = mouseX - width / 2;
-        int relY = mouseY - height / 2;
-        RenderDinosaurInfo closest = null;
-        for (RenderDinosaurInfo render : this.renderList) {
-            if(Math.abs(relX - xOffset * zoomedScale - render.x * zoomedScale + 4) <= 10 && Math.abs(relY - zOffset * zoomedScale - render.z * zoomedScale + 4) <= 10) {
-                if(closest == null || Vec2d.distance(render.x, render.z, relX, relY) < Vec2d.distance(closest.x, closest.z, relX, relY)) {
-                    closest = render;
+            double left = this.width / 2 + (xOffset - 128) * this.zoomedScale;
+            double top = this.height / 2 + (zOffset - 128) * this.zoomedScale;
+
+            GlStateManager.enableBlend();
+            drawModalRectWithCustomSizedTexture(left, top, 0, 0, i, i, i, i);
+            GlStateManager.disableBlend();
+            drawBorder(left, top, left + i, top + i, 0xFF000000, 2F * this.zoomedScale);
+            for (RenderDinosaurInfo r : renderList) {
+                ResourceLocation location = r.info.getDinosaur().getRegistryName();
+                mc.getTextureManager().bindTexture(new ResourceLocation(location.getResourceDomain(), "textures/gui/mapicons/" + location.getResourcePath() + ".png"));
+                drawModalRectWithCustomSizedTexture(this.width / 2 + (xOffset + r.x) * this.zoomedScale - 4, this.height / 2 + (zOffset + r.z) * this.zoomedScale - 4, 0, 0, 8, 8, 8, 8);
+            }
+
+            int relX = mouseX - width / 2;
+            int relY = mouseY - height / 2;
+            RenderDinosaurInfo closest = null;
+            for (RenderDinosaurInfo render : this.renderList) {
+                if(Math.abs(relX - xOffset * this.zoomedScale - render.x * this.zoomedScale + 4) <= 10 && Math.abs(relY - zOffset * this.zoomedScale - render.z * this.zoomedScale + 4) <= 10) {
+                    if(closest == null || Vec2d.distance(render.x, render.z, relX, relY) < Vec2d.distance(closest.x, closest.z, relX, relY)) {
+                        closest = render;
+                    }
                 }
             }
+            if(closest != null) {
+                List<String> lines = Lists.newArrayList();
+                TrackingTablet.DinosaurInfo info = closest.info;
+                ResourceLocation regName = info.getDinosaur().getRegistryName();
+                lines.add("Dinosaur: " + I18n.format("entity." + regName.getResourceDomain() + "." + regName.getResourcePath() + ".name"));
+                lines.add("Gender: " + I18n.format("gender." + (info.isMale() ? "male" : "female") + ".name"));
+                BlockPos pos = info.getPos();
+                lines.add("At: " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ());
+                lines.add("Days existed: " + Math.floor((info.getGrowthPercentage() * 8.0F) / 24000.0F));
+                this.drawHoveringText(lines, mouseX, mouseY);
+            }
+        } else {
+            this.loadingTexture.render();
         }
-        if(closest != null) {
-            List<String> lines = Lists.newArrayList();
-            TrackingTablet.DinosaurInfo info = closest.info;
-            ResourceLocation regName = info.getDinosaur().getRegistryName();
-            lines.add("Dinosaur: " + I18n.format("entity." + regName.getResourceDomain() + "." + regName.getResourcePath() + ".name"));
-            lines.add("Gender: " + I18n.format("gender." + (info.isMale() ? "male" : "female") + ".name"));
-            BlockPos pos = info.getPos();
-            lines.add("At: " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ());
-            lines.add("Days existed: " + Math.floor((info.getGrowthPercentage() * 8.0F) / 24000.0F));
-            this.drawHoveringText(lines, mouseX, mouseY);
-        }
-
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
@@ -128,7 +145,7 @@ public class TrackingTabletGui extends GuiScreen {
     @Override
     protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
         if(clickedMouseButton == 0) {
-            currentOffset = new Vec2d(currentOffset.x + (lastMouseClicked.x - mouseX) / zoomedScale, currentOffset.y + (lastMouseClicked.y - mouseY) / zoomedScale);
+            currentOffset = new Vec2d(currentOffset.x + (lastMouseClicked.x - mouseX) / this.zoomedScale, currentOffset.y + (lastMouseClicked.y - mouseY) / this.zoomedScale);
             this.lastMouseClicked = new Vec2d(mouseX, mouseY);
         }
         super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
@@ -139,20 +156,72 @@ public class TrackingTabletGui extends GuiScreen {
         super.handleMouseInput();
         int wheel = Mouse.getDWheel();
         if(wheel > 0) {
-            this.zoomedScale += 0.1F * zoomedScale;
+            this.zoomedScale += 0.1F * this.zoomedScale;
         } else if(wheel < 0) {
-            this.zoomedScale -= 0.1F * zoomedScale;
+            this.zoomedScale -= 0.1F * this.zoomedScale;
         }
     }
 
-    public void upload(int[] aint, int offset) {
-        for (int i = 0; i < aint.length; i++) {
-            int pos = offset + i;
-            if(pos < TrackingTablet.DISTANCE * TrackingTablet.DISTANCE * 4) {
-                this.texture.getTextureData()[pos] = aint[i];
+    public void upload(List<Integer> list, int offset) {
+        for (int i = 0; i < list.size(); i++) {
+            int c = list.get(i);
+            this.texture.getTextureData()[offset + i] = c;
+        }
+        int length = TrackingTablet.DISTANCE * 2;
+        int height = Math.min(Math.floorDiv(list.size(), length) + 1, length);
+        int area = length * height;
+        int aint[] = new int[area];
+        for(int i = 0; i < area; i++) {
+            int pos = i + Math.floorDiv(offset, length) * length;
+            if(pos < this.texture.getTextureData().length) { //TODO: remove?
+                aint[i] = this.texture.getTextureData()[pos];
             }
         }
-        this.texture.updateDynamicTexture();
+        GlStateManager.bindTexture(this.texture.getGlTextureId());
+        TextureUtil.uploadTextureMipmap(new int[][]{aint}, length, height, 0, Math.floorDiv(offset, length), false, false);
+        this.startRecieved = true;
+    }
+
+    public static void drawBorder(double left, double top, double right, double bottom, int color, double thickness) {
+        thickness /= 2;
+        drawRect(left - thickness, top - thickness, right + thickness, top + thickness, color);
+        drawRect(left - thickness, bottom - thickness, right + thickness, bottom + thickness, color);
+        drawRect(left - thickness, top + thickness, left + thickness, bottom - thickness, color);
+        drawRect(right + thickness, top + thickness, right - thickness, bottom - thickness, color);
+    }
+
+    public static void drawRect(double left, double top, double right, double bottom, int color) {
+        if (left < right) {
+            double i = left;
+            left = right;
+            right = i;
+        }
+
+        if (top < bottom) {
+            double j = top;
+            top = bottom;
+            bottom = j;
+        }
+
+        float f3 = (float)(color >> 24 & 255) / 255.0F;
+        float f = (float)(color >> 16 & 255) / 255.0F;
+        float f1 = (float)(color >> 8 & 255) / 255.0F;
+        float f2 = (float)(color & 255) / 255.0F;
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.color(f, f1, f2, f3);
+        bufferbuilder.begin(7, DefaultVertexFormats.POSITION);
+        bufferbuilder.pos(left, bottom, 0.0D).endVertex();
+        bufferbuilder.pos(right, bottom, 0.0D).endVertex();
+        bufferbuilder.pos(right, top, 0.0D).endVertex();
+        bufferbuilder.pos(left, top, 0.0D).endVertex();
+        tessellator.draw();
+        GlStateManager.color(1, 1, 1, 1);
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
     }
 
     public static class RenderDinosaurInfo {
