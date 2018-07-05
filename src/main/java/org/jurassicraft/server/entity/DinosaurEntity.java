@@ -699,13 +699,14 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
             world.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().grow(10, 10, 10), this::canEatEntity).stream().findAny().ifPresent(this::setAttackTarget);
         }
 
-
         if (!this.isMale() && !this.world.isRemote) {
             if (this.isPregnant()) {
                 if (--this.pregnantTime <= 0) {
                     this.getNavigator().clearPathEntity();
                     this.setAnimation(this.dinosaur.givesDirectBirth() ? EntityAnimation.GIVING_BIRTH.get() : EntityAnimation.LAYING_EGG.get());
-                    this.family.setHome(this.getPosition(), 6000);
+                    if(this.family != null) {
+                        this.family.setHome(this.getPosition(), 6000);
+                    }
                     this.children.clear();
                 }
             }
