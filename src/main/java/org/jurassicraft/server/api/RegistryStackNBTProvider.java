@@ -8,7 +8,6 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-//TODO: maybe merge with `StackNBTProvider` seeing as it wont be used on its own
 public interface RegistryStackNBTProvider<T extends IForgeRegistryEntry.Impl<T> & Comparable<T>> extends StackNBTProvider<T> {
 
     IForgeRegistry<T> getRegistry();
@@ -19,7 +18,7 @@ public interface RegistryStackNBTProvider<T extends IForgeRegistryEntry.Impl<T> 
     }
 
     @Override
-    default String getRegistryNameFor(T type) {
+    default String getNameFor(T type) {
         return type.getRegistryName().toString();
     }
 

@@ -12,6 +12,10 @@ public class Dart extends Item {
     private final BiConsumer<DinosaurEntity, ItemStack> consumer;
     private final int dartColor;
 
+    public Dart(BiConsumer<DinosaurEntity, ItemStack> consumer) {
+        this(consumer, -1);
+    }
+
     public Dart(BiConsumer<DinosaurEntity, ItemStack> consumer, int dartColor) {
 	    this.consumer = consumer;
 	    this.dartColor = dartColor;

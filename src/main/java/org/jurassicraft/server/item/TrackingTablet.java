@@ -1,6 +1,7 @@
 package org.jurassicraft.server.item;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -27,6 +28,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.gui.TrackingTabletGui;
+import org.jurassicraft.server.api.StackNBTProvider;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
@@ -34,9 +36,11 @@ import org.jurassicraft.server.util.TrackingMapIterator;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
-public class TrackingTablet extends Item {
+public class TrackingTablet extends Item implements StackNBTProvider<Integer> {
 
     public static final int MIN_TIER = 1;
     public static final int MAX_TIER = 5;
@@ -55,9 +59,7 @@ public class TrackingTablet extends Item {
     @Override
     public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if(player.isSneaking() && !worldIn.isRemote) {
-            TrackingInfo info = new TrackingInfo(player.getHeldItem(hand));
-            info.tier++;
-            info.putInStack(player.getHeldItem(hand));
+            ItemHandler.TRACKING_TABLET.putValue(player.getHeldItem(hand), ItemHandler.TRACKING_TABLET.getValue(player.getHeldItem(hand)) + 1);
             player.sendMessage(new TextComponentString("Upgraded tier"));
         }
         return EnumActionResult.SUCCESS;
@@ -77,21 +79,45 @@ public class TrackingTablet extends Item {
         Minecraft.getMinecraft().displayGuiScreen(new TrackingTabletGui(pos, hand, distance));
     }
 
+
+    @Override
+    public List<Integer> getAllValues() {
+        return IntStream.range(MIN_TIER, MAX_TIER + 1).collect(Lists::newArrayList, List::add, List::addAll);
+    }
+
+    @Override
+    public String getNameFor(Integer type) {
+        return String.valueOf(type);
+    }
+
+    @Override
+    public Integer getValueFromName(String string) {
+        return Integer.parseInt(string);
+    }
+
+    @Override
+    public String getKey() {
+        return "tier";
+    }
+
+    @Override
+    public Map<Object, ResourceLocation> getModelResourceLocations(Integer value) {
+        Map<Object, ResourceLocation> map = Maps.newHashMap();
+        map.put(getDefault(), new ResourceLocation(JurassiCraft.MODID, "item/tracking_tablet_tier_" + value));
+        return map;
+    }
+
     public static class TrackingInfo {
-        private int tier;
         private final List<DinosaurInfo> dinosaurInfos = Lists.newArrayList();
 
-        public TrackingInfo(ItemStack stack){
-            this(stack.getOrCreateSubCompound("jurassicraft").getCompoundTag("tracking_info"));
-        }
+        private final int tier;
 
-        public TrackingInfo(NBTTagCompound nbt) {
-            for (NBTBase nbtBase : nbt.getTagList("tracking_list", Constants.NBT.TAG_COMPOUND)) {
+        public TrackingInfo(ItemStack stack){
+            for (NBTBase nbtBase : stack.getOrCreateSubCompound("jurassicraft").getTagList("tracking_list", Constants.NBT.TAG_COMPOUND)) {
                 dinosaurInfos.add(DinosaurInfo.deserializeNBT((NBTTagCompound)nbtBase));
             }
-            this.tier = nbt.getInteger("tier");
+            this.tier = ItemHandler.TRACKING_TABLET.getValue(stack);
         }
-
         public List<DinosaurInfo> getDinosaurInfos() {
             return dinosaurInfos;
         }
@@ -103,7 +129,6 @@ public class TrackingTablet extends Item {
                 list.appendTag(dinosaurInfo.serializeNBT());
             }
             nbt.setTag("tracking_list", list);
-            nbt.setInteger("tier", this.tier);
             return nbt;
         }
 
@@ -114,7 +139,7 @@ public class TrackingTablet extends Item {
         public void update(World world, BlockPos playerPos) { //TODO: maybe dont clear the list and just simply add / remove stuff that dosnt exist
             this.dinosaurInfos.clear();
             int distance = this.getDistance();
-            for (DinosaurInfo dinosaurInfo : TrackingSavedData.getData(world).getDinosaurInfos()) {
+            for (DinosaurInfo dinosaurInfo : TrackingSavedData.getData(world).getDinosaurInfos(world)) {
                 int disX = Math.abs(dinosaurInfo.getPos().getX() - playerPos.getX());
                 int disZ = Math.abs(dinosaurInfo.getPos().getZ() - playerPos.getZ());
                 if(disX > -distance && disX < distance && disZ > -distance && disZ < distance) {
@@ -127,7 +152,7 @@ public class TrackingTablet extends Item {
         }
 
         public int getDistance() {
-            this.tier = MathHelper.clamp(this.tier, MIN_TIER, MAX_TIER);
+            int tier = MathHelper.clamp(this.tier, MIN_TIER, MAX_TIER);
             return 2 << (tier + 6);
         }
     }
@@ -137,7 +162,7 @@ public class TrackingTablet extends Item {
 
         public static final String ID = JurassiCraft.MODID + "_tracking_saved_data";
 
-        private final List<DinosaurInfo> dinosaurInfos = Lists.newArrayList();
+        private final Map<Integer, List<DinosaurInfo>> dinosaurInfos = Maps.newHashMap();
 
         public TrackingSavedData(String name) {
             super(name);
@@ -145,19 +170,29 @@ public class TrackingTablet extends Item {
 
         @Override
         public void readFromNBT(NBTTagCompound nbt) {
-            NBTTagList list = nbt.getTagList("List", Constants.NBT.TAG_COMPOUND);
-            for (NBTBase nbtBase : list) {
-                dinosaurInfos.add(DinosaurInfo.deserializeNBT((NBTTagCompound)nbtBase));
+            for (int dim : nbt.getIntArray("Dims")) {
+                NBTTagList list = nbt.getTagList("List" + dim, Constants.NBT.TAG_COMPOUND);
+                for (NBTBase nbtBase : list) {
+                    dinosaurInfos.computeIfAbsent(dim, din -> Lists.newArrayList()).add(DinosaurInfo.deserializeNBT((NBTTagCompound)nbtBase));
+                }
             }
         }
 
         @Override
         public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-            NBTTagList list = new NBTTagList();
-            for (DinosaurInfo dinosaurInfo : dinosaurInfos) {
-                list.appendTag(dinosaurInfo.serializeNBT());
+            dinosaurInfos.forEach((dim, info) -> {
+                NBTTagList list = new NBTTagList();
+                for (DinosaurInfo dinosaurInfo : info) {
+                    list.appendTag(dinosaurInfo.serializeNBT());
+                }
+                compound.setTag("List" + dim, list);
+            });
+            int[] aint = new int[dinosaurInfos.size()];
+            int i = 0;
+            for (Integer integer : dinosaurInfos.keySet()) {
+                aint[i++] = integer;
             }
-            compound.setTag("List", list);
+            compound.setIntArray("Dims", aint);
             return compound;
         }
 
@@ -176,20 +211,23 @@ public class TrackingTablet extends Item {
             Entity entity = event.getEntity();
             World world = entity.world;
             if(!world.isRemote && entity instanceof DinosaurEntity) {
-                TrackingSavedData data = getData(world);
-                for (DinosaurInfo dinosaurInfo : data.dinosaurInfos) {
-                    if(dinosaurInfo.entityUUID.equals(entity.getPersistentID())) {
-                        return;
+                DinosaurEntity dino = (DinosaurEntity) entity;
+                if(dino.hasTracker()) {
+                    TrackingSavedData data = getData(world);
+                    for (DinosaurInfo dinosaurInfo : data.dinosaurInfos.getOrDefault(world.provider.getDimension(), Lists.newArrayList())) {
+                        if(dinosaurInfo.entityUUID.equals(entity.getPersistentID())) {
+                            return;
+                        }
                     }
+                    System.out.println("Added DATA: " + entity.getUniqueID());
+                    data.dinosaurInfos.computeIfAbsent(world.provider.getDimension(), dim -> Lists.newArrayList()).add(DinosaurInfo.fromEntity(dino));
+                    data.markDirty();
                 }
-                System.out.println("Added DATA: " + entity.getUniqueID());
-                data.dinosaurInfos.add(DinosaurInfo.fromEntity((DinosaurEntity)entity));
-                data.markDirty();
             }
         }
 
-        public List<DinosaurInfo> getDinosaurInfos() {
-            return dinosaurInfos;
+        public List<DinosaurInfo> getDinosaurInfos(World world) {
+            return dinosaurInfos.getOrDefault(world.provider.getDimension(), Lists.newArrayList());
         }
     }
 

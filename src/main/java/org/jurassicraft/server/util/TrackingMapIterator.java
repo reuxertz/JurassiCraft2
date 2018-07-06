@@ -54,9 +54,6 @@ public class TrackingMapIterator {
             playerMap.get(entityPlayer).isFinished = true;
         }
         playerMap.put(entityPlayer, this);
-        //Mojang like to store the int cache. When using a large area (2048x2048) that can stack up, causing memory issues. This is just to make sure that it isnt cached at all, so theres no memory leaks
-        ReflectionHelper.setPrivateValue(IntCache.class, null, 256, FMLDeobfuscatingRemapper.INSTANCE.mapFieldName("net/minecraft/world/gen/layer/IntCache", "field_76451_a", "I"));
-        IntCache.getIntCache(257);
     }
 
     public void start() {
@@ -69,6 +66,9 @@ public class TrackingMapIterator {
         }
         if(this.biomes == null) {
             Biome[] localBiomes = this.biomeProvider.getBiomes(null, playerPos.getX() - this.distance,playerPos.getZ() - this.distance + Math.floorDiv(this.layersCached, this.distance * 2), this.distance * 2, 128, false);
+            //Mojang like to store the int cache. When using a large area (2048x2048) that can stack up, causing memory issues. This is just to make sure that it isnt cached at all, so theres no memory leaks
+            ReflectionHelper.setPrivateValue(IntCache.class, null, 256, FMLDeobfuscatingRemapper.INSTANCE.mapFieldName("net/minecraft/world/gen/layer/IntCache", "field_76451_a", "I"));
+            IntCache.getIntCache(257);
             System.arraycopy(localBiomes, 0, this.preBiome, this.layersCached, Math.min(localBiomes.length, this.preBiome.length - layersCached));
             this.layersCached += localBiomes.length;
             if(this.layersCached >= this.preBiome.length) {

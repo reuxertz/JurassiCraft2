@@ -13,7 +13,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.TRSRTransformation;
 import org.jurassicraft.client.event.DinosaurModelHandler;
-import org.jurassicraft.server.item.HatchedEggItem;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -25,7 +24,7 @@ public interface StackNBTProvider<T> {
 
     List<T> getAllValues();
 
-    String getRegistryNameFor(T type);
+    String getNameFor(T type);
 
     T getValueFromName(String string);
 
@@ -48,7 +47,7 @@ public interface StackNBTProvider<T> {
     }
 
     default ItemStack putValue(ItemStack stack, T value) {
-        stack.getOrCreateSubCompound("jurassicraft").setString(getKey(), getRegistryNameFor(value));
+        stack.getOrCreateSubCompound("jurassicraft").setString(getKey(), getNameFor(value));
         return stack;
     }
 
@@ -103,7 +102,7 @@ public interface StackNBTProvider<T> {
     }
 
     default List<String> getKeySet() {
-        return this.getAllValues().stream().map(this::getRegistryNameFor).collect(Collectors.toList());
+        return this.getAllValues().stream().map(this::getNameFor).collect(Collectors.toList());
     }
 
     default boolean canBeInCreativeTab(T value) {
