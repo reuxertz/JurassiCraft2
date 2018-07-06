@@ -12,11 +12,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.util.Constants;
@@ -38,16 +38,29 @@ import java.util.UUID;
 
 public class TrackingTablet extends Item {
 
-    public static final int DISTANCE = 2048; //Maybe have diffrent tiers of tracking tablets with diffrent ranges?
+    public static final int MIN_TIER = 1;
+    public static final int MAX_TIER = 5;
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+        int distnace = new TrackingInfo(playerIn.getHeldItem(handIn)).getDistance();
         if(worldIn.isRemote) {
-            this.openGui(handIn, null);
+            this.openGui(playerIn.getPosition(), handIn, distnace);
         } else {
-            new TrackingMapIterator(playerIn).start();
+            new TrackingMapIterator(playerIn, distnace).start();
         }
         return super.onItemRightClick(worldIn, playerIn, handIn);
+    }
+
+    @Override
+    public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        if(player.isSneaking() && !worldIn.isRemote) {
+            TrackingInfo info = new TrackingInfo(player.getHeldItem(hand));
+            info.tier++;
+            info.putInStack(player.getHeldItem(hand));
+            player.sendMessage(new TextComponentString("Upgraded tier"));
+        }
+        return EnumActionResult.SUCCESS;
     }
 
     @Override
@@ -60,33 +73,38 @@ public class TrackingTablet extends Item {
     }
 
     @SideOnly(Side.CLIENT)
-    public void openGui(EnumHand hand, TrackingMapIterator mapIterator) {
-        Minecraft.getMinecraft().displayGuiScreen(new TrackingTabletGui(hand, mapIterator));
+    public void openGui(BlockPos pos, EnumHand hand, int distance) {
+        Minecraft.getMinecraft().displayGuiScreen(new TrackingTabletGui(pos, hand, distance));
     }
 
     public static class TrackingInfo {
+        private int tier;
         private final List<DinosaurInfo> dinosaurInfos = Lists.newArrayList();
 
         public TrackingInfo(ItemStack stack){
-            this(stack.getOrCreateSubCompound("jurassicraft").getTagList("tracking_info", Constants.NBT.TAG_COMPOUND));
+            this(stack.getOrCreateSubCompound("jurassicraft").getCompoundTag("tracking_info"));
         }
 
-        public TrackingInfo(NBTTagList list) {
-            for (NBTBase nbtBase : list) {
+        public TrackingInfo(NBTTagCompound nbt) {
+            for (NBTBase nbtBase : nbt.getTagList("tracking_list", Constants.NBT.TAG_COMPOUND)) {
                 dinosaurInfos.add(DinosaurInfo.deserializeNBT((NBTTagCompound)nbtBase));
             }
+            this.tier = nbt.getInteger("tier");
         }
 
         public List<DinosaurInfo> getDinosaurInfos() {
             return dinosaurInfos;
         }
 
-        public NBTTagList serialize() {
+        public NBTTagCompound serialize() {
+            NBTTagCompound nbt = new NBTTagCompound();
             NBTTagList list = new NBTTagList();
             for (DinosaurInfo dinosaurInfo : dinosaurInfos) {
                 list.appendTag(dinosaurInfo.serializeNBT());
             }
-            return list;
+            nbt.setTag("tracking_list", list);
+            nbt.setInteger("tier", this.tier);
+            return nbt;
         }
 
         public void putInStack(ItemStack stack) {
@@ -95,17 +113,22 @@ public class TrackingTablet extends Item {
 
         public void update(World world, BlockPos playerPos) { //TODO: maybe dont clear the list and just simply add / remove stuff that dosnt exist
             this.dinosaurInfos.clear();
+            int distance = this.getDistance();
             for (DinosaurInfo dinosaurInfo : TrackingSavedData.getData(world).getDinosaurInfos()) {
                 int disX = Math.abs(dinosaurInfo.getPos().getX() - playerPos.getX());
                 int disZ = Math.abs(dinosaurInfo.getPos().getZ() - playerPos.getZ());
-
-                if(disX > -DISTANCE && disX < DISTANCE && disZ > -DISTANCE && disZ < DISTANCE) {
+                if(disX > -distance && disX < distance && disZ > -distance && disZ < distance) {
                     this.dinosaurInfos.add(dinosaurInfo);
                 }
             }
 //            for (DinosaurEntity entity : world.getEntitiesWithinAABB(DinosaurEntity.class, new AxisAlignedBB(playerPos.add(DISTANCE, DISTANCE, DISTANCE), playerPos.add(-DISTANCE, -DISTANCE, -DISTANCE)))) { // DinosaurEntity::hasTracker
 //                this.dinosaurInfos.add(DinosaurInfo.fromEntity(entity));
 //            }
+        }
+
+        public int getDistance() {
+            this.tier = MathHelper.clamp(this.tier, MIN_TIER, MAX_TIER);
+            return 2 << (tier + 6);
         }
     }
 
