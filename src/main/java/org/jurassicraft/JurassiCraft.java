@@ -3,6 +3,7 @@ package org.jurassicraft;
 import org.apache.logging.log4j.Logger;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.command.ForceAnimationCommand;
+import org.jurassicraft.server.command.SpawnStructureCommand;
 import org.jurassicraft.server.conf.JurassiCraftConfig;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.message.*;
@@ -62,6 +63,7 @@ public class JurassiCraft {
     @Mod.EventHandler
     public void onServerStarting(FMLServerStartingEvent event) {
         event.registerServerCommand(new ForceAnimationCommand());
+        event.registerServerCommand(new SpawnStructureCommand());
     }
 
     @Mod.EventHandler
