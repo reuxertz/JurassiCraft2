@@ -35,6 +35,14 @@ public abstract class StructureGenerator extends WorldGenerator {
         this.mirror = mirrors[rand.nextInt(mirrors.length)];
     }
 
+    public void setRotation(Rotation rotation) {
+        this.rotation = rotation;
+    }
+
+    public void setMirror(Mirror mirror) {
+        this.mirror = mirror;
+    }
+
     protected BlockPos placeOnGround(World world, BlockPos pos, int yOffset) {
         if (this.horizontalPos >= 0) {
             return new BlockPos(pos.getX(), this.horizontalPos, pos.getZ());

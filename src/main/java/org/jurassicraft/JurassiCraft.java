@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import org.apache.logging.log4j.Logger;
 import org.jurassicraft.server.command.ForceAnimationCommand;
+import org.jurassicraft.server.command.SpawnStructureCommand;
 import org.jurassicraft.server.message.*;
 import org.jurassicraft.server.proxy.ServerProxy;
 
@@ -54,6 +55,7 @@ public class JurassiCraft {
     @Mod.EventHandler
     public void onServerStarting(FMLServerStartingEvent event) {
         event.registerServerCommand(new ForceAnimationCommand());
+        event.registerServerCommand(new SpawnStructureCommand());
     }
 
     public static Logger getLogger() {
