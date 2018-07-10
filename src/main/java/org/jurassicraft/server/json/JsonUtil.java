@@ -1,7 +1,7 @@
 package org.jurassicraft.server.json;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
+import com.google.common.collect.Lists;
+import com.google.gson.*;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -15,6 +15,8 @@ import org.jurassicraft.JurassiCraft;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class JsonUtil {
 
@@ -53,5 +55,13 @@ public class JsonUtil {
                     }, true, true);
         });
         Loader.instance().setActiveModContainer(Loader.instance().getIndexedModList().get(JurassiCraft.MODID));
+    }
+
+    public static <T> List<T> deserializeArray(JsonArray array, JsonDeserializationContext context, Class<T> clazz) {
+        List<T> list = Lists.newArrayList();
+        for (JsonElement jsonElement : array) {
+            list.add(context.deserialize(JsonUtils.getJsonObject(jsonElement, ""), clazz));
+        }
+        return list;
     }
 }

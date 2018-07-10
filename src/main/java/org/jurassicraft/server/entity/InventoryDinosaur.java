@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 import java.util.Random;
 
 public class InventoryDinosaur implements IInventory {
+
     private DinosaurEntity entity;
 
     private NonNullList<ItemStack> inventory;

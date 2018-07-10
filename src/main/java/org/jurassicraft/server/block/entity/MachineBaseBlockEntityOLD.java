@@ -330,6 +330,16 @@ public abstract class MachineBaseBlockEntityOLD extends TileEntityLockable imple
         }
     }
 
+    public float getProcessPercent(int id) {
+        if(id >= 0 && id < this.getProcessCount()) {
+            float total = this.totalProcessTime[id];
+            if(total != 0) {
+                return (float)this.processTime[id] / total;
+            }
+        }
+        return 0;
+    }
+
     @Override
     public int getFieldCount() {
         return this.getProcessCount() * 2;

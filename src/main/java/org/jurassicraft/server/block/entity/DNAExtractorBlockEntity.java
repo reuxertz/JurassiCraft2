@@ -20,6 +20,7 @@ import org.jurassicraft.server.plant.Plant;
 import org.jurassicraft.server.plant.PlantHandler;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -60,26 +61,24 @@ public class DNAExtractorBlockEntity extends MachineBaseBlockEntityOLD {
 
             if (item == ItemHandler.AMBER || item == ItemHandler.SEA_LAMPREY) {
                 if (input.getItemDamage() == 0) {
-                    List<Dinosaur> possibleDinos = JurassicraftRegisteries.DINOSAUR_REGISTRY.getValuesCollection().stream()
+                    Optional<Dinosaur> dinosaur = JurassicraftRegisteries.DINOSAUR_REGISTRY.getValuesCollection().stream()
                             .filter(dino -> !(dino instanceof Hybrid) && (item != ItemHandler.AMBER) == dino.isMarineCreature())
-                            .collect(Collectors.toList());
+                            .findAny();
 
-                    Dinosaur dino = possibleDinos.get(rand.nextInt(possibleDinos.size()));
+                    if(dinosaur.isPresent()) {
+                        disc = new ItemStack(ItemHandler.STORAGE_DISC);
+                        int quality = (rand.nextInt(10) + 1) * 5;
+                        if (rand.nextInt(2) > 0) {
+                            quality += 50;
+                        }
 
-                    disc = new ItemStack(ItemHandler.STORAGE_DISC);
+                        DinoDNA dna = new DinoDNA(dinosaur.get(), quality, GeneticsHelper.randomGenetics(rand));
 
-                    int quality = (rand.nextInt(10) + 1) * 5;
+                        NBTTagCompound nbt = new NBTTagCompound();
+                        dna.writeToNBT(nbt);
 
-                    if (rand.nextInt(2) > 0) {
-                        quality += 50;
+                        disc.setTagCompound(nbt);
                     }
-
-                    DinoDNA dna = new DinoDNA(dino, quality, GeneticsHelper.randomGenetics(rand));
-
-                    NBTTagCompound nbt = new NBTTagCompound();
-                    dna.writeToNBT(nbt);
-
-                    disc.setTagCompound(nbt);
                 } else if (input.getItemDamage() == 1) {
                     List<Plant> possiblePlants = PlantHandler.getPrehistoricPlantsAndTrees();
 

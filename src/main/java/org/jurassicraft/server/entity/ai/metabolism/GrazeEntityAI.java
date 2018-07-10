@@ -13,6 +13,7 @@ import org.jurassicraft.server.entity.MetabolismContainer;
 import org.jurassicraft.server.entity.ai.Mutex;
 import org.jurassicraft.server.entity.ai.util.OnionTraverser;
 import org.jurassicraft.server.food.FoodHelper;
+import org.jurassicraft.server.food.FoodType;
 import org.jurassicraft.server.util.GameRuleHandler;
 
 public class GrazeEntityAI extends EntityAIBase {
@@ -36,6 +37,9 @@ public class GrazeEntityAI extends EntityAIBase {
 
     @Override
     public boolean shouldExecute() {
+        if(!this.dinosaur.getDinosaur().getDiet().canEat(this.dinosaur, FoodType.PLANT)) {
+            return false;
+        }
         if (!(this.dinosaur.isDead || this.dinosaur.isCarcass() || !GameRuleHandler.DINO_METABOLISM.getBoolean(this.dinosaur.world)) && this.dinosaur.getMetabolism().isHungry()) {
             if (!this.dinosaur.getMetabolism().isStarving() && this.dinosaur.getClosestFeeder() != null) {
                 return false;

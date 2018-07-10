@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 import org.jurassicraft.client.model.animation.EntityAnimation;
 import org.jurassicraft.client.sound.SoundHandler;
 import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.entity.GoatEntity;
 import org.jurassicraft.server.entity.ai.LeapingMeleeEntityAI;
 import org.jurassicraft.server.entity.ai.RaptorLeapEntityAI;
@@ -20,7 +21,7 @@ import org.jurassicraft.server.entity.ai.RaptorLeapEntityAI;
 public class VelociraptorEntity extends DinosaurEntity {
     public VelociraptorEntity(World world) {
         super(world);
-        this.target(GoatEntity.class, EntityPlayer.class, EntityAnimal.class, EntityVillager.class, DilophosaurusEntity.class, GallimimusEntity.class, ParasaurolophusEntity.class, TriceratopsEntity.class, MicroraptorEntity.class, MussaurusEntity.class);
+        this.target(new DinosaurClassAttackPredicate(GoatEntity.class, EntityPlayer.class, EntityAnimal.class, EntityVillager.class), new DinosaurAttackPredicate(EntityHandler.DILOPHOSAURUS, EntityHandler.GALLIMIMUS, EntityHandler.PARASAUROLOPHUS, EntityHandler.TRICERATOPS, EntityHandler.MICRORAPTOR, EntityHandler.MUSSAURUS));
         this.tasks.addTask(1, new LeapingMeleeEntityAI(this, this.dinosaur.getAttackSpeed()));
     }
 

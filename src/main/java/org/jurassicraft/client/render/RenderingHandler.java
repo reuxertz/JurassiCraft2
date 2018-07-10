@@ -39,9 +39,7 @@ import org.jurassicraft.server.block.plant.AncientCoralBlock;
 import org.jurassicraft.server.block.tree.AncientLeavesBlock;
 import org.jurassicraft.server.block.tree.TreeType;
 import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.GoatEntity;
-import org.jurassicraft.server.entity.TranquilizerDartEntity;
-import org.jurassicraft.server.entity.VenomEntity;
+import org.jurassicraft.server.entity.*;
 import org.jurassicraft.server.entity.item.AttractionSignEntity;
 import org.jurassicraft.server.entity.item.DinosaurEggEntity;
 import org.jurassicraft.server.entity.item.MuralEntity;
@@ -68,7 +66,7 @@ public enum RenderingHandler {
     INSTANCE;
 
     private final Minecraft mc = Minecraft.getMinecraft();
-    private static Map<Dinosaur, DinosaurRenderInfo> renderInfos = Maps.newHashMap();
+    public static Map<Dinosaur, DinosaurRenderInfo> renderInfos = Maps.newHashMap();
 
     //TODO: CLEAN THIS UP OMG PLZ
     @SubscribeEvent
@@ -396,6 +394,7 @@ public enum RenderingHandler {
 //        registerRenderInfo(EntityHandler.VELOCIRAPTOR, new VelociraptorAnimator(), 0.45F);
 //        registerRenderInfo(EntityHandler.STEGOSAURUS, new StegosaurusAnimator(), 0.65F);
 
+
         for(Dinosaur dinosaur : JurassicraftRegisteries.DINOSAUR_REGISTRY.getValuesCollection()) {
             ResourceLocation location = dinosaur.getRegistryName();
             if(location != null) {
@@ -415,6 +414,8 @@ public enum RenderingHandler {
                 e.printStackTrace();
             }
         }
+
+        RenderingRegistry.registerEntityRenderingHandler(DinosaurEntity.class, manager -> new DinosaurRenderer(renderInfos.get(EntityHandler.VELOCIRAPTOR), manager));
 
         RenderingRegistry.registerEntityRenderingHandler(PaddockSignEntity.class, new PaddockSignRenderer());
         RenderingRegistry.registerEntityRenderingHandler(AttractionSignEntity.class, new AttractionSignRenderer());
@@ -502,7 +503,6 @@ public enum RenderingHandler {
 
     private static void registerRenderInfo(DinosaurRenderInfo renderDef) {
         renderInfos.put(renderDef.getDinosaur(), renderDef);
-        RenderingRegistry.registerEntityRenderingHandler(renderDef.getDinosaur().getDinosaurClass(), renderDef);
     }
 
     public DinosaurRenderInfo getRenderInfo(Dinosaur dino) {

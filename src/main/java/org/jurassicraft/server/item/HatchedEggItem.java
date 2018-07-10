@@ -63,27 +63,22 @@ public class HatchedEggItem extends DNAContainerItem {
         if (player.canPlayerEdit(pos, side, stack)) {
             if (!world.isRemote) {
                 Dinosaur dinosaur = this.getValue(stack);
+                DinosaurEntity entity = new DinosaurEntity(world, dinosaur);
 
-                try {
-                    DinosaurEntity entity = dinosaur.getDinosaurClass().getDeclaredConstructor(World.class).newInstance(world);
-
-                    entity.setPosition(pos.getX() + hitX, pos.getY(), pos.getZ() + hitZ);
-                    entity.setAge(0);
-                    entity.setGenetics(this.getGeneticCode(player, stack));
-                    entity.setDNAQuality(this.getDNAQuality(player, stack));
-                    entity.setMale(this.getGender(player, stack));
+                entity.setPosition(pos.getX() + hitX, pos.getY(), pos.getZ() + hitZ);
+                entity.setAge(0);
+                entity.setGenetics(this.getGeneticCode(player, stack));
+                entity.setDNAQuality(this.getDNAQuality(player, stack));
+                entity.setMale(this.getGender(player, stack));
+                entity.setOwner(player);
+                if (!player.isSneaking()) {
                     entity.setOwner(player);
-                    if (!player.isSneaking()) {
-                        entity.setOwner(player);
-                    }
+                }
 
-                    world.spawnEntity(entity);
+                world.spawnEntity(entity);
 
-                    if (!player.capabilities.isCreativeMode) {
-                        stack.shrink(1);
-                    }
-                } catch (ReflectiveOperationException e) {
-                    JurassiCraft.getLogger().warn("Failed to spawn dinosaur from hatched egg", e);
+                if (!player.capabilities.isCreativeMode) {
+                    stack.shrink(1);
                 }
             }
 

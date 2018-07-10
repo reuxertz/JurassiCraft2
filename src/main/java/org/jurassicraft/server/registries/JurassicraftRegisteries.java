@@ -73,9 +73,9 @@ public class JurassicraftRegisteries {
             dinosaur.init();
             if(!(dinosaur instanceof Hybrid)) {
                 ((HashMap<TimePeriod, List<Dinosaur>>)owner.getSlaveMap(TIME_PERIOD_MAP, HashMap.class)).computeIfAbsent(dinosaur.getPeriod(), time -> Lists.newArrayList()).add(dinosaur);
-                if(JurassiCraftConfig.ENTITIES.naturalSpawning) {
-                    EntityRegistry.addSpawn(dinosaur.getDinosaurClass(), dinosaur.getSpawnChance(), 1, Math.min(6, dinosaur.getMaxHerdSize() / 2), dinosaur.isMarineCreature() ? EnumCreatureType.WATER_CREATURE : EnumCreatureType.CREATURE, dinosaur.getSpawnBiomes());
-                }
+//                if(JurassiCraftConfig.ENTITIES.naturalSpawning) {
+//                    EntityRegistry.addSpawn(dinosaur.getDinosaurClass(), dinosaur.getSpawnChance(), 1, Math.min(6, dinosaur.getMaxHerdSize() / 2), dinosaur.isMarineCreature() ? EnumCreatureType.WATER_CREATURE : EnumCreatureType.CREATURE, dinosaur.getSpawnBiomes());
+//                }
             }
         }
     }

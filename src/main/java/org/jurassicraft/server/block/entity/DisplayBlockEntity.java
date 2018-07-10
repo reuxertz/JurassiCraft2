@@ -25,11 +25,8 @@ public class DisplayBlockEntity extends TileEntity {
     public void setDinosaur(Dinosaur dinosaur, boolean isMale, boolean isSkeleton) {
         this.isMale = isMale;
         this.isSkeleton = isSkeleton;
-        try {
-            this.entity = dinosaur.getDinosaurClass().getDeclaredConstructor(World.class).newInstance(this.world);
-            this.initializeEntity(this.entity);
-        } catch (Exception e) {
-        }
+        this.entity = new DinosaurEntity(world, dinosaur);
+        this.initializeEntity(this.entity);
         this.markDirty();
     }
 

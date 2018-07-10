@@ -2,6 +2,7 @@ package org.jurassicraft.server.entity.ai;
 
 import net.minecraft.entity.ai.EntityAIBase;
 import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.food.FoodType;
 
 import java.util.List;
 
@@ -27,6 +28,9 @@ public class TargetCarcassEntityAI extends EntityAIBase {
 
     @Override
     public boolean shouldExecute() {
+        if(!this.entity.getDinosaur().getDiet().canEat(this.entity, FoodType.MEAT)) {
+            return false;
+        }
         if (!this.entity.getMetabolism().isHungry()) {
             return false;
         }

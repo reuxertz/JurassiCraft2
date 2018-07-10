@@ -11,34 +11,42 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.client.model.AnimatableModel;
-import org.jurassicraft.client.render.RenderingHandler;
 import org.jurassicraft.client.render.entity.dinosaur.DinosaurRenderInfo;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.GrowthStage;
 
 import java.awt.*;
+import java.util.Random;
 
-public class DinosaurRenderer extends RenderLiving<DinosaurEntity> {
+@SideOnly(Side.CLIENT)
+public class DinosaurRendererOLD extends RenderLiving<DinosaurEntity> {
+    public Dinosaur dinosaur;
+    public DinosaurRenderInfo renderInfo;
 
-    public DinosaurRenderer(DinosaurRenderInfo fallBackInfo, RenderManager rendermanagerIn) {
-        super(rendermanagerIn, fallBackInfo.getModelAdult(), fallBackInfo.getShadowSize());
+    public Random random;
+
+    public DinosaurRendererOLD(DinosaurRenderInfo renderInfo, RenderManager renderManager) {
+        super(renderManager, renderInfo.getModel(GrowthStage.INFANT), renderInfo.getShadowSize());
+
+        this.dinosaur = renderInfo.getDinosaur();
+        this.random = new Random();
+        this.renderInfo = renderInfo;
+
+        this.addLayer(new LayerEyelid(this));
     }
 
     @Override
     public void preRenderCallback(DinosaurEntity entity, float partialTick) {
         float scaleModifier = entity.getAttributes().getScaleModifier();
-        Dinosaur dinosaur = entity.getDinosaur();
-        DinosaurRenderInfo renderInfo = RenderingHandler.renderInfos.get(dinosaur);
+        float scale = (float) entity.interpolate(this.dinosaur.getScaleInfant(), this.dinosaur.getScaleAdult()) * scaleModifier;
 
-        float scale = (float) entity.interpolate(dinosaur.getScaleInfant(), dinosaur.getScaleAdult()) * scaleModifier;
+        this.shadowSize = scale * this.renderInfo.getShadowSize();
 
-        this.shadowSize = scale * renderInfo.getShadowSize();
-
-        GlStateManager.translate(dinosaur.getOffsetX() * scale, dinosaur.getOffsetY() * scale, dinosaur.getOffsetZ() * scale);
+        GlStateManager.translate(this.dinosaur.getOffsetX() * scale, this.dinosaur.getOffsetY() * scale, this.dinosaur.getOffsetZ() * scale);
 
         String name = entity.getCustomNameTag();
-
+        
         switch (name) {
             case "Kashmoney360":
             case "JTGhawk137":
@@ -64,7 +72,7 @@ public class DinosaurRenderer extends RenderLiving<DinosaurEntity> {
 
     @Override
     public void doRender(DinosaurEntity entity, double x, double y, double z, float entityYaw, float partialTicks) {
-        AnimatableModel model = RenderingHandler.renderInfos.get(entity.getDinosaur()).getModel(entity.getGrowthStage());
+        AnimatableModel model = this.renderInfo.getModel(entity.getGrowthStage());
         this.mainModel = model;
         model.partialTicks = partialTicks;
         model.location = this.getEntityTexture(entity);
@@ -74,23 +82,22 @@ public class DinosaurRenderer extends RenderLiving<DinosaurEntity> {
     @Override
     public ResourceLocation getEntityTexture(DinosaurEntity entity) {
         GrowthStage growthStage = entity.getGrowthStage();
-        Dinosaur dinosaur = entity.getDinosaur();
-        if (!dinosaur.doesSupportGrowthStage(growthStage)) {
+        if (!this.dinosaur.doesSupportGrowthStage(growthStage)) {
             growthStage = GrowthStage.ADULT;
         }
-        return entity.isMale() ? dinosaur.getMaleTexture(growthStage) : dinosaur.getFemaleTexture(growthStage);
+        return entity.isMale() ? this.dinosaur.getMaleTexture(growthStage) : this.dinosaur.getFemaleTexture(growthStage);
     }
 
     @Override
-    protected void applyRotations(DinosaurEntity entity, float p_77043_2_, float rotationYaw, float partialTicks) {
-        GlStateManager.rotate(180.0F - rotationYaw, 0.0F, 1.0F, 0.0F);
+    protected void applyRotations(DinosaurEntity entity, float p_77043_2_, float p_77043_3_, float partialTicks) {
+        GlStateManager.rotate(180.0F - p_77043_3_, 0.0F, 1.0F, 0.0F);
     }
 
     @SideOnly(Side.CLIENT)
     public class LayerEyelid implements LayerRenderer<DinosaurEntity> {
-        private final DinosaurRenderer renderer;
+        private final DinosaurRendererOLD renderer;
 
-        public LayerEyelid(DinosaurRenderer renderer) {
+        public LayerEyelid(DinosaurRendererOLD renderer) {
             this.renderer = renderer;
         }
 
@@ -98,14 +105,13 @@ public class DinosaurRenderer extends RenderLiving<DinosaurEntity> {
         public void doRenderLayer(DinosaurEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float age, float yaw, float pitch, float scale) {
             if (!entity.isInvisible()) {
                 if (entity.areEyelidsClosed()) {
-                    Dinosaur dinosaur = entity.getDinosaur();
-                    ResourceLocation texture = dinosaur.getEyelidTexture(entity);
+                    ResourceLocation texture = this.renderer.dinosaur.getEyelidTexture(entity);
                     if (texture != null) {
                         ITextureObject textureObject = Minecraft.getMinecraft().getTextureManager().getTexture(texture);
                         if (textureObject != TextureUtil.MISSING_TEXTURE) {
                             this.renderer.bindTexture(texture);
 
-                            RenderingHandler.renderInfos.get(dinosaur).getModelAdult().render(entity, limbSwing, limbSwingAmount, age, yaw, pitch, scale);
+                            this.renderer.getMainModel().render(entity, limbSwing, limbSwingAmount, age, yaw, pitch, scale);
                             this.renderer.setLightmap(entity); //TODO: Make sure this works this.renderer.setLightmap(entity, partialTicks);
                         }
                     }

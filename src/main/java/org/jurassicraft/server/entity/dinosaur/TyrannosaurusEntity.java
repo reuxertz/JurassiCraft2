@@ -10,7 +10,9 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import org.jurassicraft.client.model.animation.EntityAnimation;
 import org.jurassicraft.client.sound.SoundHandler;
+import org.jurassicraft.server.dinosaur.*;
 import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.entity.GoatEntity;
 import org.jurassicraft.server.entity.LegSolverBiped;
 
@@ -21,7 +23,8 @@ public class TyrannosaurusEntity extends DinosaurEntity {
 
     public TyrannosaurusEntity(World world) {
         super(world);
-        this.target(GoatEntity.class, EntityPlayer.class, EntityAnimal.class, EntityVillager.class, EntityMob.class, DilophosaurusEntity.class, GallimimusEntity.class, TriceratopsEntity.class, ParasaurolophusEntity.class, VelociraptorEntity.class, MussaurusEntity.class);
+        this.target(new DinosaurClassAttackPredicate(GoatEntity.class, EntityPlayer.class, EntityAnimal.class, EntityVillager.class, EntityMob.class),
+                new DinosaurAttackPredicate(EntityHandler.DILOPHOSAURUS, EntityHandler.GALLIMIMUS, EntityHandler.TRICERATOPS, EntityHandler.PARASAUROLOPHUS, EntityHandler.VELOCIRAPTOR, EntityHandler.MUSSAURUS));
     }
 
     @Override

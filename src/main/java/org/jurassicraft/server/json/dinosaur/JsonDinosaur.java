@@ -8,7 +8,6 @@ public class JsonDinosaur extends Dinosaur {
 
     public JsonDinosaur(DinosaurProperties properties) {
         this.setName(properties.getName());
-        this.setDinosaurClass(properties.getEntityClass());
         this.setTimePeriod(properties.getTimePeriod());
         this.setHeadCubeName(properties.getHeadCubeName());
         this.setAnimatorClassName(properties.getDinosaurAnimatorClassName());

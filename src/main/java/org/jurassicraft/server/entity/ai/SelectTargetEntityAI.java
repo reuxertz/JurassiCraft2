@@ -13,16 +13,16 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 public class SelectTargetEntityAI extends EntityAIBase {
     private DinosaurEntity entity;
-    private Set<Class<? extends EntityLivingBase>> targetClasses;
+    private Predicate<Entity> attackPredicate;
     private EntityLivingBase targetEntity;
 
-    public SelectTargetEntityAI(DinosaurEntity entity, Class<? extends EntityLivingBase>[] targetClasses) {
+    public SelectTargetEntityAI(DinosaurEntity entity, Predicate<Entity> attackPredicate) {
         this.entity = entity;
-        this.targetClasses = new HashSet<>();
-        Collections.addAll(this.targetClasses, targetClasses);
+        this.attackPredicate = attackPredicate;
     }
 
     @Override
@@ -107,14 +107,6 @@ public class SelectTargetEntityAI extends EntityAIBase {
         if (entity instanceof EntityPlayer && ((EntityPlayer) entity).capabilities.isCreativeMode) {
             return false;
         }
-        if (!this.targetClasses.contains(entity.getClass())) {
-            for (Class<? extends EntityLivingBase> clazz : this.targetClasses) {
-                if (clazz.isAssignableFrom(entity.getClass())) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        return true;
+        return this.attackPredicate.test(entity);
     }
 }

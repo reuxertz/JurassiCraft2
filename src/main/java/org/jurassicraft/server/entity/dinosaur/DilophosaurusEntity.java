@@ -19,6 +19,7 @@ import net.minecraft.world.World;
 import org.jurassicraft.client.model.animation.EntityAnimation;
 import org.jurassicraft.client.sound.SoundHandler;
 import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.entity.GoatEntity;
 import org.jurassicraft.server.entity.VenomEntity;
 import org.jurassicraft.server.entity.ai.DilophosaurusMeleeEntityAI;
@@ -31,7 +32,7 @@ public class DilophosaurusEntity extends DinosaurEntity implements IRangedAttack
 
     public DilophosaurusEntity(World world) {
         super(world);
-        this.target(GoatEntity.class, EntityPlayer.class, EntityVillager.class, EntityAnimal.class, GallimimusEntity.class, ParasaurolophusEntity.class, TriceratopsEntity.class, VelociraptorEntity.class, MussaurusEntity.class);
+        this.target(new DinosaurClassAttackPredicate(GoatEntity.class, EntityPlayer.class, EntityVillager.class, EntityAnimal.class), new DinosaurAttackPredicate(EntityHandler.GALLIMIMUS, EntityHandler.PARASAUROLOPHUS, EntityHandler.TRICERATOPS, EntityHandler.VELOCIRAPTOR, EntityHandler.MUSSAURUS));
         this.tasks.addTask(1, new DilophosaurusMeleeEntityAI(this, this.dinosaur.getAttackSpeed()));
     }
 

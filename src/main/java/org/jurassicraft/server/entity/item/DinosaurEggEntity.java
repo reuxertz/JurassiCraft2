@@ -105,24 +105,20 @@ public class DinosaurEggEntity extends Entity implements IEntityAdditionalSpawnD
 
     public void hatch() {
         if(dinosaur != null) {
-            try {
-                DinosaurEntity entity = this.dinosaur.getDinosaurClass().getConstructor(World.class).newInstance(this.world);
-                entity.setPosition(this.posX, this.posY, this.posZ);
-                entity.setAge(0);
-                this.world.spawnEntity(entity);
-                entity.playLivingSound();
-                this.setDead();
-                for (Entity loadedEntity : this.world.loadedEntityList) {
-                    if (loadedEntity instanceof DinosaurEntity && loadedEntity.getUniqueID().equals(this.parent)) {
-                        DinosaurEntity parent = (DinosaurEntity) loadedEntity;
-                        if (parent.family != null && this.dinosaur.shouldDefendOffspring()) {
-                            parent.family.addChild(entity.getUniqueID());
-                        }
-                        break;
+            DinosaurEntity entity = new DinosaurEntity(this.world, this.dinosaur);
+            entity.setPosition(this.posX, this.posY, this.posZ);
+            entity.setAge(0);
+            this.world.spawnEntity(entity);
+            entity.playLivingSound();
+            this.setDead();
+            for (Entity loadedEntity : this.world.loadedEntityList) {
+                if (loadedEntity instanceof DinosaurEntity && loadedEntity.getUniqueID().equals(this.parent)) {
+                    DinosaurEntity parent = (DinosaurEntity) loadedEntity;
+                    if (parent.family != null && this.dinosaur.shouldDefendOffspring()) {
+                        parent.family.addChild(entity.getUniqueID());
                     }
+                    break;
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
     }

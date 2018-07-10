@@ -8,18 +8,26 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.server.block.entity.MachineBaseBlockEntityOLD;
 import org.jurassicraft.server.container.DNAExtractorContainer;
 
 @SideOnly(Side.CLIENT)
 public class DNAExtractorGui extends GuiContainer {
     private static final ResourceLocation TEXTURE = new ResourceLocation("jurassicraft:textures/gui/dna_extractor.png");
     private final InventoryPlayer playerInventory;
-    private IInventory extractor;
+    private GuiProgressBlock progressBlock;
+    private MachineBaseBlockEntityOLD extractor;
 
-    public DNAExtractorGui(InventoryPlayer playerInv, IInventory dnaSequencer) {
-        super(new DNAExtractorContainer(playerInv, (TileEntity) dnaSequencer));
+    public DNAExtractorGui(InventoryPlayer playerInv, MachineBaseBlockEntityOLD dnaSequencer) {
+        super(new DNAExtractorContainer(playerInv, dnaSequencer));
         this.playerInventory = playerInv;
         this.extractor = dnaSequencer;
+    }
+
+    @Override
+    public void initGui() {
+        super.initGui();
+        this.progressBlock = new GuiProgressBlock(this.guiLeft + 77, this.guiTop + 36, 23, 16, 176, 0, () -> this.extractor.getProcessPercent(0));
     }
 
     @Override
@@ -44,8 +52,9 @@ public class DNAExtractorGui extends GuiContainer {
         int y = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(x, y, 0, 0, this.xSize, this.ySize);
 
-        int progress = this.getProgress(24);
-        this.drawTexturedModalRect(x + 77, y + 36, 176, 0, progress + 1, 16);
+        progressBlock.render(this);
+//        int progress = this.getProgress(23);
+//        this.drawTexturedModalRect(x + 77, y + 36, 176, 0, progress, 16);
     }
 
     private int getProgress(int scale) {

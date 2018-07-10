@@ -59,32 +59,23 @@ public class DinosaurSpawnEggItem extends Item implements DinosaurProvider {
 
     public DinosaurEntity spawnDinosaur(World world, EntityPlayer player, ItemStack stack, double x, double y, double z) {
         Dinosaur dinosaur = this.getValue(stack);
-        if (dinosaur != null) {
-            Class<? extends DinosaurEntity> entityClass = dinosaur.getDinosaurClass();
-            try {
-                DinosaurEntity entity = entityClass.getConstructor(World.class).newInstance(player.world);
-                entity.setDNAQuality(100);
+        DinosaurEntity entity = new DinosaurEntity(world, dinosaur);
+        entity.setDNAQuality(100);
 
-                int mode = this.getMode(stack);
-                if (mode > 0) {
-                    entity.setMale(mode == 1);
-                }
-
-                if (player.isSneaking()) {
-                    entity.setAge(0);
-                }
-
-                entity.setPosition(x, y, z);
-                entity.setLocationAndAngles(x, y, z, MathHelper.wrapDegrees(world.rand.nextFloat() * 360.0F), 0.0F);
-                entity.rotationYawHead = entity.rotationYaw;
-                entity.renderYawOffset = entity.rotationYaw;
-                return entity;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        int mode = this.getMode(stack);
+        if (mode > 0) {
+            entity.setMale(mode == 1);
         }
 
-        return null;
+        if (player.isSneaking()) {
+            entity.setAge(0);
+        }
+
+        entity.setPosition(x, y, z);
+        entity.setLocationAndAngles(x, y, z, MathHelper.wrapDegrees(world.rand.nextFloat() * 360.0F), 0.0F);
+        entity.rotationYawHead = entity.rotationYaw;
+        entity.renderYawOffset = entity.rotationYaw;
+        return entity;
     }
 
     @Override
@@ -132,21 +123,21 @@ public class DinosaurSpawnEggItem extends Item implements DinosaurProvider {
         } else {
             IBlockState state = world.getBlockState(pos);
 
-            if (state.getBlock() == Blocks.MOB_SPAWNER) {
-                TileEntity tile = world.getTileEntity(pos);
-
-                if (tile instanceof TileEntityMobSpawner) {
-                    MobSpawnerBaseLogic spawnerLogic = ((TileEntityMobSpawner) tile).getSpawnerBaseLogic();
-                    spawnerLogic.setEntityId(EntityList.getKey(this.getValue(stack).getDinosaurClass()));
-                    tile.markDirty();
-
-                    if (!player.capabilities.isCreativeMode) {
-                        stack.shrink(1);
-                    }
-
-                    return EnumActionResult.SUCCESS;
-                }
-            }
+//            if (state.getBlock() == Blocks.MOB_SPAWNER) {
+//                TileEntity tile = world.getTileEntity(pos);
+//
+//                if (tile instanceof TileEntityMobSpawner) {
+//                    MobSpawnerBaseLogic spawnerLogic = ((TileEntityMobSpawner) tile).getSpawnerBaseLogic();
+//                    spawnerLogic.setEntityId(EntityList.getKey(this.getValue(stack).getDinosaurClass()));
+//                    tile.markDirty();
+//
+//                    if (!player.capabilities.isCreativeMode) {
+//                        stack.shrink(1);
+//                    }
+//
+//                    return EnumActionResult.SUCCESS;
+//                }
+//            }
 
             pos = pos.offset(side);
             double yOffset = 0.0D;

@@ -3,25 +3,20 @@ package org.jurassicraft.client.render.entity.dinosaur;
 import net.ilexiconn.llibrary.client.model.tabula.TabulaModel;
 import net.ilexiconn.llibrary.client.model.tabula.container.TabulaModelContainer;
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.model.AnimatableModel;
 import org.jurassicraft.client.model.animation.EntityAnimator;
-import org.jurassicraft.client.render.entity.DinosaurRenderer;
 import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.GrowthStage;
 import org.jurassicraft.server.tabula.TabulaModelHelper;
 
 import java.util.Locale;
 
 @SideOnly(Side.CLIENT)
-public class DinosaurRenderInfo implements IRenderFactory<DinosaurEntity> {
+public class DinosaurRenderInfo {
     private static TabulaModel DEFAULT_EGG_MODEL;
     private static ResourceLocation DEFAULT_EGG_TEXTURE;
 
@@ -110,11 +105,6 @@ public class DinosaurRenderInfo implements IRenderFactory<DinosaurEntity> {
 
     public Dinosaur getDinosaur() {
         return this.dinosaur;
-    }
-
-    @Override
-    public Render<? super DinosaurEntity> createRenderFor(RenderManager manager) {
-        return new DinosaurRenderer(this, manager);
     }
 
     public AnimatableModel getModelAdult() {

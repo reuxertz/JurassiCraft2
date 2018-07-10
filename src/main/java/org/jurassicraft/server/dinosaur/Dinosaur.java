@@ -11,6 +11,7 @@ import javax.vecmathimpl.Matrix4d;
 import javax.vecmathimpl.Vector3d;
 
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.model.animation.PoseHandler;
@@ -19,6 +20,7 @@ import org.jurassicraft.server.api.Hybrid;
 import org.jurassicraft.server.entity.*;
 import org.jurassicraft.server.entity.ai.util.MovementType;
 import org.jurassicraft.server.period.TimePeriod;
+import org.jurassicraft.server.registries.JurassicraftRegisteries;
 import org.jurassicraft.server.tabula.TabulaModelHelper;
 
 import net.ilexiconn.llibrary.client.model.tabula.container.TabulaCubeContainer;
@@ -29,7 +31,8 @@ import net.minecraft.world.biome.Biome;
 
 public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comparable<Dinosaur> {
 
-    public static final Dinosaur MISSING = EntityHandler.VELOCIRAPTOR;
+    @GameRegistry.ObjectHolder(JurassiCraft.MODID + ":velociraptor")
+    public static final Dinosaur MISSING = null;
 
     private final Map<GrowthStage, List<ResourceLocation>> overlays = new HashMap<>();
     private final Map<GrowthStage, ResourceLocation> maleTextures = new HashMap<>();
@@ -175,8 +178,6 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
     }
 
     public final void init() { //TODO: move away from init //TODO: dont do that
-
-        EntityHandler.registerEntity(this.getDinosaurClass(), this.getName());
 
         String formattedName = this.getRegistryName().getResourcePath();
         String domain = this.getRegistryName().getResourceDomain();
@@ -331,10 +332,7 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
         this.defendOffspring = defendOffspring;
     }
 
-    public Class<? extends DinosaurEntity> getDinosaurClass() {
-        return this.entityClass;
-    }
-
+    @Deprecated
     public void setDinosaurClass(Class<? extends DinosaurEntity> clazz) {
         this.entityClass = clazz;
     }

@@ -10,7 +10,7 @@ import org.jurassicraft.server.entity.SwimmingDinosaurEntity;
 public class CoelacanthEntity extends SwimmingDinosaurEntity {
     public CoelacanthEntity(World world) {
         super(world);
-        this.target(EntitySquid.class);
+        this.target(new DinosaurClassAttackPredicate(EntitySquid.class));
     }
 
     protected void applyEntityAttributes()

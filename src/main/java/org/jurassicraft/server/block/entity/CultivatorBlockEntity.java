@@ -234,15 +234,11 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
     }
 
     private DinosaurEntity createEntity() {
-        try {
-            ItemStack stack = this.inventory.getStackInSlot(0);
-            this.dinosaurEntity = DinosaurProvider.getFromStack(stack).getValue(stack).getDinosaurClass().getDeclaredConstructor(World.class).newInstance(this.world);
-            this.dinosaurEntity.setMale(this.temperature > 50);
-            this.dinosaurEntity.setFullyGrown();
-            this.dinosaurEntity.getAttributes().setScaleModifier(1f);
-        } catch (ReflectiveOperationException e){
-            throw new RuntimeException("Unable to create dinosaur entity", e);
-        }
+        ItemStack stack = this.inventory.getStackInSlot(0);
+        this.dinosaurEntity = new DinosaurEntity(world, DinosaurProvider.getFromStack(stack).getValue(stack));
+        this.dinosaurEntity.setMale(this.temperature > 50);
+        this.dinosaurEntity.setFullyGrown();
+        this.dinosaurEntity.getAttributes().setScaleModifier(1f);
         return dinosaurEntity;
     }
 

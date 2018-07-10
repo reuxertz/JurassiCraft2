@@ -81,7 +81,6 @@ public class DinosaurJsonHandler {
         public JsonElement serialize(Dinosaur dino, Type typeOfSrc, JsonSerializationContext context) {
             return context.serialize(new DinosaurProperties(
                     dino.getName(),
-                    dino.getDinosaurClass(),
                     dino.getPeriod(),
                     dino.getHeadCubeName(),
                     dino.getAnimatorClassName() != null ? dino.getAnimatorClassName() : "", //TODO: remove this line when all dinosaur animators are turned into json

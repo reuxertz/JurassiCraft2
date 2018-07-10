@@ -17,7 +17,6 @@ import java.util.Locale;
 public class DinosaurProperties {
 
     String name;
-    Class<? extends DinosaurEntity> entityClass;
     TimePeriod timePeriod;
     String headCubeName;
     @Deprecated
@@ -84,7 +83,6 @@ public class DinosaurProperties {
 
             return new DinosaurProperties(
                     JsonUtils.getString(json, "name"),
-                    clazz,
                     TimePeriod.valueOf(JsonUtils.getString(json, "time_period").toUpperCase(Locale.ENGLISH)),
                     JsonUtils.getString(json, "head_cube_name"),
                     JsonUtils.isString(json, "dinosaur_animator_class") ? JsonUtils.getString(json, "dinosaur_animator_class") : null,
@@ -108,7 +106,6 @@ public class DinosaurProperties {
             spawnEgg.add("male", context.serialize(src.getMaleSpawnEgg()));
             spawnEgg.add("female", context.serialize(src.getFemaleSpawnEgg()));
             json.addProperty("name", src.getName());
-            json.addProperty("entity", src.getEntityClass().getCanonicalName());
             json.addProperty("time_period", src.getTimePeriod().toString().toLowerCase(Locale.ENGLISH));
             json.addProperty("head_cube_name", src.getHeadCubeName());
             if(src.getDinosaurModelLocation() != null && !src.getDinosaurModelLocation().isEmpty()) {

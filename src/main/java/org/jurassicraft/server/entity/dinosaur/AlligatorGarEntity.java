@@ -13,7 +13,7 @@ public class AlligatorGarEntity extends SwimmingDinosaurEntity
 {
     public AlligatorGarEntity(World world) {
         super(world);
-        this.target(EntitySquid.class);
+        this.target(new DinosaurClassAttackPredicate(EntitySquid.class));
     }
 
     @Override

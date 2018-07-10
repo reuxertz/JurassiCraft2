@@ -48,6 +48,7 @@ public class EntityHandler {
         registerEntity(MuralEntity.class, "Mural");
         registerEntity(VenomEntity.class, "Venom");
 
+        registerEntity(DinosaurEntity.class, "Dinosaur");
         registerEntity(JeepWranglerEntity.class, "Jeep Wrangler");
         registerEntity(FordExplorerEntity.class, "Ford Explorer");
 

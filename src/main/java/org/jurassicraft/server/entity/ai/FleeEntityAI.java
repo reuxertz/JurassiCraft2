@@ -17,6 +17,9 @@ public class FleeEntityAI extends EntityAIBase {
 
     @Override
     public boolean shouldExecute() {
+        if(!this.dinosaur.getDinosaur().shouldFlee()) {
+            return false;
+        }
         if (this.dinosaur.ticksExisted % 5 == 0) {
             List<DinosaurEntity> entities = this.dinosaur.world.getEntitiesWithinAABB(DinosaurEntity.class, this.dinosaur.getEntityBoundingBox().expand(10, 40, 10));
 
@@ -24,20 +27,17 @@ public class FleeEntityAI extends EntityAIBase {
 
             for (DinosaurEntity entity : entities) {
                 if (entity != this.dinosaur && !entity.isCarcass()) {
-                    for (Class<? extends EntityLivingBase> target : entity.getAttackTargets()) {
-                        if (target.isAssignableFrom(this.dinosaur.getClass())) {
-                            this.attackers.add(entity);
-                            if (entity.getAttackTarget() == null) {
-                                entity.setAttackTarget(this.dinosaur);
+                    if(entity.getAttackPredicate().test(this.dinosaur)) {
+                        this.attackers.add(entity);
+                        if (entity.getAttackTarget() == null) {
+                            entity.setAttackTarget(this.dinosaur);
+                        }
+                        if (entity.herd != null) {
+                            if (this.dinosaur.herd != null) {
+                                entity.herd.enemies.addAll(this.dinosaur.herd.members);
+                            } else {
+                                entity.herd.enemies.add(this.dinosaur);
                             }
-                            if (entity.herd != null) {
-                                if (this.dinosaur.herd != null) {
-                                    entity.herd.enemies.addAll(this.dinosaur.herd.members);
-                                } else {
-                                    entity.herd.enemies.add(this.dinosaur);
-                                }
-                            }
-                            break;
                         }
                     }
                 }
