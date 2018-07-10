@@ -52,14 +52,14 @@ public class SpawnStructureCommand extends CommandBase {
             try {
                 generator.setRotation(Rotation.valueOf(args[1].toUpperCase(Locale.ENGLISH)));
             } catch (IllegalArgumentException e) {
-                throw new CommandException("commands.spawnjc.notrot");
+                throw new CommandException("commands.spawnjc.notrot", args[1]);
             }
         }
         if(args.length > 2) {
             try {
                 generator.setMirror(Mirror.valueOf(args[2].toUpperCase(Locale.ENGLISH)));
             } catch (IllegalArgumentException e) {
-                throw new CommandException("commands.spawnjc.notmirror");
+                throw new CommandException("commands.spawnjc.notmirror", args[2]);
             }
 
         }

@@ -642,5 +642,5 @@ dinosaur.pregnancytest.pregnant=Dinosaur is pregnant. Congratulations! \o/
 #Commands
 commands.spawnjc.usuage=/spawnjc <structure> [rotation] [mirror] [seed]
 commands.spawnjc.notfound=Structure %s is not found
-commands.spawnjc.notrot=
-commands.spawnjc.notmirror=
+commands.spawnjc.notrot=Rotaion value %s not found
+commands.spawnjc.notmirror=Mirror value %s not found
