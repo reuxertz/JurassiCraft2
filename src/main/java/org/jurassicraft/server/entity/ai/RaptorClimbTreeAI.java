@@ -1,23 +1,16 @@
 package org.jurassicraft.server.entity.ai;
 
-import java.util.Random;
-
-import org.jurassicraft.client.model.animation.EntityAnimation;
-import org.jurassicraft.server.dinosaur.MicroraptorDinosaur;
-import org.jurassicraft.server.entity.dinosaur.MicroraptorEntity;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.init.Blocks;
 import net.minecraft.pathfinding.Path;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
+import org.jurassicraft.client.model.animation.EntityAnimation;
+import org.jurassicraft.server.entity.dinosaur.MicroraptorEntity;
+
+import java.util.Random;
 
 public class RaptorClimbTreeAI extends EntityAIBase {
     private static final int CLIMB_INTERVAL = 1200;

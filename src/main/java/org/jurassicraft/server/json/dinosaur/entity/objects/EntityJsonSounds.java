@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.google.gson.*;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Value;
 import lombok.experimental.FieldDefaults;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
@@ -13,10 +14,10 @@ import org.jurassicraft.client.model.animation.EntityAnimation;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Type;
+import java.util.Locale;
 import java.util.Map;
 
-@Data
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@Value
 public class EntityJsonSounds {
     Map<EntityAnimation, SoundEvent> soundMap;
     @Nullable SoundEvent breathingSound;
@@ -29,7 +30,7 @@ public class EntityJsonSounds {
             Map<EntityAnimation, SoundEvent> soundMap = Maps.newHashMap();
             for (JsonElement animationElement : JsonUtils.getJsonArray(json, "animation")) {
                 JsonObject animation = JsonUtils.getJsonObject(animationElement, "animation");
-                soundMap.put(EntityAnimation.valueOf(JsonUtils.getString(animation, "animation")), ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(JsonUtils.getString(animation, "sound"))));
+                soundMap.put(EntityAnimation.valueOf(JsonUtils.getString(animation, "animation").toUpperCase()), ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(JsonUtils.getString(animation, "sound"))));
             }
             return new EntityJsonSounds(soundMap, JsonUtils.hasField(json, "breathing") ? ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(JsonUtils.getString(json, "breathing"))) : null);
         }

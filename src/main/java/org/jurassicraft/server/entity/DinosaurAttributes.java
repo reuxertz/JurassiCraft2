@@ -2,6 +2,8 @@ package org.jurassicraft.server.entity;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jurassicraft.server.dna.DNA;
+import org.jurassicraft.server.dna.GeneType;
 
 import java.util.Random;
 
@@ -18,10 +20,10 @@ public class DinosaurAttributes {
     private static final float MINIMUM_SPEED = 0.8F;
     private static final float MAXIMUM_SPEED = 1.2F;
 
-    private float scaleModifier;
-    private float damageModifier;
-    private float healthModifier;
-    private float speedModifier;
+    private final float scaleModifier;
+    private final float damageModifier;
+    private final float healthModifier;
+    private final float speedModifier;
 
     private DinosaurAttributes(float scaleModifier, float damageModifier, float healthModifier, float speedModifier) {
         this.scaleModifier = scaleModifier;
@@ -109,7 +111,6 @@ public class DinosaurAttributes {
         return this.speedModifier;
     }
 
-    public void setScaleModifier(float scaleModifier) {
-        this.scaleModifier = scaleModifier;
-    }
+    public void setScaleModifier(float scaleModifier){}//TODO
+
 }

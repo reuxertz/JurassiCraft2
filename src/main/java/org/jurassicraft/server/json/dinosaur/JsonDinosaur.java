@@ -1,6 +1,5 @@
 package org.jurassicraft.server.json.dinosaur;
 
-import net.minecraft.util.ResourceLocation;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.json.dinosaur.objects.*;
 
@@ -13,25 +12,27 @@ public class JsonDinosaur extends Dinosaur {
         this.setAnimatorClassName(properties.getDinosaurAnimatorClassName());
 
         SpawnEggInfo male = properties.getMaleSpawnEgg();
-        this.setEggColorMale(male.getPrimary(), male.getSecondary());
+        this.setPrimaryEggColorMale(male.getPrimary());
+        this.setSecondaryEggColorMale(male.getSecondary());
 
         SpawnEggInfo female = properties.getFemaleSpawnEgg();
-        this.setEggColorFemale(female.getPrimary(), female.getSecondary());
+        this.setPrimaryEggColorFemale(female.getPrimary());
+        this.setSecondaryEggColorFemale(female.getSecondary());
 
         DinosaurStatistics statistics = properties.getStatistics();
-        statistics.getSpeed().apply(this::setSpeed);
-        statistics.getHealth().apply(this::setHealth);
-        statistics.getStrength().apply(this::setStrength);
-        statistics.getSizeX().apply(this::setSizeX);
-        statistics.getSizeY().apply(this::setSizeY);
-        statistics.getEyeHeight().apply(this::setEyeHeight);
-        statistics.getScale().apply(this::setScale);
+        statistics.getSpeed().apply(this::setBabySpeed, this::setAdultSpeed);
+        statistics.getHealth().apply(this::setBabyHealth, this::setAdultHealth);
+        statistics.getStrength().apply(this::setBabyStrength, this::setAdultStrength);
+        statistics.getSizeX().apply(this::setBabySizeX, this::setAdultSizeX);
+        statistics.getSizeY().apply(this::setBabySizeY, this::setAdultSizeY);
+        statistics.getEyeHeight().apply(this::setBabyEyeHeight, this::setAdultEyeHeight);
+        statistics.getScale().apply(this::setScaleInfant, this::setScaleAdult);
         this.setJumpHeight(statistics.getJumpHeight());
         this.setAttackSpeed(statistics.getAttackSpeed());
         this.setStorage(statistics.getItemStorage());
 
         DinosaurTraits traits = properties.getTraits();
-        this.setDinosaurType(traits.getType());
+        this.setDinosaurBehaviourType(traits.getType());
         this.setDiet(traits.getDiet());
         this.setSleepTime(traits.getSleepType());
         this.setImprintable(traits.isImprintable());

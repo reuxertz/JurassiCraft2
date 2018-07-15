@@ -33,7 +33,7 @@ public class DinosaurMeatItem extends ItemFood implements DinosaurProvider {
     @Override
     protected void onFoodEaten(ItemStack stack, World world, EntityPlayer player) {
         if (!world.isRemote) {
-            this.getValue(stack).applyMeatEffect(player, false);
+//            this.getValue(stack).applyMeatEffect(player, false); //TODO:
         }
     }
 

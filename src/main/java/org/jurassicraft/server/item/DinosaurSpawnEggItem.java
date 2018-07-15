@@ -59,7 +59,7 @@ public class DinosaurSpawnEggItem extends Item implements DinosaurProvider {
 
     public DinosaurEntity spawnDinosaur(World world, EntityPlayer player, ItemStack stack, double x, double y, double z) {
         Dinosaur dinosaur = this.getValue(stack);
-        DinosaurEntity entity = new DinosaurEntity(world, dinosaur);
+        DinosaurEntity entity = dinosaur.createEntity(world);
         entity.setDNAQuality(100);
 
         int mode = this.getMode(stack);

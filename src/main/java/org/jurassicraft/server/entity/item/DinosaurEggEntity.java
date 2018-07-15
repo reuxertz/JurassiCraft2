@@ -99,13 +99,12 @@ public class DinosaurEggEntity extends Entity implements IEntityAdditionalSpawnD
             this.entityDropItem(eggStack, 0.1F);
             this.setDead();
         }
-
         return true;
     }
 
     public void hatch() {
         if(dinosaur != null) {
-            DinosaurEntity entity = new DinosaurEntity(this.world, this.dinosaur);
+            DinosaurEntity entity = this.dinosaur.createEntity(this.world);
             entity.setPosition(this.posX, this.posY, this.posZ);
             entity.setAge(0);
             this.world.spawnEntity(entity);
@@ -114,7 +113,7 @@ public class DinosaurEggEntity extends Entity implements IEntityAdditionalSpawnD
             for (Entity loadedEntity : this.world.loadedEntityList) {
                 if (loadedEntity instanceof DinosaurEntity && loadedEntity.getUniqueID().equals(this.parent)) {
                     DinosaurEntity parent = (DinosaurEntity) loadedEntity;
-                    if (parent.family != null && this.dinosaur.shouldDefendOffspring()) {
+                    if (parent.family != null && this.dinosaur.isDefendOffspring()) {
                         parent.family.addChild(entity.getUniqueID());
                     }
                     break;

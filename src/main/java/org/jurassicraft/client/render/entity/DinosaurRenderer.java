@@ -14,6 +14,7 @@ import org.jurassicraft.client.model.AnimatableModel;
 import org.jurassicraft.client.render.RenderingHandler;
 import org.jurassicraft.client.render.entity.dinosaur.DinosaurRenderInfo;
 import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.dna.GeneType;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.GrowthStage;
 
@@ -31,14 +32,14 @@ public class DinosaurRenderer extends RenderLiving<DinosaurEntity> {
         Dinosaur dinosaur = entity.getDinosaur();
         DinosaurRenderInfo renderInfo = RenderingHandler.renderInfos.get(dinosaur);
 
-        float scale = (float) entity.interpolate(dinosaur.getScaleInfant(), dinosaur.getScaleAdult()) * scaleModifier;
+        float scale = (float) entity.interpolate(dinosaur.getScaleInfant(), dinosaur.getScaleAdult()) * scaleModifier * (entity.getDNA().getValueFloat(GeneType.SIZE) + 1.5f) / 1.5f;
 
         this.shadowSize = scale * renderInfo.getShadowSize();
 
         GlStateManager.translate(dinosaur.getOffsetX() * scale, dinosaur.getOffsetY() * scale, dinosaur.getOffsetZ() * scale);
 
         String name = entity.getCustomNameTag();
-
+//        scale = 1;
         switch (name) {
             case "Kashmoney360":
             case "JTGhawk137":

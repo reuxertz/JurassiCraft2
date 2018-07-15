@@ -19,7 +19,7 @@ public class FossilItemBlock extends ItemBlock {
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
         Dinosaur dinosaur = ((FossilBlock) this.block).getValue(stack);
-        return new LangHelper("tile.fossil_block.name").withProperty("dinosaur", dinosaur.getLocalizationName()).build();
+        return new LangHelper("tile.fossil_block.name").withProperty("dinosaur", dinosaur.getTranslationKey()).build();
     }
 
     @Override

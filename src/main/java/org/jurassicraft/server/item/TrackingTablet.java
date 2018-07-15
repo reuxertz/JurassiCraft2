@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Value;
 import lombok.experimental.FieldDefaults;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -92,7 +93,7 @@ public class TrackingTablet extends Item implements StackNBTProvider<Integer> {
 
     @Override
     public Integer getValueFromName(String string) {
-        return Integer.parseInt(string);
+        return string.isEmpty() ? 1 : Integer.parseInt(string);
     }
 
     @Override
@@ -113,7 +114,7 @@ public class TrackingTablet extends Item implements StackNBTProvider<Integer> {
         private final int tier;
 
         public TrackingInfo(ItemStack stack){
-            for (NBTBase nbtBase : stack.getOrCreateSubCompound("jurassicraft").getTagList("tracking_list", Constants.NBT.TAG_COMPOUND)) {
+            for (NBTBase nbtBase : stack.getOrCreateSubCompound("jurassicraft").getCompoundTag("tracking_info").getTagList("tracking_list", Constants.NBT.TAG_COMPOUND)) {
                 dinosaurInfos.add(DinosaurInfo.deserializeNBT((NBTTagCompound)nbtBase));
             }
             this.tier = ItemHandler.TRACKING_TABLET.getValue(stack);
@@ -232,8 +233,7 @@ public class TrackingTablet extends Item implements StackNBTProvider<Integer> {
     }
 
 
-    @Data
-    @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+    @Value
     public static class DinosaurInfo {
        BlockPos pos;
        Dinosaur dinosaur;

@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.gson.*;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Value;
 import lombok.experimental.FieldDefaults;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.SoundEvent;
@@ -15,8 +16,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
-@Data
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@Value
 public class EntityProperties { 
     String type;
     @Nullable AttackTargets targets;

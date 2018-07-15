@@ -26,13 +26,13 @@ public class Relationship {
         }
         boolean isPreoccupied = owner.getNavigator().noPath() && owner.getAttackTarget() == null;
         double scaleScore = this.score / (double) MAX_SCORE;
-        Dinosaur.DinosaurType dinosaurType = owner.getDinosaur().getDinosaurType();
+        Dinosaur.DinosaurBehaviourType dinosaurBehaviourType = owner.getDinosaur().getDinosaurBehaviourType();
         if (this.score < 0) {
-            if (!isPreoccupied && dinosaurType != Dinosaur.DinosaurType.SCARED && owner.getRNG().nextDouble() * scaleScore > 0.3) {
+            if (!isPreoccupied && dinosaurBehaviourType != Dinosaur.DinosaurBehaviourType.SCARED && owner.getRNG().nextDouble() * scaleScore > 0.3) {
                 owner.setAttackTarget(entity);
             }
         } else if (this.score > 0) {
-            if ((dinosaurType == Dinosaur.DinosaurType.AGGRESSIVE || dinosaurType == Dinosaur.DinosaurType.NEUTRAL) && entity.getAttackTarget() != null && owner.getRNG().nextDouble() * scaleScore > 0.3) {
+            if ((dinosaurBehaviourType == Dinosaur.DinosaurBehaviourType.AGGRESSIVE || dinosaurBehaviourType == Dinosaur.DinosaurBehaviourType.NEUTRAL) && entity.getAttackTarget() != null && owner.getRNG().nextDouble() * scaleScore > 0.3) {
                 owner.setAttackTarget(entity.getAttackTarget());
             } else if (owner.family == null && !isPreoccupied && owner.getRNG().nextDouble() * scaleScore > 0.6) {
                 owner.getNavigator().tryMoveToEntityLiving(entity, 0.8);

@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.gson.*;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Value;
 import lombok.experimental.FieldDefaults;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -15,8 +16,7 @@ import org.jurassicraft.server.registries.JurassicraftRegisteries;
 import java.lang.reflect.Type;
 import java.util.List;
 
-@Data
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@Value
 public class AttackTargets {
     List<Class<? extends Entity>> entityList;
     List<Dinosaur> dinosaurList;

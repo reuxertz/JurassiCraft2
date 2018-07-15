@@ -9,7 +9,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jurassicraft.server.entity.ai.MoveUnderwaterEntityAI;
 
-public abstract class SwimmingDinosaurEntity extends DinosaurEntity {
+public class SwimmingDinosaurEntity extends DinosaurEntity {
+
     public SwimmingDinosaurEntity(World world) {
         super(world);
         this.moveHelper = new SwimmingDinosaurEntity.SwimmingMoveHelper();

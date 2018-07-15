@@ -3,14 +3,15 @@ package org.jurassicraft.server.json.dinosaur.objects;
 import com.google.gson.*;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Value;
 import lombok.experimental.FieldDefaults;
 import net.minecraft.util.JsonUtils;
 
 import java.lang.reflect.Type;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
-@Data
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@Value
 public class AdultBabyValue {
     double baby;
     double adult;
@@ -34,8 +35,10 @@ public class AdultBabyValue {
         }
     }
 
-    public void apply(BiConsumer<Float, Float> consumer) {
-        consumer.accept((float)baby, (float)adult);
+
+    public void apply(Consumer<Float> babyCons, Consumer<Float> adultCons) {
+        babyCons.accept((float)this.baby);
+        adultCons.accept((float)this.adult);
     }
 
 }

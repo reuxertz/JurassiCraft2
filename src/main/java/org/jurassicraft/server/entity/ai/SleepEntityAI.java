@@ -7,6 +7,7 @@ import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.ai.util.AIUtils;
 
@@ -25,7 +26,7 @@ public class SleepEntityAI extends EntityAIBase {
     public boolean shouldExecute() {
         World world = this.dinosaur.world;
 
-        boolean marineAnimal = this.dinosaur.getDinosaur().isMarineCreature();
+        boolean marineAnimal = this.dinosaur.getDinosaur().getHomeType() == Dinosaur.DinosaurHomeType.MARINE;
 
         if ((this.dinosaur.onGround || this.dinosaur.isRiding() || marineAnimal) && this.dinosaur.isAlive() && this.dinosaur.shouldSleep() && !this.dinosaur.isSleeping() && this.dinosaur.getStayAwakeTime() <= 0) {
             if (marineAnimal) {

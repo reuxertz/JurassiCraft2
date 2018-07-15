@@ -1,0 +1,61 @@
+{
+  "type": "Dinosaur",
+  "targets": {
+    "entities": [
+      "org.jurassicraft.server.entity.GoatEntity",
+      "net.minecraft.entity.player.EntityPlayer",
+      "net.minecraft.entity.passive.EntityAnimal",
+      "net.minecraft.entity.passive.EntityVillager"
+    ],
+    "dinosaurs": [
+      "jurassicraft:dilophosaurus",
+      "jurassicraft:gallimimus",
+      "jurassicraft:parasaurolophus",
+      "jurassicraft:triceratops",
+      "jurassicraft:microraptor",
+      "jurassicraft:mussaurus"
+    ]
+  },
+  "ai": {
+    "attack": {
+      "type": "leap"
+    },
+    "additional_tasks": [
+      {
+        "type": "leaping_melee",
+        "priority": 1
+      }
+    ]
+  },
+  "attributes": [
+    {
+      "name": "follow_range",
+      "base_value": 35
+    }
+  ],
+  "sounds": {
+    "animation": [
+      {
+        "animation": "speak",
+        "sound": "jurassicraft:velociraptor_living"
+      },
+      {
+        "animation": "dying",
+        "sound": "jurassicraft:velociraptor_death"
+      },
+      {
+        "animation": "injured",
+        "sound": "jurassicraft:velociraptor_hurt"
+      },
+      {
+        "animation": "calling",
+        "sound": "jurassicraft:velociraptor_call"
+      },
+      {
+        "animation": "attacking",
+        "sound": "jurassicraft:velociraptor_attack"
+      }
+    ],
+    "breathing": "jurassicraft:velociraptor_breathing:"
+  }
+}

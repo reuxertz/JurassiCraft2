@@ -3,6 +3,7 @@ package org.jurassicraft.server.json.dinosaur.objects;
 import com.google.gson.*;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Value;
 import lombok.experimental.FieldDefaults;
 import net.minecraft.util.JsonUtils;
 import org.jurassicraft.server.entity.DinosaurEntity;
@@ -11,9 +12,7 @@ import org.jurassicraft.server.period.TimePeriod;
 import java.lang.reflect.Type;
 import java.util.Locale;
 
-@Data
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-
+@Value
 public class DinosaurProperties {
 
     String name;

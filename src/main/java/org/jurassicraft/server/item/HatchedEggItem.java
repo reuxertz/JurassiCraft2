@@ -63,7 +63,7 @@ public class HatchedEggItem extends DNAContainerItem {
         if (player.canPlayerEdit(pos, side, stack)) {
             if (!world.isRemote) {
                 Dinosaur dinosaur = this.getValue(stack);
-                DinosaurEntity entity = new DinosaurEntity(world, dinosaur);
+                DinosaurEntity entity = dinosaur.createEntity(world);
 
                 entity.setPosition(pos.getX() + hitX, pos.getY(), pos.getZ() + hitZ);
                 entity.setAge(0);

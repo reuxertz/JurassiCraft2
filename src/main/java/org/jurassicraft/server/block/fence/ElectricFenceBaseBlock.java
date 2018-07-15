@@ -78,7 +78,7 @@ public class ElectricFenceBaseBlock extends BlockContainer {
         if (wireEntity instanceof ElectricFenceWireBlockEntity && ((ElectricFenceWireBlockEntity) wireEntity).isPowered()) {
             if (entity instanceof DinosaurEntity) {
                 DinosaurEntity dinosaur = (DinosaurEntity) entity;
-                if (dinosaur.getDinosaur().canClimb()) {
+                if (dinosaur.getDinosaur().isCanClimb()) {
                     return true;
                 }
             }

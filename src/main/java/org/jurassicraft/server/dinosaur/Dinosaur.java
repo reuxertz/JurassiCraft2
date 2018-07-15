@@ -1,15 +1,16 @@
 package org.jurassicraft.server.dinosaur;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.vecmathimpl.Matrix4d;
-import javax.vecmathimpl.Vector3d;
-
+import com.google.common.collect.Lists;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import net.ilexiconn.llibrary.client.model.tabula.container.TabulaCubeContainer;
+import net.ilexiconn.llibrary.client.model.tabula.container.TabulaModelContainer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -17,18 +18,25 @@ import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.model.animation.PoseHandler;
 import org.jurassicraft.server.api.GrowthStageGenderContainer;
 import org.jurassicraft.server.api.Hybrid;
-import org.jurassicraft.server.entity.*;
+import org.jurassicraft.server.entity.Diet;
+import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.GrowthStage;
+import org.jurassicraft.server.entity.SleepTime;
 import org.jurassicraft.server.entity.ai.util.MovementType;
+import org.jurassicraft.server.json.dinosaur.DinosaurJsonHandler;
+import org.jurassicraft.server.json.dinosaur.entity.EntityDinosaurJsonHandler;
+import org.jurassicraft.server.json.dinosaur.entity.objects.EntityProperties;
 import org.jurassicraft.server.period.TimePeriod;
-import org.jurassicraft.server.registries.JurassicraftRegisteries;
 import org.jurassicraft.server.tabula.TabulaModelHelper;
 
-import net.ilexiconn.llibrary.client.model.tabula.container.TabulaCubeContainer;
-import net.ilexiconn.llibrary.client.model.tabula.container.TabulaModelContainer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.Biome;
+import javax.vecmathimpl.Matrix4d;
+import javax.vecmathimpl.Vector3d;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
 
+@Data
+@Setter(value = AccessLevel.PROTECTED)
 public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comparable<Dinosaur> {
 
     @GameRegistry.ObjectHolder(JurassiCraft.MODID + ":velociraptor")
@@ -43,7 +51,8 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
     private Class<? extends DinosaurEntity> entityClass;
     @Deprecated
     private String animatorClassName;
-    private DinosaurType dinosaurType;
+    private DinosaurBehaviourType dinosaurBehaviourType;
+    private DinosaurHomeType homeType;
     private int primaryEggColorMale, primaryEggColorFemale;
     private int secondaryEggColorMale, secondaryEggColorFemale;
     private TimePeriod timePeriod;
@@ -54,8 +63,6 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
     private float babySizeY, adultSizeY;
     private float babyEyeHeight, adultEyeHeight;
     private double attackSpeed = 1.0;
-    private boolean isMarineAnimal;
-    private boolean isMammal;
     private int storage;
     private int overlayCount;
     private Diet diet;
@@ -67,6 +74,11 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
     private MovementType movementType = MovementType.NEAR_SURFACE;
     private BirthType birthType = BirthType.EGG_LAYING;
     private boolean isImprintable;
+
+    private int lipids = 1500;
+    private int vitamins = 1500;
+    private int minerals = 1500;
+    private int proximates = 1500;
 
     private boolean randomFlock = true;
 
@@ -108,6 +120,13 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
     private String[][] recipe;
 
     private String jawCubeName = "Lower Teeth Front"; //TODO: make json based
+
+    @Setter(AccessLevel.NONE)
+    private EntityProperties properties; //@
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    private boolean init;
 
     public static Matrix4d getParentRotationMatrix(TabulaModelContainer model, TabulaCubeContainer cube, boolean includeParents, boolean ignoreSelf, float rot) {
         List<TabulaCubeContainer> parentCubes = new ArrayList<>();
@@ -177,7 +196,18 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
         return x < 0 ? x > -0.0001 ? 0 : x : x < 0.0001 ? 0 : x;
     }
 
-    public final void init() { //TODO: move away from init //TODO: dont do that
+    public final void init() {
+        if(init) {
+           return;
+        }
+        this.init = true;
+
+        try {
+            this.properties = DinosaurJsonHandler.GSON.fromJson(new InputStreamReader(Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(this.getRegistryName().getResourceDomain(), "jurassicraft/entities/" + this.getRegistryName().getResourcePath() + ".json")).getInputStream()), EntityProperties.class);;
+        } catch (IOException e) {
+            JurassiCraft.getLogger().error("Unable to load dinosaur behaviours for " + this.getRegistryName(), e);
+            this.properties = new EntityProperties("dinosaur", null, null, Lists.newArrayList(), null);
+        }
 
         String formattedName = this.getRegistryName().getResourcePath();
         String domain = this.getRegistryName().getResourceDomain();
@@ -229,8 +259,12 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
         this.poseHandler = new PoseHandler(this);
     }
 
-    protected void setDinosaurType(DinosaurType type) {
-        this.dinosaurType = type;
+    public DinosaurEntity createEntity(World world) {
+        return EntityDinosaurJsonHandler.TYPE_MAP.getOrDefault(this.properties.getType(), DinosaurEntity::new).apply(world).setDinosaur(this);
+    }
+
+    protected void setDinosaurBehaviourType(DinosaurBehaviourType type) {
+        this.dinosaurBehaviourType = type;
     }
 
     protected TabulaModelContainer parseModel(String growthStage) {
@@ -246,83 +280,6 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
         return null;
     }
 
-    public void setEggColorMale(int primary, int secondary) {
-        this.primaryEggColorMale = primary;
-        this.secondaryEggColorMale = secondary;
-    }
-
-    public void setEggColorFemale(int primary, int secondary) {
-        this.primaryEggColorFemale = primary;
-        this.secondaryEggColorFemale = secondary;
-    }
-
-    public void setTimePeriod(TimePeriod timePeriod) {
-        this.timePeriod = timePeriod;
-    }
-
-    public void setHealth(double baby, double adult) {
-        this.babyHealth = baby;
-        this.adultHealth = adult;
-    }
-
-    public void setStrength(double baby, double adult) {
-        this.babyStrength = baby;
-        this.adultStrength = adult;
-    }
-
-    public void setSpeed(double baby, double adult) {
-        this.babySpeed = baby;
-        this.adultSpeed = adult;
-    }
-
-    public void setSizeX(float baby, float adult) {
-        this.babySizeX = baby;
-        this.adultSizeX = adult;
-    }
-
-    public void setSizeY(float baby, float adult) {
-        this.babySizeY = baby;
-        this.adultSizeY = adult;
-    }
-
-    public void setEyeHeight(float baby, float adult) {
-        this.babyEyeHeight = baby;
-        this.adultEyeHeight = adult;
-    }
-
-    public void setFlockSpeed(float speed) {
-        this.flockSpeed = speed;
-    }
-
-    public void setAttackBias(double bias) {
-        this.attackBias = bias;
-    }
-
-    public void setMaxHerdSize(int herdSize) {
-        this.maxHerdSize = herdSize;
-    }
-
-    public void setRandomFlock(boolean randomFlock) {
-        this.randomFlock = randomFlock;
-    }
-
-    public MovementType getMovementType() {
-        return movementType;
-    }
-
-    public void setMovementType(MovementType type) {
-        this.movementType = type;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public Dinosaur setName(String name) {
-        this.name = name;
-        return this;
-    }
-
     public void setBreeding(BirthType birthType, int minClutch, int maxClutch, int breedCooldown, boolean breedAroundOffspring, boolean defendOffspring) {
         this.birthType = birthType;
         this.minClutch = minClutch;
@@ -332,91 +289,6 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
         this.defendOffspring = defendOffspring;
     }
 
-    @Deprecated
-    public void setDinosaurClass(Class<? extends DinosaurEntity> clazz) {
-        this.entityClass = clazz;
-    }
-
-    public int getEggPrimaryColorMale() {
-        return this.primaryEggColorMale;
-    }
-
-    public int getEggSecondaryColorMale() {
-        return this.secondaryEggColorMale;
-    }
-
-    public int getEggPrimaryColorFemale() {
-        return this.primaryEggColorFemale;
-    }
-
-    public int getEggSecondaryColorFemale() {
-        return this.secondaryEggColorFemale;
-    }
-
-    public TimePeriod getPeriod() {
-        return this.timePeriod;
-    }
-
-    public double getBabyHealth() {
-        return this.babyHealth;
-    }
-
-    public double getAdultHealth() {
-        return this.adultHealth;
-    }
-
-    public double getBabySpeed() {
-        return this.babySpeed;
-    }
-
-    public double getAdultSpeed() {
-        return this.adultSpeed;
-    }
-
-    public double getBabyStrength() {
-        return this.babyStrength;
-    }
-
-    public double getAdultStrength() {
-        return this.adultStrength;
-    }
-
-    public float getBabySizeX() {
-        return this.babySizeX;
-    }
-
-    public float getBabySizeY() {
-        return this.babySizeY;
-    }
-
-    public float getAdultSizeX() {
-        return this.adultSizeX;
-    }
-
-    public float getAdultSizeY() {
-        return this.adultSizeY;
-    }
-
-    public float getBabyEyeHeight() {
-        return this.babyEyeHeight;
-    }
-
-    public float getAdultEyeHeight() {
-        return this.adultEyeHeight;
-    }
-
-    public boolean shouldRandomlyFlock() {
-        return this.randomFlock;
-    }
-
-    public int getMaximumAge() {
-        return this.maximumAge;
-    }
-
-    public void setMaximumAge(int age) {
-        this.maximumAge = age;
-    }
-
     public ResourceLocation getMaleTexture(GrowthStage stage) {
         return this.maleTextures.get(stage);
     }
@@ -424,15 +296,6 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
     public ResourceLocation getFemaleTexture(GrowthStage stage) {
         return this.femaleTextures.get(stage);
     }
-
-    public double getAttackSpeed() {
-        return this.attackSpeed;
-    }
-
-    public void setAttackSpeed(double attackSpeed) {
-        this.attackSpeed = attackSpeed;
-    }
-
 
     protected String getDinosaurTexture(String subtype) {
         String dinosaurName = this.getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
@@ -446,15 +309,6 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
         return texture + ".png";
     }
 
-    public BirthType getBirthType() {
-        return birthType;
-    }
-
-    @Override
-    public int hashCode() {
-        return this.getName().hashCode();
-    }
-
     protected int fromDays(int days) {
         return (days * 24000) / 8;
     }
@@ -464,122 +318,18 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
         return this.getName().compareTo(dinosaur.getName());
     }
 
-    public boolean isMarineCreature() {
-        return this.isMarineAnimal;
-    }
-
-    public void setMarineAnimal(boolean marineAnimal) {
-        this.isMarineAnimal = marineAnimal;
-    }
-
-    public boolean isMammal() {
-        return this.isMammal;
-    }
-
-    public void setMammal(boolean isMammal) {
-        this.isMammal = isMammal;
-    }
-
-    public int getLipids() {
-        return 1500;
-    }
-
-    public int getMinerals() {
-        return 1500;
-    }
-
-    public int getVitamins() {
-        return 1500;
-    }
-
-    public int getProximates() // TODO
-    {
-        return 1500;
-    }
-
-    public int getStorage() {
-        return this.storage;
-    }
-
-    public void setStorage(int storage) {
-        this.storage = storage;
-    }
 
     public ResourceLocation getOverlayTexture(GrowthStage stage, int overlay) {
         return this.overlays.containsKey(stage) ? this.overlays.get(stage).get(overlay) : null;
-    }
-
-    public int getOverlayCount() {
-        return this.overlayCount;
-    }
-
-    public void setOverlayCount(int count) {
-        this.overlayCount = count;
     }
 
     public ResourceLocation getEyelidTexture(DinosaurEntity entity) {
         return this.eyelidTextures.get(new GrowthStageGenderContainer(entity.getGrowthStage(), entity.isMale()));
     }
 
-    public Diet getDiet() {
-        return this.diet;
-    }
-
-    public void setDiet(Diet diet) {
-        this.diet = diet;
-    }
-
-    public SleepTime getSleepTime() {
-        return this.sleepTime;
-    }
-
-    public void setSleepTime(SleepTime sleepTime) {
-        this.sleepTime = sleepTime;
-    }
-
-    public void setJawCubeName(String jawCubeName) {
-        this.jawCubeName = jawCubeName;
-    }
-
-    public String getJawCubeName() {
-        return jawCubeName;
-    }
-
-    public String[] getBones() {
-        return this.bones;
-    }
-
-    public void setBones(String... bones) {
-        this.bones = bones;
-    }
-
-    public void setAnimatorClassName(String animatorClassName) {
-        this.animatorClassName = animatorClassName;
-    }
-
-    public String getAnimatorClassName() {
-        return animatorClassName;
-    }
-
     @Override
-    public boolean equals(Object object) {
-        return object instanceof Dinosaur && ((Dinosaur) object).getName().equalsIgnoreCase(this.getName());
-    }
-
-    public String getHeadCubeName() {
-        return this.headCubeName;
-    }
-
-    public void setHeadCubeName(String headCubeName) {
-        this.headCubeName = headCubeName;
-    }
-
-    public void setShadowSize(float shadowSize) {
-        this.shadowSize = shadowSize;
-    }
-
-    public float getShadowSize() {
-        return shadowSize;
+    public int hashCode() {
+        return this.getRegistryName().hashCode();
     }
 
     public double[] getCubePosition(String cubeName, GrowthStage stage) {
@@ -645,79 +395,8 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
         }
     }
 
-    public void setScale(float scaleAdult, float scaleInfant) {
-        this.scaleInfant = scaleInfant;
-        this.scaleAdult = scaleAdult;
-    }
-
-    public void setOffset(float x, float y, float z) {
-        this.offsetX = x;
-        this.offsetY = y;
-        this.offsetZ = z;
-    }
-
-    public void setDefendOwner(boolean defendOwner) {
-        this.defendOwner = defendOwner;
-    }
-
-    public void setFlee(boolean flee) {
-        this.flee = flee;
-    }
-
-    public double getScaleInfant() {
-        return this.scaleInfant;
-    }
-
-    public double getScaleAdult() {
-        return this.scaleAdult;
-    }
-
-    public float getOffsetX() {
-        return this.offsetX;
-    }
-
-    public float getOffsetY() {
-        return this.offsetY;
-    }
-
-    public float getOffsetZ() {
-        return this.offsetZ;
-    }
-
-    public PoseHandler<?> getPoseHandler() {
-        return this.poseHandler;
-    }
-
     public boolean doesSupportGrowthStage(GrowthStage stage) {
         return stage == GrowthStage.ADULT || stage == GrowthStage.SKELETON;
-    }
-
-    public boolean isImprintable() {
-        return this.isImprintable;
-    }
-
-    public void setImprintable(boolean imprintable) {
-        this.isImprintable = imprintable;
-    }
-
-    public boolean shouldDefendOwner() {
-        return this.defendOwner;
-    }
-
-    public boolean shouldFlee() {
-        return this.flee;
-    }
-
-    public double getFlockSpeed() {
-        return this.flockSpeed;
-    }
-
-    public double getAttackBias() {
-        return this.attackBias;
-    }
-
-    public int getMaxHerdSize() {
-        return this.maxHerdSize;
     }
 
     public void setSpawn(int chance, BiomeDictionary.Type... allBiomes) {
@@ -734,52 +413,8 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
         this.biomeTypes = allBiomes;
     }
 
-    public BiomeDictionary.Type[] getBiomeTypes() {
-        return biomeTypes;
-    }
-
-    public int getSpawnChance() {
-        return this.spawnChance;
-    }
-
-    public Biome[] getSpawnBiomes() {
-        return this.spawnBiomes;
-    }
-
-    public String getLocalizationName() {
+    public String getTranslationKey() {
         return "entity.jurassicraft." + this.getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_") + ".name";
-    }
-
-    public DinosaurType getDinosaurType() {
-        return this.dinosaurType;
-    }
-
-    public boolean canClimb() {
-        return this.canClimb;
-    }
-
-    public void setCanClimb(boolean canClimb) {
-        this.canClimb = canClimb;
-    }
-
-    public int getMinClutch() {
-        return this.minClutch;
-    }
-
-    public int getMaxClutch() {
-        return this.maxClutch;
-    }
-
-    public int getBreedCooldown() {
-        return this.breedCooldown;
-    }
-
-    public boolean shouldBreedAroundOffspring() {
-        return this.breedAroundOffspring;
-    }
-
-    public boolean shouldDefendOffspring() {
-        return this.defendOffspring;
     }
 
     public List<GrowthStage> getSupportedStages() {
@@ -792,30 +427,12 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
         return supportedStages;
     }
 
-    public void setJumpHeight(int jumpHeight) {
-        this.jumpHeight = jumpHeight;
+    public enum DinosaurHomeType {
+        LAND,
+        MARINE;
     }
 
-    public int getJumpHeight() {
-        return this.jumpHeight;
-    }
-
-    public void setRecipe(String[][] recipe) {
-        this.recipe = recipe;
-    }
-
-    public String[][] getRecipe() {
-        return this.recipe;
-    }
-
-    public void applyMeatEffect(EntityPlayer player, boolean cooked) {
-    }
-
-    public final String phraseRegistryName() {
-        return this.getRegistryName().toString().replace(':', '.');
-    }
-
-    public enum DinosaurType {
+    public enum DinosaurBehaviourType {
         AGGRESSIVE,
         NEUTRAL,
         PASSIVE,

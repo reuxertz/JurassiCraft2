@@ -1,19 +1,46 @@
 package org.jurassicraft.server.entity;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
-import java.util.Set;
-import java.util.UUID;
-import java.util.function.Predicate;
-
+import com.google.common.collect.Lists;
+import io.netty.buffer.ByteBuf;
 import mcp.MethodsReturnNonnullByDefault;
+import net.ilexiconn.llibrary.client.model.tools.ChainBuffer;
+import net.ilexiconn.llibrary.server.animation.Animation;
+import net.ilexiconn.llibrary.server.animation.AnimationHandler;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
+import net.minecraft.entity.ai.attributes.IAttribute;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.pathfinding.Path;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.*;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jurassicraft.JurassiCraft;
@@ -24,27 +51,9 @@ import org.jurassicraft.server.block.entity.FeederBlockEntity;
 import org.jurassicraft.server.block.machine.FeederBlock;
 import org.jurassicraft.server.damage.DinosaurDamageSource;
 import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.ai.AdvancedSwimEntityAI;
-import org.jurassicraft.server.entity.ai.AssistOwnerEntityAI;
-import org.jurassicraft.server.entity.ai.DefendOwnerEntityAI;
-import org.jurassicraft.server.entity.ai.DinosaurAttackMeleeEntityAI;
-import org.jurassicraft.server.entity.ai.DinosaurLookHelper;
-import org.jurassicraft.server.entity.ai.DinosaurWanderAvoidWater;
-import org.jurassicraft.server.entity.ai.DinosaurWanderEntityAI;
-import org.jurassicraft.server.entity.ai.EscapeWireEntityAI;
-import org.jurassicraft.server.entity.ai.Family;
-import org.jurassicraft.server.entity.ai.FleeEntityAI;
-import org.jurassicraft.server.entity.ai.FollowOwnerEntityAI;
-import org.jurassicraft.server.entity.ai.Herd;
-import org.jurassicraft.server.entity.ai.MateEntityAI;
-import org.jurassicraft.server.entity.ai.ProtectInfantEntityAI;
-import org.jurassicraft.server.entity.ai.Relationship;
-import org.jurassicraft.server.entity.ai.RespondToAttackEntityAI;
-import org.jurassicraft.server.entity.ai.SelectTargetEntityAI;
-import org.jurassicraft.server.entity.ai.SleepEntityAI;
-import org.jurassicraft.server.entity.ai.SmartBodyHelper;
-import org.jurassicraft.server.entity.ai.TargetCarcassEntityAI;
-import org.jurassicraft.server.entity.ai.TemptNonAdultEntityAI;
+import org.jurassicraft.server.dna.DNA;
+import org.jurassicraft.server.dna.GeneType;
+import org.jurassicraft.server.entity.ai.*;
 import org.jurassicraft.server.entity.ai.animations.CallAnimationAI;
 import org.jurassicraft.server.entity.ai.animations.HeadCockAnimationAI;
 import org.jurassicraft.server.entity.ai.animations.LookAnimationAI;
@@ -63,63 +72,18 @@ import org.jurassicraft.server.food.FoodType;
 import org.jurassicraft.server.genetics.GeneticsHelper;
 import org.jurassicraft.server.item.FossilItem;
 import org.jurassicraft.server.item.ItemHandler;
+import org.jurassicraft.server.json.dinosaur.entity.objects.EntityJsonAttributes;
+import org.jurassicraft.server.json.dinosaur.entity.objects.EntityJsonSounds;
 import org.jurassicraft.server.message.SetOrderMessage;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
 import org.jurassicraft.server.util.GameRuleHandler;
 import org.jurassicraft.server.util.LangHelper;
 
-import com.google.common.collect.Lists;
-
-import io.netty.buffer.ByteBuf;
-import net.ilexiconn.llibrary.client.model.tools.ChainBuffer;
-import net.ilexiconn.llibrary.server.animation.Animation;
-import net.ilexiconn.llibrary.server.animation.AnimationHandler;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityBodyHelper;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IEntityLivingData;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.init.MobEffects;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.pathfinding.Path;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.vecmath.Vector3f;
+import java.util.*;
+import java.util.function.Predicate;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -148,7 +112,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
     private int geneticsQuality;
     private boolean isMale;
     private boolean hasTracker;
-    private UUID owner;
+    @Nullable private UUID owner;
     private boolean isSleeping;
     private int tranquilizerTicks;
     private int stayAwakeTime;
@@ -203,13 +167,13 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
     private UUID inMouthEntity; //The entity of whose mouth this is inside
     private UUID entityInMouth; //The entity inside this entities mouth
 
-    public DinosaurEntity(World world, Dinosaur dinosaur) {
-        this(world);
-        this.setDinosaur(dinosaur);
-    }
-
     public DinosaurEntity(World world) {
         super(world);
+
+        this.setNoAI(true);
+
+        this.metabolism = new MetabolismContainer(this);
+        this.inventory = new InventoryDinosaur(this);
 
         this.moveHelper = new DinosaurMoveHelper(this);
         this.jumpHelper = new DinosaurJumpHelper(this);
@@ -281,16 +245,17 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
                 
     }
 
-    private void setDinosaur(Dinosaur dinosaur) {
+    public DinosaurEntity setDinosaur(Dinosaur dinosaur) {
         this.dinosaur = dinosaur;
 
-//        this.setFullyGrown();
+        this.setFullyGrown();
         this.updateAttributes();
 //        this.applyEntityAttributes();
 
         this.metabolism = new MetabolismContainer(this);
         this.inventory = new InventoryDinosaur(this);
         this.setAnimation(EntityAnimation.IDLE.get());
+        return this;
     }
 
     public void pickUpEntityInMouth(DinosaurEntity entity) {
@@ -369,6 +334,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
         this.hasTracker = hasTracker;
     }
 
+    @Nullable
     public UUID getOwner() {
         return this.owner;
     }
@@ -396,7 +362,11 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
             entity = entity.getRidingEntity();
         }
 
-        float damage = (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
+        float damage = (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue() * (this.getDNA().getValueFloat(GeneType.ATTACK) + 1);
+
+        if(entity instanceof DinosaurEntity) {
+            damage *= ((DinosaurEntity)entity).getDNA().getValueFloat(GeneType.DEFENSE) + 1;
+        }
 
         if (entity.attackEntityFrom(new DinosaurDamageSource("mob", this), damage)) {
             if (entity instanceof DinosaurEntity && ((DinosaurEntity) entity).isCarcass()) {
@@ -618,14 +588,26 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(newHealth);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(speed);
-
         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(strength);
 
-        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(64.0D);
+        for (EntityJsonAttributes attributes : this.dinosaur.getProperties().getAttributes()) {
+            attributes.apply(this);
+        }
+
+        applyDnaChanges(SharedMonsterAttributes.MAX_HEALTH, GeneType.HEALTH, 3);
+        applyDnaChanges(SharedMonsterAttributes.MOVEMENT_SPEED, GeneType.SPEED, 2);
+        applyDnaChanges(SharedMonsterAttributes.ATTACK_DAMAGE, GeneType.STRENGTH, 4);
 
         if (prevHealth != newHealth) {
             this.heal((float) (newHealth - prevHealth));
         }
+    }
+
+    private void applyDnaChanges(IAttribute attribute, GeneType type, int totalAddition) {
+        IAttributeInstance instance = this.getEntityAttribute(attribute);
+        double baseValue = instance.getBaseValue();
+        baseValue += baseValue * totalAddition * this.getDNA().getValueFloat(type);
+        instance.setBaseValue(baseValue);
     }
 
     private void updateBounds() {
@@ -758,15 +740,17 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
                     if (!this.isMale()) {
                         int minClutch = this.dinosaur.getMinClutch();
                         int maxClutch = this.dinosaur.getMaxClutch();
-                        for (int i = 0; i < this.rand.nextInt(maxClutch - minClutch) + minClutch; i++) {
-                            DinosaurEntity child = new DinosaurEntity(this.world, this.dinosaur);
+                        for (int i = 0; i < (this.rand.nextInt(maxClutch - minClutch) + minClutch) + this.getDNA().getValueFloat(GeneType.CHILD_YEILD); i++) {
+                            boolean isMale = this.rand.nextBoolean();
+                            DinosaurEntity child = this.dinosaur.createEntity(this.world);
                             child.setAge(0);
-                            child.setMale(this.rand.nextDouble() > 0.5);
+                            child.setMale(isMale);
                             child.setDNAQuality(Math.min(100, this.getDNAQuality() + this.breeding.getDNAQuality()));
                             DinosaurAttributes attributes = DinosaurAttributes.combine(this, this.getAttributes(), this.breeding.getAttributes());
                             String genetics = "";
+                            int maleChances = (this.isMale == isMale ? 65 : 15) + rand.nextInt(20);
                             for (int c = 0; c < this.genetics.length(); c++) {
-                                if (this.rand.nextBoolean()) {
+                                if (c / this.genetics.length() <= maleChances) {
                                     genetics += this.genetics.charAt(i);
                                 } else {
                                     genetics += this.breeding.genetics.charAt(i);
@@ -834,7 +818,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
                 this.playSound(this.getBreathingSound(), this.getSoundVolume(), this.getSoundPitch());
             }
 
-            if (!this.dinosaur.isMarineCreature()) {
+            if (this.dinosaur.getHomeType() != Dinosaur.DinosaurHomeType.MARINE) {
                 if (this.isInsideOfMaterial(Material.WATER) || (this.getNavigator().noPath() && this.inWater() || this.inLava())) {
                     this.getJumpHelper().setJumping();
                 } else {
@@ -1151,6 +1135,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
         this.setAge(this.dinosaur.getMaximumAge());
     }
 
+    @Nullable
     public Dinosaur getDinosaur() {
         return this.dinosaur;
     }
@@ -1259,13 +1244,13 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
                         }
                         if (!this.isOwner(player)) {
                             if (this.rand.nextFloat() < 0.30) {
-                                if (this.dinosaur.getDinosaurType() == Dinosaur.DinosaurType.AGGRESSIVE) {
+                                if (this.dinosaur.getDinosaurBehaviourType() == Dinosaur.DinosaurBehaviourType.AGGRESSIVE) {
                                     if (this.rand.nextFloat() * 4.0F < (float) this.herd.members.size() / this.dinosaur.getMaxHerdSize()) {
                                         this.herd.enemies.add(player);
                                     } else {
                                         this.attackEntityAsMob(player);
                                     }
-                                } else if (this.dinosaur.getDinosaurType() == Dinosaur.DinosaurType.SCARED) {
+                                } else if (this.dinosaur.getDinosaurBehaviourType() == Dinosaur.DinosaurBehaviourType.SCARED) {
                                     this.herd.fleeing = true;
                                     this.herd.enemies.add(player);
                                 }
@@ -1372,8 +1357,10 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
         return this.getSoundForAnimation(EntityAnimation.DYING.get());
     }
 
+    @Nullable
     public SoundEvent getSoundForAnimation(Animation animation) {
-        return null;
+        EntityJsonSounds sounds = this.dinosaur.getProperties().getSounds();
+        return sounds == null ? null : sounds.getSoundMap().get(EntityAnimation.getAnimation(animation));
     }
 
     public SoundEvent getBreathingSound() {
@@ -1398,7 +1385,10 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
     public int getAgePercentage() {
         int age = this.getDinosaurAge();
-        return age != 0 ? age * 100 / this.getDinosaur().getMaximumAge() : 0;
+        if((this.getDinosaur().getMaximumAge() * (int)(((this.getDNA().getValueFloat(GeneType.LIFESPAN) + 1) / 2) + 0.5)) == 0) {
+            System.out.println(this.getDNA().getValueFloat(GeneType.LIFESPAN));
+        }
+        return (int)(age != 0 ? age * 100 / (this.getDinosaur().getMaximumAge() * ((this.getDNA().getValueFloat(GeneType.LIFESPAN) + 1) / 2) + 0.5) : 0);
     }
 
     @Override
@@ -1500,6 +1490,8 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
         this.deserializing = true;
 
         super.readFromNBT(nbt);
+        this.setDinosaur(JurassicraftRegisteries.DINOSAUR_REGISTRY.getValue(new ResourceLocation(nbt.getString("Dinosaur"))));
+
         this.setAge(nbt.getInteger("DinosaurAge"));
         this.setCarcass(nbt.getBoolean("IsCarcass"));
         this.geneticsQuality = nbt.getInteger("DNAQuality");
@@ -1555,7 +1547,6 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
         this.ticksUntilDeath = nbt.getInteger("TicksUntilDeath");
         this.entityInMouth = nbt.hasUniqueId("EntityInMouth") ? nbt.getUniqueId("EntityInMouth") : null;
         this.inMouthEntity = nbt.hasUniqueId("InMouthEntity") ? nbt.getUniqueId("InMouthEntity") : null;
-        this.setDinosaur(JurassicraftRegisteries.DINOSAUR_REGISTRY.getValue(new ResourceLocation(nbt.getString("Dinosaur"))));
 
         this.updateBounds();
 
@@ -1569,8 +1560,8 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
         buffer.writeInt(this.geneticsQuality);
         buffer.writeBoolean(this.isMale);
         buffer.writeInt(this.growthSpeedOffset);
-        buffer.writeBoolean(this.dinosaur != null);
         this.attributes.write(buffer);
+        buffer.writeBoolean(this.dinosaur != null);
         if(this.dinosaur != null) {
             ByteBufUtils.writeRegistryEntry(buffer, this.dinosaur);
         }
@@ -1634,6 +1625,10 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
         LOGGER.info(this);
     }
 
+    public DNA getDNA() {
+        return new DNA(this.genetics, this::setGenetics);
+    }
+
     @Override
     public String toString() {
         return "DinosaurEntity{ " +
@@ -1695,7 +1690,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
     }
 
     public boolean areEyelidsClosed() {
-        return !this.dinosaur.isMarineCreature() && ((this.isCarcass || this.isSleeping) || this.ticksExisted % 100 < 4);
+        return this.dinosaur.getHomeType() != Dinosaur.DinosaurHomeType.MARINE && ((this.isCarcass || this.isSleeping) || this.ticksExisted % 100 < 4);
     }
 
     @Override
@@ -1862,7 +1857,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
                 Herd herd = this.herd;
 
                 if (herd != null) {
-                    herd.fleeing = !herd.shouldDefend(enemies) || this.dinosaur.shouldFlee();
+                    herd.fleeing = !herd.shouldDefend(enemies) || this.dinosaur.isFlee();
 
                     for (EntityLivingBase entity : enemies) {
                         if (!herd.enemies.contains(entity)) {
@@ -1936,7 +1931,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
     @Override
     public boolean isMarineCreature() {
-        return this.dinosaur.isMarineCreature();
+        return this.dinosaur.getHomeType() == Dinosaur.DinosaurHomeType.MARINE;
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.gson.*;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Value;
 import lombok.experimental.FieldDefaults;
 import net.minecraft.util.JsonUtils;
 import net.minecraftforge.common.BiomeDictionary;
@@ -12,8 +13,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Locale;
 
-@Data
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@Value
 public class DinosaurSpawningInfo {
 
     int chance;

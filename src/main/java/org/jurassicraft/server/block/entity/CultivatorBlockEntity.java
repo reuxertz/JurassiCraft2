@@ -235,7 +235,7 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
 
     private DinosaurEntity createEntity() {
         ItemStack stack = this.inventory.getStackInSlot(0);
-        this.dinosaurEntity = new DinosaurEntity(world, DinosaurProvider.getFromStack(stack).getValue(stack));
+        this.dinosaurEntity = DinosaurProvider.getFromStack(stack).getValue(stack).createEntity(this.world);
         this.dinosaurEntity.setMale(this.temperature > 50);
         this.dinosaurEntity.setFullyGrown();
         this.dinosaurEntity.getAttributes().setScaleModifier(1f);

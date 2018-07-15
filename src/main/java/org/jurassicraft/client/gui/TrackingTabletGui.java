@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Biomes;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -71,7 +72,8 @@ public class TrackingTabletGui extends GuiScreen {
 
     public void refreshDinosaurs() {
         this.renderList.clear();
-        TrackingTablet.TrackingInfo info = new TrackingTablet.TrackingInfo(mc.player.getHeldItem(hand));
+        ItemStack stack = mc.player.getHeldItem(hand);
+        TrackingTablet.TrackingInfo info = new TrackingTablet.TrackingInfo(stack);
         for (TrackingTablet.DinosaurInfo dinosaurInfo : info.getDinosaurInfos()) {
             renderList.add(new RenderDinosaurInfo(mc.player, dinosaurInfo));
         }

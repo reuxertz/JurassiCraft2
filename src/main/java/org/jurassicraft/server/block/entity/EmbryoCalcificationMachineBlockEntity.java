@@ -33,7 +33,7 @@ public class EmbryoCalcificationMachineBlockEntity extends MachineBaseBlockEntit
         if (!input.isEmpty() && input.getItem() instanceof SyringeItem && !egg.isEmpty() && egg.getItem() == Items.EGG) {
             Dinosaur dino = DinosaurProvider.getFromStack(input).getValue(input);
 
-            if (!dino.isMammal()) {
+            if (dino.getHomeType() != Dinosaur.DinosaurHomeType.LAND) {
                 ItemStack output = ItemHandler.EGG.getItemStack(DinosaurProvider.getFromStack(input).getValue(input));
                 output.setTagCompound(input.getTagCompound());
 

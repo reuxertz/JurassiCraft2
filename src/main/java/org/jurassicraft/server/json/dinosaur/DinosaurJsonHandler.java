@@ -5,18 +5,16 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.dinosaur.*;
+import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.json.JsonUtil;
+import org.jurassicraft.server.json.dinosaur.entity.objects.*;
 import org.jurassicraft.server.json.dinosaur.model.JsonAnimator;
 import org.jurassicraft.server.json.dinosaur.model.JsonDinosaurModel;
 import org.jurassicraft.server.json.dinosaur.model.objects.Constants;
 import org.jurassicraft.server.json.dinosaur.model.objects.JsonAnimationType;
 import org.jurassicraft.server.json.dinosaur.objects.*;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.lang.reflect.Type;
 @Mod.EventBusSubscriber(modid = JurassiCraft.MODID)
 @SuppressWarnings("unused")
@@ -39,6 +37,15 @@ public class DinosaurJsonHandler {
             .registerTypeAdapter(JsonAnimator.class, new JsonAnimator.Deserializer())
             .registerTypeAdapter(Constants.class, new Constants.Deserializer())
             .registerTypeAdapter(JsonAnimationType.class, new JsonAnimationType.Deserializer())
+
+            //Entity Stuff
+            .registerTypeAdapter(AttackTargets.class, new AttackTargets.Deserializer())
+            .registerTypeAdapter(EntityAiBlock.class, new EntityAiBlock.Deserializer())
+            .registerTypeAdapter(EntityAiBlockNoPriority.class, new EntityAiBlockNoPriority.Deserializer())
+            .registerTypeAdapter(EntityJsonAi.class, new EntityJsonAi.Deserializer())
+            .registerTypeAdapter(EntityJsonAttributes.class, new EntityJsonAttributes.Deserializer())
+            .registerTypeAdapter(EntityJsonSounds.class, new EntityJsonSounds.Deserializer())
+            .registerTypeAdapter(EntityProperties.class, new EntityProperties.Deserializer())
             .create();
 
     @SubscribeEvent
@@ -47,27 +54,27 @@ public class DinosaurJsonHandler {
 
 //        event.getRegistry().register(new StegosaurusDinosaur().setRegistryName("stegosaurus"));
 
-        if(Boolean.FALSE) { //Debug stuff. Dont use unless you know what youre doing
-            File folder = new File(new File(".").getAbsoluteFile().getParentFile().getParentFile(), "src\\main\\resources\\assets\\jurassicraft\\jurassicraft\\dinosaurs");
-            for (Dinosaur dinosaur : new Dinosaur[]{
-                    new BrachiosaurusDinosaur(),
-                    new CoelacanthDinosaur(),
-                    new DilophosaurusDinosaur(),
-                    new GallimimusDinosaur(),
-                    new MicroraptorDinosaur(),
-                    new MussaurusDinosaur(),
-                    new ParasaurolophusDinosaur(),
-                    new TriceratopsDinosaur(),
-                    new TyrannosaurusDinosaur(),
-                    new VelociraptorDinosaur()
-            }) {
-                try(FileWriter fw = new FileWriter(new File(folder, dinosaur.getName().toLowerCase() + ".json"))) {
-                    GSON.toJson(dinosaur, Dinosaur.class, fw);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+//        if(Boolean.FALSE) { //Debug stuff. Dont use unless you know what youre doing
+//            File folder = new File(new File(".").getAbsoluteFile().getParentFile().getParentFile(), "src\\main\\resources\\assets\\jurassicraft\\jurassicraft\\dinosaurs");
+//            for (Dinosaur dinosaur : new Dinosaur[]{
+//                    new BrachiosaurusDinosaur(),
+//                    new CoelacanthDinosaur(),
+//                    new DilophosaurusDinosaur(),
+//                    new GallimimusDinosaur(),
+//                    new MicroraptorDinosaur(),
+//                    new MussaurusDinosaur(),
+//                    new ParasaurolophusDinosaur(),
+//                    new TriceratopsDinosaur(),
+//                    new TyrannosaurusDinosaur(),
+//                    new VelociraptorDinosaur()
+//            }) {
+//                try(FileWriter fw = new FileWriter(new File(folder, dinosaur.getName().toLowerCase() + ".json"))) {
+//                    GSON.toJson(dinosaur, Dinosaur.class, fw);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
     }
 
     public static class JsonHandler implements JsonDeserializer<Dinosaur>, JsonSerializer<Dinosaur> {
@@ -81,13 +88,13 @@ public class DinosaurJsonHandler {
         public JsonElement serialize(Dinosaur dino, Type typeOfSrc, JsonSerializationContext context) {
             return context.serialize(new DinosaurProperties(
                     dino.getName(),
-                    dino.getPeriod(),
+                    dino.getTimePeriod(),
                     dino.getHeadCubeName(),
                     dino.getAnimatorClassName() != null ? dino.getAnimatorClassName() : "", //TODO: remove this line when all dinosaur animators are turned into json
                     dino.getAnimatorClassName() != null ? "" : dino.getRegistryName().toString(),
                     dino.getShadowSize(),
-                    new SpawnEggInfo(dino.getEggPrimaryColorMale(), dino.getEggSecondaryColorMale()),
-                    new SpawnEggInfo(dino.getEggPrimaryColorFemale(), dino.getEggSecondaryColorFemale()),
+                    new SpawnEggInfo(dino.getPrimaryEggColorMale(), dino.getSecondaryEggColorMale()),
+                    new SpawnEggInfo(dino.getPrimaryEggColorFemale(), dino.getSecondaryEggColorFemale()),
                     new DinosaurStatistics(
                             new AdultBabyValue(dino.getBabySpeed(),     dino.getAdultSpeed()),
                             new AdultBabyValue(dino.getBabyHealth(),    dino.getAdultHealth()),
@@ -101,15 +108,16 @@ public class DinosaurJsonHandler {
                             dino.getStorage()
                     ),
                     new DinosaurTraits(
-                            dino.getDinosaurType(),
+                            dino.getHomeType(),
+                            dino.getDinosaurBehaviourType(),
                             dino.getDiet(),
                             dino.getSleepTime(),
                             dino.isImprintable(),
-                            dino.shouldDefendOwner(),
+                            dino.isDefendOwner(),
                             dino.getMaximumAge(),
                             dino.getMaxHerdSize(),
                             dino.getAttackBias(),
-                            dino.canClimb(),
+                            dino.isCanClimb(),
                             dino.getFlockSpeed()
                     ),
                     new DinosaurSpawningInfo(dino.getSpawnChance(), dino.getBiomeTypes()),
@@ -118,7 +126,8 @@ public class DinosaurJsonHandler {
                             dino.getMinClutch(),
                             dino.getMaxClutch(),
                             dino.getBreedCooldown(),
-                            dino.shouldBreedAroundOffspring(), dino.shouldDefendOffspring()
+                            dino.isBreedAroundOffspring(),
+                            dino.isDefendOffspring()
                     ),
                     dino.getBones(),
                     dino.getRecipe()

@@ -1,23 +1,21 @@
 package org.jurassicraft.server.json.dinosaur.objects;
 
 import com.google.gson.*;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
+import lombok.Value;
 import net.minecraft.util.JsonUtils;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.entity.SleepTime;
-import org.jurassicraft.server.json.JsonUtil;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 import java.util.Locale;
 
-@Data
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@Value
 public class DinosaurTraits {
 
-    Dinosaur.DinosaurType type;
+    Dinosaur.DinosaurHomeType homeType;
+    Dinosaur.DinosaurBehaviourType type;
     Diet diet;
     SleepTime sleepType;
     boolean imprintable;
@@ -37,7 +35,8 @@ public class DinosaurTraits {
             }
             JsonObject json = element.getAsJsonObject();
             return new DinosaurTraits(
-                    Dinosaur.DinosaurType.valueOf(JsonUtils.getString(json, "type").toUpperCase(Locale.ENGLISH)),
+                    JsonUtils.isString(json, "home_type") ? Dinosaur.DinosaurHomeType.valueOf(JsonUtils.getString(json, "home_type").toUpperCase(Locale.ENGLISH)) : Dinosaur.DinosaurHomeType.LAND,
+                    Dinosaur.DinosaurBehaviourType.valueOf(JsonUtils.getString(json, "type").toUpperCase(Locale.ENGLISH)),
                     context.deserialize(JsonUtils.getJsonArray(json, "diet"), Diet.class),
                     SleepTime.valueOf(JsonUtils.getString(json, "sleep_type").toUpperCase(Locale.ENGLISH)),
                     JsonUtils.getBoolean(json, "imprintable"),

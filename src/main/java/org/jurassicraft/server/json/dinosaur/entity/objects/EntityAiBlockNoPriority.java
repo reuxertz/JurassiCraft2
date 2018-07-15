@@ -11,18 +11,17 @@ import java.lang.reflect.Type;
 import java.util.function.Function;
 
 @Data
-public class EntityAiBlock {
-    private final int priority;
+public class EntityAiBlockNoPriority {
     private final Function<DinosaurEntity, EntityAIBase> entityAiFunc;
 
-    public static class Deserializer implements JsonDeserializer<EntityAiBlock> {
+    public static class Deserializer implements JsonDeserializer<EntityAiBlockNoPriority> {
         @Override
-        public EntityAiBlock deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        public EntityAiBlockNoPriority deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             if(!element.isJsonObject()) {
                 throw new JsonParseException("Expected Json Object, found " + JsonUtils.toString(element));
             }
             JsonObject json = element.getAsJsonObject();
-            return new EntityAiBlock(JsonUtils.getInt(json, "priority"), EntityDinosaurJsonHandler.TASK_MAP.get(JsonUtils.getString(json, "type")).apply(json));
+            return new EntityAiBlockNoPriority(EntityDinosaurJsonHandler.TASK_MAP.get(JsonUtils.getString(json, "type")).apply(json));
         }
     }
 

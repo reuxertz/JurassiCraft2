@@ -459,9 +459,9 @@ public enum RenderingHandler {
                     mode = JurassiCraft.timerTicks % 64 > 32 ? 1 : 2;
                 }
                 if (mode == 1) {
-                    return tintIndex == 0 ? dino.getEggPrimaryColorMale() : dino.getEggSecondaryColorMale();
+                    return tintIndex == 0 ? dino.getPrimaryEggColorMale() : dino.getSecondaryEggColorMale();
                 } else {
-                    return tintIndex == 0 ? dino.getEggPrimaryColorFemale() : dino.getEggSecondaryColorFemale();
+                    return tintIndex == 0 ? dino.getPrimaryEggColorFemale() : dino.getSecondaryEggColorFemale();
                 }
             }
             return 0xFFFFFF;
