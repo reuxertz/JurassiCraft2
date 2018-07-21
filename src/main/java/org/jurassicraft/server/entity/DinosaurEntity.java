@@ -1,5 +1,6 @@
 package org.jurassicraft.server.entity;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -12,6 +13,7 @@ import java.util.UUID;
 
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.entity.ai.*;
+import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jurassicraft.JurassiCraft;
@@ -1179,15 +1181,27 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     }
 
     public void setCarcass(boolean carcass) {
+
+        boolean carcassAllowed;
+
+        Configuration config = new Configuration(new File("config/jurassicraft.cfg"));
+        config.load();
+
+        carcassAllowed = config.get("entities", "Can Carcasses Spawn", true).getBoolean();
+
         this.isCarcass = carcass;
         if (!this.world.isRemote) {
             this.dataManager.set(WATCHER_IS_CARCASS, this.isCarcass);
         }
         if (carcass) {
-            this.setAnimation(EntityAnimation.DYING.get());
-            this.carcassHealth = Math.max(1, (int) Math.sqrt(this.width * this.height) * 2);
-            this.ticksExisted = 0;
-            this.inventory.dropItems(this.world, this.rand);
+            if(carcassAllowed) {
+                this.setAnimation(EntityAnimation.DYING.get());
+                this.carcassHealth = Math.max(1, (int) Math.sqrt(this.width * this.height) * 2);
+                this.ticksExisted = 0;
+                this.inventory.dropItems(this.world, this.rand);
+            }else{
+                this.inventory.dropItems(this.world, this.rand);
+            }
         }
     }
 
