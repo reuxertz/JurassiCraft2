@@ -25,6 +25,11 @@ public class JsonAnimationType {
     private final Map<JsonArray, BiFunction<JsonArray, JsonAnimator, JsonAnimationModule>> animationFactoryMap;
     private final List<JsonAnimationModule> modules = Lists.newArrayList();
 
+    public JsonAnimationType(Map<JsonArray, BiFunction<JsonArray, JsonAnimator, JsonAnimationModule>> animationFactoryMap) {
+        super();
+        this.animationFactoryMap = animationFactoryMap;
+    }
+
     public void runFactories(JsonAnimator animator) {
         modules.clear();
         animationFactoryMap.forEach((array, factory) -> modules.add(factory.apply(array, animator)));
