@@ -2,10 +2,9 @@ package org.jurassicraft.server.entity.ai;
 
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.pathfinding.Path;
-import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.math.BlockPos;
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.Dinosaur;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.entity.ai.util.AIUtils;
 
 public class AdvancedSwimEntityAI extends EntityAIBase {

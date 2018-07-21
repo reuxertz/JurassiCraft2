@@ -1,18 +1,9 @@
 package org.jurassicraft.server.block.entity;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.api.Hybrid;
-import org.jurassicraft.server.container.DNACombinatorHybridizerContainer;
-import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.Dinosaur;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
 import org.jurassicraft.server.genetics.DinoDNA;
 import org.jurassicraft.server.genetics.PlantDNA;

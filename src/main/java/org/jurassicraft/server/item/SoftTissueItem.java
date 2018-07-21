@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jurassicraft.server.api.DinosaurProvider;
 import org.jurassicraft.server.api.SequencableItem;
-import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.Dinosaur;
 import org.jurassicraft.server.genetics.DinoDNA;
 import org.jurassicraft.server.genetics.GeneticsHelper;
 import org.jurassicraft.server.tab.TabHandler;

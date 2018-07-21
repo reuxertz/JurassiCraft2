@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.block.entity.CultivatorBlockEntity;
 import org.jurassicraft.server.container.CultivateContainer;
-import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.Dinosaur;
 
 @SideOnly(Side.CLIENT)
 public class CultivateProcessGui extends GuiScreen {

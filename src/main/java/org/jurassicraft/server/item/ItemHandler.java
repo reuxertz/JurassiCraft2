@@ -10,7 +10,7 @@ import org.jurassicraft.client.sound.SoundHandler;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.NestFossilBlock;
 import org.jurassicraft.server.block.tree.TreeType;
-import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.entity.item.AttractionSignEntity;
 import org.jurassicraft.server.item.block.AncientDoorItem;
 import org.jurassicraft.server.item.vehicles.HelicopterItem;

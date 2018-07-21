@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.container.slot.FossilSlotCrafting;
 import org.jurassicraft.server.container.slot.SkeletonCraftingSlot;
-import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.Dinosaur;
 import org.jurassicraft.server.item.DisplayBlockItem;
 import org.jurassicraft.server.item.FossilItem;
 import org.jurassicraft.server.item.ItemHandler;

@@ -3,7 +3,7 @@ package org.jurassicraft.server.item;
 import java.util.Locale;
 
 import org.jurassicraft.server.api.DinosaurProvider;
-import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.Dinosaur;
 import org.jurassicraft.server.genetics.GeneticsHelper;
 import org.jurassicraft.server.tab.TabHandler;
 import org.jurassicraft.server.util.LangHelper;

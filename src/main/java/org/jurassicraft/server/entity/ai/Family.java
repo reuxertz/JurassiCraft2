@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.entity.GrowthStage;
 
 import java.util.Collections;

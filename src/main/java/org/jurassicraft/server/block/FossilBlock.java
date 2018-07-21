@@ -7,7 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import org.jurassicraft.server.api.SubBlocksBlock;
-import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.Dinosaur;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
 import org.jurassicraft.server.api.DinosaurProvider;
 import org.jurassicraft.server.item.block.FossilItemBlock;

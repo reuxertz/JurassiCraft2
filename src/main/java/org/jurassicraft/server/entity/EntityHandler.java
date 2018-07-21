@@ -2,15 +2,11 @@ package org.jurassicraft.server.entity;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.Biome;
-import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.dinosaur.*;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.entity.item.AttractionSignEntity;
 import org.jurassicraft.server.entity.item.DinosaurEggEntity;
 import org.jurassicraft.server.entity.item.MuralEntity;
@@ -19,7 +15,6 @@ import org.jurassicraft.server.entity.vehicle.FordExplorerEntity;
 import org.jurassicraft.server.entity.vehicle.HelicopterBaseEntity;
 import org.jurassicraft.server.entity.vehicle.JeepWranglerEntity;
 
-import java.util.ArrayList;
 import java.util.Locale;
 
 @GameRegistry.ObjectHolder(JurassiCraft.MODID)

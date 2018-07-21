@@ -27,7 +27,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.model.animation.EntityAnimation;
 import org.jurassicraft.client.sound.SoundHandler;
-import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.ai.LeapingMeleeEntityAI;
 import org.jurassicraft.server.entity.ai.RaptorClimbTreeAI;
 import org.jurassicraft.server.entity.ai.RaptorLeapEntityAI;

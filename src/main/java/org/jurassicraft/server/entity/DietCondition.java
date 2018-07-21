@@ -1,6 +1,7 @@
 package org.jurassicraft.server.entity;
 
 import com.google.common.collect.Lists;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 
 import java.util.List;
 import java.util.function.Predicate;

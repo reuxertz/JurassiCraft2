@@ -1,31 +1,23 @@
 package org.jurassicraft.server.registries;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.minecraft.block.Block;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryInternal;
 import net.minecraftforge.registries.RegistryBuilder;
 import net.minecraftforge.registries.RegistryManager;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.api.Hybrid;
-import org.jurassicraft.server.conf.JurassiCraftConfig;
-import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.Dinosaur;
 import org.jurassicraft.server.period.TimePeriod;
 import org.jurassicraft.server.plant.Plant;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 @Mod.EventBusSubscriber(modid = JurassiCraft.MODID)

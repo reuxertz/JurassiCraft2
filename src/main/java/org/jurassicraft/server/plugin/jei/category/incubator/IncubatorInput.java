@@ -1,6 +1,6 @@
 package org.jurassicraft.server.plugin.jei.category.incubator;
 
-import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.Dinosaur;
 
 public class IncubatorInput {
 

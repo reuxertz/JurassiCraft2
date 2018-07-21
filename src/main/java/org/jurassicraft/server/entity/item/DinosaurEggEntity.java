@@ -13,8 +13,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.Dinosaur;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
 import org.jurassicraft.server.item.ItemHandler;
 

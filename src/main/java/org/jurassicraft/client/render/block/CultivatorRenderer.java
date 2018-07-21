@@ -5,11 +5,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.Vec3d;
 import org.jurassicraft.server.block.entity.CultivatorBlockEntity;
-import org.jurassicraft.server.entity.DinosaurEntity;
-
-import javax.vecmath.Vector3f;
 
 public class CultivatorRenderer extends TileEntitySpecialRenderer<CultivatorBlockEntity> {
     private Minecraft mc = Minecraft.getMinecraft();

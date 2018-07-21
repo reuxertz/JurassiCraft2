@@ -2,7 +2,7 @@ package org.jurassicraft.server.json.dinosaur.objects;
 
 import com.google.gson.*;
 import net.minecraft.util.JsonUtils;
-import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.Dinosaur;
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.entity.SleepTime;
 

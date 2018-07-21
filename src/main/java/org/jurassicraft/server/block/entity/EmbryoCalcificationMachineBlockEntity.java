@@ -2,7 +2,7 @@ package org.jurassicraft.server.block.entity;
 
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.container.EmbryoCalcificationMachineContainer;
-import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.Dinosaur;
 import org.jurassicraft.server.api.DinosaurProvider;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.item.SyringeItem;

@@ -6,7 +6,7 @@ import java.util.Random;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jurassicraft.server.api.CleanableItem;
-import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.Dinosaur;
 import org.jurassicraft.server.item.FossilItem;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.item.block.EncasedFossilItemBlock;

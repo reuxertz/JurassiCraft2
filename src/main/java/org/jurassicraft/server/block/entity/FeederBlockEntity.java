@@ -17,7 +17,7 @@ import net.minecraft.util.SoundCategory;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.sound.SoundHandler;
 import org.jurassicraft.server.block.machine.FeederBlock;
-import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.food.FoodHelper;
 
 import java.util.Random;

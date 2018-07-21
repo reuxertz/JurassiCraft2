@@ -2,7 +2,7 @@ package org.jurassicraft.server.recipe;
 
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.tree.TreeType;
-import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.Dinosaur;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
 import org.jurassicraft.server.item.ItemHandler;
 

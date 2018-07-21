@@ -22,8 +22,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.server.api.NoItemBlock;
 import org.jurassicraft.server.block.entity.DisplayBlockEntity;
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.entity.Dinosaur;
 import org.jurassicraft.server.item.DisplayBlockItem;
 import org.jurassicraft.server.item.ItemHandler;
 

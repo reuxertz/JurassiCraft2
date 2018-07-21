@@ -4,6 +4,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 
 public class DinosaurSerializers {
     public static final DataSerializer<DinosaurEntity.Order> ORDER = new DataSerializer<DinosaurEntity.Order>() {

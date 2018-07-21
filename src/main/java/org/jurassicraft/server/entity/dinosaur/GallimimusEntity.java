@@ -3,7 +3,6 @@ package org.jurassicraft.server.entity.dinosaur;
 import net.minecraft.entity.ai.EntityAIBase;
 import org.jurassicraft.client.model.animation.EntityAnimation;
 import org.jurassicraft.client.sound.SoundHandler;
-import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.LegSolverBiped;
 import org.jurassicraft.server.entity.ai.RaptorLeapEntityAI;
 import org.jurassicraft.server.entity.ai.animations.PeckGroundAnimationAI;

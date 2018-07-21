@@ -1,34 +1,16 @@
 package org.jurassicraft.server.item;
 
-import java.util.List;
-import java.util.Locale;
-
-import net.minecraft.client.util.ITooltipFlag;
-import org.jurassicraft.server.api.DinosaurProvider;
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.DinosaurEntity;
-import org.jurassicraft.server.tab.TabHandler;
-import org.jurassicraft.server.util.LangHelper;
-
 import net.minecraft.block.BlockFence;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.MobSpawnerBaseLogic;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityMobSpawner;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
@@ -36,92 +18,100 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.server.api.DinosaurProvider;
+import org.jurassicraft.server.entity.Dinosaur;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
+import org.jurassicraft.server.tab.TabHandler;
+import org.jurassicraft.server.util.LangHelper;
+
+import java.util.List;
+import java.util.Locale;
 
 public class DinosaurSpawnEggItem extends Item implements DinosaurProvider {
-    public DinosaurSpawnEggItem() {
-        this.setCreativeTab(TabHandler.ITEMS);
-    }
+	public DinosaurSpawnEggItem() {
+		this.setCreativeTab(TabHandler.ITEMS);
+	}
 
-    @Override
-    public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target, EnumHand hand) {
-        return true;
-    }
+	@Override
+	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target, EnumHand hand) {
+		return true;
+	}
 
-    @Override
-    public boolean shouldOverrideModel(Dinosaur dinosaur) {
-        return false;
-    }
+	@Override
+	public boolean shouldOverrideModel(Dinosaur dinosaur) {
+		return false;
+	}
 
-    @Override
-    public boolean canBeInCreativeTab(Dinosaur value) {
-        return true;
-    }
+	@Override
+	public boolean canBeInCreativeTab(Dinosaur value) {
+		return true;
+	}
 
-    public DinosaurEntity spawnDinosaur(World world, EntityPlayer player, ItemStack stack, double x, double y, double z) {
-        Dinosaur dinosaur = this.getValue(stack);
-        DinosaurEntity entity = dinosaur.createEntity(world);
-        entity.setDNAQuality(100);
+	public DinosaurEntity spawnDinosaur(World world, EntityPlayer player, ItemStack stack, double x, double y, double z) {
+		Dinosaur dinosaur = this.getValue(stack);
+		DinosaurEntity entity = dinosaur.createEntity(world);
+		entity.setDNAQuality(100);
 
-        int mode = this.getMode(stack);
-        if (mode > 0) {
-            entity.setMale(mode == 1);
-        }
+		int mode = this.getMode(stack);
+		if (mode > 0) {
+			entity.setMale(mode == 1);
+		}
 
-        if (player.isSneaking()) {
-            entity.setAge(0);
-        }
+		if (player.isSneaking()) {
+			entity.setAge(0);
+		}
 
-        entity.setPosition(x, y, z);
-        entity.setLocationAndAngles(x, y, z, MathHelper.wrapDegrees(world.rand.nextFloat() * 360.0F), 0.0F);
-        entity.rotationYawHead = entity.rotationYaw;
-        entity.renderYawOffset = entity.rotationYaw;
-        return entity;
-    }
+		entity.setPosition(x, y, z);
+		entity.setLocationAndAngles(x, y, z, MathHelper.wrapDegrees(world.rand.nextFloat() * 360.0F), 0.0F);
+		entity.rotationYawHead = entity.rotationYaw;
+		entity.renderYawOffset = entity.rotationYaw;
+		return entity;
+	}
 
-    @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
-    	ItemStack stack = player.getHeldItem(hand);
-    	if(player.isSneaking()) {
-            int mode = this.changeMode(stack);
-            if (world.isRemote) {
-                String modeString = "";
-                if (mode == 0) {
-                    modeString = "random";
-                } else if (mode == 1) {
-                    modeString = "male";
-                } else if (mode == 2) {
-                    modeString = "female";
-                }
-                player.sendMessage(new TextComponentString(new LangHelper("spawnegg.genderchange.name").withProperty("mode", I18n.format("gender." + modeString + ".name")).build()));
-            }
-        }
-        return new ActionResult<>(EnumActionResult.SUCCESS, stack);
-    }
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+		ItemStack stack = player.getHeldItem(hand);
+		if (player.isSneaking()) {
+			int mode = this.changeMode(stack);
+			if (world.isRemote) {
+				String modeString = "";
+				if (mode == 0) {
+					modeString = "random";
+				} else if (mode == 1) {
+					modeString = "male";
+				} else if (mode == 2) {
+					modeString = "female";
+				}
+				player.sendMessage(new TextComponentString(new LangHelper("spawnegg.genderchange.name").withProperty("mode", I18n.format("gender." + modeString + ".name")).build()));
+			}
+		}
+		return new ActionResult<>(EnumActionResult.SUCCESS, stack);
+	}
 
-    @Override
-    public String getItemStackDisplayName(ItemStack stack) {
-        Dinosaur dinosaur = this.getValue(stack);
+	@Override
+	public String getItemStackDisplayName(ItemStack stack) {
+		Dinosaur dinosaur = this.getValue(stack);
 
-        return new LangHelper("item.dino_spawn_egg.name").withProperty("dino", "entity.jurassicraft." + dinosaur.name.replace(" ", "_").toLowerCase(Locale.ENGLISH) + ".name").build();
-    }
+		return new LangHelper("item.dino_spawn_egg.name").withProperty("dino", "entity.jurassicraft." + dinosaur.name.replace(" ", "_").toLowerCase(Locale.ENGLISH) + ".name").build();
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subtypes) {
-        if(this.isInCreativeTab(tab)) {
-            subtypes.addAll(this.getAllStacksOrdered());
-        }
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subtypes) {
+		if (this.isInCreativeTab(tab)) {
+			subtypes.addAll(this.getAllStacksOrdered());
+		}
+	}
 
-    @Override
-    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-    	ItemStack stack = player.getHeldItem(hand);
-        if (world.isRemote) {
-            return EnumActionResult.SUCCESS;
-        } else if (!player.canPlayerEdit(pos.offset(side), side, stack)) {
-            return EnumActionResult.PASS;
-        } else {
-            IBlockState state = world.getBlockState(pos);
+	@Override
+	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		ItemStack stack = player.getHeldItem(hand);
+		if (world.isRemote) {
+			return EnumActionResult.SUCCESS;
+		} else if (!player.canPlayerEdit(pos.offset(side), side, stack)) {
+			return EnumActionResult.PASS;
+		} else {
+			IBlockState state = world.getBlockState(pos);
 
 //            if (state.getBlock() == Blocks.MOB_SPAWNER) {
 //                TileEntity tile = world.getTileEntity(pos);
@@ -139,61 +129,61 @@ public class DinosaurSpawnEggItem extends Item implements DinosaurProvider {
 //                }
 //            }
 
-            pos = pos.offset(side);
-            double yOffset = 0.0D;
+			pos = pos.offset(side);
+			double yOffset = 0.0D;
 
-            if (side == EnumFacing.UP && state.getBlock() instanceof BlockFence) {
-                yOffset = 0.5D;
-            }
+			if (side == EnumFacing.UP && state.getBlock() instanceof BlockFence) {
+				yOffset = 0.5D;
+			}
 
-            DinosaurEntity dinosaur = this.spawnDinosaur(world, player, stack, pos.getX() + 0.5D, pos.getY() + yOffset, pos.getZ() + 0.5D);
+			DinosaurEntity dinosaur = this.spawnDinosaur(world, player, stack, pos.getX() + 0.5D, pos.getY() + yOffset, pos.getZ() + 0.5D);
 
-            if (dinosaur != null) {
-                if (stack.hasDisplayName()) {
-                    dinosaur.setCustomNameTag(stack.getDisplayName());
-                }
+			if (dinosaur != null) {
+				if (stack.hasDisplayName()) {
+					dinosaur.setCustomNameTag(stack.getDisplayName());
+				}
 
-                if (!player.capabilities.isCreativeMode) {
-                    stack.shrink(1);
-                }
+				if (!player.capabilities.isCreativeMode) {
+					stack.shrink(1);
+				}
 
-                world.spawnEntity(dinosaur);
-                dinosaur.playLivingSound();
-            }
+				world.spawnEntity(dinosaur);
+				dinosaur.playLivingSound();
+			}
 
-            return EnumActionResult.SUCCESS;
-        }
-    }
+			return EnumActionResult.SUCCESS;
+		}
+	}
 
-    public int getMode(ItemStack stack) {
-        return this.getNBT(stack).getInteger("GenderMode");
-    }
+	public int getMode(ItemStack stack) {
+		return this.getNBT(stack).getInteger("GenderMode");
+	}
 
-    public int changeMode(ItemStack stack) {
-        NBTTagCompound nbt = this.getNBT(stack);
+	public int changeMode(ItemStack stack) {
+		NBTTagCompound nbt = this.getNBT(stack);
 
-        int mode = this.getMode(stack) + 1;
-        mode %= 3;
+		int mode = this.getMode(stack) + 1;
+		mode %= 3;
 
-        nbt.setInteger("GenderMode", mode);
+		nbt.setInteger("GenderMode", mode);
 
-        stack.setTagCompound(nbt);
+		stack.setTagCompound(nbt);
 
-        return mode;
-    }
+		return mode;
+	}
 
-    public NBTTagCompound getNBT(ItemStack stack) {
-        NBTTagCompound nbt = stack.getTagCompound();
-        if (nbt == null) {
-            nbt = new NBTTagCompound();
-        }
-        stack.setTagCompound(nbt);
-        return nbt;
-    }
+	public NBTTagCompound getNBT(ItemStack stack) {
+		NBTTagCompound nbt = stack.getTagCompound();
+		if (nbt == null) {
+			nbt = new NBTTagCompound();
+		}
+		stack.setTagCompound(nbt);
+		return nbt;
+	}
 
-    @Override
-    public void addInformation(ItemStack stack, World worldIn, List<String> lore, ITooltipFlag tooltipFlag) {
-        lore.add(TextFormatting.BLUE + I18n.format("lore.baby_dino.name"));
-        lore.add(TextFormatting.YELLOW + I18n.format("lore.change_gender.name"));
-    }
+	@Override
+	public void addInformation(ItemStack stack, World worldIn, List<String> lore, ITooltipFlag tooltipFlag) {
+		lore.add(TextFormatting.BLUE + I18n.format("lore.baby_dino.name"));
+		lore.add(TextFormatting.YELLOW + I18n.format("lore.change_gender.name"));
+	}
 }

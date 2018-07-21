@@ -22,7 +22,7 @@ import org.jurassicraft.server.block.FossilizedTrackwayBlock;
 import org.jurassicraft.server.block.NestFossilBlock;
 import org.jurassicraft.server.block.tree.TreeType;
 import org.jurassicraft.server.conf.JurassiCraftConfig;
-import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.Dinosaur;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
 import org.jurassicraft.server.period.TimePeriod;
 

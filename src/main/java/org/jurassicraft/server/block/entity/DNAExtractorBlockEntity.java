@@ -10,7 +10,7 @@ import net.minecraft.util.NonNullList;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.api.Hybrid;
 import org.jurassicraft.server.container.DNAExtractorContainer;
-import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.Dinosaur;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
 import org.jurassicraft.server.genetics.DinoDNA;
 import org.jurassicraft.server.genetics.GeneticsHelper;
@@ -22,7 +22,6 @@ import org.jurassicraft.server.plant.PlantHandler;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 public class DNAExtractorBlockEntity extends MachineBaseBlockEntityOLD {
     private static final int[] INPUTS = new int[]{0, 1};

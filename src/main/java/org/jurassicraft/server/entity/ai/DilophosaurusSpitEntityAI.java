@@ -6,7 +6,7 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.util.math.MathHelper;
 import org.jurassicraft.client.model.animation.EntityAnimation;
 import org.jurassicraft.client.sound.SoundHandler;
-import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.entity.dinosaur.DilophosaurusEntity;
 
 public class DilophosaurusSpitEntityAI extends EntityAIBase {

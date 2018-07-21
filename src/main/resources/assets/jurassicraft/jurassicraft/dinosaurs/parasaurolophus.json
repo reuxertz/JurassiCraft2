@@ -1,6 +1,5 @@
 {
   "name": "Parasaurolophus",
-  "entity": "org.jurassicraft.server.entity.dinosaur.ParasaurolophusEntity",
   "time_period": "cretaceous",
   "head_cube_name": "Head",
   "dinosaur_animator_class": "org.jurassicraft.client.model.animation.entity.ParasaurolophusAnimator",
@@ -112,5 +111,17 @@
       "front_leg_bones",
       "front_leg_bones"
     ]
-  ]
+  ],
+  "animation": {
+    "legs": {
+      "type": "QUADRUPED",
+      "params": {
+        "forwardCenter": 0.2,
+        "forward": 0.9,
+        "side": 0.8,
+        "frontRange": 0.9,
+        "backRange": 1.0
+      }
+    }
+  }
 }

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.jurassicraft.server.block.entity.ElectricFenceBaseBlockEntity;
 import org.jurassicraft.server.block.entity.ElectricFenceWireBlockEntity;
-import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.tab.TabHandler;
 
 import net.minecraft.block.Block;

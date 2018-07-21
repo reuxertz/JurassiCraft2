@@ -14,7 +14,7 @@ import org.jurassicraft.client.model.animation.dto.AnimatableRenderDefDTO;
 import org.jurassicraft.client.model.animation.dto.AnimationsDTO;
 import org.jurassicraft.client.model.animation.dto.PoseDTO;
 import org.jurassicraft.server.api.Animatable;
-import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.Dinosaur;
 import org.jurassicraft.server.entity.GrowthStage;
 import org.jurassicraft.server.tabula.TabulaModelHelper;
 

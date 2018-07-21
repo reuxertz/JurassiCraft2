@@ -1,11 +1,9 @@
 package org.jurassicraft.server.plugin.jei.category.incubator;
 
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeWrapper;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.item.ItemStack;
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.entity.Dinosaur;
 import org.jurassicraft.server.item.ItemHandler;
 
 public class IncubatorRecipeWrapper implements IRecipeWrapper {

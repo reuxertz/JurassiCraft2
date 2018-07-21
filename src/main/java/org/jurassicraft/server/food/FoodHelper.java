@@ -8,15 +8,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
-import org.apache.logging.log4j.Level;
-import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.tree.TreeType;
 import org.jurassicraft.server.entity.Diet;
-import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.plant.Plant;
-import org.jurassicraft.server.plant.PlantHandler;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
 
 import java.util.ArrayList;

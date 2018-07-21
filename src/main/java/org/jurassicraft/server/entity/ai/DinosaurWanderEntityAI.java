@@ -1,6 +1,6 @@
 package org.jurassicraft.server.entity.ai;
 
-import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.ai.EntityAIBase;

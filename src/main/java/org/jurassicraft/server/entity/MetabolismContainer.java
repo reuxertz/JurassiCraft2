@@ -3,6 +3,7 @@ package org.jurassicraft.server.entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import org.jurassicraft.client.model.animation.EntityAnimation;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.util.GameRuleHandler;
 
 public class MetabolismContainer {

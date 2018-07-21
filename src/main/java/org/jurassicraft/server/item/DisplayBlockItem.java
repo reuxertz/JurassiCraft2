@@ -21,7 +21,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.server.api.DinosaurProvider;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.entity.DisplayBlockEntity;
-import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.Dinosaur;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
 import org.jurassicraft.server.tab.TabHandler;
 import org.jurassicraft.server.util.LangHelper;

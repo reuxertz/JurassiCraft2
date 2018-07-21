@@ -25,7 +25,7 @@ import net.minecraft.world.storage.loot.functions.SetNBT;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.api.DinosaurProvider;
 import org.jurassicraft.server.api.PlantProvider;
-import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.Dinosaur;
 import org.jurassicraft.server.item.*;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
 import org.jurassicraft.server.genetics.DinoDNA;

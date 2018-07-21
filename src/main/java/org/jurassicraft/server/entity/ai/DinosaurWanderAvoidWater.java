@@ -1,11 +1,8 @@
 package org.jurassicraft.server.entity.ai;
 
-import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.ai.RandomPositionGenerator;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 public class DinosaurWanderAvoidWater extends DinosaurWanderEntityAI {

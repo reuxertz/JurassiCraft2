@@ -2,7 +2,7 @@ package org.jurassicraft.server.item;
 
 import java.util.function.BiConsumer;
 
-import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

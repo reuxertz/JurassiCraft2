@@ -23,7 +23,7 @@ import org.jurassicraft.server.block.entity.ElectricFenceWireBlockEntity;
 import org.jurassicraft.server.block.fence.ElectricFenceBaseBlock;
 import org.jurassicraft.server.block.fence.ElectricFencePoleBlock;
 import org.jurassicraft.server.block.fence.ElectricFenceWireBlock;
-import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.Dinosaur;
 
 import javax.annotation.Nullable;
 

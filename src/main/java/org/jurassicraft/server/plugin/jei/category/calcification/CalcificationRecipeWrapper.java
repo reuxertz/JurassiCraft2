@@ -5,12 +5,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.entity.Dinosaur;
 import org.jurassicraft.server.genetics.DinoDNA;
 import org.jurassicraft.server.genetics.GeneticsHelper;
 import org.jurassicraft.server.item.ItemHandler;
-import org.jurassicraft.server.plugin.jei.category.calcification.CalcificationInput;
 
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;

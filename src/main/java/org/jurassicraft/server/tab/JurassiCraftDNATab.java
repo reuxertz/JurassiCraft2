@@ -3,7 +3,7 @@ package org.jurassicraft.server.tab;
 import java.util.Collection;
 
 import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.Dinosaur;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
 import org.jurassicraft.server.item.ItemHandler;
 

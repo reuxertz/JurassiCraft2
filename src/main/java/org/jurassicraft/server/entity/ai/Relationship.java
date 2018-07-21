@@ -3,8 +3,8 @@ package org.jurassicraft.server.entity.ai;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.Dinosaur;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 
 import java.util.UUID;
 

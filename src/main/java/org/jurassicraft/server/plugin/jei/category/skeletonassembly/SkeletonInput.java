@@ -1,6 +1,6 @@
 package org.jurassicraft.server.plugin.jei.category.skeletonassembly;
 
-import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.Dinosaur;
 
 public class SkeletonInput {
     public final Dinosaur dinosaur;

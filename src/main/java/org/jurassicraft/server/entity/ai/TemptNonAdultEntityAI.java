@@ -1,11 +1,8 @@
 package org.jurassicraft.server.entity.ai;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.minecraft.entity.ai.EntityAITempt;
-import org.jurassicraft.server.entity.DinosaurEntity;
-import org.jurassicraft.server.food.FoodHelper;
-import org.jurassicraft.server.food.FoodType;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 
 public class TemptNonAdultEntityAI extends EntityAITempt {
     private DinosaurEntity dinosaur;

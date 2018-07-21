@@ -25,8 +25,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.gui.TrackingTabletGui;
 import org.jurassicraft.server.api.StackNBTProvider;
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.Dinosaur;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
 import org.jurassicraft.server.util.TrackingMapIterator;
 

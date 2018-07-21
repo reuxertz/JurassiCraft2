@@ -3,7 +3,7 @@ package org.jurassicraft.server.entity.ai;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
-import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 
 public class RespondToAttackEntityAI extends EntityAIBase {
     private DinosaurEntity dinosaur;

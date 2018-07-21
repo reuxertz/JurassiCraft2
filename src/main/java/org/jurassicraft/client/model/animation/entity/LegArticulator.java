@@ -1,7 +1,7 @@
 package org.jurassicraft.client.model.animation.entity;
 
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.Dinosaur;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.entity.LegSolverBiped;
 import org.jurassicraft.server.entity.LegSolverQuadruped;
 

@@ -1,4 +1,4 @@
-package org.jurassicraft.server.dinosaur;
+package org.jurassicraft.server.entity;
 
 import com.google.common.collect.Lists;
 import net.ilexiconn.llibrary.client.model.tabula.container.TabulaCubeContainer;
@@ -14,14 +14,12 @@ import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.model.animation.PoseHandler;
 import org.jurassicraft.server.api.GrowthStageGenderContainer;
 import org.jurassicraft.server.api.Hybrid;
-import org.jurassicraft.server.entity.Diet;
-import org.jurassicraft.server.entity.DinosaurEntity;
-import org.jurassicraft.server.entity.GrowthStage;
-import org.jurassicraft.server.entity.SleepTime;
 import org.jurassicraft.server.entity.ai.util.MovementType;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.json.dinosaur.DinosaurJsonHandler;
 import org.jurassicraft.server.json.dinosaur.entity.EntityDinosaurJsonHandler;
 import org.jurassicraft.server.json.dinosaur.entity.objects.EntityProperties;
+import org.jurassicraft.server.json.dinosaur.objects.DinosaurAnimation;
 import org.jurassicraft.server.period.TimePeriod;
 import org.jurassicraft.server.tabula.TabulaModelHelper;
 
@@ -42,7 +40,6 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
 	private final Map<GrowthStageGenderContainer, ResourceLocation> eyelidTextures = new HashMap<>();
 
 	public String name;
-	public Class<? extends DinosaurEntity> entityClass;
 	public String animatorClassName;
 	public DinosaurBehaviourType dinosaurBehaviourType;
 	public DinosaurHomeType homeType;
@@ -102,6 +99,7 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
 	public String jawCubeName = "Lower Teeth Front"; //TODO: make json based
 	public EntityProperties properties; //@
 	public boolean init;
+	public DinosaurAnimation animation;
 
 	public static Matrix4d getParentRotationMatrix(TabulaModelContainer model, TabulaCubeContainer cube, boolean includeParents, boolean ignoreSelf, float rot) {
 		List<TabulaCubeContainer> parentCubes = new ArrayList<>();
@@ -475,5 +473,9 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
 	public enum BirthType {
 		LIVE_BIRTH,
 		EGG_LAYING
+	}
+
+	public enum LegType {
+		QUADRUPED, BIPED
 	}
 }

@@ -3,7 +3,7 @@ package org.jurassicraft.server.json.dinosaur.entity.objects;
 import com.google.gson.*;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.JsonUtils;
-import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.json.dinosaur.entity.EntityDinosaurJsonHandler;
 
 import java.lang.reflect.Type;

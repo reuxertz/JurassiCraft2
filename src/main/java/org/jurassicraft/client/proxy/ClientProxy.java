@@ -26,7 +26,7 @@ import org.jurassicraft.client.model.JurassicraftTabulaModelHandler;
 import org.jurassicraft.client.render.RenderingHandler;
 import org.jurassicraft.client.sound.CarSound;
 import org.jurassicraft.server.block.entity.*;
-import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.entity.VenomEntity;
 import org.jurassicraft.server.entity.particle.VenomParticle;
 import org.jurassicraft.server.entity.vehicle.CarEntity;

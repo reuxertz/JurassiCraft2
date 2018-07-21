@@ -2,7 +2,6 @@ package org.jurassicraft.server.genetics;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.item.ItemHandler;
 
 import java.util.List;

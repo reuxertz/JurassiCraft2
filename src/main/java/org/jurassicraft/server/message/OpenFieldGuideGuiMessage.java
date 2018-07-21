@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 
 public class OpenFieldGuideGuiMessage extends AbstractMessage<OpenFieldGuideGuiMessage> {
     private DinosaurEntity entity;

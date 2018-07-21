@@ -4,7 +4,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import org.jurassicraft.server.api.DinosaurProvider;
-import org.jurassicraft.server.dinosaur.Dinosaur.BirthType;
+import org.jurassicraft.server.entity.Dinosaur.BirthType;
 import org.jurassicraft.server.item.SyringeItem;
 
 public class SyringeSlot extends Slot {

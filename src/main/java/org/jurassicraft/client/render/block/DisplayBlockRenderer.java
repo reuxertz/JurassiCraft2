@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import org.jurassicraft.server.block.entity.DisplayBlockEntity;
-import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 
 public class DisplayBlockRenderer extends TileEntitySpecialRenderer<DisplayBlockEntity> {
     private Minecraft mc = Minecraft.getMinecraft();

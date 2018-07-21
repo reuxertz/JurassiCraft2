@@ -11,14 +11,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.entity.item.PaddockSignEntity;
 import org.lwjgl.opengl.GL11;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 @SideOnly(Side.CLIENT)

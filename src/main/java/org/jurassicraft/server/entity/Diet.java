@@ -2,6 +2,7 @@ package org.jurassicraft.server.entity;
 
 import com.google.common.collect.Lists;
 import net.minecraft.item.Item;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.food.FoodHelper;
 import org.jurassicraft.server.food.FoodType;
 
