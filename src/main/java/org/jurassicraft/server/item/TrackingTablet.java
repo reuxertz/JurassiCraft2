@@ -241,6 +241,14 @@ public class TrackingTablet extends Item implements StackNBTProvider<Integer> {
        int growthPercentage;
        UUID entityUUID;
 
+       public DinosaurInfo(BlockPos pos, Dinosaur dinosaur, boolean male, int growthPercentage, UUID entityUUID) {
+           this.pos = pos;
+           this.dinosaur = dinosaur;
+           this.male = male;
+           this.growthPercentage = growthPercentage;
+           this.entityUUID = entityUUID;
+       }
+
        public static DinosaurInfo fromEntity(DinosaurEntity entity) {
            return new DinosaurInfo(entity.getPosition(), entity.getDinosaur(), entity.isMale(), entity.getAgePercentage(), entity.getPersistentID());
        }

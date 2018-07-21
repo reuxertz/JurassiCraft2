@@ -112,7 +112,7 @@ public class DinosaurJsonHandler {
                             dino.dinosaurBehaviourType,
                             dino.diet,
                             dino.sleepTime,
-                            dino.imprintable,
+                            dino.isImprintable,
                             dino.defendOwner,
                             dino.maximumAge,
                             dino.maxHerdSize,
