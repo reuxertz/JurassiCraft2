@@ -9,27 +9,28 @@ public class JsonDinosaur extends Dinosaur {
         this.name = properties.name;
         this.timePeriod = properties.timePeriod;
         this.headCubeName = properties.headCubeName;
-        this.animatorClassName(properties.dinosaurAnimatorClassName);
+        this.animatorClassName = properties.dinosaurAnimatorClassName;
 
         SpawnEggInfo male = properties.maleSpawnEgg;
-        this.primaryEggColorMale(male.primary);
-        this.secondaryEggColorMale(male.secondary);
+        this.primaryEggColorMale = male.primary;
+        this.secondaryEggColorMale = male.secondary;
 
         SpawnEggInfo female = properties.femaleSpawnEgg;
-        this.primaryEggColorFemale(female.primary);
-        this.secondaryEggColorFemale(female.secondary);
+        this.primaryEggColorFemale = female.primary;
+        this.secondaryEggColorFemale = female.secondary;
 
-        DinosaurStatistics statistics = properties.statistics();
-        statistics.speed = .apply(this::setBabySpeed, this::setAdultSpeed);
-        statistics.health.apply(this::setBabyHealth, this::setAdultHealth);
-        statistics.strength.apply(this::setBabyStrength, this::setAdultStrength);
-        statistics.sizeX.apply(this::setBabySizeX, this::setAdultSizeX);
-        statistics.sizeY.apply(this::setBabySizeY, this::setAdultSizeY);
-        statistics.eyeHeight.apply(this::setBabyEyeHeight, this::setAdultEyeHeight);
-        statistics.scale.apply(this::setScaleInfant, this::setScaleAdult);
-        this.jumpHeight(statistics.jumpHeight());
-        this.attackSpeed(statistics.attackSpeed());
-        this.storage(statistics.itemStorage());
+        DinosaurStatistics statistics = properties.statistics;
+//        statistics.speed = .apply(this::setBabySpeed, this::setAdultSpeed);
+//        statistics.health.apply(this::setBabyHealth, this::setAdultHealth);
+//        statistics.strength.apply(this::setBabyStrength, this::setAdultStrength);
+//        statistics.sizeX.apply(this::setBabySizeX, this::setAdultSizeX);
+//        statistics.sizeY.apply(this::setBabySizeY, this::setAdultSizeY);
+//        statistics.eyeHeight.apply(this::setBabyEyeHeight, this::setAdultEyeHeight);
+//        statistics.scale.apply(this::setScaleInfant, this::setScaleAdult);
+
+        this.jumpHeight = statistics.jumpHeight;
+        this.attackSpeed = statistics.attackSpeed;
+        this.storage = statistics.itemStorage;
 
         DinosaurTraits traits = properties.traits;
         this.setDinosaurBehaviourType(traits.type);
