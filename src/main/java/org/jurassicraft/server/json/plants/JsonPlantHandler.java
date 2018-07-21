@@ -4,23 +4,16 @@ import com.google.gson.*;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.block.tree.TreeType;
 import org.jurassicraft.server.food.FoodHelper;
 import org.jurassicraft.server.json.JsonUtil;
 import org.jurassicraft.server.plant.Plant;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Locale;
 import java.util.Objects;
 

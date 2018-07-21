@@ -87,50 +87,50 @@ public class DinosaurJsonHandler {
         @Override
         public JsonElement serialize(Dinosaur dino, Type typeOfSrc, JsonSerializationContext context) {
             return context.serialize(new DinosaurProperties(
-                    dino.getName(),
-                    dino.getTimePeriod(),
-                    dino.getHeadCubeName(),
-                    dino.getAnimatorClassName() != null ? dino.getAnimatorClassName() : "", //TODO: remove this line when all dinosaur animators are turned into json
-                    dino.getAnimatorClassName() != null ? "" : dino.getRegistryName().toString(),
-                    dino.getShadowSize(),
-                    new SpawnEggInfo(dino.getPrimaryEggColorMale(), dino.getSecondaryEggColorMale()),
-                    new SpawnEggInfo(dino.getPrimaryEggColorFemale(), dino.getSecondaryEggColorFemale()),
+                    dino.name,
+                    dino.timePeriod,
+                    dino.headCubeName,
+                    dino.animatorClassName != null ? dino.animatorClassName : "", //TODO: remove this line when all dinosaur animators are turned into json
+                    dino.animatorClassName != null ? "" : dino.getRegistryName().toString(),
+                    dino.shadowSize,
+                    new SpawnEggInfo(dino.primaryEggColorMale, dino.secondaryEggColorMale),
+                    new SpawnEggInfo(dino.primaryEggColorFemale, dino.secondaryEggColorFemale),
                     new DinosaurStatistics(
-                            new AdultBabyValue(dino.getBabySpeed(),     dino.getAdultSpeed()),
-                            new AdultBabyValue(dino.getBabyHealth(),    dino.getAdultHealth()),
-                            new AdultBabyValue(dino.getBabyStrength(),  dino.getAdultStrength()),
-                            new AdultBabyValue(dino.getBabySizeX(),     dino.getAdultSizeX()),
-                            new AdultBabyValue(dino.getBabySizeY(),     dino.getAdultSizeY()),
-                            new AdultBabyValue(dino.getBabyEyeHeight(), dino.getAdultEyeHeight()),
-                            new AdultBabyValue(dino.getScaleInfant(),   dino.getScaleAdult()),
-                            dino.getJumpHeight(),
-                            dino.getAttackSpeed(),
-                            dino.getStorage()
+                            new AdultBabyValue(dino.babySpeed,     dino.adultSpeed),
+                            new AdultBabyValue(dino.babyHealth,    dino.adultHealth),
+                            new AdultBabyValue(dino.babyStrength,  dino.adultStrength),
+                            new AdultBabyValue(dino.babySizeX,    dino.adultSizeX),
+                            new AdultBabyValue(dino.babySizeY,     dino.adultSizeY),
+                            new AdultBabyValue(dino.babyEyeHeight, dino.adultEyeHeight),
+                            new AdultBabyValue(dino.scaleInfant,   dino.scaleAdult),
+                            dino.jumpHeight,
+                            dino.attackSpeed,
+                            dino.storage
                     ),
                     new DinosaurTraits(
-                            dino.getHomeType(),
-                            dino.getDinosaurBehaviourType(),
-                            dino.getDiet(),
-                            dino.getSleepTime(),
-                            dino.isImprintable(),
-                            dino.isDefendOwner(),
-                            dino.getMaximumAge(),
-                            dino.getMaxHerdSize(),
-                            dino.getAttackBias(),
-                            dino.isCanClimb(),
-                            dino.getFlockSpeed()
+                            dino.homeType,
+                            dino.dinosaurBehaviourType,
+                            dino.diet,
+                            dino.sleepTime,
+                            dino.imprintable,
+                            dino.defendOwner,
+                            dino.maximumAge,
+                            dino.maxHerdSize,
+                            dino.attackBias,
+                            dino.canClimb,
+                            dino.flockSpeed
                     ),
-                    new DinosaurSpawningInfo(dino.getSpawnChance(), dino.getBiomeTypes()),
+                    new DinosaurSpawningInfo(dino.spawnChance, dino.biomeTypes),
                     new DinosaurBreeding(
-                            dino.getBirthType(),
-                            dino.getMinClutch(),
-                            dino.getMaxClutch(),
-                            dino.getBreedCooldown(),
-                            dino.isBreedAroundOffspring(),
-                            dino.isDefendOffspring()
+                            dino.birthType,
+                            dino.minClutch,
+                            dino.maxClutch,
+                            dino.breedCooldown,
+                            dino.breedAroundOffspring,
+                            dino.defendOffspring
                     ),
-                    dino.getBones(),
-                    dino.getRecipe()
+                    dino.bones,
+                    dino.recipe
             ));
         }
     }

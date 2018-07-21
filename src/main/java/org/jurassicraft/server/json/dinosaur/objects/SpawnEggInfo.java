@@ -1,18 +1,19 @@
 package org.jurassicraft.server.json.dinosaur.objects;
 
 import com.google.gson.*;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Value;
-import lombok.experimental.FieldDefaults;
 import net.minecraft.util.JsonUtils;
 
 import java.lang.reflect.Type;
 
-@Value
 public class SpawnEggInfo {
     int primary;
     int secondary;
+
+    public SpawnEggInfo(int primary, int secondary) {
+        this.primary = primary;
+        this.secondary = secondary;
+
+    }
 
     public static class JsonHandler implements JsonDeserializer<SpawnEggInfo>, JsonSerializer<SpawnEggInfo>{
         @Override

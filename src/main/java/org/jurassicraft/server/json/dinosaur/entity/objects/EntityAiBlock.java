@@ -1,7 +1,6 @@
 package org.jurassicraft.server.json.dinosaur.entity.objects;
 
 import com.google.gson.*;
-import lombok.Data;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.JsonUtils;
 import org.jurassicraft.server.entity.DinosaurEntity;
@@ -10,10 +9,15 @@ import org.jurassicraft.server.json.dinosaur.entity.EntityDinosaurJsonHandler;
 import java.lang.reflect.Type;
 import java.util.function.Function;
 
-@Data
 public class EntityAiBlock {
     private final int priority;
     private final Function<DinosaurEntity, EntityAIBase> entityAiFunc;
+
+    public EntityAiBlock(int priority, Function aiFunc) {
+        super();
+        this.priority = priority;
+        this.entityAiFunc = aiFunc;
+    }
 
     public static class Deserializer implements JsonDeserializer<EntityAiBlock> {
         @Override

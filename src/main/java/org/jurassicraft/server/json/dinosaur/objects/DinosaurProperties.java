@@ -1,10 +1,6 @@
 package org.jurassicraft.server.json.dinosaur.objects;
 
 import com.google.gson.*;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Value;
-import lombok.experimental.FieldDefaults;
 import net.minecraft.util.JsonUtils;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.period.TimePeriod;
@@ -12,7 +8,6 @@ import org.jurassicraft.server.period.TimePeriod;
 import java.lang.reflect.Type;
 import java.util.Locale;
 
-@Value
 public class DinosaurProperties {
 
     String name;
@@ -33,6 +28,28 @@ public class DinosaurProperties {
 
     String[] bones;
     String[][] skeletonRecipe;
+
+    public DinosaurProperties(String name, TimePeriod timePeriod, String headCubeName, String dinosaurAnimatorClassName,
+                              String dinosaurModelLocation, float shadowSize, SpawnEggInfo maleSpawnEgg,
+                              SpawnEggInfo femaleSpawnEgg, DinosaurStatistics statistics, DinosaurTraits traits,
+                              DinosaurSpawningInfo spawningInfo, DinosaurBreeding breeding, String[] bones, String[][] skeletonRecipe) {
+        this.name = name;
+        this.timePeriod = timePeriod;
+        this.headCubeName = headCubeName;
+        this.dinosaurAnimatorClassName = dinosaurAnimatorClassName;
+        this.dinosaurModelLocation = dinosaurModelLocation;
+        this.shadowSize = shadowSize;
+        this.maleSpawnEgg = maleSpawnEgg;
+        this.femaleSpawnEgg = femaleSpawnEgg;
+        this.statistics = statistics;
+        this.traits = traits;
+        this.spawningInfo = spawningInfo;
+        this.breeding = breeding;
+        this.bones = bones;
+        this.skeletonRecipe = skeletonRecipe;
+
+    }
+
 
     //TODO: model
 
@@ -102,32 +119,32 @@ public class DinosaurProperties {
         public JsonElement serialize(DinosaurProperties src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject json = new JsonObject();
             JsonObject spawnEgg = new JsonObject();
-            spawnEgg.add("male", context.serialize(src.getMaleSpawnEgg()));
-            spawnEgg.add("female", context.serialize(src.getFemaleSpawnEgg()));
-            json.addProperty("name", src.getName());
-            json.addProperty("time_period", src.getTimePeriod().toString().toLowerCase(Locale.ENGLISH));
-            json.addProperty("head_cube_name", src.getHeadCubeName());
-            if(src.getDinosaurModelLocation() != null && !src.getDinosaurModelLocation().isEmpty()) {
-                json.addProperty("model_location", src.getDinosaurModelLocation());
+            spawnEgg.add("male", context.serialize(src.maleSpawnEgg));
+            spawnEgg.add("female", context.serialize(src.femaleSpawnEgg));
+            json.addProperty("name", src.name);
+            json.addProperty("time_period", src.timePeriod.toString().toLowerCase(Locale.ENGLISH));
+            json.addProperty("head_cube_name", src.headCubeName);
+            if(src.dinosaurModelLocation != null && !src.dinosaurModelLocation.isEmpty()) {
+                json.addProperty("model_location", src.dinosaurModelLocation);
             } else {
-                json.addProperty("dinosaur_animator_class", src.getDinosaurAnimatorClassName());
+                json.addProperty("dinosaur_animator_class", src.dinosaurAnimatorClassName);
             }
-            json.addProperty("shadow_size", src.getShadowSize());
+            json.addProperty("shadow_size", src.shadowSize);
             json.add("spawn_egg", spawnEgg);
-            json.add("statistics", context.serialize(src.getStatistics()));
-            json.add("traits", context.serialize(src.getTraits()));
-            json.add("spawning", context.serialize(src.getSpawningInfo()));
-            json.add("breeding", context.serialize(src.getBreeding()));
+            json.add("statistics", context.serialize(src.statistics));
+            json.add("traits", context.serialize(src.traits));
+            json.add("spawning", context.serialize(src.spawningInfo));
+            json.add("breeding", context.serialize(src.breeding));
 
             JsonArray bones = new JsonArray();
-            for (String bone : src.getBones()) {
+            for (String bone : src.bones) {
                 bones.add(bone);
             }
             json.add("bones", bones);
 
 
             JsonArray skeletonRecipe = new JsonArray();
-            for (String[] strings : src.getSkeletonRecipe()) {
+            for (String[] strings : src.skeletonRecipe) {
                 JsonArray innerArray = new JsonArray();
                 for (String string : strings) {
                     innerArray.add(string);

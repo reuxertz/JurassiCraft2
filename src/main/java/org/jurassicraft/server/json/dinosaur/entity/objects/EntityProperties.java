@@ -19,8 +19,13 @@ public class EntityProperties {
 
 
     //TODO Look into Constructor
-    public EntityProperties(String string, JsonObject object, JsonObject object2, List list, JsonObject object3) {
+    public EntityProperties(String type, AttackTargets targets, List<EntityJsonAttributes> attributes, List list, EntityJsonSounds sounds) {
         super();
+        this.type = type;
+        this.targets = targets;
+        this.attributes = attributes;
+        this.attributes = list;
+        this.sounds = sounds;
     }
 
     public static class Deserializer implements JsonDeserializer<EntityProperties> {

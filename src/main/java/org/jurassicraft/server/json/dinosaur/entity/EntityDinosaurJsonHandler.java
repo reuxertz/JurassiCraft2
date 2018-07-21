@@ -24,7 +24,7 @@ public class EntityDinosaurJsonHandler {
         TYPE_MAP.put("swimming_dinosaur", SwimmingDinosaurEntity::new);
 
         TASK_MAP.put("leap", json -> RaptorLeapEntityAI::new);
-        TASK_MAP.put("leaping_melee", json -> dino -> new LeapingMeleeEntityAI(dino, dino.getDinosaur().getAttackSpeed()));
+        TASK_MAP.put("leaping_melee", json -> dino -> new LeapingMeleeEntityAI(dino, dino.getDinosaur().attackSpeed));
 
         ATTRIBUTE_MAP.put("max_health", SharedMonsterAttributes.MAX_HEALTH);
         ATTRIBUTE_MAP.put("follow_range", SharedMonsterAttributes.FOLLOW_RANGE);

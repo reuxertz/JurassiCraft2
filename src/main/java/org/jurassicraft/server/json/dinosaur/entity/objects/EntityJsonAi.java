@@ -1,10 +1,6 @@
 package org.jurassicraft.server.json.dinosaur.entity.objects;
 
 import com.google.gson.*;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Value;
-import lombok.experimental.FieldDefaults;
 import net.minecraft.util.JsonUtils;
 import org.jurassicraft.server.json.JsonUtil;
 
@@ -12,10 +8,17 @@ import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 import java.util.List;
 
-@Value
+
 public class EntityJsonAi {
     @Nullable EntityAiBlockNoPriority attack;
     List<EntityAiBlock> additionalTasks;
+
+    public EntityJsonAi(EntityAiBlockNoPriority attack, List list) {
+        super();
+        this.attack = attack;
+        this.additionalTasks = list;
+
+    }
 
     public static class Deserializer implements JsonDeserializer<EntityJsonAi> {
 
