@@ -1,17 +1,14 @@
 package org.jurassicraft.server.json.dinosaur.objects;
 
 import com.google.gson.*;
-import lombok.Value;
 import net.minecraft.util.JsonUtils;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.Diet;
 import org.jurassicraft.server.entity.SleepTime;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 import java.util.Locale;
 
-@Value
 public class DinosaurTraits {
 
     Dinosaur.DinosaurHomeType homeType;
@@ -25,6 +22,23 @@ public class DinosaurTraits {
     double attackBias;
     boolean canClimb;
     double flockSpeed;
+
+    public DinosaurTraits(Dinosaur.DinosaurHomeType homeType, Dinosaur.DinosaurBehaviourType type,
+                          Diet diet, SleepTime sleepType, boolean imprintable, boolean defendOwner,
+                          int maxAge, int maxHerdSize, double attackBias, boolean canClimb, double flockSpeed) {
+        this.homeType = homeType;
+        this.type = type;
+        this.diet = diet;
+        this.sleepType = sleepType;
+        this.imprintable = imprintable;
+        this.defendOwner = defendOwner;
+        this.maxAge = maxAge;
+        this.maxHerdSize = maxHerdSize;
+        this.attackBias = attackBias;
+        this.canClimb = canClimb;
+        this.flockSpeed = flockSpeed;
+
+    }
 
     public static class JsonHandler implements JsonDeserializer<DinosaurTraits>, JsonSerializer<DinosaurTraits> {
 
@@ -52,16 +66,16 @@ public class DinosaurTraits {
         @Override
         public JsonElement serialize(DinosaurTraits src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject json = new JsonObject();
-            json.addProperty("type", src.getType().toString().toLowerCase(Locale.ENGLISH));
-            json.add("diet", context.serialize(src.getDiet()));
-            json.addProperty("sleep_type", src.getSleepType().toString().toLowerCase(Locale.ENGLISH));
-            json.addProperty("imprintable", src.isImprintable());
-            json.addProperty("defend_owner", src.isDefendOwner());
-            json.addProperty("maximum_age", (src.getMaxAge() * 8) / 24000); //Convert from ticks to days
-            json.addProperty("max_herd_size", src.getMaxHerdSize());
-            json.addProperty("attack_bias", src.getAttackBias());
-            json.addProperty("can_climb", src.isCanClimb());
-            json.addProperty("flock_speed", (float)src.getFlockSpeed());
+            json.addProperty("type", src.type.toString().toLowerCase(Locale.ENGLISH));
+            json.add("diet", context.serialize(src.diet));
+            json.addProperty("sleep_type", src.sleepType.toString().toLowerCase(Locale.ENGLISH));
+            json.addProperty("imprintable", src.imprintable);
+            json.addProperty("defend_owner", src.defendOwner);
+            json.addProperty("maximum_age", (src.maxAge * 8) / 24000); //Convert from ticks to days
+            json.addProperty("max_herd_size", src.maxHerdSize);
+            json.addProperty("attack_bias", src.attackBias);
+            json.addProperty("can_climb", src.canClimb);
+            json.addProperty("flock_speed", (float)src.flockSpeed);
             return json;
         }
     }

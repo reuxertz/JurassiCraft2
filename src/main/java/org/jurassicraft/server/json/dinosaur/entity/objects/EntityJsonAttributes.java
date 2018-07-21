@@ -1,10 +1,6 @@
 package org.jurassicraft.server.json.dinosaur.entity.objects;
 
 import com.google.gson.*;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Value;
-import lombok.experimental.FieldDefaults;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.util.JsonUtils;
@@ -12,10 +8,16 @@ import org.jurassicraft.server.json.dinosaur.entity.EntityDinosaurJsonHandler;
 
 import java.lang.reflect.Type;
 
-@Value
 public class EntityJsonAttributes {
+
     IAttribute attribute;
     double baseValue;
+
+    public EntityJsonAttributes(IAttribute attribute, float baseValue) {
+        super();
+        this.attribute = attribute;
+        this.baseValue = baseValue;
+    }
 
     public void apply(EntityLivingBase entity) {
         entity.getEntityAttribute(this.attribute).setBaseValue(this.baseValue);

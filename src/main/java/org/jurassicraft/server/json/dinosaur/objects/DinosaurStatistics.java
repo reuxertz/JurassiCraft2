@@ -1,15 +1,11 @@
 package org.jurassicraft.server.json.dinosaur.objects;
 
 import com.google.gson.*;
-import lombok.AccessLevel;
-import lombok.Data;
 import lombok.Value;
-import lombok.experimental.FieldDefaults;
 import net.minecraft.util.JsonUtils;
 
 import java.lang.reflect.Type;
 
-@Value
 public class DinosaurStatistics {
 
     AdultBabyValue speed;
@@ -22,6 +18,22 @@ public class DinosaurStatistics {
     int jumpHeight;
     double attackSpeed;
     int itemStorage;
+
+    public DinosaurStatistics(AdultBabyValue speed, AdultBabyValue health, AdultBabyValue strength,
+                              AdultBabyValue sizeX, AdultBabyValue sizeY, AdultBabyValue eyeHeight,
+                              AdultBabyValue scale, int jumpHeight, double attackSpeed, int itemStorage) {
+        this.speed = speed;
+        this.health = health;
+        this.strength = strength;
+        this.sizeX = sizeX;
+        this.sizeY = sizeY;
+        this.eyeHeight = eyeHeight;
+        this.scale = scale;
+        this.jumpHeight = jumpHeight;
+        this.attackSpeed = attackSpeed;
+        this.itemStorage = itemStorage;
+
+    }
 
     public static class JsonHandler implements JsonDeserializer<DinosaurStatistics>, JsonSerializer<DinosaurStatistics> {
 
@@ -48,16 +60,16 @@ public class DinosaurStatistics {
         @Override
         public JsonElement serialize(DinosaurStatistics src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject json = new JsonObject();
-            json.add("speed", context.serialize(src.getSpeed()));
-            json.add("health", context.serialize(src.getHealth()));
-            json.add("strength", context.serialize(src.getStrength()));
-            json.add("size_x", context.serialize(src.getSizeX()));
-            json.add("size_y", context.serialize(src.getSizeY()));
-            json.add("eye_height", context.serialize(src.getEyeHeight()));
-            json.add("scale", context.serialize(src.getScale()));
-            json.addProperty("jump_height", src.getJumpHeight());
-            json.addProperty("attack_speed", src.getAttackSpeed());
-            json.addProperty("item_storage", src.getItemStorage());
+            json.add("speed", context.serialize(src.speed));
+            json.add("health", context.serialize(src.health));
+            json.add("strength", context.serialize(src.strength));
+            json.add("size_x", context.serialize(src.sizeX));
+            json.add("size_y", context.serialize(src.sizeY));
+            json.add("eye_height", context.serialize(src.eyeHeight));
+            json.add("scale", context.serialize(src.scale));
+            json.addProperty("jump_height", src.jumpHeight);
+            json.addProperty("attack_speed", src.attackSpeed);
+            json.addProperty("item_storage", src.itemStorage);
             return json;
         }
     }

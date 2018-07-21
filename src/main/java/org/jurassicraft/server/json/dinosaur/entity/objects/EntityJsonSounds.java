@@ -2,10 +2,6 @@ package org.jurassicraft.server.json.dinosaur.entity.objects;
 
 import com.google.common.collect.Maps;
 import com.google.gson.*;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Value;
-import lombok.experimental.FieldDefaults;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -14,13 +10,17 @@ import org.jurassicraft.client.model.animation.EntityAnimation;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Type;
-import java.util.Locale;
 import java.util.Map;
 
-@Value
 public class EntityJsonSounds {
     Map<EntityAnimation, SoundEvent> soundMap;
     @Nullable SoundEvent breathingSound;
+
+    public EntityJsonSounds(Map soundMap, SoundEvent event) {
+        super();
+        this.soundMap = soundMap;
+        this.breathingSound = event;
+    }
 
     public static class Deserializer implements JsonDeserializer<EntityJsonSounds> {
 

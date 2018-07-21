@@ -1,20 +1,20 @@
 package org.jurassicraft.server.json.dinosaur.objects;
 
 import com.google.gson.*;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Value;
-import lombok.experimental.FieldDefaults;
 import net.minecraft.util.JsonUtils;
 
 import java.lang.reflect.Type;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-@Value
 public class AdultBabyValue {
     double baby;
     double adult;
+
+    public AdultBabyValue(double baby, double adult) {
+        this.baby = baby;
+        this.adult = adult;
+    }
+
     public static class JsonHandler implements JsonDeserializer<AdultBabyValue>, JsonSerializer<AdultBabyValue> {
 
         @Override

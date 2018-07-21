@@ -21,6 +21,12 @@ public class AttackTargets {
     List<Class<? extends Entity>> entityList;
     List<Dinosaur> dinosaurList;
 
+    public AttackTargets(List entityList, List dinosaurList) {
+        super();
+        this.entityList = entityList;
+        this.dinosaurList = dinosaurList;
+    }
+
     public static class Deserializer implements JsonDeserializer<AttackTargets> {
 
         @Override

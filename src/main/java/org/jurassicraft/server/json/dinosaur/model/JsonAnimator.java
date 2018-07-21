@@ -25,6 +25,13 @@ public class JsonAnimator implements ITabulaModelAnimator<Entity> {
     public final Constants constants;
     public final List<JsonAnimationType> animationList;
 
+    public JsonAnimator(float globalSpeed, float globalDegree, Constants constants, List animationList) {
+        this.globalSpeed = globalSpeed;
+        this.globalDegree = globalDegree;
+        this.constants = constants;
+        this.animationList = animationList;
+    }
+
     @Override
     public void setRotationAngles(TabulaModel model, Entity entity, float limbSwing, float limbSwingAmount, float ticks, float rotationYaw, float rotationPitch, float scale) {
         for (JsonAnimationType animation : animationList) {

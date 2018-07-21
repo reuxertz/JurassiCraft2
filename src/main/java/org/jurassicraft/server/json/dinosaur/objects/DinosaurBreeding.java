@@ -1,17 +1,12 @@
 package org.jurassicraft.server.json.dinosaur.objects;
 
 import com.google.gson.*;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Value;
-import lombok.experimental.FieldDefaults;
 import net.minecraft.util.JsonUtils;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 
 import java.lang.reflect.Type;
 import java.util.Locale;
 
-@Value
 public class DinosaurBreeding {
 
    Dinosaur.BirthType birthType;
@@ -20,6 +15,15 @@ public class DinosaurBreeding {
    int breedingCooldown;
    boolean breedNearOffsprring;
    boolean defendOffspring;
+
+   public DinosaurBreeding(Dinosaur.BirthType birthType, int minClutch, int maxClutch, int breedingCooldown, boolean breedNearOffsprring, boolean defendOffspring) {
+       this.birthType = birthType;
+       this.minClutch = minClutch;
+       this.maxClutch = maxClutch;
+       this.breedingCooldown = breedingCooldown;
+       this.breedNearOffsprring = breedNearOffsprring;
+       this.defendOffspring = defendOffspring;
+   }
 
     public static class JsonHandler implements JsonDeserializer<DinosaurBreeding>, JsonSerializer<DinosaurBreeding> {
         @Override
@@ -41,7 +45,7 @@ public class DinosaurBreeding {
         @Override
         public JsonElement serialize(DinosaurBreeding src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject json = new JsonObject();
-            json.addProperty("birth_type", src.getBirthType().toString().toLowerCase(Locale.ENGLISH));
+            json.addProperty("birth_type", src.birthType.toString().toLowerCase(Locale.ENGLISH));
             json.addProperty("min_clutch", src.minClutch);
             json.addProperty("max_clutch", src.maxClutch);
             json.addProperty("breeding_cooldown", src.breedingCooldown);

@@ -3,6 +3,7 @@ package org.jurassicraft.server.json.dinosaur.model;
 import com.google.gson.*;
 import lombok.Data;
 import net.minecraft.util.JsonUtils;
+import org.jurassicraft.server.json.dinosaur.JsonDinosaur;
 
 import java.lang.reflect.Type;
 
@@ -12,6 +13,12 @@ public class JsonDinosaurModel {
     private final String headCuboid;
     private final JsonAnimator animator;
     private final float shadowSize;
+
+    public JsonDinosaurModel(String headCuboid, JsonAnimator animator, float shadowSize) {
+        this.headCuboid = headCuboid;
+        this.animator = animator;
+        this.shadowSize = shadowSize;
+    }
 
     public static class Deserializer implements JsonDeserializer<JsonDinosaurModel> {
         @Override

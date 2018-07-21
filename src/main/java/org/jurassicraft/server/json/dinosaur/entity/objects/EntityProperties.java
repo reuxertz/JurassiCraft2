@@ -2,27 +2,31 @@ package org.jurassicraft.server.json.dinosaur.entity.objects;
 
 import com.google.common.collect.Lists;
 import com.google.gson.*;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Value;
-import lombok.experimental.FieldDefaults;
 import net.minecraft.util.JsonUtils;
-import net.minecraft.util.SoundEvent;
-import org.jurassicraft.client.model.animation.EntityAnimation;
 import org.jurassicraft.server.json.JsonUtil;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Map;
 
-@Value
-public class EntityProperties { 
+public class EntityProperties {
+
     String type;
     @Nullable AttackTargets targets;
     @Nullable EntityJsonAi ai;
     List<EntityJsonAttributes> attributes;
     @Nullable EntityJsonSounds sounds;
+
+
+    //TODO Look into Constructor
+    public EntityProperties(String type, AttackTargets targets, List<EntityJsonAttributes> attributes, List list, EntityJsonSounds sounds) {
+        super();
+        this.type = type;
+        this.targets = targets;
+        this.attributes = attributes;
+        this.attributes = list;
+        this.sounds = sounds;
+    }
 
     public static class Deserializer implements JsonDeserializer<EntityProperties> {
 
@@ -32,7 +36,7 @@ public class EntityProperties {
             return new EntityProperties(
                     JsonUtils.getString(json, "type"),
                     JsonUtils.hasField(json, "targets") ? context.deserialize(JsonUtils.getJsonObject(json, "targets"), AttackTargets.class) : null,
-                    JsonUtils.hasField(json, "ai") ? context.deserialize(JsonUtils.getJsonObject(json, "ai"), EntityJsonAi.class) : null,
+                    JsonUtils.hasField(json, "ai") ?  context.deserialize(JsonUtils.getJsonObject(json, "ai"), EntityJsonAi.class) : null,
                     JsonUtils.hasField(json, "attributes") ? JsonUtil.deserializeArray(JsonUtils.getJsonArray(json, "attributes"), context, EntityJsonAttributes.class) : Lists.newArrayList(),
                     JsonUtils.hasField(json, "sounds") ? context.deserialize(JsonUtils.getJsonObject(json, "sounds"), EntityJsonSounds.class) : null
             );
