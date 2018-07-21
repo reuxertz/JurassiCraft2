@@ -34,6 +34,7 @@ import javax.vecmathimpl.Vector3d;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
+
 public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comparable<Dinosaur> {
 
     @GameRegistry.ObjectHolder(JurassiCraft.MODID + ":velociraptor")
@@ -54,6 +55,64 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
     public TimePeriod timePeriod;
     public double babyHealth, adultHealth;
     public double babyStrength, adultStrength;
+
+    public void setBabyHealth(double babyHealth) {
+        this.babyHealth = babyHealth;
+    }
+
+    public void setAdultHealth(double adultHealth) {
+        this.adultHealth = adultHealth;
+    }
+
+    public void setBabyStrength(double babyStrength) {
+        this.babyStrength = babyStrength;
+    }
+
+    public void setAdultStrength(double adultStrength) {
+        this.adultStrength = adultStrength;
+    }
+
+    public void setBabySpeed(double babySpeed) {
+        this.babySpeed = babySpeed;
+    }
+
+    public void setScaleInfant(float scaleInfant) {
+        this.scaleInfant = scaleInfant;
+    }
+
+    public void setScaleAdult(float scaleAdult) {
+        this.scaleAdult = scaleAdult;
+    }
+
+    public void setAdultSpeed(double adultSpeed) {
+
+        this.adultSpeed = adultSpeed;
+    }
+
+    public void setBabySizeX(float babySizeX) {
+        this.babySizeX = babySizeX;
+    }
+
+    public void setAdultSizeX(float adultSizeX) {
+        this.adultSizeX = adultSizeX;
+    }
+
+    public void setBabySizeY(float babySizeY) {
+        this.babySizeY = babySizeY;
+    }
+
+    public void setAdultSizeY(float adultSizeY) {
+        this.adultSizeY = adultSizeY;
+    }
+
+    public void setBabyEyeHeight(float babyEyeHeight) {
+        this.babyEyeHeight = babyEyeHeight;
+    }
+
+    public void setAdultEyeHeight(float adultEyeHeight) {
+        this.adultEyeHeight = adultEyeHeight;
+    }
+
     public double babySpeed, adultSpeed;
     public float babySizeX, adultSizeX;
     public float babySizeY, adultSizeY;
@@ -182,7 +241,7 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
         double rotationAngleX = epsilon(Math.atan2(sinRotationAngleX, cosRotationAngleX)) / Math.PI * 180;
         double rotationAngleY = epsilon(Math.atan2(sinRotationAngleY, cosRotationAngleY)) / Math.PI * 180;
         double rotationAngleZ = epsilon(Math.atan2(sinRotationAngleZ, cosRotationAngleZ)) / Math.PI * 180;
-        return new double[][] { { epsilon(matrix.m03), epsilon(matrix.m13), epsilon(matrix.m23) }, { rotationAngleX, rotationAngleY, rotationAngleZ } };
+        return new double[][]{{epsilon(matrix.m03), epsilon(matrix.m13), epsilon(matrix.m23)}, {rotationAngleX, rotationAngleY, rotationAngleZ}};
     }
 
     public static double epsilon(double x) {
@@ -190,13 +249,14 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
     }
 
     public final void init() {
-        if(init) {
-           return;
+        if (init) {
+            return;
         }
         this.init = true;
 
         try {
-            this.properties = DinosaurJsonHandler.GSON.fromJson(new InputStreamReader(Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(this.getRegistryName().getResourceDomain(), "jurassicraft/entities/" + this.getRegistryName().getResourcePath() + ".json")).getInputStream()), EntityProperties.class);;
+            this.properties = DinosaurJsonHandler.GSON.fromJson(new InputStreamReader(Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(this.getRegistryName().getResourceDomain(), "jurassicraft/entities/" + this.getRegistryName().getResourcePath() + ".json")).getInputStream()), EntityProperties.class);
+            ;
         } catch (IOException e) {
             JurassiCraft.getLogger().error("Unable to load dinosaur behaviours for " + this.getRegistryName(), e);
             this.properties = new EntityProperties("dinosaur", null, Lists.newArrayList(), null);
@@ -334,7 +394,7 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
             return cube.getPosition();
         }
 
-        return new double[] { 0.0, 0.0, 0.0 };
+        return new double[]{0.0, 0.0, 0.0};
     }
 
     public double[] getParentedCubePosition(String cubeName, GrowthStage stage, float rot) {
@@ -346,7 +406,7 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
             return getTransformation(getParentRotationMatrix(model, cube, true, false, rot))[0];
         }
 
-        return new double[] { 0.0, 0.0, 0.0 };
+        return new double[]{0.0, 0.0, 0.0};
     }
 
     public double[] getHeadPosition(GrowthStage stage, float rot) {

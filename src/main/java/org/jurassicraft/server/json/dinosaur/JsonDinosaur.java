@@ -20,13 +20,14 @@ public class JsonDinosaur extends Dinosaur {
         this.secondaryEggColorFemale = female.secondary;
 
         DinosaurStatistics statistics = properties.statistics;
-//        statistics.speed = .apply(this::setBabySpeed, this::setAdultSpeed);
-//        statistics.health.apply(this::setBabyHealth, this::setAdultHealth);
-//        statistics.strength.apply(this::setBabyStrength, this::setAdultStrength);
-//        statistics.sizeX.apply(this::setBabySizeX, this::setAdultSizeX);
-//        statistics.sizeY.apply(this::setBabySizeY, this::setAdultSizeY);
-//        statistics.eyeHeight.apply(this::setBabyEyeHeight, this::setAdultEyeHeight);
-//        statistics.scale.apply(this::setScaleInfant, this::setScaleAdult);
+
+        statistics.speed.apply(this::setBabySpeed, this::setAdultSpeed);
+        statistics.health.apply(this::setBabyHealth, this::setAdultHealth);
+        statistics.strength.apply(this::setBabyStrength, this::setAdultStrength);
+        statistics.sizeX.apply(this::setBabySizeX, this::setAdultSizeX);
+        statistics.sizeY.apply(this::setBabySizeY, this::setAdultSizeY);
+        statistics.eyeHeight.apply(this::setBabyEyeHeight, this::setAdultEyeHeight);
+        statistics.scale.apply(this::setScaleInfant, this::setScaleAdult);
 
         this.jumpHeight = statistics.jumpHeight;
         this.attackSpeed = statistics.attackSpeed;
