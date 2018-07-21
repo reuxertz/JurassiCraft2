@@ -30,6 +30,6 @@ public class EncasedFossilItemBlock extends ItemBlock {
     @Override
     public String getUnlocalizedName(ItemStack stack) {
         Dinosaur dinosaur = ((EncasedFossilBlock) this.block).getValue(stack);
-        return super.getUnlocalizedName() + "." + dinosaur.name).toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
+        return super.getUnlocalizedName() + "." + dinosaur.name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
     }
 }

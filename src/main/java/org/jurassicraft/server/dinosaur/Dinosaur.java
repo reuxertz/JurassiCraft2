@@ -57,7 +57,7 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
     public double babySpeed, adultSpeed;
     public float babySizeX, adultSizeX;
     public float babySizeY, adultSizeY;
-    public float babyEyeHeight, adultEyeHeight;
+    public float babyEyeHeight, adultEyeHeight, eyeHeight;
     public double attackSpeed = 1.0;
     public int storage;
     public int overlayCount;
