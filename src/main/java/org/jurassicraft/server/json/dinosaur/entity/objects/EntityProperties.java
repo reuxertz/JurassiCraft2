@@ -13,18 +13,19 @@ public class EntityProperties {
 
     public String type;
     public @Nullable AttackTargets targets;
-    public @Nullable EntityJsonAi ai;
+    public @Nullable List<EntityJsonAi> ai;
     public List<EntityJsonAttributes> attributes;
     public  @Nullable EntityJsonSounds sounds;
 
 
     //TODO Look into Constructor
-    public EntityProperties(String type, AttackTargets targets, List<EntityJsonAttributes> attributes, List list, EntityJsonSounds sounds) {
+    //public EntityProperties(String type, AttackTargets targets, List<EntityJsonAi> ai, List<EntityJsonAttributes> attributes, EntityJsonSounds sounds) {
+    public EntityProperties(String type, AttackTargets targets, List<EntityJsonAttributes> attributes, EntityJsonSounds sounds) {
         super();
         this.type = type;
         this.targets = targets;
+        //this.ai = ai;
         this.attributes = attributes;
-        this.attributes = list;
         this.sounds = sounds;
     }
 
@@ -36,7 +37,7 @@ public class EntityProperties {
             return new EntityProperties(
                     JsonUtils.getString(json, "type"),
                     JsonUtils.hasField(json, "targets") ? context.deserialize(JsonUtils.getJsonObject(json, "targets"), AttackTargets.class) : null,
-                    JsonUtils.hasField(json, "ai") ?  context.deserialize(JsonUtils.getJsonObject(json, "ai"), EntityJsonAi.class) : null,
+                    //JsonUtils.hasField(json, "ai") ?  context.deserialize(JsonUtils.getJsonObject(json, "ai"), EntityJsonAi.class) : null,
                     JsonUtils.hasField(json, "attributes") ? JsonUtil.deserializeArray(JsonUtils.getJsonArray(json, "attributes"), context, EntityJsonAttributes.class) : Lists.newArrayList(),
                     JsonUtils.hasField(json, "sounds") ? context.deserialize(JsonUtils.getJsonObject(json, "sounds"), EntityJsonSounds.class) : null
             );

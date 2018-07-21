@@ -199,7 +199,7 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
             this.properties = DinosaurJsonHandler.GSON.fromJson(new InputStreamReader(Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(this.getRegistryName().getResourceDomain(), "jurassicraft/entities/" + this.getRegistryName().getResourcePath() + ".json")).getInputStream()), EntityProperties.class);;
         } catch (IOException e) {
             JurassiCraft.getLogger().error("Unable to load dinosaur behaviours for " + this.getRegistryName(), e);
-            this.properties = new EntityProperties("dinosaur", null, null, Lists.newArrayList(), null);
+            this.properties = new EntityProperties("dinosaur", null, Lists.newArrayList(), null);
         }
 
         String formattedName = this.getRegistryName().getResourcePath();
