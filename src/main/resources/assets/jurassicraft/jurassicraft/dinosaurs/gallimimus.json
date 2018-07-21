@@ -125,5 +125,15 @@
       "",
       ""
     ]
-  ]
+  ],
+  "animation": {
+    "legs": {
+      "type": "BIPED",
+      "params": {
+        "forward": -0.05,
+        "side": 0.25,
+        "range": 0.5
+      }
+    }
+  }
 }

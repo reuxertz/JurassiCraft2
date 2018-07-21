@@ -55,5 +55,4 @@ public class JsonDinosaur extends Dinosaur {
 
 		this.animation = properties.animation;
 	}
-
 }

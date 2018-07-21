@@ -111,5 +111,17 @@
       "pelvic_fin_bones",
       "teeth"
     ]
-  ]
+  ],
+  "animation": {
+    "legs": {
+      "type": "QUADRUPED",
+      "params": {
+        "forwardCenter": 0.2,
+        "forward": 0.9,
+        "side": 0.8,
+        "frontRange": 0.9,
+        "backRange": 1.0
+      }
+    }
+  }
 }

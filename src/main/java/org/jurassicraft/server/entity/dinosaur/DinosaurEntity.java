@@ -97,7 +97,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 	private static final DataParameter<String> WATCHER_OWNER = EntityDataManager.createKey(DinosaurEntity.class, DataSerializers.STRING);
 	private static final DataParameter<Order> WATCHER_ORDER = EntityDataManager.createKey(DinosaurEntity.class, DinosaurSerializers.ORDER);
 	private static final DataParameter<Boolean> WATCHER_IS_RUNNING = EntityDataManager.createKey(DinosaurEntity.class, DataSerializers.BOOLEAN);
-
+	public final LegSolver legSolver;
 	public InventoryDinosaur inventory;
 	public MetabolismContainer metabolism;
 	public Dinosaur dinosaur = Dinosaur.MISSING;
@@ -119,13 +119,9 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 	public int stayAwakeTime;
 	public boolean useInertialTweens;
 	public Predicate<Entity> attackPredicate = entity -> false;
-
 	public boolean deserializing;
-
 	public int ticksUntilDeath;
-
 	public int attackCooldown;
-
 	@SideOnly(Side.CLIENT)
 	public ChainBuffer tailBuffer;
 	public Herd herd;
@@ -134,7 +130,6 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 	public int wireTicks;
 	public int disableHerdingTicks;
 	public boolean isSittingNaturally;
-	public final LegSolver legSolver;
 	@SideOnly(Side.CLIENT)
 	private boolean forceRender;
 	private Animation animation = EntityAnimation.IDLE.get();
@@ -240,7 +235,19 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
 	@Nullable
 	protected LegSolver createLegSolver() {
-		return null;
+		Map<String, Float> params = dinosaur.animation.legs.params;
+		switch (dinosaur.animation.legs.type) {
+			case BIPED:
+				return new LegSolverBiped(params.get("forward"), params.get("side"), params.get("range"));
+			case QUADRUPED:
+				if (params.containsKey("forwardCenter")) {
+					return new LegSolverQuadruped(params.get("forwardCenter"), params.get("forward"), params.get("side"), params.get("frontRange"), params.get("backRange"));
+				} else {
+					return new LegSolverQuadruped(params.get("forward"), params.get("side"), params.get("frontRange"), params.get("backRange"));
+				}
+			default:
+				return null;
+		}
 	}
 
 	@Override

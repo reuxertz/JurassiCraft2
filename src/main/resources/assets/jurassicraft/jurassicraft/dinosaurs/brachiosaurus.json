@@ -118,5 +118,16 @@
       "front_leg_bones",
       "front_leg_bones"
     ]
-  ]
+  ]     ,
+  "animation": {
+    "legs": {
+      "type": "QUADRUPED",
+      "params": {
+        "forward": 2.5,
+        "side": 2.0,
+        "frontRange": 1.0,
+        "backRange": 1.0
+      }
+    }
+  }
 }
