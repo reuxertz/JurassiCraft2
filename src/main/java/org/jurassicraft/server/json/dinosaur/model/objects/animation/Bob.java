@@ -19,7 +19,7 @@ public class Bob extends JsonAnimationModule<Bob.Info> {
     @Override
     public void performAnimation(TabulaModel model, Entity entity, Info info, float limbSwing, float limbSwingAmount, float ticks, float rotationYaw, float rotationPitch, float scale) {
         for (AdvancedModelRenderer renderer : info.getRenderers(model)) {
-            model.bob(renderer, info.speed * this.animator.getGlobalSpeed(), info.degree * this.animator.getGlobalDegree(), false, limbSwing, limbSwingAmount);
+            model.bob(renderer, info.speed * this.animator.globalSpeed, info.degree * this.animator.globalDegree, false, limbSwing, limbSwingAmount);
         }
     }
 

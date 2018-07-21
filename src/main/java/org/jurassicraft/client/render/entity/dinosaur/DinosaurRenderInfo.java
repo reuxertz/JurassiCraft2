@@ -52,7 +52,7 @@ public class DinosaurRenderInfo {
         this.modelSkeleton = this.loadModel(GrowthStage.SKELETON);
 
         try {
-            String name = dinosaur.getName().toLowerCase(Locale.ENGLISH);
+            String name = dinosaur.name.toLowerCase(Locale.ENGLISH);
             this.eggModel = new TabulaModel(TabulaModelHelper.loadTabulaModel("/assets/jurassicraft/models/entities/egg/" + name));
             this.eggTexture = new ResourceLocation(JurassiCraft.MODID, "textures/entities/egg/" + name + ".png");
         } catch (Exception e) {

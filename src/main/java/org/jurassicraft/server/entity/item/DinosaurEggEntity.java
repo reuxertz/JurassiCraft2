@@ -113,7 +113,7 @@ public class DinosaurEggEntity extends Entity implements IEntityAdditionalSpawnD
             for (Entity loadedEntity : this.world.loadedEntityList) {
                 if (loadedEntity instanceof DinosaurEntity && loadedEntity.getUniqueID().equals(this.parent)) {
                     DinosaurEntity parent = (DinosaurEntity) loadedEntity;
-                    if (parent.family != null && this.dinosaur.isDefendOffspring()) {
+                    if (parent.family != null && this.dinosaur.defendOffspring) {
                         parent.family.addChild(entity.getUniqueID());
                     }
                     break;

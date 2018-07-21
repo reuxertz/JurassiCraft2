@@ -11,11 +11,11 @@ import java.util.List;
 
 public class EntityProperties {
 
-    String type;
-    @Nullable AttackTargets targets;
-    @Nullable EntityJsonAi ai;
-    List<EntityJsonAttributes> attributes;
-    @Nullable EntityJsonSounds sounds;
+    public String type;
+    public @Nullable AttackTargets targets;
+    public @Nullable EntityJsonAi ai;
+    public List<EntityJsonAttributes> attributes;
+    public  @Nullable EntityJsonSounds sounds;
 
 
     //TODO Look into Constructor

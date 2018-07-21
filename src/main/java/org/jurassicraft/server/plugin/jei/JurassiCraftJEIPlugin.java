@@ -157,8 +157,8 @@ public class JurassiCraftJEIPlugin implements IModPlugin {
         registry.addRecipes(getAllItems(SynthesizableItem::getSynthesizableItem, SynthesizerInput::new), DNA_SYNTHASIZER);
         registry.addRecipes(getAllItems(SequencableItem::getSequencableItem, SequencerInput::new), DNA_SEQUENCER);
 
-        registry.addRecipes(getDinos(CultivateInput::new, dino -> dino.getBirthType() == Dinosaur.BirthType.LIVE_BIRTH), CULTIVATEOR);
-        registry.addRecipes(getDinos(IncubatorInput::new, dino -> dino.getBirthType() == Dinosaur.BirthType.EGG_LAYING), INCUBATOR);
+        registry.addRecipes(getDinos(CultivateInput::new, dino -> dino.birthType == Dinosaur.BirthType.LIVE_BIRTH), CULTIVATEOR);
+        registry.addRecipes(getDinos(IncubatorInput::new, dino -> dino.birthType == Dinosaur.BirthType.EGG_LAYING), INCUBATOR);
         registry.addRecipes(getDinos(CalcificationInput::new), EMBRYO_CALCIFICATION_MACHINE);
         registry.addRecipes(getDinos(EmbryoInput.DinosaurInput::new), EMBRYOMIC_MACHINE);
         registry.addRecipes(getPlants(EmbryoInput.PlantInput::new), EMBRYOMIC_MACHINE);

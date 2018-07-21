@@ -13,8 +13,8 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 public class EntityJsonSounds {
-    Map<EntityAnimation, SoundEvent> soundMap;
-    @Nullable SoundEvent breathingSound;
+    public Map<EntityAnimation, SoundEvent> soundMap;
+    public @Nullable SoundEvent breathingSound;
 
     public EntityJsonSounds(Map soundMap, SoundEvent event) {
         super();

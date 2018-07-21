@@ -402,14 +402,14 @@ public enum RenderingHandler {
                     JsonDinosaurModel model = DinosaurJsonHandler.GSON.fromJson(new InputStreamReader(Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(location.getResourceDomain(), "jurassicraft/models/" + location.getResourcePath() + ".json")).getInputStream()), JsonDinosaurModel.class);
                     //TODO: register model stuff here
                     System.out.println("Registered " + dinosaur.getRegistryName() + " json animator");
-                    registerRenderInfo(dinosaur, new EntityTaublaAnimator(model.getAnimator()), model.getShadowSize());
+                    registerRenderInfo(dinosaur, new EntityTaublaAnimator(model.animator), model.shadowSize);
                     continue;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
             try {
-                registerRenderInfo(dinosaur, (EntityAnimator)Class.forName(dinosaur.getAnimatorClassName()).newInstance(), dinosaur.getShadowSize());
+                registerRenderInfo(dinosaur, (EntityAnimator)Class.forName(dinosaur.animatorClassName).newInstance(), dinosaur.shadowSize);
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | ClassCastException e) {
                 e.printStackTrace();
             }
@@ -459,9 +459,9 @@ public enum RenderingHandler {
                     mode = JurassiCraft.timerTicks % 64 > 32 ? 1 : 2;
                 }
                 if (mode == 1) {
-                    return tintIndex == 0 ? dino.getPrimaryEggColorMale() : dino.getSecondaryEggColorMale();
+                    return tintIndex == 0 ? dino.primaryEggColorMale : dino.secondaryEggColorMale;
                 } else {
-                    return tintIndex == 0 ? dino.getPrimaryEggColorFemale() : dino.getSecondaryEggColorFemale();
+                    return tintIndex == 0 ? dino.primaryEggColorFemale : dino.secondaryEggColorFemale;
                 }
             }
             return 0xFFFFFF;

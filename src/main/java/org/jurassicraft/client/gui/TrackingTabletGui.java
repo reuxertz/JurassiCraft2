@@ -103,7 +103,7 @@ public class TrackingTabletGui extends GuiScreen {
             GlStateManager.disableBlend();
             drawBorder(left, top, left + i, top + i, 0xFF000000, 2F * this.zoomedScale);
             for (RenderDinosaurInfo r : renderList) {
-                ResourceLocation location = r.info.getDinosaur().getRegistryName();
+                ResourceLocation location = r.info.dinosaur.getRegistryName();
                 mc.getTextureManager().bindTexture(new ResourceLocation(location.getResourceDomain(), "textures/gui/mapicons/" + location.getResourcePath() + ".png"));
                 drawModalRectWithCustomSizedTexture(this.width / 2 + (xOffset + r.x) * this.zoomedScale - 4, this.height / 2 + (zOffset + r.z) * this.zoomedScale - 4, 0, 0, 8, 8, 8, 8);
             }
@@ -131,12 +131,12 @@ public class TrackingTabletGui extends GuiScreen {
             if(closest != null) {
                 List<String> lines = Lists.newArrayList();
                 TrackingTablet.DinosaurInfo info = closest.info;
-                ResourceLocation regName = info.getDinosaur().getRegistryName();
+                ResourceLocation regName = info.dinosaur.getRegistryName();
                 lines.add("Dinosaur: " + I18n.format("entity." + regName.getResourceDomain() + "." + regName.getResourcePath() + ".name"));
                 lines.add("Gender: " + I18n.format("gender." + (info.isMale() ? "male" : "female") + ".name"));
                 BlockPos pos = info.getPos();
                 lines.add("At: " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ());
-                lines.add("Days existed: " + Math.floor((info.getGrowthPercentage() * 8.0F) / 24000.0F));
+                lines.add("Days existed: " + Math.floor((info.growthPercentage() * 8.0F) / 24000.0F));
                 this.drawHoveringText(lines, mouseX, mouseY);
             }
 
@@ -290,8 +290,8 @@ public class TrackingTabletGui extends GuiScreen {
 
         private RenderDinosaurInfo(EntityPlayer player, TrackingTablet.DinosaurInfo info) {
             this.info = info;
-            this.x = (info.getPos().getX() - player.getPosition().getX()) / (TrackingTabletGui.this.distance / 128);
-            this.z = (info.getPos().getZ() - player.getPosition().getZ()) / (TrackingTabletGui.this.distance / 128);
+            this.x = (info.getPos.getX() - player.getPosition().getX()) / (TrackingTabletGui.this.distance / 128);
+            this.z = (info.getPos.getZ() - player.getPosition().getZ()) / (TrackingTabletGui.this.distance / 128);
         }
     }
 }

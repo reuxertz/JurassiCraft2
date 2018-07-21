@@ -10,24 +10,24 @@ import java.util.Locale;
 
 public class DinosaurProperties {
 
-    String name;
-    TimePeriod timePeriod;
-    String headCubeName;
-    @Deprecated
-    String dinosaurAnimatorClassName;
-    String dinosaurModelLocation;
-    float shadowSize;
+    public String name;
+    public TimePeriod timePeriod;
+    public String headCubeName;
 
-    SpawnEggInfo maleSpawnEgg;
-    SpawnEggInfo femaleSpawnEgg;
+    public String dinosaurAnimatorClassName;
+    public String dinosaurModelLocation;
+    public float shadowSize;
 
-    DinosaurStatistics statistics;
-    DinosaurTraits traits;
-    DinosaurSpawningInfo spawningInfo;
-    DinosaurBreeding breeding;
+    public SpawnEggInfo maleSpawnEgg;
+    public SpawnEggInfo femaleSpawnEgg;
 
-    String[] bones;
-    String[][] skeletonRecipe;
+    public DinosaurStatistics statistics;
+    public DinosaurTraits traits;
+    public DinosaurSpawningInfo spawningInfo;
+    public DinosaurBreeding breeding;
+
+    public String[] bones;
+    public String[][] skeletonRecipe;
 
     public DinosaurProperties(String name, TimePeriod timePeriod, String headCubeName, String dinosaurAnimatorClassName,
                               String dinosaurModelLocation, float shadowSize, SpawnEggInfo maleSpawnEgg,

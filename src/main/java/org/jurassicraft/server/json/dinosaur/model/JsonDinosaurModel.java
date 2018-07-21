@@ -10,9 +10,9 @@ import java.lang.reflect.Type;
 @Data
 public class JsonDinosaurModel {
 
-    private final String headCuboid;
-    private final JsonAnimator animator;
-    private final float shadowSize;
+    public final String headCuboid;
+    public final JsonAnimator animator;
+    public final float shadowSize;
 
     public JsonDinosaurModel(String headCuboid, JsonAnimator animator, float shadowSize) {
         this.headCuboid = headCuboid;
