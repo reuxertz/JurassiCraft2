@@ -316,7 +316,7 @@ public class FeederBlockEntity extends TileEntityLockable implements ITickable, 
     private int getFoodForDinosaur(DinosaurEntity dinosaur) {
         int i = 0;
         for (ItemStack stack : this.slots) {
-            if (stack != ItemStack.EMPTY && stack.getCount() > 0 && FoodHelper.isEdible(dinosaur, dinosaur.getDinosaur().getDiet(), stack.getItem())) {
+            if (stack != ItemStack.EMPTY && stack.getCount() > 0 && FoodHelper.isEdible(dinosaur, dinosaur.getDinosaur().diet, stack.getItem())) {
                 return i;
             }
             i++;

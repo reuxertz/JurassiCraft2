@@ -24,7 +24,7 @@ public class SkeletonAssemblyRecipeWrapper implements IRecipeWrapper {
 
     @Override
     public void getIngredients(IIngredients ingredients) {
-        String[][] recipe = this.input.dinosaur.getRecipe();
+        String[][] recipe = this.input.dinosaur.recipe;
         Item fossilItem = this.input.fresh ? ItemHandler.FRESH_FOSSIL : ItemHandler.FOSSIL;
 
         List<ItemStack> inputs = new ArrayList<>(recipe.length);

@@ -20,7 +20,7 @@ public class InventoryDinosaur implements IInventory {
 
     public InventoryDinosaur(DinosaurEntity entity) {
         this.entity = entity;
-        this.inventory = NonNullList.withSize(entity.getDinosaur().getStorage(), ItemStack.EMPTY);
+        this.inventory = NonNullList.withSize(entity.getDinosaur().storage, ItemStack.EMPTY);
     }
 
     public void writeToNBT(NBTTagCompound nbt) {

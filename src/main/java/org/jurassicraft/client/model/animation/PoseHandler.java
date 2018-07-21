@@ -40,7 +40,7 @@ public class PoseHandler<ENTITY extends EntityLivingBase & Animatable> {
     private Map<GrowthStage, ModelData> modelData;
 
     public PoseHandler(Dinosaur dinosaur) {
-        this(dinosaur.getName(), dinosaur.getSupportedStages());
+        this(dinosaur.name, dinosaur.getSupportedStages());
     }
 
     public PoseHandler(String name, List<GrowthStage> supported) {

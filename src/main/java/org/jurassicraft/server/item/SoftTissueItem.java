@@ -30,7 +30,7 @@ public class SoftTissueItem extends Item implements SequencableItem, DinosaurPro
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        String dinoName = this.getValue(stack).getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
+        String dinoName = this.getValue(stack).name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
 
         return new LangHelper("item.soft_tissue.name").withProperty("dino", "entity.jurassicraft." + dinoName + ".name").build();
     }

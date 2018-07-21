@@ -102,7 +102,7 @@ public class DinosaurSpawnEggItem extends Item implements DinosaurProvider {
     public String getItemStackDisplayName(ItemStack stack) {
         Dinosaur dinosaur = this.getValue(stack);
 
-        return new LangHelper("item.dino_spawn_egg.name").withProperty("dino", "entity.jurassicraft." + dinosaur.getName().replace(" ", "_").toLowerCase(Locale.ENGLISH) + ".name").build();
+        return new LangHelper("item.dino_spawn_egg.name").withProperty("dino", "entity.jurassicraft." + dinosaur.name.replace(" ", "_").toLowerCase(Locale.ENGLISH) + ".name").build();
     }
 
     @Override

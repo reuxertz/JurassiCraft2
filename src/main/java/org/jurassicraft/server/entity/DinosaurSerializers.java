@@ -1,6 +1,5 @@
 package org.jurassicraft.server.entity;
 
-import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializer;

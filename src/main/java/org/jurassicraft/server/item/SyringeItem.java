@@ -8,7 +8,7 @@ import java.util.Locale;
 public class SyringeItem extends DNAContainerItem {
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        String dinoName = getValue(stack).getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
+        String dinoName = getValue(stack).name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
         return new LangHelper("item.syringe.name").withProperty("dino", "entity.jurassicraft." + dinoName + ".name").build();
     }
 

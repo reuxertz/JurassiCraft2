@@ -91,7 +91,7 @@ public class FieldGuideGui extends GuiScreen {
 
         Dinosaur dinosaur = this.entity.getDinosaur();
 
-        this.drawScaledString(new LangHelper("entity.jurassicraft." + dinosaur.getName().toLowerCase(Locale.ENGLISH) + ".name").build().toUpperCase(Locale.ENGLISH), x + 15, y + 10, 1.3F, 0);
+        this.drawScaledString(new LangHelper("entity.jurassicraft." + dinosaur.name.toLowerCase(Locale.ENGLISH) + ".name").build().toUpperCase(Locale.ENGLISH), x + 15, y + 10, 1.3F, 0);
 
         if (this.page == 0) {
             this.drawScaledString(this.entity.getGrowthStage().getLocalization().toUpperCase(Locale.ENGLISH) + " // " + new LangHelper("gender." + (this.entity.isMale() ? "male" : "female") + ".name").build().toUpperCase(Locale.ENGLISH), x + 16, y + 24, 1.0F, 0);
@@ -113,7 +113,7 @@ public class FieldGuideGui extends GuiScreen {
             this.drawBar(statisticsX, y + 45, this.entity.isCarcass() ? 0 : this.entity.getHealth(), this.entity.getMaxHealth(), 0xFF0000);
             this.drawBar(statisticsX, y + 75, this.fieldGuideInfo.hunger, this.entity.getMetabolism().getMaxEnergy(), 0x94745A);
             this.drawBar(statisticsX, y + 105, this.fieldGuideInfo.thirst, this.entity.getMetabolism().getMaxWater(), 0x0000FF);
-            this.drawBar(statisticsX, y + 135, this.entity.getDinosaurAge(), dinosaur.getMaximumAge(), 0x00FF00);
+            this.drawBar(statisticsX, y + 135, this.entity.getDinosaurAge(), dinosaur.maximumAge, 0x00FF00);
 
             this.drawCenteredScaledString(new LangHelper("gui.days_old.name").withProperty("value", String.valueOf(this.entity.getDaysExisted())).build(), statisticTextX, y + 155, 1.0F, 0);
 
@@ -169,7 +169,7 @@ public class FieldGuideGui extends GuiScreen {
 
             GlStateManager.disableLighting();
         } else {
-            String text = new LangHelper("info." + dinosaur.getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_") + ".name").build();
+            String text = new LangHelper("info." + dinosaur.name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_") + ".name").build();
             List<String> lines = new ArrayList<>();
 
             int wrapX = 0;

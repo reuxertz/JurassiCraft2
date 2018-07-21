@@ -71,7 +71,7 @@ public class EncasedFossilBlock extends FossilBlock implements CleanableItem {
     @Override
     public ItemStack getCleanedItem(ItemStack stack, Random random) {
         Dinosaur dinosaur = this.getValue(stack);
-        String[] bones = dinosaur.getBones();
+        String[] bones = dinosaur.bones;
         return ItemHandler.FOSSIL.createNewStack(new FossilItem.FossilInfomation(dinosaur, bones[random.nextInt(bones.length)]));
     }
 
@@ -83,7 +83,7 @@ public class EncasedFossilBlock extends FossilBlock implements CleanableItem {
     @Override
     public List<Pair<Float, ItemStack>> getChancedOutputs(ItemStack inputItem) {
         Dinosaur dinosaur = this.getValue(inputItem);
-        String[] bones = dinosaur.getBones();
+        String[] bones = dinosaur.bones;
         float single = 100F / bones.length;
 
         List<Pair<Float, ItemStack>> list = Lists.newArrayList();

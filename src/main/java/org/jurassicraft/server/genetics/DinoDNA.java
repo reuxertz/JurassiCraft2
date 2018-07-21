@@ -57,7 +57,7 @@ public class/* Bingo! */ DinoDNA {
         if(this.missing) {
             tooltip.add(TextFormatting.RED + "Unknown");//TODO: localize
         } else {
-            tooltip.add(TextFormatting.DARK_AQUA + new LangHelper("lore.dinosaur.name").withProperty("dino", "entity.jurassicraft." + this.dinosaur.getName().toLowerCase(Locale.ENGLISH) + ".name").build());
+            tooltip.add(TextFormatting.DARK_AQUA + new LangHelper("lore.dinosaur.name").withProperty("dino", "entity.jurassicraft." + this.dinosaur.name.toLowerCase(Locale.ENGLISH) + ".name").build());
 
             TextFormatting colour;
 

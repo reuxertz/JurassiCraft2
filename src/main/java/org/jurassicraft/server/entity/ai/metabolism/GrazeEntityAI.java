@@ -37,7 +37,7 @@ public class GrazeEntityAI extends EntityAIBase {
 
     @Override
     public boolean shouldExecute() {
-        if(!this.dinosaur.getDinosaur().getDiet().canEat(this.dinosaur, FoodType.PLANT)) {
+        if(!this.dinosaur.getDinosaur().diet.canEat(this.dinosaur, FoodType.PLANT)) {
             return false;
         }
         if (!(this.dinosaur.isDead || this.dinosaur.isCarcass() || !GameRuleHandler.DINO_METABOLISM.getBoolean(this.dinosaur.world)) && this.dinosaur.getMetabolism().isHungry()) {
@@ -61,7 +61,7 @@ public class GrazeEntityAI extends EntityAIBase {
             //scans all blocks around the LOOK_RADIUS
             for (BlockPos pos : traverser) {
                 Block block = this.world.getBlockState(pos).getBlock();
-                if (FoodHelper.isEdible(this.dinosaur, this.dinosaur.getDinosaur().getDiet(), block) && pos != this.previousTarget) {
+                if (FoodHelper.isEdible(this.dinosaur, this.dinosaur.getDinosaur().diet, block) && pos != this.previousTarget) {
                     this.target = pos;
                     for (int i = 0; i < 16; i++) {
                         IBlockState state = this.world.getBlockState(pos);

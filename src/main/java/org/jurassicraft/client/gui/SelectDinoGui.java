@@ -186,7 +186,7 @@ public class SelectDinoGui extends GuiScreen {
 
                 GlStateManager.scale(textScale, textScale, textScale);
 
-                this.drawCenteredString(this.mc.fontRenderer, dinosaur.getName(), (int) ((x + 8) / textScale), (int) ((y + 17) / textScale), 0xFFFFFF);
+                this.drawCenteredString(this.mc.fontRenderer, dinosaur.name, (int) ((x + 8) / textScale), (int) ((y + 17) / textScale), 0xFFFFFF);
 
                 GlStateManager.popMatrix();
 

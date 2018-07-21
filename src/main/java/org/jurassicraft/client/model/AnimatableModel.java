@@ -48,7 +48,7 @@ public class AnimatableModel extends FixedTabulaModel {
             UUID inMouthEntity = ((DinosaurEntity) entityIn).getInMouthEntity();
             UUID entityInMouth = ((DinosaurEntity) entityIn).getEntityInMouth();
             if(entityInMouth != null) {
-                AdvancedModelRenderer box = this.getCube(((DinosaurEntity)entityIn).getDinosaur().getJawCubeName());
+                AdvancedModelRenderer box = this.getCube(((DinosaurEntity)entityIn).getDinosaur().jawCubeName);
                 if(box instanceof FixedModelRenderer) {
                     FixedModelRenderer renderer = (FixedModelRenderer)box;
                     for (DinosaurEntity entity : entityIn.world.getEntities(DinosaurEntity.class, e -> entityInMouth.equals(e.getUniqueID()))) {

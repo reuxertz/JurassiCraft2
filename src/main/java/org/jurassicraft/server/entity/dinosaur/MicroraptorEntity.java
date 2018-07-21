@@ -44,7 +44,7 @@ public class MicroraptorEntity extends DinosaurEntity {
     public MicroraptorEntity(World world) {
         super(world);
         this.target(new DinosaurClassAttackPredicate(EntityChicken.class, EntityRabbit.class));
-        this.tasks.addTask(1, new LeapingMeleeEntityAI(this, this.dinosaur.getAttackSpeed()));
+        this.tasks.addTask(1, new LeapingMeleeEntityAI(this, this.dinosaur.attackSpeed));
         this.tasks.addTask(2, new RaptorClimbTreeAI(this, 1.0f));
         this.animationTasks.addTask(3, new BirdPreenAnimationAI(this));
         this.animationTasks.addTask(3, new TailDisplayAnimationAI(this));

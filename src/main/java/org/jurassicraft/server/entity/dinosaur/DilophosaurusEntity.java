@@ -33,7 +33,7 @@ public class DilophosaurusEntity extends DinosaurEntity implements IRangedAttack
     public DilophosaurusEntity(World world) {
         super(world);
         this.target(new DinosaurClassAttackPredicate(GoatEntity.class, EntityPlayer.class, EntityVillager.class, EntityAnimal.class), new DinosaurAttackPredicate(EntityHandler.GALLIMIMUS, EntityHandler.PARASAUROLOPHUS, EntityHandler.TRICERATOPS, EntityHandler.VELOCIRAPTOR, EntityHandler.MUSSAURUS));
-        this.tasks.addTask(1, new DilophosaurusMeleeEntityAI(this, this.dinosaur.getAttackSpeed()));
+        this.tasks.addTask(1, new DilophosaurusMeleeEntityAI(this, this.dinosaur.attackSpeed));
     }
 
     @Override
@@ -60,7 +60,7 @@ public class DilophosaurusEntity extends DinosaurEntity implements IRangedAttack
 
     @Override
     public EntityAIBase getAttackAI() {
-        return new DilophosaurusSpitEntityAI(this, this.dinosaur.getAttackSpeed(), 40, 10);
+        return new DilophosaurusSpitEntityAI(this, this.dinosaur.attackSpeed, 40, 10);
     }
 
     @Override

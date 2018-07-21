@@ -67,7 +67,7 @@ public class DisplayBlockItem extends Item implements DinosaurProvider {
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
         Dinosaur dinosaur = getValue(stack);
-        String dinoName = dinosaur.getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
+        String dinoName = dinosaur.name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
         DisplayBlockProperties properties = getProperties(stack);
         if (!properties.getType().isSkeleton()) {
             return new LangHelper("item.action_figure.name").withProperty("dino", "entity.jurassicraft." + dinoName + ".name").build();

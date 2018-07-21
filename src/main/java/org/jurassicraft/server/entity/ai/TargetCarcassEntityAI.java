@@ -28,7 +28,7 @@ public class TargetCarcassEntityAI extends EntityAIBase {
 
     @Override
     public boolean shouldExecute() {
-        if(!this.entity.getDinosaur().getDiet().canEat(this.entity, FoodType.MEAT)) {
+        if(!this.entity.getDinosaur().diet.canEat(this.entity, FoodType.MEAT)) {
             return false;
         }
         if (!this.entity.getMetabolism().isHungry()) {

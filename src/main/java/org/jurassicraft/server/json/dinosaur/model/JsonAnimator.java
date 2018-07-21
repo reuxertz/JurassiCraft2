@@ -20,10 +20,10 @@ import java.util.List;
 @Data
 public class JsonAnimator implements ITabulaModelAnimator<Entity> {
 
-    private final float globalSpeed;
-    private final float globalDegree;
-    private final Constants constants;
-    private final List<JsonAnimationType> animationList;
+    public final float globalSpeed;
+    public final float globalDegree;
+    public final Constants constants;
+    public final List<JsonAnimationType> animationList;
 
     @Override
     public void setRotationAngles(TabulaModel model, Entity entity, float limbSwing, float limbSwingAmount, float ticks, float rotationYaw, float rotationPitch, float scale) {

@@ -43,7 +43,7 @@ public class DinosaurSpawningInfo {
         @Override
         public JsonElement serialize(DinosaurSpawningInfo src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject json = new JsonObject();
-            json.addProperty("chance", src.getChance());
+            json.addProperty("chance", src.chance);
             JsonArray array = new JsonArray();
             for (BiomeDictionary.Type biome : src.biomes) {
                 array.add(biome.getName().toLowerCase(Locale.ENGLISH));

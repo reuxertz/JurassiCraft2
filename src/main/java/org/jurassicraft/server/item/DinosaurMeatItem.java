@@ -27,7 +27,7 @@ public class DinosaurMeatItem extends ItemFood implements DinosaurProvider {
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
         Dinosaur dinosaur = this.getValue(stack);
-        return new LangHelper("item.dinosaur_meat.name").withProperty("dino", "entity.jurassicraft." + dinosaur.getName().replace(" ", "_").toLowerCase(Locale.ENGLISH) + ".name").build();
+        return new LangHelper("item.dinosaur_meat.name").withProperty("dino", "entity.jurassicraft." + dinosaur.name.replace(" ", "_").toLowerCase(Locale.ENGLISH) + ".name").build();
     }
 
     @Override

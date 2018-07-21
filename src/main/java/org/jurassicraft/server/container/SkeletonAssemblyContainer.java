@@ -61,7 +61,7 @@ public class SkeletonAssemblyContainer extends Container {
     private ItemStack getResult() {
         AssemblyData data = this.getAssemblyData();
         if (data != null) {
-            String[][] recipe = data.dinosaur.getRecipe();
+            String[][] recipe = data.dinosaur.recipe;
             int targetWidth = recipe[0].length;
             int targetHeight = recipe.length;
 

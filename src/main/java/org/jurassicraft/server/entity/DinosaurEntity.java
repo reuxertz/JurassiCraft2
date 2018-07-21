@@ -98,32 +98,32 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
     private static final DataParameter<Order> WATCHER_ORDER = EntityDataManager.createKey(DinosaurEntity.class, DinosaurSerializers.ORDER);
     private static final DataParameter<Boolean> WATCHER_IS_RUNNING = EntityDataManager.createKey(DinosaurEntity.class, DataSerializers.BOOLEAN);
 
-    private InventoryDinosaur inventory;
-    private MetabolismContainer metabolism;
-    protected Dinosaur dinosaur = Dinosaur.MISSING;
-    protected int dinosaurAge;
-    protected int prevAge;
-    protected EntityAITasks animationTasks;
-    protected Order order = Order.WANDER;
-    private int growthSpeedOffset;
-    private boolean isCarcass;
-    private int carcassHealth;
-    private String genetics;
-    private int geneticsQuality;
-    private boolean isMale;
-    private boolean hasTracker;
-    @Nullable private UUID owner;
-    private boolean isSleeping;
-    private int tranquilizerTicks;
-    private int stayAwakeTime;
-    private boolean useInertialTweens;
-    private Predicate<Entity> attackPredicate = entity -> false;
+    public InventoryDinosaur inventory;
+    public MetabolismContainer metabolism;
+    public Dinosaur dinosaur = Dinosaur.MISSING;
+    public int dinosaurAge;
+    public int prevAge;
+    public EntityAITasks animationTasks;
+    public Order order = Order.WANDER;
+    public int growthSpeedOffset;
+    public boolean isCarcass;
+    public int carcassHealth;
+    public String genetics;
+    public int geneticsQuality;
+    public boolean isMale;
+    public boolean hasTracker;
+    @Nullable public UUID owner;
+    public boolean isSleeping;
+    public int tranquilizerTicks;
+    public int stayAwakeTime;
+    public boolean useInertialTweens;
+    public Predicate<Entity> attackPredicate = entity -> false;
 
-    private boolean deserializing;
+    public boolean deserializing;
 
-    private int ticksUntilDeath;
-    
-    private int attackCooldown;
+    public int ticksUntilDeath;
+
+    public int attackCooldown;
 
     @SideOnly(Side.CLIENT)
     public ChainBuffer tailBuffer;
@@ -138,7 +138,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
     public int wireTicks;
     public int disableHerdingTicks;
 
-    private boolean isSittingNaturally;
+    public boolean isSittingNaturally;
 
     private Animation animation = EntityAnimation.IDLE.get();
     private int animationTick;
@@ -286,7 +286,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
         if (this.metabolism.isDehydrated() || this.metabolism.isStarving()) {
             return false;
         }
-        SleepTime sleepTime = this.getDinosaur().getSleepTime();
+        SleepTime sleepTime = this.getDinosaur().sleepTime;
         return sleepTime.shouldSleep() && this.getDinosaurTime() > sleepTime.getAwakeTime() && !this.hasPredators() && (this.herd == null || this.herd.enemies.isEmpty());
     }
 
@@ -313,7 +313,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
     }
 
     public int getDinosaurTime() {
-        SleepTime sleepTime = this.getDinosaur().getSleepTime();
+        SleepTime sleepTime = this.getDinosaur().sleepTime;
 
         long time = (this.world.getWorldTime() % 24000) - sleepTime.getWakeUpTime();
 
@@ -340,12 +340,12 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
     }
 
     public void setOwner(EntityPlayer player) {
-        if (this.dinosaur.isImprintable()) {
+        if (this.dinosaur.isImprintable) {
             UUID prevOwner = this.owner;
             this.owner = player.getUniqueID();
 
             if (!this.owner.equals(prevOwner)) {
-                player.sendMessage(new TextComponentString(new LangHelper("message.tame.name").withProperty("dinosaur", "entity.jurassicraft." + this.dinosaur.getName().toLowerCase(Locale.ENGLISH) + ".name").build()));
+                player.sendMessage(new TextComponentString(new LangHelper("message.tame.name").withProperty("dinosaur", "entity.jurassicraft." + this.dinosaur.name.toLowerCase(Locale.ENGLISH) + ".name").build()));
             }
         }
     }
@@ -582,15 +582,15 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
     public void updateAttributes() {
         double prevHealth = this.getMaxHealth();
-        double newHealth = Math.max(1.0F, this.interpolate(this.dinosaur.getBabyHealth(), this.dinosaur.getAdultHealth()) * this.attributes.getHealthModifier());
-        double speed = this.interpolate(this.dinosaur.getBabySpeed(), this.dinosaur.getAdultSpeed()) * this.attributes.getSpeedModifier();
+        double newHealth = Math.max(1.0F, this.interpolate(this.dinosaur.babyHealth, this.dinosaur.adultHealth)) * this.attributes.getHealthModifier();
+        double speed = this.interpolate(this.dinosaur.babySpeed, this.dinosaur.adultSpeed) * this.attributes.getSpeedModifier();
         double strength = this.getAttackDamage() * this.attributes.getDamageModifier();
 
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(newHealth);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(speed);
         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(strength);
 
-        for (EntityJsonAttributes attributes : this.dinosaur.getProperties().getAttributes()) {
+        for (EntityJsonAttributes attributes : this.dinosaur.properties.attributes) {
             attributes.apply(this);
         }
 
@@ -612,8 +612,8 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
     private void updateBounds() {
         float scale = this.attributes.getScaleModifier();
-        float width = MathHelper.clamp((float) this.interpolate(this.dinosaur.getBabySizeX(), this.dinosaur.getAdultSizeX()) * scale, 0.3F, 4.0F);
-        float height = MathHelper.clamp((float) this.interpolate(this.dinosaur.getBabySizeY(), this.dinosaur.getAdultSizeY()) * scale, 0.3F, 4.0F);
+        float width = MathHelper.clamp((float) this.interpolate(this.dinosaur.babySizeX, this.dinosaur.adultSizeX) * scale, 0.3F, 4.0F);
+        float height = MathHelper.clamp((float) this.interpolate(this.dinosaur.babySizeY, this.dinosaur.adultSizeY) * scale, 0.3F, 4.0F);
 
         this.stepHeight = Math.max(1.0F, (float) (Math.ceil(height / 2.0F) / 2.0F));
 
@@ -626,7 +626,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
     public double interpolate(double baby, double adult) {
         int dinosaurAge = this.dinosaurAge;
-        int maxAge = this.dinosaur.getMaximumAge();
+        int maxAge = this.dinosaur.maximumAge;
         if (dinosaurAge > maxAge) {
             dinosaurAge = maxAge;
         }
@@ -696,7 +696,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
             this.breedCooldown--;
         }
         
-        if(!this.world.isRemote && this.dinosaur.getDiet().canEat(this, FoodType.MEAT) && this.getMetabolism().isHungry()) {
+        if(!this.world.isRemote && this.dinosaur.diet.canEat(this, FoodType.MEAT) && this.getMetabolism().isHungry()) {
             world.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().grow(10, 10, 10), this::canEatEntity).stream().findAny().ifPresent(this::setAttackTarget);
         }
         
@@ -704,7 +704,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
             if (this.isPregnant()) {
                 if (--this.pregnantTime <= 0) {
                     this.getNavigator().clearPath();
-                    this.setAnimation(this.dinosaur.getBirthType() == Dinosaur.BirthType.LIVE_BIRTH ? EntityAnimation.GIVING_BIRTH.get() : EntityAnimation.LAYING_EGG.get());
+                    this.setAnimation(this.dinosaur.birthType == Dinosaur.BirthType.LIVE_BIRTH ? EntityAnimation.GIVING_BIRTH.get() : EntityAnimation.LAYING_EGG.get());
                     if(this.family != null) {
                         this.family.setHome(this.getPosition(), 6000);
                     }
@@ -714,7 +714,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
             if ((this.getAnimation() == EntityAnimation.LAYING_EGG.get() || this.getAnimation() == EntityAnimation.GIVING_BIRTH.get()) && this.animationTick == this.getAnimationLength() / 2) {
         	    for (DinosaurEntity child : this.children) {
                     Entity entity;
-                    if (this.dinosaur.getBirthType() == Dinosaur.BirthType.LIVE_BIRTH) {
+                    if (this.dinosaur.birthType == Dinosaur.BirthType.LIVE_BIRTH) {
                         entity = child;
                         child.setAge(0);
                         if(this.family != null) {
@@ -736,10 +736,10 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
             boolean dead = this.breeding.isDead || this.breeding.isCarcass();
             if (dead || this.getEntityBoundingBox().intersects(this.breeding.getEntityBoundingBox().expand(3, 3, 3))) {
                 if (!dead) {
-                    this.breedCooldown = this.dinosaur.getBreedCooldown();
+                    this.breedCooldown = this.dinosaur.breedCooldown;
                     if (!this.isMale()) {
-                        int minClutch = this.dinosaur.getMinClutch();
-                        int maxClutch = this.dinosaur.getMaxClutch();
+                        int minClutch = this.dinosaur.minClutch;
+                        int maxClutch = this.dinosaur.maxClutch;
                         for (int i = 0; i < (this.rand.nextInt(maxClutch - minClutch) + minClutch) + this.getDNA().getValueFloat(GeneType.CHILD_YEILD); i++) {
                             boolean isMale = this.rand.nextBoolean();
                             DinosaurEntity child = this.dinosaur.createEntity(this.world);
@@ -793,7 +793,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
                     List<EntityItem> entitiesWithinAABB = this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(1.0, 1.0, 1.0));
                     for (EntityItem itemEntity : entitiesWithinAABB) {
                         Item item = itemEntity.getItem().getItem();
-                        if (FoodHelper.isEdible(this, this.dinosaur.getDiet(), item)) {
+                        if (FoodHelper.isEdible(this, this.dinosaur.diet, item)) {
                             this.setAnimation(EntityAnimation.EATING.get());
 
                             if (itemEntity.getItem().getCount() > 1) {
@@ -818,7 +818,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
                 this.playSound(this.getBreathingSound(), this.getSoundVolume(), this.getSoundPitch());
             }
 
-            if (this.dinosaur.getHomeType() != Dinosaur.DinosaurHomeType.MARINE) {
+            if (this.dinosaur.homeType != Dinosaur.DinosaurHomeType.MARINE) {
                 if (this.isInsideOfMaterial(Material.WATER) || (this.getNavigator().noPath() && this.inWater() || this.inLava())) {
                     this.getJumpHelper().setJumping();
                 } else {
@@ -1093,7 +1093,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
         }
 
         if (this.legSolver != null) {
-            double msc = this.dinosaur.getScaleInfant() / this.dinosaur.getScaleAdult();
+            double msc = this.dinosaur.scaleInfant / this.dinosaur.scaleAdult;
             this.legSolver.update(this, (float) this.interpolate(msc, 1.0) * this.getAttributes().getScaleModifier());
         }
 
@@ -1132,7 +1132,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
     }
 
     public void setFullyGrown() {
-        this.setAge(this.dinosaur.getMaximumAge());
+        this.setAge(this.dinosaur.maximumAge);
     }
 
     @Nullable
@@ -1158,12 +1158,12 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
     @Override
     public float getEyeHeight() {
-        return (float) this.interpolate(this.dinosaur.getBabyEyeHeight(), this.dinosaur.getAdultEyeHeight()) * this.attributes.getScaleModifier();
+        return (float) this.interpolate(this.dinosaur.eyeHeight, this.dinosaur.adultEyeHeight) * this.attributes.getScaleModifier();
     }
 
     @Override
     protected void dropFewItems(boolean playerAttack, int looting) {
-        for (String bone : this.dinosaur.getBones()) {
+        for (String bone : this.dinosaur.bones) {
             if (this.rand.nextInt(10) != 0) {
                 this.dropStackWithGenetics(ItemHandler.FRESH_FOSSIL.createNewStack(new FossilItem.FossilInfomation(this.dinosaur, bone)));
             }
@@ -1229,7 +1229,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
                         fed = true;
                         this.metabolism.increaseWater(1000);
                         this.setAnimation(EntityAnimation.DRINKING.get());
-                    } else if (FoodHelper.isEdible(this, this.dinosaur.getDiet(), item)) {
+                    } else if (FoodHelper.isEdible(this, this.dinosaur.diet, item)) {
                         fed = true;
                         this.metabolism.eat(FoodHelper.getHealAmount(item));
                         this.setAnimation(EntityAnimation.EATING.get());
@@ -1244,13 +1244,13 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
                         }
                         if (!this.isOwner(player)) {
                             if (this.rand.nextFloat() < 0.30) {
-                                if (this.dinosaur.getDinosaurBehaviourType() == Dinosaur.DinosaurBehaviourType.AGGRESSIVE) {
-                                    if (this.rand.nextFloat() * 4.0F < (float) this.herd.members.size() / this.dinosaur.getMaxHerdSize()) {
+                                if (this.dinosaur.dinosaurBehaviourType == Dinosaur.DinosaurBehaviourType.AGGRESSIVE) {
+                                    if (this.rand.nextFloat() * 4.0F < (float) this.herd.members.size() / this.dinosaur.maxHerdSize) {
                                         this.herd.enemies.add(player);
                                     } else {
                                         this.attackEntityAsMob(player);
                                     }
-                                } else if (this.dinosaur.getDinosaurBehaviourType() == Dinosaur.DinosaurBehaviourType.SCARED) {
+                                } else if (this.dinosaur.dinosaurBehaviourType == Dinosaur.DinosaurBehaviourType.SCARED) {
                                     this.herd.fleeing = true;
                                     this.herd.enemies.add(player);
                                 }
@@ -1312,7 +1312,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
         if (oldAnimation != newAnimation) {
             this.animationTick = 0;
-            this.animationLength = (int) this.dinosaur.getPoseHandler().getAnimationLength(this.animation, this.getGrowthStage());
+            this.animationLength = (int) this.dinosaur.poseHandler.getAnimationLength(this.animation, this.getGrowthStage());
 
             AnimationHandler.INSTANCE.sendAnimationMessage(this, newAnimation);
         }
@@ -1359,8 +1359,8 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
     @Nullable
     public SoundEvent getSoundForAnimation(Animation animation) {
-        EntityJsonSounds sounds = this.dinosaur.getProperties().getSounds();
-        return sounds == null ? null : sounds.getSoundMap().get(EntityAnimation.getAnimation(animation));
+        EntityJsonSounds sounds = this.dinosaur.properties.sounds;
+        return sounds == null ? null : sounds.soundMap.get(EntityAnimation.getAnimation(animation));
     }
 
     public SoundEvent getBreathingSound() {
@@ -1368,7 +1368,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
     }
 
     public double getAttackDamage() {
-        return this.interpolate(this.dinosaur.getBabyStrength(), this.dinosaur.getAdultStrength());
+        return this.interpolate(this.dinosaur.babyStrength, this.dinosaur.adultStrength);
     }
 
     public boolean isMale() {
@@ -1385,10 +1385,10 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
     public int getAgePercentage() {
         int age = this.getDinosaurAge();
-        if((this.getDinosaur().getMaximumAge() * (int)(((this.getDNA().getValueFloat(GeneType.LIFESPAN) + 1) / 2) + 0.5)) == 0) {
+        if((this.getDinosaur().maximumAge * (int)(((this.getDNA().getValueFloat(GeneType.LIFESPAN) + 1) / 2) + 0.5)) == 0) {
             System.out.println(this.getDNA().getValueFloat(GeneType.LIFESPAN));
         }
-        return (int)(age != 0 ? age * 100 / (this.getDinosaur().getMaximumAge() * ((this.getDNA().getValueFloat(GeneType.LIFESPAN) + 1) / 2) + 0.5) : 0);
+        return (int)(age != 0 ? age * 100 / (this.getDinosaur().maximumAge * ((this.getDNA().getValueFloat(GeneType.LIFESPAN) + 1) / 2) + 0.5) : 0);
     }
 
     @Override
@@ -1632,7 +1632,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
     @Override
     public String toString() {
         return "DinosaurEntity{ " +
-                this.dinosaur.getName() +
+                this.dinosaur.name +
                 ", id=" + this.getEntityId() +
                 ", remote=" + this.getEntityWorld().isRemote +
                 ", isDead=" + this.isDead +
@@ -1642,7 +1642,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
                 "\n    " +
                 ", dinosaurAge=" + this.dinosaurAge +
                 ", prevAge=" + this.prevAge +
-                ", maxAge" + this.dinosaur.getMaximumAge() +
+                ", maxAge" + this.dinosaur.maximumAge +
                 ", ticksExisted=" + this.ticksExisted +
                 ", entityAge=" + this.idleTime +
                 ", isMale=" + this.isMale +
@@ -1678,19 +1678,19 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
     }
 
     public Vec3d getHeadPos() {
-        double scale = this.interpolate(this.dinosaur.getScaleInfant(), this.dinosaur.getScaleAdult());
+        double scale = this.interpolate(this.dinosaur.scaleInfant, this.dinosaur.scaleAdult);
 
         double[] headPos = this.dinosaur.getHeadPosition(this.getGrowthStage(), ((360 - this.rotationYawHead)) % 360 - 180);
 
-        double headX = ((headPos[0] * 0.0625F) - this.dinosaur.getOffsetX()) * scale;
-        double headY = (((24 - headPos[1]) * 0.0625F) - this.dinosaur.getOffsetY()) * scale;
-        double headZ = ((headPos[2] * 0.0625F) - this.dinosaur.getOffsetZ()) * scale;
+        double headX = ((headPos[0] * 0.0625F) - this.dinosaur.offsetX) * scale;
+        double headY = (((24 - headPos[1]) * 0.0625F) - this.dinosaur.offsetY) * scale;
+        double headZ = ((headPos[2] * 0.0625F) - this.dinosaur.offsetZ) * scale;
 
         return new Vec3d(this.posX + headX, this.posY + (headY), this.posZ + headZ);
     }
 
     public boolean areEyelidsClosed() {
-        return this.dinosaur.getHomeType() != Dinosaur.DinosaurHomeType.MARINE && ((this.isCarcass || this.isSleeping) || this.ticksExisted % 100 < 4);
+        return this.dinosaur.homeType != Dinosaur.DinosaurHomeType.MARINE && ((this.isCarcass || this.isSleeping) || this.ticksExisted % 100 < 4);
     }
 
     @Override
@@ -1857,7 +1857,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
                 Herd herd = this.herd;
 
                 if (herd != null) {
-                    herd.fleeing = !herd.shouldDefend(enemies) || this.dinosaur.isFlee();
+                    herd.fleeing = !herd.shouldDefend(enemies) || this.dinosaur.flee;
 
                     for (EntityLivingBase entity : enemies) {
                         if (!herd.enemies.contains(entity)) {
@@ -1931,12 +1931,12 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
     @Override
     public boolean isMarineCreature() {
-        return this.dinosaur.getHomeType() == Dinosaur.DinosaurHomeType.MARINE;
+        return this.dinosaur.homeType == Dinosaur.DinosaurHomeType.MARINE;
     }
 
     @Override
     public <ENTITY extends EntityLivingBase & Animatable> PoseHandler<ENTITY> getPoseHandler() {
-        return (PoseHandler<ENTITY>) this.dinosaur.getPoseHandler();
+        return (PoseHandler<ENTITY>) this.dinosaur.poseHandler;
     }
 
     @Override

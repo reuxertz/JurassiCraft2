@@ -1,11 +1,9 @@
 package org.jurassicraft.client.gui;
 
-import lombok.RequiredArgsConstructor;
 import net.minecraft.client.gui.GuiScreen;
 
 import java.util.function.DoubleSupplier;
 
-@RequiredArgsConstructor
 public class GuiProgressBlock {
     private final int x;
     private final int y;

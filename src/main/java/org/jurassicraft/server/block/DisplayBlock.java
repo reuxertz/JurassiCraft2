@@ -57,8 +57,8 @@ public class DisplayBlock extends BlockContainer implements NoItemBlock {
             if(displayEntity.getEntity() != null) {
                 Dinosaur dinosaur = displayEntity.getEntity().getDinosaur();
                 if (dinosaur != null && !displayEntity.isSkeleton()) {
-                    float width = MathHelper.clamp(dinosaur.getAdultSizeX() * 0.25F, 0.1F, 1.0F);
-                    float height = MathHelper.clamp(dinosaur.getAdultSizeY() * 0.25F, 0.1F, 1.0F);
+                    float width = MathHelper.clamp(dinosaur.adultSizeX * 0.25F, 0.1F, 1.0F);
+                    float height = MathHelper.clamp(dinosaur.adultSizeY * 0.25F, 0.1F, 1.0F);
                     float halfWidth = width / 2.0F;
                     return new AxisAlignedBB(0.5 - halfWidth, 0, 0.5 - halfWidth, halfWidth + 0.5, height, halfWidth + 0.5);
                 }

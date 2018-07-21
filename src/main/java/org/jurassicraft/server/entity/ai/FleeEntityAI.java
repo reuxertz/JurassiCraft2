@@ -17,7 +17,7 @@ public class FleeEntityAI extends EntityAIBase {
 
     @Override
     public boolean shouldExecute() {
-        if(!this.dinosaur.getDinosaur().isFlee()) {
+        if(!this.dinosaur.getDinosaur().flee) {
             return false;
         }
         if (this.dinosaur.ticksExisted % 5 == 0) {

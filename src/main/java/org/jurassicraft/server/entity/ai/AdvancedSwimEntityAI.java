@@ -21,7 +21,7 @@ public class AdvancedSwimEntityAI extends EntityAIBase {
 
     @Override
     public boolean shouldExecute() {
-        if(this.entity.getDinosaur().getHomeType() == Dinosaur.DinosaurHomeType.MARINE) {
+        if(this.entity.getDinosaur().homeType == Dinosaur.DinosaurHomeType.MARINE) {
             return false;
         }
         return this.entity.isSwimming() && this.entity.getNavigator().noPath() && (this.entity.getAttackTarget() == null || this.entity.getAttackTarget().isDead) && this.entity.canDinoSwim();

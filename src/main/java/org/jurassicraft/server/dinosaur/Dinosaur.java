@@ -34,9 +34,6 @@ import javax.vecmathimpl.Vector3d;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
-
-@Data
-@Setter(value = AccessLevel.PROTECTED)
 public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comparable<Dinosaur> {
 
     @GameRegistry.ObjectHolder(JurassiCraft.MODID + ":velociraptor")
@@ -47,86 +44,82 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
     private final Map<GrowthStage, ResourceLocation> femaleTextures = new HashMap<>();
     private final Map<GrowthStageGenderContainer, ResourceLocation> eyelidTextures = new HashMap<>();
 
-    private String name;
-    private Class<? extends DinosaurEntity> entityClass;
-    @Deprecated
-    private String animatorClassName;
-    private DinosaurBehaviourType dinosaurBehaviourType;
-    private DinosaurHomeType homeType;
-    private int primaryEggColorMale, primaryEggColorFemale;
-    private int secondaryEggColorMale, secondaryEggColorFemale;
-    private TimePeriod timePeriod;
-    private double babyHealth, adultHealth;
-    private double babyStrength, adultStrength;
-    private double babySpeed, adultSpeed;
-    private float babySizeX, adultSizeX;
-    private float babySizeY, adultSizeY;
-    private float babyEyeHeight, adultEyeHeight;
-    private double attackSpeed = 1.0;
-    private int storage;
-    private int overlayCount;
-    private Diet diet;
-    private SleepTime sleepTime = SleepTime.DIURNAL;
-    private String[] bones;
-    private int maximumAge;
-    private String headCubeName;
-    private float shadowSize;
-    private MovementType movementType = MovementType.NEAR_SURFACE;
-    private BirthType birthType = BirthType.EGG_LAYING;
-    private boolean isImprintable;
+    public String name;
+    public Class<? extends DinosaurEntity> entityClass;
+    public String animatorClassName;
+    public DinosaurBehaviourType dinosaurBehaviourType;
+    public DinosaurHomeType homeType;
+    public int primaryEggColorMale, primaryEggColorFemale;
+    public int secondaryEggColorMale, secondaryEggColorFemale;
+    public TimePeriod timePeriod;
+    public double babyHealth, adultHealth;
+    public double babyStrength, adultStrength;
+    public double babySpeed, adultSpeed;
+    public float babySizeX, adultSizeX;
+    public float babySizeY, adultSizeY;
+    public float babyEyeHeight, adultEyeHeight;
+    public double attackSpeed = 1.0;
+    public int storage;
+    public int overlayCount;
+    public Diet diet;
+    public SleepTime sleepTime = SleepTime.DIURNAL;
+    public String[] bones;
+    public int maximumAge;
+    public String headCubeName;
+    public float shadowSize;
+    public MovementType movementType = MovementType.NEAR_SURFACE;
+    public BirthType birthType = BirthType.EGG_LAYING;
+    public boolean isImprintable;
 
-    private int lipids = 1500;
-    private int vitamins = 1500;
-    private int minerals = 1500;
-    private int proximates = 1500;
+    public int lipids = 1500;
+    public int vitamins = 1500;
+    public int minerals = 1500;
+    public int proximates = 1500;
 
-    private boolean randomFlock = true;
+    public boolean randomFlock = true;
 
-    private float scaleInfant;
-    private float scaleAdult;
+    public float scaleInfant;
+    public float scaleAdult;
 
-    private float offsetX;
-    private float offsetY;
-    private float offsetZ;
+    public float offsetX;
+    public float offsetY;
+    public float offsetZ;
 
-    private TabulaModelContainer modelAdult;
-    private TabulaModelContainer modelInfant;
-    private TabulaModelContainer modelJuvenile;
-    private TabulaModelContainer modelAdolescent;
-    private TabulaModelContainer modelSkeleton;
+    public TabulaModelContainer modelAdult;
+    public TabulaModelContainer modelInfant;
+    public TabulaModelContainer modelJuvenile;
+    public TabulaModelContainer modelAdolescent;
+    public TabulaModelContainer modelSkeleton;
 
-    private PoseHandler<?> poseHandler;
+    public PoseHandler<?> poseHandler;
 
-    private boolean defendOwner;
+    public boolean defendOwner;
 
-    private boolean flee;
-    private double flockSpeed = 0.8;
+    public boolean flee;
+    public double flockSpeed = 0.8;
 
-    private double attackBias = 200.0;
-    private int maxHerdSize = 32;
+    public double attackBias = 200.0;
+    public int maxHerdSize = 32;
 
-    private int spawnChance;
-    private Biome[] spawnBiomes;
-    private BiomeDictionary.Type[] biomeTypes;
-    private boolean canClimb;
+    public int spawnChance;
+    public Biome[] spawnBiomes;
+    public BiomeDictionary.Type[] biomeTypes;
+    public boolean canClimb;
 
-    private int breedCooldown;
-    private boolean breedAroundOffspring;
-    private int minClutch = 2;
-    private int maxClutch = 6;
-    private boolean defendOffspring;
-    private int jumpHeight;
+    public int breedCooldown;
+    public boolean breedAroundOffspring;
+    public int minClutch = 2;
+    public int maxClutch = 6;
+    public boolean defendOffspring;
+    public int jumpHeight;
 
-    private String[][] recipe;
+    public String[][] recipe;
 
-    private String jawCubeName = "Lower Teeth Front"; //TODO: make json based
+    public String jawCubeName = "Lower Teeth Front"; //TODO: make json based
 
-    @Setter(AccessLevel.NONE)
-    private EntityProperties properties; //@
+    public EntityProperties properties; //@
 
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private boolean init;
+    public boolean init;
 
     public static Matrix4d getParentRotationMatrix(TabulaModelContainer model, TabulaCubeContainer cube, boolean includeParents, boolean ignoreSelf, float rot) {
         List<TabulaCubeContainer> parentCubes = new ArrayList<>();
@@ -168,7 +161,7 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
         return mat;
     }
 
-    private static double[][] getTransformation(Matrix4d matrix) {
+    public static double[][] getTransformation(Matrix4d matrix) {
         double sinRotationAngleY, cosRotationAngleY, sinRotationAngleX, cosRotationAngleX, sinRotationAngleZ, cosRotationAngleZ;
 
         sinRotationAngleY = -matrix.m20;
@@ -192,7 +185,7 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
         return new double[][] { { epsilon(matrix.m03), epsilon(matrix.m13), epsilon(matrix.m23) }, { rotationAngleX, rotationAngleY, rotationAngleZ } };
     }
 
-    private static double epsilon(double x) {
+    public static double epsilon(double x) {
         return x < 0 ? x > -0.0001 ? 0 : x : x < 0.0001 ? 0 : x;
     }
 
@@ -249,7 +242,7 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
 
             List<ResourceLocation> overlaysForGrowthStage = new ArrayList<>();
 
-            for (int i = 1; i <= this.getOverlayCount(); i++) {
+            for (int i = 1; i <= this.overlayCount; i++) {
                 overlaysForGrowthStage.add(new ResourceLocation(domain, baseTextures + formattedName + "_overlay_" + growthStageName + "_" + i + ".png"));
             }
 
@@ -260,15 +253,15 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
     }
 
     public DinosaurEntity createEntity(World world) {
-        return EntityDinosaurJsonHandler.TYPE_MAP.getOrDefault(this.properties.getType(), DinosaurEntity::new).apply(world).setDinosaur(this);
+        return EntityDinosaurJsonHandler.TYPE_MAP.getOrDefault(this.properties.type, DinosaurEntity::new).apply(world).setDinosaur(this);
     }
 
-    protected void setDinosaurBehaviourType(DinosaurBehaviourType type) {
+    public void setDinosaurBehaviourType(DinosaurBehaviourType type) {
         this.dinosaurBehaviourType = type;
     }
 
-    protected TabulaModelContainer parseModel(String growthStage) {
-        String formattedName = this.getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
+    public TabulaModelContainer parseModel(String growthStage) {
+        String formattedName = this.name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
         String modelPath = "/assets/jurassicraft/models/entities/" + formattedName + "/" + growthStage + "/" + formattedName + "_" + growthStage + "_idle";
 
         try {
@@ -298,7 +291,7 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
     }
 
     protected String getDinosaurTexture(String subtype) {
-        String dinosaurName = this.getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
+        String dinosaurName = this.name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
 
         String texture = "jurassicraft:textures/entities/" + dinosaurName + "/" + dinosaurName;
 
@@ -315,7 +308,7 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
 
     @Override
     public int compareTo(Dinosaur dinosaur) {
-        return this.getName().compareTo(dinosaur.getName());
+        return this.name.compareTo(dinosaur.name);
     }
 
 
@@ -357,7 +350,7 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
     }
 
     public double[] getHeadPosition(GrowthStage stage, float rot) {
-        return this.getParentedCubePosition(this.getHeadCubeName(), stage, rot);
+        return this.getParentedCubePosition(this.headCubeName, stage, rot);
     }
 
     public TabulaModelContainer getModelContainer(GrowthStage stage) {
@@ -414,7 +407,7 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
     }
 
     public String getTranslationKey() {
-        return "entity.jurassicraft." + this.getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_") + ".name";
+        return "entity.jurassicraft." + this.name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_") + ".name";
     }
 
     public List<GrowthStage> getSupportedStages() {

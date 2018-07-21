@@ -19,7 +19,7 @@ public class DefendOwnerEntityAI extends EntityAIBase {
 
     @Override
     public boolean shouldExecute() {
-        if(!this.entity.getDinosaur().isDefendOwner()) {
+        if(!this.entity.getDinosaur().defendOwner) {
             return false;
         }
         if (this.entity.getAgePercentage() > 50) {

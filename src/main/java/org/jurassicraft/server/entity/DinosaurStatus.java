@@ -8,19 +8,19 @@ import java.util.List;
 import java.util.function.BiPredicate;
 
 public enum DinosaurStatus {
-    CARNIVOROUS((entity, info) -> entity.getDinosaur().getDiet().canEat(entity, FoodType.MEAT)),
-    PISCIVOROUS((entity, info) -> entity.getDinosaur().getDiet().canEat(entity, FoodType.FISH)),
-    HERBIVOROUS((entity, info) -> entity.getDinosaur().getDiet().canEat(entity, FoodType.PLANT)),
-    INSECTIVOROUS((entity, info) -> entity.getDinosaur().getDiet().canEat(entity, FoodType.INSECT)),
-    DIURNAL((entity, info) -> entity.getDinosaur().getSleepTime() == SleepTime.DIURNAL),
-    NOCTURNAL((entity, info) -> entity.getDinosaur().getSleepTime() == SleepTime.NOCTURNAL),
-    CREPUSCULAR((entity, info) -> entity.getDinosaur().getSleepTime() == SleepTime.CREPUSCULAR),
+    CARNIVOROUS((entity, info) -> entity.getDinosaur().diet.canEat(entity, FoodType.MEAT)),
+    PISCIVOROUS((entity, info) -> entity.getDinosaur().diet.canEat(entity, FoodType.FISH)),
+    HERBIVOROUS((entity, info) -> entity.getDinosaur().diet.canEat(entity, FoodType.PLANT)),
+    INSECTIVOROUS((entity, info) -> entity.getDinosaur().diet.canEat(entity, FoodType.INSECT)),
+    DIURNAL((entity, info) -> entity.getDinosaur().sleepTime == SleepTime.DIURNAL),
+    NOCTURNAL((entity, info) -> entity.getDinosaur().sleepTime == SleepTime.NOCTURNAL),
+    CREPUSCULAR((entity, info) -> entity.getDinosaur().sleepTime == SleepTime.CREPUSCULAR),
     TAMED((entity, info) -> entity.getOwner() != null),
     LOW_HEALTH((entity, info) -> entity.getHealth() < entity.getMaxHealth() / 4 || entity.isCarcass()),
     HUNGRY((entity, info) -> info.hungry),
     THIRSTY((entity, info) -> info.thirsty),
     POISONED((entity, info) -> info.poisoned),
-    DROWNING((entity, info) -> entity.getDinosaur().getHomeType() != Dinosaur.DinosaurHomeType.MARINE && entity.getAir() < 200),
+    DROWNING((entity, info) -> entity.getDinosaur().homeType != Dinosaur.DinosaurHomeType.MARINE && entity.getAir() < 200),
     SLEEPY((entity, info) -> entity.shouldSleep()),
     FLOCKING((entity, info) -> info.flocking),
     SCARED((entity, info) -> info.scared);

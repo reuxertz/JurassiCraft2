@@ -67,10 +67,10 @@ public class CultivatorRecipeCategory implements IRecipeCategory<CultivatorRecip
         Dinosaur dinosaur = recipeWrapper.getDinosaur();
 
         nutrientBarList = Lists.newArrayList(
-                new NutrientBar(dinosaur::getProximates, 0),
-                new NutrientBar(dinosaur::getMinerals, 1),
-                new NutrientBar(dinosaur::getVitamins, 2),
-                new NutrientBar(dinosaur::getLipids, 3)
+                new NutrientBar(() -> { return dinosaur.proximates; }, 0),
+                new NutrientBar(() -> { return dinosaur.minerals; }, 1),
+                new NutrientBar(() -> { return dinosaur.vitamins; }, 2),
+                new NutrientBar(() -> { return dinosaur.lipids; }, 3)
         );
     }
 

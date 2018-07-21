@@ -17,7 +17,7 @@ public class AnimationInfoBase {
     final List<String> animationPartNames;
 
     public AnimationInfoBase(JsonObject json, JsonAnimator animator) {
-        this.animationPartNames = getParts(json, animator.getConstants());
+        this.animationPartNames = getParts(json, animator.constants);
     }
 
     public AdvancedModelRenderer[] getRenderers(TabulaModel model) {

@@ -26,7 +26,7 @@ public class Relationship {
         }
         boolean isPreoccupied = owner.getNavigator().noPath() && owner.getAttackTarget() == null;
         double scaleScore = this.score / (double) MAX_SCORE;
-        Dinosaur.DinosaurBehaviourType dinosaurBehaviourType = owner.getDinosaur().getDinosaurBehaviourType();
+        Dinosaur.DinosaurBehaviourType dinosaurBehaviourType = owner.getDinosaur().dinosaurBehaviourType;
         if (this.score < 0) {
             if (!isPreoccupied && dinosaurBehaviourType != Dinosaur.DinosaurBehaviourType.SCARED && owner.getRNG().nextDouble() * scaleScore > 0.3) {
                 owner.setAttackTarget(entity);

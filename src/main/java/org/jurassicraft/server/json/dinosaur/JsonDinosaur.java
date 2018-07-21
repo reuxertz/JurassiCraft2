@@ -6,50 +6,50 @@ import org.jurassicraft.server.json.dinosaur.objects.*;
 public class JsonDinosaur extends Dinosaur {
 
     public JsonDinosaur(DinosaurProperties properties) {
-        this.setName(properties.getName());
-        this.setTimePeriod(properties.getTimePeriod());
-        this.setHeadCubeName(properties.getHeadCubeName());
-        this.setAnimatorClassName(properties.getDinosaurAnimatorClassName());
+        this.name = properties.name;
+        this.timePeriod = properties.timePeriod;
+        this.headCubeName = properties.headCubeName;
+        this.animatorClassName(properties.dinosaurAnimatorClassName);
 
-        SpawnEggInfo male = properties.getMaleSpawnEgg();
-        this.setPrimaryEggColorMale(male.getPrimary());
-        this.setSecondaryEggColorMale(male.getSecondary());
+        SpawnEggInfo male = properties.maleSpawnEgg;
+        this.primaryEggColorMale(male.primary);
+        this.secondaryEggColorMale(male.secondary);
 
-        SpawnEggInfo female = properties.getFemaleSpawnEgg();
-        this.setPrimaryEggColorFemale(female.getPrimary());
-        this.setSecondaryEggColorFemale(female.getSecondary());
+        SpawnEggInfo female = properties.femaleSpawnEgg;
+        this.primaryEggColorFemale(female.primary);
+        this.secondaryEggColorFemale(female.secondary);
 
-        DinosaurStatistics statistics = properties.getStatistics();
-        statistics.getSpeed().apply(this::setBabySpeed, this::setAdultSpeed);
-        statistics.getHealth().apply(this::setBabyHealth, this::setAdultHealth);
-        statistics.getStrength().apply(this::setBabyStrength, this::setAdultStrength);
-        statistics.getSizeX().apply(this::setBabySizeX, this::setAdultSizeX);
-        statistics.getSizeY().apply(this::setBabySizeY, this::setAdultSizeY);
-        statistics.getEyeHeight().apply(this::setBabyEyeHeight, this::setAdultEyeHeight);
-        statistics.getScale().apply(this::setScaleInfant, this::setScaleAdult);
-        this.setJumpHeight(statistics.getJumpHeight());
-        this.setAttackSpeed(statistics.getAttackSpeed());
-        this.setStorage(statistics.getItemStorage());
+        DinosaurStatistics statistics = properties.statistics();
+        statistics.speed().apply(this::setBabySpeed, this::setAdultSpeed);
+        statistics.health().apply(this::setBabyHealth, this::setAdultHealth);
+        statistics.strength().apply(this::setBabyStrength, this::setAdultStrength);
+        statistics.sizeX().apply(this::setBabySizeX, this::setAdultSizeX);
+        statistics.sizeY().apply(this::setBabySizeY, this::setAdultSizeY);
+        statistics.eyeHeight().apply(this::setBabyEyeHeight, this::setAdultEyeHeight);
+        statistics.scale().apply(this::setScaleInfant, this::setScaleAdult);
+        this.jumpHeight(statistics.jumpHeight());
+        this.attackSpeed(statistics.attackSpeed());
+        this.storage(statistics.itemStorage());
 
-        DinosaurTraits traits = properties.getTraits();
-        this.setDinosaurBehaviourType(traits.getType());
-        this.setDiet(traits.getDiet());
-        this.setSleepTime(traits.getSleepType());
-        this.setImprintable(traits.isImprintable());
-        this.setDefendOwner(traits.isDefendOwner());
-        this.setMaximumAge(this.fromDays(traits.getMaxAge()));
-        this.setAttackBias(traits.getAttackBias());
-        this.setCanClimb(traits.isCanClimb());
-        this.setFlockSpeed((float)traits.getFlockSpeed());
+        DinosaurTraits traits = properties.traits;
+        this.setDinosaurBehaviourType(traits.type);
+        this.diet(traits.diet);
+        this.sleepTime(traits.sleepType);
+        this.imprintable(traits.imprintable);
+        this.defendOwner(traits.defendOwner);
+        this.maximumAge(this.fromDays(traits.maxAge));
+        this.attackBias(traits.attackBias);
+        this.canClimb(traits.canClimb);
+        this.flockSpeed((float)traits.getFlockSpeed());
 
-        DinosaurSpawningInfo spawningInfo = properties.getSpawningInfo();
-        this.setSpawn(spawningInfo.getChance(), spawningInfo.getBiomes());
+        DinosaurSpawningInfo spawningInfo = properties.spawningInfo;
+        this.setSpawn(spawningInfo.chance, spawningInfo.biomes);
 
-        DinosaurBreeding breeding = properties.getBreeding();
-        this.setBreeding(breeding.getBirthType(), breeding.getMinClutch(), breeding.getMaxClutch(), breeding.getBreedingCooldown(), breeding.isBreedNearOffsprring(), breeding.isDefendOffspring());
+        DinosaurBreeding breeding = properties.breeding;
+        this.setBreeding(breeding.birthType, breeding.minClutch, breeding.maxClutch, breeding.breedingCooldown, breeding.breedNearOffsprring, breeding.defendOffspring);
 
-        this.setBones(properties.getBones());
-        this.setRecipe(properties.getSkeletonRecipe());
+        this.bones = properties.bones;
+        this.recipe = properties.skeletonRecipe;
     }
 
 }

@@ -23,9 +23,9 @@ public class HatchedEggItem extends DNAContainerItem {
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
         Dinosaur dinosaur = this.getValue(stack);
-        String dinoName = dinosaur.getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
+        String dinoName = dinosaur.name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
 
-        return new LangHelper(dinosaur.getBirthType() == Dinosaur.BirthType.LIVE_BIRTH ? "item.gestated.name" :"item.hatched_egg.name")
+        return new LangHelper(dinosaur.birthType == Dinosaur.BirthType.LIVE_BIRTH ? "item.gestated.name" :"item.hatched_egg.name")
                 .withProperty("dino", "entity.jurassicraft." + dinoName + ".name").build();
     }
 

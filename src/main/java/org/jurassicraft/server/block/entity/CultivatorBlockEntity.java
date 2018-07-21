@@ -53,8 +53,8 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
 //            if(provider.isMissing()) //TODO: wtf
             {
                 Dinosaur dino = provider.getValue(itemstack);
-                if (dino != null && dino.getBirthType() == Dinosaur.BirthType.LIVE_BIRTH) {
-                    return this.lipids >= dino.getLipids() && this.minerals >= dino.getMinerals() && this.proximates >= dino.getProximates() && this.vitamins >= dino.getVitamins();
+                if (dino != null && dino.birthType == Dinosaur.BirthType.LIVE_BIRTH) {
+                    return this.lipids >= dino.lipids && this.minerals >= dino.minerals && this.proximates >= dino.proximates && this.vitamins >= dino.vitamins;
                 }
             }
         }
@@ -68,10 +68,10 @@ public class CultivatorBlockEntity extends MachineBaseBlockEntity implements Tem
         Dinosaur dinosaur = DinosaurProvider.getFromStack(syringe).getValue(syringe);
 
         if (dinosaur != null) {
-            this.lipids -= dinosaur.getLipids();
-            this.minerals -= dinosaur.getMinerals();
-            this.vitamins -= dinosaur.getVitamins();
-            this.proximates -= dinosaur.getProximates();
+            this.lipids -= dinosaur.lipids;
+            this.minerals -= dinosaur.minerals;
+            this.vitamins -= dinosaur.vitamins;
+            this.proximates -= dinosaur.proximates;
             this.waterLevel--;
 
 

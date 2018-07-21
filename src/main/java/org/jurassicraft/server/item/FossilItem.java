@@ -43,7 +43,7 @@ public class FossilItem extends Item implements GrindableItem, DinosaurProvider 
         Dinosaur dinosaur = this.getValue(stack);
 
         if (dinosaur != null) {
-            return new LangHelper("item." + this.getVarient(stack) + ".name").withProperty("dino", "entity.jurassicraft." + dinosaur.getName().replace(" ", "_").toLowerCase(Locale.ENGLISH) + ".name").build();
+            return new LangHelper("item." + this.getVarient(stack) + ".name").withProperty("dino", "entity.jurassicraft." + dinosaur.name.replace(" ", "_").toLowerCase(Locale.ENGLISH) + ".name").build();
         }
 
         return super.getItemStackDisplayName(stack);
@@ -56,7 +56,7 @@ public class FossilItem extends Item implements GrindableItem, DinosaurProvider 
 
     @Override
     public ItemStack getItemStack(Dinosaur dinosaur) {
-        return createNewStack(new FossilInfomation(dinosaur, dinosaur.getBones()[0]));
+        return createNewStack(new FossilInfomation(dinosaur, dinosaur.bones[0]));
     }
 
     @Override
@@ -95,7 +95,7 @@ public class FossilItem extends Item implements GrindableItem, DinosaurProvider 
     public Map<Object, ResourceLocation> getModelResourceLocations(Dinosaur dinosaur) {
         Map<Object, ResourceLocation> map = Maps.newHashMap();
         ResourceLocation dinoreg = dinosaur.getRegistryName();
-        for(String bone : dinosaur.getBones()) {
+        for(String bone : dinosaur.bones) {
             map.put(bone, new ResourceLocation(dinoreg.getResourceDomain(), "item/" + (fresh ? "fresh_" : "") + "bones/" + dinoreg.getResourcePath()+ "/" + bone));
         }
         return map;
@@ -179,7 +179,7 @@ public class FossilItem extends Item implements GrindableItem, DinosaurProvider 
 
         public static List<FossilInfomation> getAllInfomation() {
             List<FossilInfomation> list = Lists.newArrayList();
-            JurassicraftRegisteries.DINOSAUR_REGISTRY.forEach(dino -> Lists.newArrayList(dino.getBones()).forEach(bone -> list.add(new FossilInfomation(dino, bone))));
+            JurassicraftRegisteries.DINOSAUR_REGISTRY.forEach(dino -> Lists.newArrayList(dino.bones).forEach(bone -> list.add(new FossilInfomation(dino, bone))));
             return list;
         }
 

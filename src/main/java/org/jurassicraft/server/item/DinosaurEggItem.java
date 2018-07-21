@@ -26,13 +26,13 @@ public class DinosaurEggItem extends DNAContainerItem implements DinosaurProvide
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        String dinoName = this.getValue(stack).getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
+        String dinoName = this.getValue(stack).name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
 
         return new LangHelper("item.egg.name").withProperty("dino", "entity.jurassicraft." + dinoName + ".name").build();
     }
 
     @Override
     public boolean shouldOverrideModel(Dinosaur dinosaur) {
-        return dinosaur.getBirthType() == Dinosaur.BirthType.EGG_LAYING;
+        return dinosaur.birthType == Dinosaur.BirthType.EGG_LAYING;
     }
 }

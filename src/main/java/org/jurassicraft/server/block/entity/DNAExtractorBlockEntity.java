@@ -62,7 +62,7 @@ public class DNAExtractorBlockEntity extends MachineBaseBlockEntityOLD {
             if (item == ItemHandler.AMBER || item == ItemHandler.SEA_LAMPREY) {
                 if (input.getItemDamage() == 0) {
                     Optional<Dinosaur> dinosaur = JurassicraftRegisteries.DINOSAUR_REGISTRY.getValuesCollection().stream()
-                            .filter(dino -> !(dino instanceof Hybrid) && (item != ItemHandler.AMBER) == (dino.getHomeType() == Dinosaur.DinosaurHomeType.MARINE))
+                            .filter(dino -> !(dino instanceof Hybrid) && (item != ItemHandler.AMBER) == (dino.homeType == Dinosaur.DinosaurHomeType.MARINE))
                             .findAny();
 
                     if(dinosaur.isPresent()) {

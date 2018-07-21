@@ -141,8 +141,8 @@ public class TrackingTablet extends Item implements StackNBTProvider<Integer> {
             this.dinosaurInfos.clear();
             int distance = this.getDistance();
             for (DinosaurInfo dinosaurInfo : TrackingSavedData.getData(world).getDinosaurInfos(world)) {
-                int disX = Math.abs(dinosaurInfo.getPos().getX() - playerPos.getX());
-                int disZ = Math.abs(dinosaurInfo.getPos().getZ() - playerPos.getZ());
+                int disX = Math.abs(dinosaurInfo.pos.getX() - playerPos.getX());
+                int disZ = Math.abs(dinosaurInfo.pos.getZ() - playerPos.getZ());
                 if(disX > -distance && disX < distance && disZ > -distance && disZ < distance) {
                     this.dinosaurInfos.add(dinosaurInfo);
                 }
@@ -247,10 +247,10 @@ public class TrackingTablet extends Item implements StackNBTProvider<Integer> {
 
         public NBTTagCompound serializeNBT() {
            NBTTagCompound nbt = new NBTTagCompound();
-           nbt.setLong("Position", this.getPos().toLong());
-           nbt.setString("Dinosaur", this.getDinosaur().getRegistryName().toString());
-           nbt.setBoolean("Male", this.isMale());
-           nbt.setInteger("Growth", this.getGrowthPercentage());
+           nbt.setLong("Position", this.pos.toLong());
+           nbt.setString("Dinosaur", this.dinosaur.getRegistryName().toString());
+           nbt.setBoolean("Male", this.male);
+           nbt.setInteger("Growth", this.growthPercentage);
            nbt.setUniqueId("UUID", this.entityUUID);
            return nbt;
         }
