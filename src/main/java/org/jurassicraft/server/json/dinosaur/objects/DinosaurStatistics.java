@@ -8,16 +8,16 @@ import java.lang.reflect.Type;
 
 public class DinosaurStatistics {
 
-    AdultBabyValue speed;
-    AdultBabyValue health;
-    AdultBabyValue strength;
-    AdultBabyValue sizeX;
-    AdultBabyValue sizeY;
-    AdultBabyValue eyeHeight;
-    AdultBabyValue scale;
-    int jumpHeight;
-    double attackSpeed;
-    int itemStorage;
+    public AdultBabyValue speed;
+    public AdultBabyValue health;
+    public AdultBabyValue strength;
+    public AdultBabyValue sizeX;
+    public AdultBabyValue sizeY;
+    public AdultBabyValue eyeHeight;
+    public AdultBabyValue scale;
+    public int jumpHeight;
+    public double attackSpeed;
+    public int itemStorage;
 
     public DinosaurStatistics(AdultBabyValue speed, AdultBabyValue health, AdultBabyValue strength,
                               AdultBabyValue sizeX, AdultBabyValue sizeY, AdultBabyValue eyeHeight,

@@ -235,11 +235,11 @@ public class TrackingTablet extends Item implements StackNBTProvider<Integer> {
 
     @Value
     public static class DinosaurInfo {
-       BlockPos pos;
-       Dinosaur dinosaur;
-       boolean male;
-       int growthPercentage;
-       UUID entityUUID;
+       public BlockPos pos;
+       public Dinosaur dinosaur;
+       public boolean male;
+       public int growthPercentage;
+       public UUID entityUUID;
 
        public DinosaurInfo(BlockPos pos, Dinosaur dinosaur, boolean male, int growthPercentage, UUID entityUUID) {
            this.pos = pos;

@@ -20,27 +20,27 @@ public class JsonDinosaur extends Dinosaur {
         this.secondaryEggColorFemale(female.secondary);
 
         DinosaurStatistics statistics = properties.statistics();
-        statistics.speed().apply(this::setBabySpeed, this::setAdultSpeed);
-        statistics.health().apply(this::setBabyHealth, this::setAdultHealth);
-        statistics.strength().apply(this::setBabyStrength, this::setAdultStrength);
-        statistics.sizeX().apply(this::setBabySizeX, this::setAdultSizeX);
-        statistics.sizeY().apply(this::setBabySizeY, this::setAdultSizeY);
-        statistics.eyeHeight().apply(this::setBabyEyeHeight, this::setAdultEyeHeight);
-        statistics.scale().apply(this::setScaleInfant, this::setScaleAdult);
+        statistics.speed = .apply(this::setBabySpeed, this::setAdultSpeed);
+        statistics.health.apply(this::setBabyHealth, this::setAdultHealth);
+        statistics.strength.apply(this::setBabyStrength, this::setAdultStrength);
+        statistics.sizeX.apply(this::setBabySizeX, this::setAdultSizeX);
+        statistics.sizeY.apply(this::setBabySizeY, this::setAdultSizeY);
+        statistics.eyeHeight.apply(this::setBabyEyeHeight, this::setAdultEyeHeight);
+        statistics.scale.apply(this::setScaleInfant, this::setScaleAdult);
         this.jumpHeight(statistics.jumpHeight());
         this.attackSpeed(statistics.attackSpeed());
         this.storage(statistics.itemStorage());
 
         DinosaurTraits traits = properties.traits;
         this.setDinosaurBehaviourType(traits.type);
-        this.diet(traits.diet);
-        this.sleepTime(traits.sleepType);
-        this.imprintable(traits.imprintable);
-        this.defendOwner(traits.defendOwner);
-        this.maximumAge(this.fromDays(traits.maxAge));
-        this.attackBias(traits.attackBias);
-        this.canClimb(traits.canClimb);
-        this.flockSpeed((float)traits.getFlockSpeed());
+        this.diet = traits.diet;
+        this.sleepTime = traits.sleepType;
+        this.isImprintable = traits.imprintable;
+        this.defendOwner = traits.defendOwner;
+        this.maximumAge = this.fromDays(traits.maxAge);
+        this.attackBias = traits.attackBias;
+        this.canClimb = traits.canClimb;
+        this.flockSpeed = (float)traits.flockSpeed;
 
         DinosaurSpawningInfo spawningInfo = properties.spawningInfo;
         this.setSpawn(spawningInfo.chance, spawningInfo.biomes);

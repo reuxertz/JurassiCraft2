@@ -11,17 +11,17 @@ import java.util.Locale;
 
 public class DinosaurTraits {
 
-    Dinosaur.DinosaurHomeType homeType;
-    Dinosaur.DinosaurBehaviourType type;
-    Diet diet;
-    SleepTime sleepType;
-    boolean imprintable;
-    boolean defendOwner;
-    int maxAge;
-    int maxHerdSize;
-    double attackBias;
-    boolean canClimb;
-    double flockSpeed;
+    public Dinosaur.DinosaurHomeType homeType;
+    public Dinosaur.DinosaurBehaviourType type;
+    public Diet diet;
+    public SleepTime sleepType;
+    public boolean imprintable;
+    public boolean defendOwner;
+    public int maxAge;
+    public int maxHerdSize;
+    public double attackBias;
+    public boolean canClimb;
+    public double flockSpeed;
 
     public DinosaurTraits(Dinosaur.DinosaurHomeType homeType, Dinosaur.DinosaurBehaviourType type,
                           Diet diet, SleepTime sleepType, boolean imprintable, boolean defendOwner,

@@ -11,8 +11,8 @@ import java.util.Locale;
 
 public class DinosaurSpawningInfo {
 
-    int chance;
-    BiomeDictionary.Type[] biomes;
+    public int chance;
+    public BiomeDictionary.Type[] biomes;
 
     public DinosaurSpawningInfo(int chance, BiomeDictionary.Type[] biomes) {
         this.chance = chance;

@@ -133,10 +133,10 @@ public class TrackingTabletGui extends GuiScreen {
                 TrackingTablet.DinosaurInfo info = closest.info;
                 ResourceLocation regName = info.dinosaur.getRegistryName();
                 lines.add("Dinosaur: " + I18n.format("entity." + regName.getResourceDomain() + "." + regName.getResourcePath() + ".name"));
-                lines.add("Gender: " + I18n.format("gender." + (info.isMale() ? "male" : "female") + ".name"));
-                BlockPos pos = info.getPos();
+                lines.add("Gender: " + I18n.format("gender." + (info.male ? "male" : "female") + ".name"));
+                BlockPos pos = info.pos;
                 lines.add("At: " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ());
-                lines.add("Days existed: " + Math.floor((info.growthPercentage() * 8.0F) / 24000.0F));
+                lines.add("Days existed: " + Math.floor((info.growthPercentage * 8.0F) / 24000.0F));
                 this.drawHoveringText(lines, mouseX, mouseY);
             }
 
@@ -290,8 +290,8 @@ public class TrackingTabletGui extends GuiScreen {
 
         private RenderDinosaurInfo(EntityPlayer player, TrackingTablet.DinosaurInfo info) {
             this.info = info;
-            this.x = (info.getPos.getX() - player.getPosition().getX()) / (TrackingTabletGui.this.distance / 128);
-            this.z = (info.getPos.getZ() - player.getPosition().getZ()) / (TrackingTabletGui.this.distance / 128);
+            this.x = (info.pos.getX() - player.getPosition().getX()) / (TrackingTabletGui.this.distance / 128);
+            this.z = (info.pos.getZ() - player.getPosition().getZ()) / (TrackingTabletGui.this.distance / 128);
         }
     }
 }

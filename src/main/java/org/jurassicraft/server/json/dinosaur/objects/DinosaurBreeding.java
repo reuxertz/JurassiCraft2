@@ -9,12 +9,12 @@ import java.util.Locale;
 
 public class DinosaurBreeding {
 
-   Dinosaur.BirthType birthType;
-   int minClutch;
-   int maxClutch;
-   int breedingCooldown;
-   boolean breedNearOffsprring;
-   boolean defendOffspring;
+   public Dinosaur.BirthType birthType;
+   public int minClutch;
+   public int maxClutch;
+   public int breedingCooldown;
+   public boolean breedNearOffsprring;
+   public boolean defendOffspring;
 
    public DinosaurBreeding(Dinosaur.BirthType birthType, int minClutch, int maxClutch, int breedingCooldown, boolean breedNearOffsprring, boolean defendOffspring) {
        this.birthType = birthType;

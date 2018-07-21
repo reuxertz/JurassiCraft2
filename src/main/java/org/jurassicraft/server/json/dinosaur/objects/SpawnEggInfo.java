@@ -6,8 +6,8 @@ import net.minecraft.util.JsonUtils;
 import java.lang.reflect.Type;
 
 public class SpawnEggInfo {
-    int primary;
-    int secondary;
+    public int primary;
+    public int secondary;
 
     public SpawnEggInfo(int primary, int secondary) {
         this.primary = primary;
