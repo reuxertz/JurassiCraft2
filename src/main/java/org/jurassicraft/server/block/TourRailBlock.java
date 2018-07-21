@@ -23,7 +23,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import org.jurassicraft.server.block.entity.TourRailBlockEntity;
 import org.jurassicraft.server.entity.vehicle.CarEntity;
-import org.jurassicraft.server.tab.TabHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,15 +37,14 @@ public final class TourRailBlock extends Block {
 
     public static final PropertyEnum<TourRailBlock.EnumRailDirection> SHAPE = PropertyEnum.create("shape", TourRailBlock.EnumRailDirection.class);
 
-    protected static final AxisAlignedBB FLAT_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.125D, 1.0D);
-    protected static final AxisAlignedBB ASCENDING_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D);
+    private static final AxisAlignedBB FLAT_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.125D, 1.0D);
+    private static final AxisAlignedBB ASCENDING_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D);
 
     private final SpeedType speedType;
 
-    public TourRailBlock(SpeedType speedType) {
+    TourRailBlock(SpeedType speedType) {
         super(Material.CIRCUITS);
         this.speedType = speedType;
-        this.setCreativeTab(TabHandler.BLOCKS);
         this.setHarvestLevel("pickaxe", 1);
         this.setHardness(1);
         this.setDefaultState(this.blockState.getBaseState().withProperty(SHAPE, EnumRailDirection.NORTH_SOUTH));
@@ -172,11 +170,13 @@ public final class TourRailBlock extends Block {
         return world.getTileEntity(pos) instanceof  TourRailBlockEntity ? ((TourRailBlockEntity) world.getTileEntity(pos)).getDirection() : EnumRailDirection.NORTH_SOUTH;
     }
 
+
     protected void updateState(IBlockState state, World world, BlockPos pos, Block blockIn) {
         if (blockIn.getDefaultState().canProvidePower() && (new TourRailBlock.Rail(world, pos, state)).countAdjacentRails() == 3) {
-//            this.updateDir(world, pos, state, false);
+            //this.updateDir(world, pos, state, false);
         }
     }
+
 
     @Override
     public EnumPushReaction getMobilityFlag(IBlockState state) {
@@ -203,12 +203,12 @@ public final class TourRailBlock extends Block {
         return Item.getItemFromBlock(this);
     }
 
-    public static boolean isRailBlock(World worldIn, BlockPos pos)
+    private static boolean isRailBlock(World worldIn, BlockPos pos)
     {
         return isRailBlock(worldIn.getBlockState(pos));
     }
 
-    public static boolean isRailBlock(IBlockState state)
+    private static boolean isRailBlock(IBlockState state)
     {
         Block block = state.getBlock();
         return block instanceof TourRailBlock;
@@ -345,15 +345,15 @@ public final class TourRailBlock extends Block {
         }
     }
 
-    public class Rail
+    class Rail
     {
         private final World world;
         private final BlockPos pos;
-        private final TourRailBlock block;
+        final TourRailBlock block;
         private IBlockState state;
         private final List<BlockPos> connectedRails = Lists.newArrayList();
 
-        public Rail(World worldIn, BlockPos pos, IBlockState state)
+        Rail(World worldIn, BlockPos pos, IBlockState state)
         {
             this.world = worldIn;
             this.pos = pos;
@@ -513,7 +513,7 @@ public final class TourRailBlock extends Block {
 
         private boolean isConnectedTo(BlockPos posIn)
         {
-            for (int i = 0; i < this.connectedRails.size(); ++i)
+            for(int i = 0; i < this.connectedRails.size(); ++i)
             {
                 BlockPos blockpos = this.connectedRails.get(i);
 

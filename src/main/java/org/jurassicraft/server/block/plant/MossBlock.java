@@ -12,12 +12,13 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.PeatBlock;
 import org.jurassicraft.server.tab.TabHandler;
 
 import java.util.Random;
 
-public class MossBlock extends Block {
+public class MossBlock extends Block implements BlockHandler.BlockStayCheck {
     private static final AxisAlignedBB BOUNDS = new AxisAlignedBB(0.0F, 0.0F, 0.0F, 1.0F, 0.0625F, 1.0F);
 
     private static final int DENSITY_PER_AREA = 8;
@@ -29,7 +30,6 @@ public class MossBlock extends Block {
         this.setHardness(0.2F);
         this.setResistance(0.0F);
         this.setTickRandomly(true);
-        this.setCreativeTab(TabHandler.PLANTS);
         this.setSoundType(SoundType.PLANT);
         this.setLightOpacity(0);
     }
@@ -118,20 +118,11 @@ public class MossBlock extends Block {
     @Override
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos) {
         super.neighborChanged(state, world, pos, block, fromPos);
-        this.checkForDrop(world, pos, state);
+        BlockHandler.checkForDrop(world, pos, state, this);
     }
 
-    private boolean checkForDrop(World world, BlockPos pos, IBlockState state) {
-        if (!this.canBlockStay(world, pos)) {
-            this.dropBlockAsItem(world, pos, state, 0);
-            world.setBlockToAir(pos);
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    private boolean canBlockStay(World world, BlockPos pos) {
+    @Override
+    public  boolean canBlockStay(World world, BlockPos pos) {
         return !world.isAirBlock(pos.down());
     }
 

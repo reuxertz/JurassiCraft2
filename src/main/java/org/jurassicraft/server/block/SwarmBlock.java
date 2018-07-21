@@ -18,12 +18,12 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class SwarmBlock extends Block {
+public class SwarmBlock extends Block implements BlockHandler.BlockStayCheck{
     private static final AxisAlignedBB BOUNDS = new AxisAlignedBB(0.0F, 0.0F, 0.0F, 1.0F, 0.09F, 1.0F);
 
     private Supplier<Item> item;
 
-    public SwarmBlock(Supplier<Item> item) {
+    SwarmBlock(Supplier<Item> item) {
         super(Material.PLANTS);
         this.setHardness(0.0F);
         this.setSoundType(SoundType.PLANT);
@@ -40,7 +40,7 @@ public class SwarmBlock extends Block {
     @Override
     public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
         super.updateTick(world, pos, state, rand);
-        this.checkForDrop(world, pos, state);
+        BlockHandler.checkForDrop(world, pos, state, this);
         if (rand.nextInt(10) == 0) {
             EntityItem item = new EntityItem(world, pos.getX() + 0.5, pos.getY() + 0.8, pos.getZ() + 0.5, new ItemStack(this.getItem()));
             item.motionX = (rand.nextFloat() - 0.5F) * 0.5F;
@@ -68,20 +68,11 @@ public class SwarmBlock extends Block {
     @Override
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos) {
         super.neighborChanged(state, world, pos, block, fromPos);
-        this.checkForDrop(world, pos, state);
+        BlockHandler.checkForDrop(world, pos, state, this);
     }
 
-    private boolean checkForDrop(World world, BlockPos pos, IBlockState state) {
-        if (!this.canBlockStay(world, pos)) {
-            this.dropBlockAsItem(world, pos, state, 0);
-            world.setBlockToAir(pos);
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    private boolean canBlockStay(World world, BlockPos pos) {
+    @Override
+    public boolean canBlockStay(World world, BlockPos pos) {
         return world.getBlockState(pos.down()).getMaterial() == Material.WATER;
     }
 

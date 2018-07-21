@@ -48,7 +48,6 @@ public class GracilariaBlock extends BlockBush {
         this.setDefaultState(this.blockState.getBaseState().withProperty(LEVEL, 0));
 
         // Not tab because we are accessed in play via the item.
-        this.setCreativeTab(null);
         this.setTickRandomly(true);
     }
 

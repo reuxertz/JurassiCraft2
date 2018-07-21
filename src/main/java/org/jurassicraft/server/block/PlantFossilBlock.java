@@ -13,18 +13,16 @@ import net.minecraft.world.Explosion;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jurassicraft.server.api.CleanableItem;
 import org.jurassicraft.server.item.ItemHandler;
-import org.jurassicraft.server.tab.TabHandler;
 
 import java.util.List;
 import java.util.Random;
 
 public class PlantFossilBlock extends Block implements CleanableItem {
-    public PlantFossilBlock() {
+    PlantFossilBlock() {
         super(Material.ROCK);
         this.setHardness(2.0F);
         this.setResistance(8.0F);
         this.setSoundType(SoundType.STONE);
-        this.setCreativeTab(TabHandler.FOSSILS);
         this.setHarvestLevel("pickaxe", 0);
     }
 

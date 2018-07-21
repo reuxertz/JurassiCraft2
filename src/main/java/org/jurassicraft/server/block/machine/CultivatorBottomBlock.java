@@ -24,7 +24,6 @@ import org.jurassicraft.server.tab.TabHandler;
 public class CultivatorBottomBlock extends CultivatorBlock implements SubBlocksBlock {
     public CultivatorBottomBlock(EnumDyeColor color) {
         super(color,"bottom");
-        this.setCreativeTab(TabHandler.BLOCKS);
     }
 
     @Override

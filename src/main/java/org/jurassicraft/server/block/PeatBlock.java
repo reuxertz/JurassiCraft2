@@ -10,16 +10,14 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeSwamp;
-import org.jurassicraft.server.tab.TabHandler;
 
 import java.util.Random;
 
 public class PeatBlock extends Block {
-    public static final PropertyInteger MOISTURE = PropertyInteger.create("moisture", 0, 7);
+    private static final PropertyInteger MOISTURE = PropertyInteger.create("moisture", 0, 7);
 
-    public PeatBlock() {
+    PeatBlock() {
         super(Material.GROUND);
-        this.setCreativeTab(TabHandler.PLANTS);
         this.setSoundType(SoundType.GROUND);
         this.setHardness(0.5F);
         this.setDefaultState(this.blockState.getBaseState().withProperty(MOISTURE, 0));

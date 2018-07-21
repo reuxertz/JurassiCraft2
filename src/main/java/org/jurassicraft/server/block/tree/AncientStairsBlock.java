@@ -9,7 +9,6 @@ import java.util.Locale;
 public class AncientStairsBlock extends BlockStairs {
     public AncientStairsBlock(TreeType type, IBlockState state) {
         super(state);
-        this.setCreativeTab(TabHandler.PLANTS);
         this.setUnlocalizedName(type.name().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_") + "_stairs");
     }
 }

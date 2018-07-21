@@ -3,10 +3,14 @@ package org.jurassicraft.server.block;
 import com.google.common.collect.Maps;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import org.jurassicraft.JurassiCraft;
@@ -21,6 +25,7 @@ import org.jurassicraft.server.block.machine.*;
 import org.jurassicraft.server.block.plant.*;
 import org.jurassicraft.server.block.tree.*;
 import org.jurassicraft.server.item.ItemHandler;
+import org.jurassicraft.server.tab.TabHandler;
 import org.jurassicraft.server.util.RegistryHandler;
 
 import java.util.*;
@@ -134,22 +139,20 @@ public class BlockHandler
     public static final SkeletonAssemblyBlock SKELETON_ASSEMBLY = new SkeletonAssemblyBlock();
 
     public static ElectricFencePoleBlock LOW_SECURITY_FENCE_POLE = new ElectricFencePoleBlock(FenceType.LOW);
-    public static ElectricFencePoleBlock MED_SECURITY_FENCE_POLE = new ElectricFencePoleBlock(FenceType.MED);
-    public static ElectricFencePoleBlock HIGH_SECURITY_FENCE_POLE = new ElectricFencePoleBlock(FenceType.HIGH);
 
     public static ElectricFenceBaseBlock LOW_SECURITY_FENCE_BASE = new ElectricFenceBaseBlock(FenceType.LOW);
-    public static ElectricFenceBaseBlock MED_SECURITY_FENCE_BASE = new ElectricFenceBaseBlock(FenceType.MED);
-    public static ElectricFenceBaseBlock HIGH_SECURITY_FENCE_BASE = new ElectricFenceBaseBlock(FenceType.HIGH);
 
     public static ElectricFenceWireBlock LOW_SECURITY_FENCE_WIRE = new ElectricFenceWireBlock(FenceType.LOW);
-    public static ElectricFenceWireBlock MED_SECURITY_FENCE_WIRE = new ElectricFenceWireBlock(FenceType.MED);
-    public static ElectricFenceWireBlock HIGH_SECURITY_FENCE_WIRE = new ElectricFenceWireBlock(FenceType.HIGH);
 
     public static PaleoBaleBlock PALEO_BALE_CYCADEOIDEA = new PaleoBaleBlock(PaleoBaleBlock.Variant.CYCADEOIDEA);
     public static PaleoBaleBlock PALEO_BALE_CYCAD = new PaleoBaleBlock(PaleoBaleBlock.Variant.CYCAD);
     public static PaleoBaleBlock PALEO_BALE_FERN = new PaleoBaleBlock(PaleoBaleBlock.Variant.FERN);
     public static PaleoBaleBlock PALEO_BALE_LEAVES = new PaleoBaleBlock(PaleoBaleBlock.Variant.LEAVES);
     public static PaleoBaleBlock PALEO_BALE_OTHER = new PaleoBaleBlock(PaleoBaleBlock.Variant.OTHER);
+
+    private static CreativeTabs blockTab = TabHandler.BLOCKS;
+    private static CreativeTabs plantTab = TabHandler.PLANTS;
+    private static CreativeTabs fossilTab = TabHandler.FOSSILS;
 
     static
     {
@@ -174,123 +177,117 @@ public class BlockHandler
 
     public static void init()
     {
+        //Fossils
+        registerBlock(ENCASED_FOSSIL, "Encased Fossil Block", null);
 
-        registerBlock(FOSSIL, "Fossil Block");
-        registerBlock(ENCASED_FOSSIL, "Encased Fossil Block");
+        registerBlock(FOSSIL, "Fossil Block", fossilTab);
+        registerBlock(PLANT_FOSSIL, "Plant Fossil Block", fossilTab);
 
-        registerBlock(PLANT_FOSSIL, "Plant Fossil Block");
         for(FossilizedTrackwayBlock.TrackwayType type : FossilizedTrackwayBlock.TrackwayType.values()) {
-            registerBlock(FOSSILIZED_TRACKWAY.get(type), "Fossilized Trackway " + type.getName());
+            registerBlock(FOSSILIZED_TRACKWAY.get(type), "Fossilized Trackway " + type.getName(), fossilTab);
         }
         for (NestFossilBlock.Variant variant : NestFossilBlock.Variant.values()) {
-            registerBlock(NEST_FOSSIL.get(variant), "Nest Fossil " + variant.getName());
-            registerBlock(ENCASED_NEST_FOSSIL.get(variant), "Encased Nest Fossil " + variant.getName());
+            registerBlock(NEST_FOSSIL.get(variant), "Nest Fossil " + variant.getName(), fossilTab);
+            registerBlock(ENCASED_NEST_FOSSIL.get(variant), "Encased Nest Fossil " + variant.getName(), fossilTab);
         }
 
-        registerBlock(AMBER_ORE, "Amber Ore");
-        registerBlock(ICE_SHARD, "Ice Shard");
-        registerBlock(GYPSUM_STONE, "Gypsum Stone");
-        registerBlock(GYPSUM_COBBLESTONE, "Gypsum Cobblestone");
-        registerBlock(GYPSUM_BRICKS, "Gypsum Bricks");
-        registerBlock(REINFORCED_STONE, "Reinforced Stone");
-        registerBlock(REINFORCED_BRICKS, "Reinforced Bricks");
+        //Generic Blocks
+        registerBlock(AMBER_ORE, "Amber Ore", blockTab);
+        registerBlock(ICE_SHARD, "Ice Shard", blockTab);
+        registerBlock(GYPSUM_STONE, "Gypsum Stone", blockTab);
+        registerBlock(GYPSUM_COBBLESTONE, "Gypsum Cobblestone", blockTab);
+        registerBlock(GYPSUM_BRICKS, "Gypsum Bricks", blockTab);
+        registerBlock(REINFORCED_STONE, "Reinforced Stone", blockTab);
+        registerBlock(REINFORCED_BRICKS, "Reinforced Bricks", blockTab);
+        registerBlock(CLEAR_GLASS, "Clear Glass", blockTab);
 
-        registerBlock(AJUGINUCULA_SMITHII, "Ajuginucula Smithii");
-        registerBlock(SMALL_ROYAL_FERN, "Small Royal Fern");
-        registerBlock(SMALL_CHAIN_FERN, "Small Chain Fern");
-        registerBlock(SMALL_CYCAD, "Small Cycad");
-        registerBlock(CYCADEOIDEA, "Bennettitalean Cycadeoidea");
-        registerBlock(CRY_PANSY, "Cry Pansy");
-        registerBlock(SCALY_TREE_FERN, "Scaly Tree Fern");
-        registerBlock(ZAMITES, "Cycad Zamites");
-        registerBlock(DICKSONIA, "Dicksonia");
-        registerBlock(WILD_ONION, "Wild Onion Plant");
-        registerBlock(GRACILARIA, "Gracilaria Seaweed");
-        registerBlock(DICROIDIUM_ZUBERI, "Dicroidium Zuberi");
-        registerBlock(DICTYOPHYLLUM, "Dictyophyllum");
-        registerBlock(WEST_INDIAN_LILAC, "West Indian Lilac");
-        registerBlock(SERENNA_VERIFORMANS, "Serenna Veriformans");
-        registerBlock(LADINIA_SIMPLEX, "Ladinia Simplex");
-        registerBlock(ORONTIUM_MACKII, "Orontium Mackii");
-        registerBlock(UMALTOLEPIS, "Umaltolepis");
-        registerBlock(LIRIODENDRITES, "Liriodendrites");
-        registerBlock(RAPHAELIA, "Raphaelia");
-        registerBlock(ENCEPHALARTOS, "Encephalartos");
-        registerBlock(WILD_POTATO_PLANT, "Wild Potato Plant");
-        registerBlock(RHAMNUS_SALICIFOLIUS_PLANT, "Rhamnus Salicifolius");
-        registerBlock(BRISTLE_FERN, "Bristle Fern");
-        registerBlock(CINNAMON_FERN, "Cinnamon Fern");
-        registerBlock(TEMPSKYA, "Tempskya");
-        registerBlock(WOOLLY_STALKED_BEGONIA, "Woolly Stalked Begonia");
-        registerBlock(LARGESTIPULE_LEATHER_ROOT, "Largestipule Leather Root");
-        registerBlock(RHACOPHYTON, "Rhacophyton");
-        registerBlock(GRAMINIDITES_BAMBUSOIDES, "Graminidites Bambusoides");
-        registerBlock(ENALLHELIA, "Enallhelia");
-        registerBlock(AULOPORA, "Aulopora");
-        registerBlock(CLADOCHONUS, "Cladochonus");
-        registerBlock(LITHOSTROTION, "Lithostrotion");
-        registerBlock(STYLOPHYLLOPSIS, "Stylophyllopsis");
-        registerBlock(HIPPURITES_RADIOSUS, "Hippurites Radiosus");
-        registerBlock(HELICONIA, "Heliconia");
+        //Plants
+        registerBlock(AJUGINUCULA_SMITHII, "Ajuginucula Smithii", null);
+        registerBlock(SCALY_TREE_FERN, "Scaly Tree Fern", null);
+        registerBlock(ZAMITES, "Cycad Zamites", null);
+        registerBlock(DICKSONIA, "Dicksonia", null);
+        registerBlock(GRACILARIA, "Gracilaria Seaweed", null);
+        registerBlock(DICROIDIUM_ZUBERI, "Dicroidium Zuberi", null);
+        registerBlock(DICTYOPHYLLUM, "Dictyophyllum",null);
+        registerBlock(WEST_INDIAN_LILAC, "West Indian Lilac", null);
+        registerBlock(SERENNA_VERIFORMANS, "Serenna Veriformans", null);
+        registerBlock(LADINIA_SIMPLEX, "Ladinia Simplex", null);
+        registerBlock(ORONTIUM_MACKII, "Orontium Mackii", null);
+        registerBlock(UMALTOLEPIS, "Umaltolepis", null);
+        registerBlock(LIRIODENDRITES, "Liriodendrites", null);
+        registerBlock(RAPHAELIA, "Raphaelia", null);
+        registerBlock(ENCEPHALARTOS, "Encephalartos", null);
+        registerBlock(WILD_POTATO_PLANT, "Wild Potato Plant", null);
+        registerBlock(RHAMNUS_SALICIFOLIUS_PLANT, "Rhamnus Salicifolius", null);
+        registerBlock(BRISTLE_FERN, "Bristle Fern", null);
+        registerBlock(CINNAMON_FERN, "Cinnamon Fern", null);
+        registerBlock(TEMPSKYA, "Tempskya", null);
+        registerBlock(WOOLLY_STALKED_BEGONIA, "Woolly Stalked Begonia", null);
+        registerBlock(LARGESTIPULE_LEATHER_ROOT, "Largestipule Leather Root", null);
+        registerBlock(RHACOPHYTON, "Rhacophyton", null);
+        registerBlock(GRAMINIDITES_BAMBUSOIDES, "Graminidites Bambusoides", null);
+        registerBlock(ENALLHELIA, "Enallhelia", null);
+        registerBlock(AULOPORA, "Aulopora", null);
+        registerBlock(CLADOCHONUS, "Cladochonus", null);
+        registerBlock(LITHOSTROTION, "Lithostrotion", null);
+        registerBlock(STYLOPHYLLOPSIS, "Stylophyllopsis", null);
+        registerBlock(HIPPURITES_RADIOSUS, "Hippurites Radiosus", null);
+        registerBlock(HELICONIA, "Heliconia", null);
 
-        registerBlock(MOSS, "Moss");
-        registerBlock(PEAT, "Peat");
-        registerBlock(PEAT_MOSS, "Peat Moss");
+        registerBlock(SMALL_ROYAL_FERN, "Small Royal Fern", plantTab);
+        registerBlock(SMALL_CHAIN_FERN, "Small Chain Fern", plantTab);
+        registerBlock(SMALL_CYCAD, "Small Cycad", plantTab);
+        registerBlock(CYCADEOIDEA, "Bennettitalean Cycadeoidea", plantTab);
+        registerBlock(CRY_PANSY, "Cry Pansy", plantTab);
+        registerBlock(WILD_ONION, "Wild Onion Plant", plantTab);
 
-        registerBlock(CLEAR_GLASS, "Clear Glass");
-
-        registerBlock(PLANKTON_SWARM, "Plankton Swarm");
-        registerBlock(KRILL_SWARM, "Krill Swarm");
-        registerBlock(TourRailBlockEntity.class, TOUR_RAIL, "Tour Rail");
-        registerBlock(TOUR_RAIL_SLOW, "Tour Rail Slow");
-        registerBlock(TOUR_RAIL_MEDIUM, "Tour Rail Medium");
-        registerBlock(TOUR_RAIL_FAST, "Tour Rail Fast");
-
-        registerBlock(SKELETON_ASSEMBLY, "Skeleton Assembly");
-//        registerBlock(JP_MAIN_GATE_BLOCK, "Jurassic Park Gate");
+        registerBlock(MOSS, "Moss", plantTab);
+        registerBlock(PEAT, "Peat", plantTab);
+        registerBlock(PEAT_MOSS, "Peat Moss", plantTab);
 
 
+        registerBlock(PLANKTON_SWARM, "Plankton Swarm", null);
+        registerBlock(KRILL_SWARM, "Krill Swarm", null);
 
+        registerBlock(TourRailBlockEntity.class, TOUR_RAIL, "Tour Rail", blockTab);
+        registerBlock(TOUR_RAIL_SLOW, "Tour Rail Slow", blockTab);
+        registerBlock(TOUR_RAIL_MEDIUM, "Tour Rail Medium", blockTab);
+        registerBlock(TOUR_RAIL_FAST, "Tour Rail Fast", blockTab);
+
+        //Machines
         for(EnumDyeColor color : EnumDyeColor.values()) { //TODO: make it so blockentities can be registered on their own
             if(color == EnumDyeColor.WHITE) {
-                registerBlock(CultivatorBlockEntity.class, CULTIVATOR_BOTTOM.get(color), "Cultivate Bottom " + color.getDyeColorName());
+                registerBlock(CultivatorBlockEntity.class, CULTIVATOR_BOTTOM.get(color), "Cultivate Bottom " + color.getDyeColorName(), blockTab);
             } else {
-                registerBlock(CULTIVATOR_BOTTOM.get(color), "Cultivate Bottom " + color.getDyeColorName());
+                registerBlock(CULTIVATOR_BOTTOM.get(color), "Cultivate Bottom " + color.getDyeColorName(), blockTab);
             }
-            registerBlock(CULTIVATOR_TOP.get(color), "Cultivate Top " + color.getDyeColorName());
+            registerBlock(CULTIVATOR_TOP.get(color), "Cultivate Top " + color.getDyeColorName(), null);
         }
 
-        registerBlock(CleaningStationBlockEntity.class, CLEANING_STATION, "Cleaning Station");
-        registerBlock(FossilGrinderBlockEntity.class, FOSSIL_GRINDER, "Fossil Grinder");
-        registerBlock(DNASequencerBlockEntity.class, DNA_SEQUENCER, "DNA Sequencer");
-        registerBlock(DNASynthesizerBlockEntity.class, DNA_SYNTHESIZER, "DNA Synthesizer");
-        registerBlock(EmbryonicMachineBlockEntity.class, EMBRYONIC_MACHINE, "Embryonic Machine");
-        registerBlock(EmbryoCalcificationMachineBlockEntity.class, EMBRYO_CALCIFICATION_MACHINE, "Embryo Calcification Machine");
-        registerBlock(DNAExtractorBlockEntity.class, DNA_EXTRACTOR, "DNA Extractor");
-        registerBlock(DNACombinatorHybridizerBlockEntity.class, DNA_COMBINATOR_HYBRIDIZER, "DNA Combinator Hybridizer");
-        registerBlock(IncubatorBlockEntity.class, INCUBATOR, "Incubator");
-        registerBlock(DisplayBlockEntity.class, DISPLAY_BLOCK, "Display Block");
-        registerBlock(FeederBlockEntity.class, FEEDER, "Feeder");
-        registerBlock(BugCrateBlockEntity.class, BUG_CRATE, "Bug Crate");
+        registerBlock(SKELETON_ASSEMBLY, "Skeleton Assembly", blockTab);
+        registerBlock(CleaningStationBlockEntity.class, CLEANING_STATION, "Cleaning Station", blockTab);
+        registerBlock(FossilGrinderBlockEntity.class, FOSSIL_GRINDER, "Fossil Grinder", blockTab);
+        registerBlock(DNASequencerBlockEntity.class, DNA_SEQUENCER, "DNA Sequencer", blockTab);
+        registerBlock(DNASynthesizerBlockEntity.class, DNA_SYNTHESIZER, "DNA Synthesizer", blockTab);
+        registerBlock(EmbryonicMachineBlockEntity.class, EMBRYONIC_MACHINE, "Embryonic Machine, blockTab", blockTab);
+        registerBlock(EmbryoCalcificationMachineBlockEntity.class, EMBRYO_CALCIFICATION_MACHINE, "Embryo Calcification Machine", blockTab);
+        registerBlock(DNAExtractorBlockEntity.class, DNA_EXTRACTOR, "DNA Extractor", blockTab);
+        registerBlock(DNACombinatorHybridizerBlockEntity.class, DNA_COMBINATOR_HYBRIDIZER, "DNA Combinator Hybridizer", blockTab);
+        registerBlock(IncubatorBlockEntity.class, INCUBATOR, "Incubator", blockTab);
+        registerBlock(DisplayBlockEntity.class, DISPLAY_BLOCK, "Display Block", blockTab);
+        registerBlock(FeederBlockEntity.class, FEEDER, "Feeder", blockTab);
+        registerBlock(BugCrateBlockEntity.class, BUG_CRATE, "Bug Crate", blockTab);
 
-        registerBlock(ElectricFenceWireBlockEntity.class, "tileEntityElectricFence", LOW_SECURITY_FENCE_WIRE, "Low Security Fence Wire");
-//        registerBlock(MED_SECURITY_FENCE_WIRE, "Med Security Fence Wire");
-//        registerBlock(HIGH_SECURITY_FENCE_WIRE, "High Security Fence Wire");
-
-        registerBlock(ElectricFencePoleBlockEntity.class, "tileEntityElectricPole", LOW_SECURITY_FENCE_POLE, "Low Security Fence Pole");
-//        registerBlock(MED_SECURITY_FENCE_POLE, "Med Security Fence Pole");
-//        registerBlock(HIGH_SECURITY_FENCE_POLE, "High Security Fence Pole");
-
-        registerBlock(ElectricFenceBaseBlockEntity.class, "tileEntityElectricBase", LOW_SECURITY_FENCE_BASE, "Low Security Fence Base");
-//        registerBlock(MED_SECURITY_FENCE_BASE, "Med Security Fence Base");
-//        registerBlock(HIGH_SECURITY_FENCE_BASE, "High Security Fence Base");
+        registerBlock(ElectricFenceWireBlockEntity.class, "tileEntityElectricFence", LOW_SECURITY_FENCE_WIRE, "Low Security Fence Wire",null);
+        registerBlock(ElectricFencePoleBlockEntity.class, "tileEntityElectricPole", LOW_SECURITY_FENCE_POLE, "Low Security Fence Pole", null);
+        registerBlock(ElectricFenceBaseBlockEntity.class, "tileEntityElectricBase", LOW_SECURITY_FENCE_BASE, "Low Security Fence Base", null);
 
 
-        registerBlock(PALEO_BALE_OTHER, "Paleo Bale Other");
-        registerBlock(PALEO_BALE_CYCADEOIDEA, "Paleo Bale Cycadeoidea");
-        registerBlock(PALEO_BALE_CYCAD, "Paleo Bale Cycad");
-        registerBlock(PALEO_BALE_FERN, "Paleo Bale Fern");
-        registerBlock(PALEO_BALE_LEAVES, "Paleo Bale Leaves");
+        registerBlock(PALEO_BALE_OTHER, "Paleo Bale Other", plantTab);
+        registerBlock(PALEO_BALE_CYCADEOIDEA, "Paleo Bale Cycadeoidea", plantTab);
+        registerBlock(PALEO_BALE_CYCAD, "Paleo Bale Cycad", plantTab);
+        registerBlock(PALEO_BALE_FERN, "Paleo Bale Fern", plantTab);
+        registerBlock(PALEO_BALE_LEAVES, "Paleo Bale Leaves", plantTab);
 
         for (TreeType type : TreeType.values()) {
             registerTreeType(type);
@@ -333,19 +330,21 @@ public class BlockHandler
         Blocks.FIRE.setFireInfo(fenceGate, 5, 20);
     }
 
+    //Trees
     private static void registerTreeType(TreeType type) {
         String typeName = type.name();
-        registerBlock(ANCIENT_PLANKS.get(type), typeName + " Planks");
-        registerBlock(ANCIENT_LOGS.get(type), typeName + " Log");
-        registerBlock(PETRIFIED_LOGS.get(type), typeName + " Log Petrified");
-        registerBlock(ANCIENT_LEAVES.get(type), typeName + " Leaves");
-        registerBlock(ANCIENT_SAPLINGS.get(type), typeName + " Sapling");
-        registerBlock(ANCIENT_STAIRS.get(type), typeName + " Stairs");
-        registerBlock(ANCIENT_SLABS.get(type), typeName + " Slab");
-        registerBlock(ANCIENT_DOUBLE_SLABS.get(type), typeName + " Double Slab");
-        registerBlock(ANCIENT_FENCES.get(type), typeName + " Fence");
-        registerBlock(ANCIENT_FENCE_GATES.get(type), typeName + " Fence Gate");
-        registerBlock(ANCIENT_DOORS.get(type), typeName + " Door");
+        registerBlock(ANCIENT_DOORS.get(type), typeName + " Door", null);
+        registerBlock(ANCIENT_DOUBLE_SLABS.get(type), typeName + " Double Slab", null);
+
+        registerBlock(ANCIENT_PLANKS.get(type), typeName + " Planks", plantTab);
+        registerBlock(ANCIENT_LOGS.get(type), typeName + " Log", plantTab);
+        registerBlock(PETRIFIED_LOGS.get(type), typeName + " Log Petrified", plantTab);
+        registerBlock(ANCIENT_LEAVES.get(type), typeName + " Leaves", plantTab);
+        registerBlock(ANCIENT_SAPLINGS.get(type), typeName + " Sapling", plantTab);
+        registerBlock(ANCIENT_STAIRS.get(type), typeName + " Stairs", plantTab);
+        registerBlock(ANCIENT_SLABS.get(type), typeName + " Slab", plantTab);
+        registerBlock(ANCIENT_FENCES.get(type), typeName + " Fence", plantTab);
+        registerBlock(ANCIENT_FENCE_GATES.get(type), typeName + " Fence Gate", plantTab);
     }
 
     /**
@@ -371,27 +370,40 @@ public class BlockHandler
 
     }
 
-    public static void registerBlock(Class<? extends TileEntity> tileEntity, Block block, String name)
+    private static void registerBlock(Class<? extends TileEntity> tileEntity, Block block, String name, CreativeTabs creativeTab)
     {
-        registerBlock(tileEntity, name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_"), block, name);
+        registerBlock(tileEntity, name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_"), block, name, creativeTab);
     }
 
-    public static void registerBlock(Class<? extends TileEntity> tileEntity, String tileEntityName,  Block block, String name)
+    private static void registerBlock(Class<? extends TileEntity> tileEntity, String tileEntityName,  Block block, String name, CreativeTabs creativeTab)
     {
-        registerBlock(block, name);
+        registerBlock(block, name, creativeTab);
         GameRegistry.registerTileEntity(tileEntity, new ResourceLocation(JurassiCraft.MODID, tileEntityName));
     }
 
-    public static void registerBlock(Block block, String name)
+    private static void registerBlock(Block block, String name, CreativeTabs creativeTab)
     {
         if(block instanceof SubBlocksBlock) {
             RegistryHandler.registerBlockWithCustomItem(block, ((SubBlocksBlock) block).getItemBlock(), name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_"));
+            block.setCreativeTab(creativeTab);
         }
         else if(block instanceof NoItemBlock) {
             RegistryHandler.registerBlock(block, name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_"));
         } else {
             RegistryHandler.registerBlockWithItem(block, name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_"));
+            block.setCreativeTab(creativeTab);
 
         }
+    }
+
+    public static <T extends Block & BlockStayCheck> void checkForDrop(World world, BlockPos pos, IBlockState state, T block){
+        if (!block.canBlockStay(world, pos)) {
+            block.dropBlockAsItem(world, pos, state, 0);
+            world.setBlockToAir(pos);
+        }
+    }
+
+    public interface BlockStayCheck{
+        boolean canBlockStay(World world, BlockPos pos);
     }
 }

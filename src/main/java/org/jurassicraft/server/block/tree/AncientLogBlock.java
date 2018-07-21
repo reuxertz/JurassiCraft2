@@ -29,7 +29,6 @@ public class AncientLogBlock extends BlockLog implements GrindableItem {
         this.setHardness(2.0F);
         this.setResistance(0.5F);
         this.setSoundType(SoundType.WOOD);
-        this.setCreativeTab(TabHandler.PLANTS);
         this.petrified = petrified;
         this.type = treeType;
 

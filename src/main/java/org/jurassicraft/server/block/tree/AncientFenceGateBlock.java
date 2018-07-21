@@ -14,6 +14,5 @@ public class AncientFenceGateBlock extends BlockFenceGate {
         this.setResistance(0.5F);
         this.setSoundType(SoundType.WOOD);
         this.setUnlocalizedName(treeType.name().toLowerCase(Locale.ENGLISH) + "_fence_gate");
-        this.setCreativeTab(TabHandler.PLANTS);
     }
 }

@@ -35,7 +35,6 @@ public abstract class JCBlockCropsBase extends BlockBush implements IGrowable {
         this.setDefaultState(this.blockState.getBaseState().withProperty(this.getAgeProperty(), 0));
         this.setTickRandomly(true);
         // NOTE: No tab because the seeds are placed not the plant.
-        this.setCreativeTab(null);
         this.setHardness(0.0F);
         this.setSoundType(SoundType.PLANT);
         this.disableStats();

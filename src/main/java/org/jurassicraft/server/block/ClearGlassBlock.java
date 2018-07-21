@@ -12,7 +12,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jurassicraft.server.tab.TabHandler;
 
 public class ClearGlassBlock extends BlockGlass {
     public static final PropertyBool NORTH = PropertyBool.create("north");
@@ -22,15 +21,14 @@ public class ClearGlassBlock extends BlockGlass {
     public static final PropertyBool UP = PropertyBool.create("up");
     public static final PropertyBool DOWN = PropertyBool.create("down");
 
-    public ClearGlassBlock() {
+    ClearGlassBlock() {
         super(Material.GLASS, false);
-        this.setCreativeTab(TabHandler.BLOCKS);
         this.setHardness(0.3F);
         this.setSoundType(SoundType.GLASS);
         this.setDefaultState(this.blockState.getBaseState().withProperty(NORTH, false).withProperty(EAST, false).withProperty(SOUTH, false).withProperty(WEST, false).withProperty(UP, false).withProperty(DOWN, false));
     }
 
-    public boolean canConnectTo(IBlockAccess world, BlockPos pos) {
+    private boolean canConnectTo(IBlockAccess world, BlockPos pos) {
         return world.getBlockState(pos).getBlock() instanceof ClearGlassBlock;
     }
 

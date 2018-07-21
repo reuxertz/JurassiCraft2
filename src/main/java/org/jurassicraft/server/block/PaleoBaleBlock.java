@@ -11,18 +11,16 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jurassicraft.server.tab.TabHandler;
 
 import java.util.Locale;
 
 public class PaleoBaleBlock extends BlockRotatedPillar {
     private PaleoBaleBlock.Variant variant;
 
-    public PaleoBaleBlock(PaleoBaleBlock.Variant variant) {
+    PaleoBaleBlock(PaleoBaleBlock.Variant variant) {
         super(Material.GRASS, MapColor.FOLIAGE);
         this.variant = variant;
         this.setDefaultState(this.blockState.getBaseState().withProperty(AXIS, EnumFacing.Axis.Y));
-        this.setCreativeTab(TabHandler.PLANTS);
         this.setSoundType(SoundType.PLANT);
     }
 

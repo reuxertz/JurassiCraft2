@@ -38,7 +38,6 @@ public class SkeletonAssemblyBlock extends Block {
         this.setHardness(2.0F);
         this.setLightOpacity(0);
         this.setSoundType(SoundType.METAL);
-        this.setCreativeTab(TabHandler.BLOCKS);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(HALF, BlockHalf.MAIN));
     }
 

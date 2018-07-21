@@ -10,18 +10,16 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import org.jurassicraft.server.item.ItemHandler;
-import org.jurassicraft.server.tab.TabHandler;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class IceShardBlock extends Block {
-    public IceShardBlock() {
+    IceShardBlock() {
         super(Material.ROCK);
         this.setHardness(3.0F);
         this.setResistance(5.0F);
-        this.setCreativeTab(TabHandler.BLOCKS);
         this.setHarvestLevel("pickaxe", 2);
     }
 

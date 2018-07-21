@@ -5,14 +5,12 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import org.jurassicraft.server.item.ItemHandler;
-import org.jurassicraft.server.tab.TabHandler;
 
 import java.util.Random;
 
 public class GypsumStoneBlock extends Block {
-    public GypsumStoneBlock() {
+    GypsumStoneBlock() {
         super(Material.ROCK);
-        this.setCreativeTab(TabHandler.BLOCKS);
         this.setHardness(1.5F);
         this.setResistance(1.5F);
     }

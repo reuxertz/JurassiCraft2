@@ -1,48 +1,39 @@
 package org.jurassicraft.server.block;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
-
 import com.google.common.collect.Lists;
-import org.apache.commons.lang3.tuple.Pair;
-import org.jurassicraft.server.api.CleanableItem;
-import org.jurassicraft.server.api.SubBlocksBlock;
-import org.jurassicraft.server.item.ItemHandler;
-import org.jurassicraft.server.item.block.NestFossilItemBlock;
-import org.jurassicraft.server.tab.TabHandler;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.Pair;
+import org.jurassicraft.server.api.CleanableItem;
+import org.jurassicraft.server.api.SubBlocksBlock;
+import org.jurassicraft.server.item.ItemHandler;
+import org.jurassicraft.server.item.block.NestFossilItemBlock;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
 
 public class NestFossilBlock extends Block implements SubBlocksBlock, CleanableItem {
     public boolean encased;
 
     private final Variant variant;
 
-    public NestFossilBlock(Variant variant, boolean encased) {
+    NestFossilBlock(Variant variant, boolean encased) {
         super(Material.ROCK);
         this.variant = variant;
         this.encased = encased;
         this.setHardness(1.5F);
-        this.setCreativeTab(TabHandler.FOSSILS);
     }
 
     public Variant getVariant() {
