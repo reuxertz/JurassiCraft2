@@ -228,6 +228,9 @@ item.west_indian_lilac_berries.name=West Indian Lilac Berries
 
 filled_map.jurassicraft.visitorcenter=Visitor Center Map
 
+item.tracking_dart.name=Tracking Dart
+item.tracking_tablet.name=Tracking Tablet
+
 // Crops ========================================
 item.ajuginucula_smithii_seeds.name=Ajuginucula Smithii Seeds
 item.ajuginucula_smithii_leaves.name=Ajuginucula Smithii Leaves
