@@ -7,12 +7,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.client.model.AnimatableModel;
 import org.jurassicraft.client.model.animation.EntityAnimation;
 import org.jurassicraft.client.model.animation.EntityAnimator;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.entity.dinosaur.MicroraptorEntity;
 
 @SideOnly(Side.CLIENT)
-public class MicroraptorAnimator extends EntityAnimator<MicroraptorEntity> {
+public class MicroraptorAnimator extends EntityAnimator<DinosaurEntity> {
     @Override
-    protected void performAnimations(AnimatableModel model, MicroraptorEntity entity, float limbSwing, float limbSwingAmount, float ticks, float rotationYaw, float rotationPitch, float scale) {
+    protected void performAnimations(AnimatableModel model, DinosaurEntity entity, float limbSwing, float limbSwingAmount, float ticks, float rotationYaw, float rotationPitch, float scale) {
         if (entity.getAnimation() == EntityAnimation.GLIDING.get()) {
             GlStateManager.rotate(rotationPitch, 1.0F, 0.0F, 0.0F);
         }

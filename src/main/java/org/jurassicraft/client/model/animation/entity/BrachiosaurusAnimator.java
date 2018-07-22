@@ -6,12 +6,14 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.client.model.AnimatableModel;
 import org.jurassicraft.client.model.animation.EntityAnimator;
+import org.jurassicraft.server.entity.LegSolverQuadruped;
 import org.jurassicraft.server.entity.dinosaur.BrachiosaurusEntity;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 
 @SideOnly(Side.CLIENT)
-public class BrachiosaurusAnimator extends EntityAnimator<BrachiosaurusEntity> {
+public class BrachiosaurusAnimator extends EntityAnimator<DinosaurEntity> {
     @Override
-    protected void performAnimations(AnimatableModel model, BrachiosaurusEntity entity, float f, float f1, float ticks, float rotationYaw, float rotationPitch, float scale) {
+    protected void performAnimations(AnimatableModel model, DinosaurEntity entity, float f, float f1, float ticks, float rotationYaw, float rotationPitch, float scale) {
         AdvancedModelRenderer head = model.getCube("head");
 
         AdvancedModelRenderer neck1 = model.getCube("Neck 1");
@@ -42,7 +44,7 @@ public class BrachiosaurusAnimator extends EntityAnimator<BrachiosaurusEntity> {
         AdvancedModelRenderer frontLeftCalf = model.getCube("bottom front left leg");
         AdvancedModelRenderer frontRightThigh = model.getCube("front right top leg");
         AdvancedModelRenderer frontRightCalf = model.getCube("bottom front right leg");
-        LegArticulator.articulateQuadruped(entity, entity.legSolver, root, neck1,
+        LegArticulator.articulateQuadruped(entity, (LegSolverQuadruped) entity.legSolver, root, neck1,
             backLeftThigh, backLeftCalf, backRightThigh, backRightCalf, frontLeftThigh, frontLeftCalf, frontRightThigh, frontRightCalf, 
             0.25F, 0.4F, -0.2F, -0.3F,
             delta

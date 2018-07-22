@@ -97,7 +97,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 	private static final DataParameter<String> WATCHER_OWNER = EntityDataManager.createKey(DinosaurEntity.class, DataSerializers.STRING);
 	private static final DataParameter<Order> WATCHER_ORDER = EntityDataManager.createKey(DinosaurEntity.class, DinosaurSerializers.ORDER);
 	private static final DataParameter<Boolean> WATCHER_IS_RUNNING = EntityDataManager.createKey(DinosaurEntity.class, DataSerializers.BOOLEAN);
-	public final LegSolver legSolver;
+	public LegSolver legSolver;
 	public InventoryDinosaur inventory;
 	public MetabolismContainer metabolism;
 	public Dinosaur dinosaur = Dinosaur.MISSING;
@@ -1577,6 +1577,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 			this.setAnimation(EntityAnimation.DYING.get());
 		}
 
+		this.legSolver = createLegSolver();
 		this.updateBounds();
 	}
 

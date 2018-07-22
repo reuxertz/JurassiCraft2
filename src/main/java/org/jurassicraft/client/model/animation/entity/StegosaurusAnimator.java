@@ -2,6 +2,8 @@ package org.jurassicraft.client.model.animation.entity;
 
 import org.jurassicraft.client.model.AnimatableModel;
 import org.jurassicraft.client.model.animation.EntityAnimator;
+import org.jurassicraft.server.entity.LegSolverQuadruped;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.entity.dinosaur.StegosaurusEntity;
 
 import net.ilexiconn.llibrary.client.model.tools.AdvancedModelRenderer;
@@ -13,9 +15,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Created by Codyr on 08/07/2017.
  */
 @SideOnly(Side.CLIENT)
-public class StegosaurusAnimator extends EntityAnimator<StegosaurusEntity> {
+public class StegosaurusAnimator extends EntityAnimator<DinosaurEntity> {
     @Override
-    protected void performAnimations(AnimatableModel model, StegosaurusEntity entity, float f, float f1, float ticks, float rotationYaw, float rotationPitch, float scale) {
+    protected void performAnimations(AnimatableModel model, DinosaurEntity entity, float f, float f1, float ticks, float rotationYaw, float rotationPitch, float scale) {
         AdvancedModelRenderer head = model.getCube("Head");
 
         AdvancedModelRenderer neck3 = model.getCube("Neck 3");
@@ -75,7 +77,7 @@ public class StegosaurusAnimator extends EntityAnimator<StegosaurusEntity> {
         frontLeftThigh.rotationPointZ -= 0.5 * Math.cos(ticks * 0.025F);
 
         float delta = Minecraft.getMinecraft().getRenderPartialTicks();
-        LegArticulator.articulateQuadruped(entity, entity.legSolver, waist, neck1,
+        LegArticulator.articulateQuadruped(entity, (LegSolverQuadruped) entity.legSolver, waist, neck1,
                 backLeftThigh, backLeftCalf, backRightThigh, backRightCalf, frontLeftThigh, frontLeftCalf, frontRightThigh, frontRightCalf,
                 0.5F, 0.8F, -0.6F, -1.1F,
                 delta

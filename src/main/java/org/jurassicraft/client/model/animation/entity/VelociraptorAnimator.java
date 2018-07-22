@@ -5,12 +5,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.client.model.AnimatableModel;
 import org.jurassicraft.client.model.animation.EntityAnimator;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.entity.dinosaur.VelociraptorEntity;
 
 @SideOnly(Side.CLIENT)
-public class VelociraptorAnimator extends EntityAnimator<VelociraptorEntity> {
+public class VelociraptorAnimator extends EntityAnimator<DinosaurEntity> {
     @Override
-    protected void performAnimations(AnimatableModel model, VelociraptorEntity entity, float limbSwing, float limbSwingAmount, float ticks, float rotationYaw, float rotationPitch, float scale) {
+    protected void performAnimations(AnimatableModel model, DinosaurEntity entity, float limbSwing, float limbSwingAmount, float ticks, float rotationYaw, float rotationPitch, float scale) {
         AdvancedModelRenderer waist = model.getCube("body3");
         AdvancedModelRenderer chest = model.getCube("body2");
         AdvancedModelRenderer shoulders = model.getCube("body1");

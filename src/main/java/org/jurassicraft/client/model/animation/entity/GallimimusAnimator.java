@@ -6,12 +6,15 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.client.model.AnimatableModel;
 import org.jurassicraft.client.model.animation.EntityAnimator;
+import org.jurassicraft.server.entity.Dinosaur;
+import org.jurassicraft.server.entity.LegSolverBiped;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.entity.dinosaur.GallimimusEntity;
 
 @SideOnly(Side.CLIENT)
-public class GallimimusAnimator extends EntityAnimator<GallimimusEntity> {
+public class GallimimusAnimator extends EntityAnimator<DinosaurEntity> {
     @Override
-    protected void performAnimations(AnimatableModel model, GallimimusEntity entity, float f, float f1, float ticks, float rotationYaw, float rotationPitch, float scale) {
+    protected void performAnimations(AnimatableModel model, DinosaurEntity entity, float f, float f1, float ticks, float rotationYaw, float rotationPitch, float scale) {
         AdvancedModelRenderer neck1 = model.getCube("Neck part 1");
         AdvancedModelRenderer neck2 = model.getCube("Neck part 2");
         AdvancedModelRenderer neck3 = model.getCube("Neck part 3");
@@ -54,7 +57,7 @@ public class GallimimusAnimator extends EntityAnimator<GallimimusEntity> {
         AdvancedModelRenderer[] armRight = new AdvancedModelRenderer[] { handRight, lowerArmRight, upperArmRight };
 
         float delta = Minecraft.getMinecraft().getRenderPartialTicks();
-        LegArticulator.articulateBiped(entity, entity.legSolver, body1, leftThigh, leftCalf, rightThigh, rightCalf, 1.0F, 1.4F, delta);
+        LegArticulator.articulateBiped(entity, (LegSolverBiped) entity.legSolver, body1, leftThigh, leftCalf, rightThigh, rightCalf, 1.0F, 1.4F, delta);
 
         float globalSpeed = 1.5F;
         float globalDegree = 1.0F;

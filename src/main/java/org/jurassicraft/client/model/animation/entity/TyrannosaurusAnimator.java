@@ -2,6 +2,8 @@ package org.jurassicraft.client.model.animation.entity;
 
 import org.jurassicraft.client.model.AnimatableModel;
 import org.jurassicraft.client.model.animation.EntityAnimator;
+import org.jurassicraft.server.entity.LegSolverBiped;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.entity.dinosaur.TyrannosaurusEntity;
 
 import net.ilexiconn.llibrary.client.model.tools.AdvancedModelRenderer;
@@ -10,9 +12,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class TyrannosaurusAnimator extends EntityAnimator<TyrannosaurusEntity> {
+public class TyrannosaurusAnimator extends EntityAnimator<DinosaurEntity> {
     @Override
-    protected void performAnimations(AnimatableModel model, TyrannosaurusEntity entity, float f, float f1, float ticks, float rotationYaw, float rotationPitch, float scale) {
+    protected void performAnimations(AnimatableModel model, DinosaurEntity entity, float f, float f1, float ticks, float rotationYaw, float rotationPitch, float scale) {
         AdvancedModelRenderer waist = model.getCube("Body 1");
         AdvancedModelRenderer stomach = model.getCube("Body 2");
         AdvancedModelRenderer chest = model.getCube("Body 3");
@@ -50,7 +52,7 @@ public class TyrannosaurusAnimator extends EntityAnimator<TyrannosaurusEntity> {
         float delta = Minecraft.getMinecraft().getRenderPartialTicks();
         AdvancedModelRenderer leftCalf = model.getCube("Left Calf 1");
         AdvancedModelRenderer rightCalf = model.getCube("Right Calf 1");
-        LegArticulator.articulateBiped(entity, entity.legSolver, waist, leftThigh, leftCalf, rightThigh, rightCalf, 0.4F, 0.4F, delta);
+        LegArticulator.articulateBiped(entity, (LegSolverBiped) entity.legSolver, waist, leftThigh, leftCalf, rightThigh, rightCalf, 0.4F, 0.4F, delta);
 
         float globalSpeed = 0.5F;
         float globalDegree = 0.5F;

@@ -6,11 +6,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.client.model.AnimatableModel;
 import org.jurassicraft.client.model.animation.EntityAnimator;
 import org.jurassicraft.server.entity.dinosaur.CoelacanthEntity;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 
 @SideOnly(Side.CLIENT)
-public class CoelacanthAnimator extends EntityAnimator<CoelacanthEntity> {
+public class CoelacanthAnimator extends EntityAnimator<DinosaurEntity> {
     @Override
-    protected void performAnimations(AnimatableModel model, CoelacanthEntity entity, float limbSwing, float limbSwingAmount, float ticks, float rotationYaw, float rotationPitch, float scale) {
+    protected void performAnimations(AnimatableModel model, DinosaurEntity entity, float limbSwing, float limbSwingAmount, float ticks, float rotationYaw, float rotationPitch, float scale) {
         AdvancedModelRenderer neck = model.getCube("Neck ");
         AdvancedModelRenderer body1 = model.getCube("Body Section 1");
         AdvancedModelRenderer body2 = model.getCube("Body Section 2");
