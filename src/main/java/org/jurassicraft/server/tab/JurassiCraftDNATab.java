@@ -1,16 +1,15 @@
 package org.jurassicraft.server.tab;
 
-import java.util.Collection;
-
-import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.entity.Dinosaur;
-import org.jurassicraft.server.registries.JurassicraftRegisteries;
-import org.jurassicraft.server.item.ItemHandler;
-
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.entity.Dinosaur;
+import org.jurassicraft.server.item.ItemHandler;
+import org.jurassicraft.server.registries.JurassicraftRegisteries;
+
+import java.util.Collection;
 
 public class JurassiCraftDNATab extends CreativeTabs {
     private ItemStack[] stacks = null;

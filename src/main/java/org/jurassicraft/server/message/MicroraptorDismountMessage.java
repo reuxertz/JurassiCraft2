@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.entity.dinosaur.MicroraptorEntity;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 
 import java.util.Set;
 
@@ -40,7 +40,7 @@ public class MicroraptorDismountMessage extends AbstractMessage<MicroraptorDismo
     @SideOnly(Side.CLIENT)
     public void onClientReceived(Minecraft client, MicroraptorDismountMessage message, EntityPlayer player, MessageContext messageContext) {
         Entity entity = client.world.getEntityByID(message.entityId);
-        if (entity instanceof MicroraptorEntity) {
+        if (entity instanceof DinosaurEntity) {
             entity.dismountRidingEntity();
         }
     }
@@ -48,8 +48,8 @@ public class MicroraptorDismountMessage extends AbstractMessage<MicroraptorDismo
     @Override
     public void onServerReceived(MinecraftServer server, MicroraptorDismountMessage message, EntityPlayer player, MessageContext messageContext) {
         Entity entity = player.world.getEntityByID(message.entityId);
-        if (entity instanceof MicroraptorEntity) {
-            MicroraptorEntity microraptor = (MicroraptorEntity) entity;
+        if (entity instanceof DinosaurEntity) {
+            DinosaurEntity microraptor = (DinosaurEntity) entity;
             if (microraptor.isOwner(player)) {
                 microraptor.dismountRidingEntity();
                 if (!player.world.isRemote) {

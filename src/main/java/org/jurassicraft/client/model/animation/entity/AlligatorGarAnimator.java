@@ -1,19 +1,18 @@
 package org.jurassicraft.client.model.animation.entity;
 
-import org.jurassicraft.client.model.AnimatableModel;
-import org.jurassicraft.client.model.animation.EntityAnimator;
-import org.jurassicraft.server.entity.dinosaur.AlligatorGarEntity;
-
 import net.ilexiconn.llibrary.client.model.tools.AdvancedModelRenderer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.client.model.AnimatableModel;
+import org.jurassicraft.client.model.animation.EntityAnimator;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 
 @SideOnly(Side.CLIENT)
-public class AlligatorGarAnimator extends EntityAnimator<AlligatorGarEntity>
+public class AlligatorGarAnimator extends EntityAnimator<DinosaurEntity>
 {
 
 @Override
-protected void performAnimations(AnimatableModel model, AlligatorGarEntity entity, float limbSwing, float limbSwingAmount, float ticks, float rotationYaw, float rotationPitch, float scale) {
+protected void performAnimations(AnimatableModel model, DinosaurEntity entity, float limbSwing, float limbSwingAmount, float ticks, float rotationYaw, float rotationPitch, float scale) {
 
     //TODO: needs some work.
         AdvancedModelRenderer neck = model.getCube("Neck");

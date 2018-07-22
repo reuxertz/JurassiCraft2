@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 
 import javax.vecmath.Vector3f;
 
+@Deprecated
 public class AlligatorGarEntity extends SwimmingDinosaurEntity
 {
     public AlligatorGarEntity(World world) {

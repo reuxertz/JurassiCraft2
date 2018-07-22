@@ -8,7 +8,6 @@ import org.jurassicraft.client.model.AnimatableModel;
 import org.jurassicraft.client.model.animation.EntityAnimator;
 import org.jurassicraft.server.entity.LegSolverQuadruped;
 import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
-import org.jurassicraft.server.entity.dinosaur.TriceratopsEntity;
 
 @SideOnly(Side.CLIENT)
 public class TriceratopsAnimator extends EntityAnimator<DinosaurEntity> {

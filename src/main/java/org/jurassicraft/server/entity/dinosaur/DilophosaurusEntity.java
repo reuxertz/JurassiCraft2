@@ -24,6 +24,7 @@ import org.jurassicraft.server.entity.VenomEntity;
 import org.jurassicraft.server.entity.ai.DilophosaurusMeleeEntityAI;
 import org.jurassicraft.server.entity.ai.DilophosaurusSpitEntityAI;
 
+@Deprecated
 public class DilophosaurusEntity extends DinosaurEntity implements IRangedAttackMob {
 
     private static final DataParameter<Boolean> WATCHER_HAS_TARGET = EntityDataManager.createKey(DinosaurEntity.class, DataSerializers.BOOLEAN);

@@ -8,7 +8,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import org.jurassicraft.client.model.animation.EntityAnimation;
-import org.jurassicraft.server.entity.dinosaur.MicroraptorEntity;
+import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 
 import java.util.Random;
 
@@ -16,7 +16,7 @@ public class RaptorClimbTreeAI extends EntityAIBase {
     private static final int CLIMB_INTERVAL = 1200;
     private static final int MAX_TREE_HEIGHT = 14;
 
-    private final MicroraptorEntity entity;
+    private final DinosaurEntity entity;
     private final double movementSpeed;
     private final World world;
     
@@ -35,7 +35,7 @@ public class RaptorClimbTreeAI extends EntityAIBase {
 
     private int lastActive = -CLIMB_INTERVAL;
 
-    public RaptorClimbTreeAI(MicroraptorEntity entity, double speed) {
+    public RaptorClimbTreeAI(DinosaurEntity entity, double speed) {
         this.entity = entity;
         this.movementSpeed = speed;
         this.world = entity.world;

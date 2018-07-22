@@ -6,10 +6,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.client.model.AnimatableModel;
 import org.jurassicraft.client.model.animation.EntityAnimator;
-import org.jurassicraft.server.entity.Dinosaur;
 import org.jurassicraft.server.entity.LegSolverBiped;
 import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
-import org.jurassicraft.server.entity.dinosaur.GallimimusEntity;
 
 @SideOnly(Side.CLIENT)
 public class GallimimusAnimator extends EntityAnimator<DinosaurEntity> {

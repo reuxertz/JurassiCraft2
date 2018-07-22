@@ -35,6 +35,7 @@ import org.jurassicraft.server.entity.ai.animations.TailDisplayAnimationAI;
 import org.jurassicraft.server.event.KeyBindingHandler;
 import org.jurassicraft.server.message.MicroraptorDismountMessage;
 
+@Deprecated
 public class MicroraptorEntity extends DinosaurEntity {
     private int flyTime;
     private int groundHeight;

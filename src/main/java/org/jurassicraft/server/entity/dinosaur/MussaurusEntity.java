@@ -8,6 +8,7 @@ import org.jurassicraft.client.sound.SoundHandler;
 import org.jurassicraft.server.entity.ai.animations.PeckGroundAnimationAI;
 import org.jurassicraft.server.entity.ai.animations.RearingUpAnimationAI;
 
+@Deprecated
 public class MussaurusEntity extends DinosaurEntity {
     public MussaurusEntity(World world){
         super(world);

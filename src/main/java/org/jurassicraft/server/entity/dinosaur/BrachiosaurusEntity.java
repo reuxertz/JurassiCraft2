@@ -8,6 +8,7 @@ import org.jurassicraft.client.sound.SoundHandler;
 import org.jurassicraft.server.entity.LegSolver;
 import org.jurassicraft.server.entity.LegSolverQuadruped;
 
+@Deprecated
 public class BrachiosaurusEntity extends DinosaurEntity {
     private int stepCount = 0;
 

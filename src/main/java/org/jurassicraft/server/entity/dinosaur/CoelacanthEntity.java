@@ -7,6 +7,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import org.jurassicraft.server.entity.SwimmingDinosaurEntity;
 
+@Deprecated
 public class CoelacanthEntity extends SwimmingDinosaurEntity {
     public CoelacanthEntity(World world) {
         super(world);

@@ -7,7 +7,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.client.model.AnimatableModel;
 import org.jurassicraft.client.model.animation.EntityAnimator;
 import org.jurassicraft.server.entity.LegSolverQuadruped;
-import org.jurassicraft.server.entity.dinosaur.BrachiosaurusEntity;
 import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 
 @SideOnly(Side.CLIENT)

@@ -14,6 +14,7 @@ import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.entity.GoatEntity;
 import org.jurassicraft.server.entity.LegSolverBiped;
 
+@Deprecated
 public class TyrannosaurusEntity extends DinosaurEntity {
     private int stepCount = 0;
 

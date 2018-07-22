@@ -11,6 +11,7 @@ import net.ilexiconn.llibrary.server.animation.Animation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
+@Deprecated
 public class GallimimusEntity extends DinosaurEntity {
     public LegSolverBiped legSolver;
 

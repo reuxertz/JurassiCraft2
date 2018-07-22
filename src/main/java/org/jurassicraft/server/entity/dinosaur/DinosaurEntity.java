@@ -146,8 +146,10 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 	private int pregnantTime;
 	private int jumpHeight;
 	private boolean isSkeleton;
+    private Vec3d glidingPos;
 
-	private UUID inMouthEntity; //The entity of whose mouth this is inside
+
+    private UUID inMouthEntity; //The entity of whose mouth this is inside
 	private UUID entityInMouth; //The entity inside this entities mouth
 
 	public DinosaurEntity(World world) {
@@ -227,6 +229,20 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 		this.setSkeleton(false);
 
 	}
+
+    @Override
+    public void travel(float strafe, float vertical, float forward) {
+        float prevRot = this.rotationPitch;
+        if(this.getAnimation() == EntityAnimation.GLIDING.get() && glidingPos != null) {
+            this.rotationPitch = (float) -Math.toDegrees(Math.asin((this.glidingPos.y - this.posY) / glidingPos.distanceTo(this.getPositionVector())));
+        }
+        super.travel(strafe, vertical, forward);
+        this.rotationPitch = prevRot;
+    }
+
+    public void setGlidingTo(Vec3d glidingPos) {
+        this.glidingPos = glidingPos;
+    }
 
 	public void pickUpEntityInMouth(DinosaurEntity entity) {
 		entity.inMouthEntity = this.getUniqueID();

@@ -17,6 +17,7 @@ import org.jurassicraft.server.entity.GoatEntity;
 import org.jurassicraft.server.entity.ai.LeapingMeleeEntityAI;
 import org.jurassicraft.server.entity.ai.RaptorLeapEntityAI;
 
+@Deprecated
 public class VelociraptorEntity extends DinosaurEntity {
     public VelociraptorEntity(World world) {
         super(world);
