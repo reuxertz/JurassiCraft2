@@ -1,5 +1,6 @@
 package org.jurassicraft.server.entity;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -12,6 +13,7 @@ import java.util.UUID;
 
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.entity.ai.*;
+import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jurassicraft.JurassiCraft;
@@ -20,6 +22,7 @@ import org.jurassicraft.client.model.animation.PoseHandler;
 import org.jurassicraft.server.api.Animatable;
 import org.jurassicraft.server.block.entity.FeederBlockEntity;
 import org.jurassicraft.server.block.machine.FeederBlock;
+import org.jurassicraft.server.conf.JurassiCraftConfig;
 import org.jurassicraft.server.damage.DinosaurDamageSource;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.ai.AdvancedSwimEntityAI;
@@ -1179,11 +1182,14 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     }
 
     public void setCarcass(boolean carcass) {
+
         this.isCarcass = carcass;
+
+        boolean carcassAllowed = JurassiCraftConfig.ENTITIES.allowCarcass;
         if (!this.world.isRemote) {
             this.dataManager.set(WATCHER_IS_CARCASS, this.isCarcass);
         }
-        if (carcass) {
+        if (carcass && carcassAllowed) {
             this.setAnimation(EntityAnimation.DYING.get());
             this.carcassHealth = Math.max(1, (int) Math.sqrt(this.width * this.height) * 2);
             this.ticksExisted = 0;

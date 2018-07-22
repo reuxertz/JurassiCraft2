@@ -33,6 +33,9 @@ public class JurassiCraftConfig { //TODO: move all structures to same parent pac
 
         @Config.Name("Only Hunt when Hungry")
         public boolean huntWhenHungry = false;
+
+        @Config.Name("Allow Carcass Spawning")
+        public boolean allowCarcass = true;
     }
 
     public static class MineralGeneration {
