@@ -1381,7 +1381,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 	public int getAgePercentage() {
 		int age = this.getDinosaurAge();
 		if ((this.getDinosaur().maximumAge * (int) (((this.getDNA().getValueFloat(GeneType.LIFESPAN) + 1) / 2) + 0.5)) == 0) {
-			System.out.println(this.getDNA().getValueFloat(GeneType.LIFESPAN));
+//			System.out.println(this.getDNA().getValueFloat(GeneType.LIFESPAN));
 		}
 		return (int) (age != 0 ? age * 100 / (this.getDinosaur().maximumAge * ((this.getDNA().getValueFloat(GeneType.LIFESPAN) + 1) / 2) + 0.5) : 0);
 	}
