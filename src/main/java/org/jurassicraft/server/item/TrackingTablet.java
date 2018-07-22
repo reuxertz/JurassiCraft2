@@ -39,7 +39,8 @@ import java.util.stream.IntStream;
 public class TrackingTablet extends Item implements StackNBTProvider<Integer> {
 
 	private static final int MIN_TIER = 1;
-	private static final int MAX_TIER = 5;
+	private static final int MAX_TIER = 3;
+	private static int CURRENT_TIER = 1;
 
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
@@ -54,9 +55,10 @@ public class TrackingTablet extends Item implements StackNBTProvider<Integer> {
 
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-		if (player.isSneaking() && !worldIn.isRemote) {
+		if (player.isSneaking() && !worldIn.isRemote && CURRENT_TIER <= MAX_TIER) {
 			ItemHandler.TRACKING_TABLET.putValue(player.getHeldItem(hand), ItemHandler.TRACKING_TABLET.getValue(player.getHeldItem(hand)) + 1);
-			player.sendMessage(new TextComponentString("Upgraded tier"));
+			player.sendMessage(new TextComponentString("Upgraded to tier " + CURRENT_TIER));
+			CURRENT_TIER++;
 		}
 		return EnumActionResult.SUCCESS;
 	}
