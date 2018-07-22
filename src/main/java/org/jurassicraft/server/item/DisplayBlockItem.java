@@ -23,15 +23,14 @@ import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.entity.DisplayBlockEntity;
 import org.jurassicraft.server.entity.Dinosaur;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
-import org.jurassicraft.server.tab.TabHandler;
 import org.jurassicraft.server.util.LangHelper;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class DisplayBlockItem extends Item implements DinosaurProvider {
-    public DisplayBlockItem() {
-        this.setCreativeTab(TabHandler.DECORATIONS);
-    }
 
     @Override
     public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
@@ -166,11 +165,11 @@ public class DisplayBlockItem extends Item implements DinosaurProvider {
             return type;
         }
 
-        public DisplayBlockProperties cycle() {
+        DisplayBlockProperties cycle() {
             return new DisplayBlockProperties(this.dinosaur, Type.values()[(this.type.ordinal() + 1) % Type.values().length]);
         }
 
-        public DisplayBlockProperties cycleIgnore(Type... types) {
+        DisplayBlockProperties cycleIgnore(Type... types) {
             List<Type> typeList = Lists.newArrayList(types);
             DisplayBlockProperties ret = this;
             do {

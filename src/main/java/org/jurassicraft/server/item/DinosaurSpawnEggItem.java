@@ -28,9 +28,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class DinosaurSpawnEggItem extends Item implements DinosaurProvider {
-	public DinosaurSpawnEggItem() {
-		this.setCreativeTab(TabHandler.ITEMS);
-	}
 
 	@Override
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target, EnumHand hand) {
@@ -47,7 +44,7 @@ public class DinosaurSpawnEggItem extends Item implements DinosaurProvider {
 		return true;
 	}
 
-	public DinosaurEntity spawnDinosaur(World world, EntityPlayer player, ItemStack stack, double x, double y, double z) {
+	private DinosaurEntity spawnDinosaur(World world, EntityPlayer player, ItemStack stack, double x, double y, double z) {
 		Dinosaur dinosaur = this.getValue(stack);
 		DinosaurEntity entity = dinosaur.createEntity(world);
 		entity.setDNAQuality(100);
@@ -159,7 +156,7 @@ public class DinosaurSpawnEggItem extends Item implements DinosaurProvider {
 		return this.getNBT(stack).getInteger("GenderMode");
 	}
 
-	public int changeMode(ItemStack stack) {
+	private int changeMode(ItemStack stack) {
 		NBTTagCompound nbt = this.getNBT(stack);
 
 		int mode = this.getMode(stack) + 1;
@@ -172,7 +169,7 @@ public class DinosaurSpawnEggItem extends Item implements DinosaurProvider {
 		return mode;
 	}
 
-	public NBTTagCompound getNBT(ItemStack stack) {
+	private NBTTagCompound getNBT(ItemStack stack) {
 		NBTTagCompound nbt = stack.getTagCompound();
 		if (nbt == null) {
 			nbt = new NBTTagCompound();

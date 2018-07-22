@@ -11,15 +11,13 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import org.jurassicraft.server.tab.TabHandler;
 
 public class FineNetItem extends Item {
-    public FineNetItem() {
+    FineNetItem() {
         super();
-        this.setCreativeTab(TabHandler.ITEMS);
         this.setMaxDamage(50);
         this.setMaxStackSize(1);
-        }
+    }
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {

@@ -1,29 +1,26 @@
 package org.jurassicraft.server.item;
 
-import java.util.List;
-import java.util.Random;
-
 import com.google.common.collect.Lists;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jurassicraft.server.api.PlantProvider;
 import org.jurassicraft.server.api.SequencableItem;
 import org.jurassicraft.server.genetics.PlantDNA;
 import org.jurassicraft.server.plant.Plant;
-import org.jurassicraft.server.tab.TabHandler;
 import org.jurassicraft.server.util.LangHelper;
 
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.NonNullList;
+import java.util.List;
+import java.util.Random;
 
 public class PlantSoftTissueItem extends Item implements SequencableItem, PlantProvider {
-    public PlantSoftTissueItem() {
+    PlantSoftTissueItem() {
         super();
         this.setHasSubtypes(true);
-        this.setCreativeTab(TabHandler.PLANTS);
     }
 
     @Override

@@ -13,14 +13,12 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
-import org.jurassicraft.server.tab.TabHandler;
 
 public class SaplingSeedItem extends Item implements IPlantable {
     private Block sapling;
 
-    public SaplingSeedItem(Block sapling) {
+    SaplingSeedItem(Block sapling) {
         this.sapling = sapling;
-        this.setCreativeTab(TabHandler.PLANTS);
     }
 
     @Override

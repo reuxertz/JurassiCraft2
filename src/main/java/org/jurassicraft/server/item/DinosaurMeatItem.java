@@ -1,13 +1,5 @@
 package org.jurassicraft.server.item;
 
-import java.util.Locale;
-
-import org.jurassicraft.server.api.DinosaurProvider;
-import org.jurassicraft.server.entity.Dinosaur;
-import org.jurassicraft.server.genetics.GeneticsHelper;
-import org.jurassicraft.server.tab.TabHandler;
-import org.jurassicraft.server.util.LangHelper;
-
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemFood;
@@ -17,11 +9,16 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.server.api.DinosaurProvider;
+import org.jurassicraft.server.entity.Dinosaur;
+import org.jurassicraft.server.genetics.GeneticsHelper;
+import org.jurassicraft.server.util.LangHelper;
+
+import java.util.Locale;
 
 public class DinosaurMeatItem extends ItemFood implements DinosaurProvider {
-    public DinosaurMeatItem() {
+    DinosaurMeatItem() {
         super(3, 0.3F, true);
-        this.setCreativeTab(TabHandler.FOODS);
     }
 
     @Override

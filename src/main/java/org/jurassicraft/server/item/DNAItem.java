@@ -1,16 +1,10 @@
 package org.jurassicraft.server.item;
 
-import java.util.Locale;
-
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.jurassicraft.server.tab.TabHandler;
 import org.jurassicraft.server.util.LangHelper;
 
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import java.util.Locale;
 
 public class DNAItem extends DNAContainerItem {
 

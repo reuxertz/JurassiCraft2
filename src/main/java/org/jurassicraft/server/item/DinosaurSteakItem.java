@@ -18,20 +18,12 @@ import java.util.Locale;
 public class DinosaurSteakItem extends ItemFood implements DinosaurProvider {
     public DinosaurSteakItem() {
         super(8, 0.8F, true);
-        this.setCreativeTab(TabHandler.FOODS);
     }
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
         Dinosaur dinosaur = this.getValue(stack);
         return new LangHelper("item.dinosaur_steak.name").withProperty("dino", "entity.jurassicraft." + dinosaur.name.replace(" ", "_").toLowerCase(Locale.ENGLISH) + ".name").build();
-    }
-
-    @Override
-    protected void onFoodEaten(ItemStack stack, World world, EntityPlayer player) {
-        if (!world.isRemote) {
-//            this.getValue(stack).applyMeatEffect(player, true); //TODO:
-        }
     }
 
     @Override

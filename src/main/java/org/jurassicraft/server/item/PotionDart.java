@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class PotionDart extends Dart {
-    public PotionDart() {
+    PotionDart() {
         super((entity, stack) -> PotionUtils.getEffectsFromStack(stack).forEach(entity::addPotionEffect), -1);
     }
 

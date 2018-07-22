@@ -12,7 +12,6 @@ public class BugItem extends Item implements BreedableBug {
 
     public BugItem(Function<ItemStack, Integer> breedings) {
         super();
-        this.setCreativeTab(TabHandler.ITEMS);
         this.breedings = breedings;
     }
 

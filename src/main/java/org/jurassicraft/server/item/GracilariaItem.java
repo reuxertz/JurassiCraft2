@@ -20,7 +20,7 @@ import net.minecraftforge.common.IPlantable;
 public class GracilariaItem extends Item implements IPlantable {
     private Block seaweedBlock;
 
-    public GracilariaItem(Block crops) {
+    GracilariaItem(Block crops) {
         this.seaweedBlock = crops;
     }
     @Override
@@ -39,12 +39,6 @@ public class GracilariaItem extends Item implements IPlantable {
 
         return EnumActionResult.PASS;
     }
-
-    //  ___ ____  _             _        _     _
-    // |_ _|  _ \| | __ _ _ __ | |_ __ _| |__ | | ___
-    //  | || |_) | |/ _` | '_ \| __/ _` | '_ \| |/ _ \
-    //  | ||  __/| | (_| | | | | || (_| | |_) | |  __/
-    // |___|_|   |_|\__,_|_| |_|\__\__,_|_.__/|_|\___|
 
     @Override
     public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos) {

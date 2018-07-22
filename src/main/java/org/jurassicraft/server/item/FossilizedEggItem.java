@@ -1,29 +1,26 @@
 package org.jurassicraft.server.item;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
-
 import com.google.common.collect.Lists;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jurassicraft.server.api.GrindableItem;
 import org.jurassicraft.server.block.NestFossilBlock;
 import org.jurassicraft.server.entity.Dinosaur;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
-import org.jurassicraft.server.tab.TabHandler;
 import org.jurassicraft.server.util.LangHelper;
 
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import java.util.Collection;
+import java.util.List;
+import java.util.Random;
 
 public class FossilizedEggItem extends Item implements GrindableItem {
 
     private final NestFossilBlock.Variant variant;
 
-    public FossilizedEggItem(NestFossilBlock.Variant variant) {
-        this.setCreativeTab(TabHandler.FOSSILS);
+    FossilizedEggItem(NestFossilBlock.Variant variant) {
         this.variant = variant;
     }
 

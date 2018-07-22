@@ -17,7 +17,6 @@ import java.util.UUID;
 
 public class HelicopterItem extends Item {
     public HelicopterItem() {
-        this.setCreativeTab(TabHandler.ITEMS);
         this.setMaxStackSize(1);
     }
 

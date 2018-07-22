@@ -1,23 +1,16 @@
 package org.jurassicraft.server.item;
 
-import org.jurassicraft.server.tab.TabHandler;
-import org.jurassicraft.server.util.LangHelper;
-
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.server.util.LangHelper;
 
 import java.util.Locale;
 
 public class AmberItem extends Item {
     private final AmberStorageType type;
 
-    public AmberItem(AmberStorageType type) {
+    AmberItem(AmberStorageType type) {
         this.type = type;
-        this.setCreativeTab(TabHandler.ITEMS);
     }
 
     @Override

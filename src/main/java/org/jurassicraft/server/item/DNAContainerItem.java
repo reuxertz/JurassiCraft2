@@ -10,15 +10,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.server.api.DinosaurProvider;
 import org.jurassicraft.server.genetics.GeneticsHelper;
-import org.jurassicraft.server.tab.TabHandler;
 
 public class DNAContainerItem extends Item implements DinosaurProvider {
 
-    public DNAContainerItem() {
-        this.setCreativeTab(TabHandler.DNA);
-    }
-
-    public int getDNAQuality(EntityPlayer player, ItemStack stack) {
+    int getDNAQuality(EntityPlayer player, ItemStack stack) {
         int quality = player.capabilities.isCreativeMode ? 100 : 0;
 
         NBTTagCompound nbt = stack.getTagCompound();

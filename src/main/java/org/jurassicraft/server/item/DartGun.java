@@ -11,15 +11,13 @@ import net.minecraft.stats.StatList;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import org.jurassicraft.server.entity.TranquilizerDartEntity;
-import org.jurassicraft.server.tab.TabHandler;
 
 import java.util.Collections;
 import java.util.List;
 
 public class DartGun extends Item {
 
-    public DartGun() {
-        this.setCreativeTab(TabHandler.ITEMS);
+    DartGun() {
         this.setMaxStackSize(1);
     }
 
@@ -69,7 +67,7 @@ public class DartGun extends Item {
         return stack;
     }
     
-    public static boolean setDartItem(ItemStack dartGun, ItemStack dartItem) {
+    private static boolean setDartItem(ItemStack dartGun, ItemStack dartItem) {
         boolean hadItem = !dartItem.isEmpty();
         ItemStack dartItem2 = dartItem.splitStack(MAX_CARRY_SIZE);
         dartGun.getOrCreateSubCompound("dart_gun").setTag("itemstack", dartItem2.serializeNBT());

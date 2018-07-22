@@ -9,13 +9,8 @@ import net.minecraft.util.EnumHand;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.message.OpenFieldGuideGuiMessage;
-import org.jurassicraft.server.tab.TabHandler;
 
 public class FieldGuideItem extends Item {
-    public FieldGuideItem() {
-        super();
-        this.setCreativeTab(TabHandler.ITEMS);
-    }
 
     @Override
     public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target, EnumHand hand) {

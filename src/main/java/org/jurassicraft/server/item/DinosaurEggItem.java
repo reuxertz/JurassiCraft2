@@ -9,7 +9,7 @@ import org.jurassicraft.server.util.LangHelper;
 import net.minecraft.item.ItemStack;
 
 public class DinosaurEggItem extends DNAContainerItem implements DinosaurProvider {//TODO not let direct birth animals
-    public DinosaurEggItem() {
+    DinosaurEggItem() {
         this.setMaxStackSize(1);
     }
 

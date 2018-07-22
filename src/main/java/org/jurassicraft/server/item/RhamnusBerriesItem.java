@@ -11,10 +11,8 @@ import net.minecraft.world.World;
  * Created by Codyr on 01/10/2017.
  */
 public class RhamnusBerriesItem extends ItemFood {
-
-    public RhamnusBerriesItem(int i, float v) {
-        super(5, 0.6F, false);
-
+    RhamnusBerriesItem(int amount, float saturation, boolean isWolfFood) {
+        super(amount, saturation, isWolfFood);
     }
 
     protected void onFoodEaten(ItemStack stack, World worldIn, EntityPlayer player) {

@@ -19,7 +19,6 @@ import org.jurassicraft.server.api.DinosaurProvider;
 import org.jurassicraft.server.api.GrindableItem;
 import org.jurassicraft.server.entity.Dinosaur;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
-import org.jurassicraft.server.tab.TabHandler;
 import org.jurassicraft.server.util.LangHelper;
 
 import java.util.List;
@@ -34,7 +33,6 @@ public class FossilItem extends Item implements GrindableItem, DinosaurProvider 
 
     public FossilItem(boolean fresh) {
         this.fresh = fresh;
-        this.setCreativeTab(TabHandler.FOSSILS);
     }
 
     @Override
@@ -153,12 +151,12 @@ public class FossilItem extends Item implements GrindableItem, DinosaurProvider 
         return Lists.newArrayList(Pair.of(single, output), Pair.of(50f, new ItemStack(Items.DYE, 1, 15)), Pair.of(single*2f, new ItemStack(Items.FLINT)));
     }
 
-    public static FossilInfomation getFossilInfomation(ItemStack stack) {
+    private static FossilInfomation getFossilInfomation(ItemStack stack) {
         NBTTagCompound nbt = stack.getOrCreateSubCompound("jurassicraft").getCompoundTag("Fossil Info");
         return new FossilInfomation(JurassicraftRegisteries.DINOSAUR_REGISTRY.getValue(new ResourceLocation(nbt.getString("Dinosaur"))), nbt.getString("Bone Type"));
     }
 
-    public static ItemStack putFossilInfomation(ItemStack stack, FossilInfomation infomation) {
+    private static ItemStack putFossilInfomation(ItemStack stack, FossilInfomation infomation) {
         NBTTagCompound compound = stack.getOrCreateSubCompound("jurassicraft");
         NBTTagCompound nbt = compound.getCompoundTag("Fossil Info");
         if(nbt == null) {
@@ -176,7 +174,7 @@ public class FossilItem extends Item implements GrindableItem, DinosaurProvider 
 
     public static class FossilInfomation {
 
-        public static List<FossilInfomation> getAllInfomation() {
+        private static List<FossilInfomation> getAllInfomation() {
             List<FossilInfomation> list = Lists.newArrayList();
             JurassicraftRegisteries.DINOSAUR_REGISTRY.forEach(dino -> Lists.newArrayList(dino.bones).forEach(bone -> list.add(new FossilInfomation(dino, bone))));
             return list;

@@ -1,32 +1,27 @@
 package org.jurassicraft.server.item;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
-
 import com.google.common.collect.Lists;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jurassicraft.server.api.DinosaurProvider;
 import org.jurassicraft.server.api.SequencableItem;
 import org.jurassicraft.server.entity.Dinosaur;
 import org.jurassicraft.server.genetics.DinoDNA;
 import org.jurassicraft.server.genetics.GeneticsHelper;
-import org.jurassicraft.server.tab.TabHandler;
 import org.jurassicraft.server.util.LangHelper;
 
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
 
 public class SoftTissueItem extends Item implements SequencableItem, DinosaurProvider {
-    public SoftTissueItem() {
-        this.setCreativeTab(TabHandler.DNA);
-    }
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {

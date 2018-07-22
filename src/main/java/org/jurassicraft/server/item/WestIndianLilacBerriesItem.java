@@ -6,12 +6,11 @@ import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
-import org.jurassicraft.server.tab.TabHandler;
 
 public class WestIndianLilacBerriesItem extends ItemFood{
 
-    public WestIndianLilacBerriesItem() {
-        super(1, 0.1F, false);
+    public WestIndianLilacBerriesItem(int amount, float saturation, boolean isWolfFood) {
+        super(amount, saturation, isWolfFood);
         this.setHasSubtypes(true);
     }
 

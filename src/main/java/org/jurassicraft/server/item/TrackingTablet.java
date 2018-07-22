@@ -38,8 +38,8 @@ import java.util.stream.IntStream;
 
 public class TrackingTablet extends Item implements StackNBTProvider<Integer> {
 
-	public static final int MIN_TIER = 1;
-	public static final int MAX_TIER = 5;
+	private static final int MIN_TIER = 1;
+	private static final int MAX_TIER = 5;
 
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
@@ -161,7 +161,7 @@ public class TrackingTablet extends Item implements StackNBTProvider<Integer> {
 
 		private final Map<Integer, List<DinosaurInfo>> dinosaurInfos = Maps.newHashMap();
 
-		public TrackingSavedData(String name) {
+		TrackingSavedData(String name) {
 			super(name);
 		}
 
@@ -223,7 +223,7 @@ public class TrackingTablet extends Item implements StackNBTProvider<Integer> {
 			return compound;
 		}
 
-		public List<DinosaurInfo> getDinosaurInfos(World world) {
+		List<DinosaurInfo> getDinosaurInfos(World world) {
 			return dinosaurInfos.getOrDefault(world.provider.getDimension(), Lists.newArrayList());
 		}
 	}
@@ -233,9 +233,9 @@ public class TrackingTablet extends Item implements StackNBTProvider<Integer> {
 		public Dinosaur dinosaur;
 		public boolean male;
 		public int growthPercentage;
-		public UUID entityUUID;
+		UUID entityUUID;
 
-		public DinosaurInfo(BlockPos pos, Dinosaur dinosaur, boolean male, int growthPercentage, UUID entityUUID) {
+		DinosaurInfo(BlockPos pos, Dinosaur dinosaur, boolean male, int growthPercentage, UUID entityUUID) {
 			this.pos = pos;
 			this.dinosaur = dinosaur;
 			this.male = male;
@@ -243,11 +243,11 @@ public class TrackingTablet extends Item implements StackNBTProvider<Integer> {
 			this.entityUUID = entityUUID;
 		}
 
-		public static DinosaurInfo fromEntity(DinosaurEntity entity) {
+		static DinosaurInfo fromEntity(DinosaurEntity entity) {
 			return new DinosaurInfo(entity.getPosition(), entity.getDinosaur(), entity.isMale(), entity.getAgePercentage(), entity.getPersistentID());
 		}
 
-		public static DinosaurInfo deserializeNBT(NBTTagCompound nbt) {
+		static DinosaurInfo deserializeNBT(NBTTagCompound nbt) {
 			return new DinosaurInfo(
 					BlockPos.fromLong(nbt.getLong("Position")),
 					JurassicraftRegisteries.DINOSAUR_REGISTRY.getValue(new ResourceLocation(nbt.getString("Dinosaur"))),

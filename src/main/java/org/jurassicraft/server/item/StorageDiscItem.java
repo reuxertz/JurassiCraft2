@@ -21,9 +21,6 @@ import java.util.List;
 import java.util.Random;
 
 public class StorageDiscItem extends Item implements SynthesizableItem { //TODO: make a plant storage disc
-    public StorageDiscItem() {
-        this.setCreativeTab(TabHandler.ITEMS);
-    }
 
     @Override
     @SideOnly(Side.CLIENT)

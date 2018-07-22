@@ -15,13 +15,11 @@ import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.FossilBlock;
 import org.jurassicraft.server.block.NestFossilBlock;
 import org.jurassicraft.server.entity.Dinosaur;
-import org.jurassicraft.server.tab.TabHandler;
 
 public class PlasterAndBandageItem extends Item {
-    public PlasterAndBandageItem() {
+    PlasterAndBandageItem() {
         super();
 
-        this.setCreativeTab(TabHandler.ITEMS);
     }
 
     @Override

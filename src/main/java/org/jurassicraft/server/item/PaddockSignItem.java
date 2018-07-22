@@ -9,12 +9,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.tab.TabHandler;
 
 public class PaddockSignItem extends Item {
-    public PaddockSignItem() {
-        this.setCreativeTab(TabHandler.DECORATIONS);
-    }
 
     @Override
     public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {

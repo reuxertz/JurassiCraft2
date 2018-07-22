@@ -15,7 +15,7 @@ import org.jurassicraft.server.util.LangHelper;
 import java.util.Locale;
 
 public class HatchedEggItem extends DNAContainerItem {
-    public HatchedEggItem() {
+    HatchedEggItem() {
         this.setMaxStackSize(1);
     }
 
@@ -28,7 +28,7 @@ public class HatchedEggItem extends DNAContainerItem {
                 .withProperty("dino", "entity.jurassicraft." + dinoName + ".name").build();
     }
 
-    public boolean getGender(EntityPlayer player, ItemStack stack) {
+    private boolean getGender(EntityPlayer player, ItemStack stack) {
         NBTTagCompound nbt = stack.getTagCompound();
 
         boolean gender = player.world.rand.nextBoolean();

@@ -22,7 +22,6 @@ public class SwarmItem extends Item {
     public SwarmItem(Supplier<IBlockState> block) {
         super();
         this.block = block;
-        this.setCreativeTab(TabHandler.ITEMS);
     }
 
     @Override

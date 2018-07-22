@@ -28,8 +28,8 @@ public class EntityRightClickItem extends Item {
 	private final EntityPlayer player;
 	private final EntityLivingBase target;
 	private final EnumHand hand;
-	
-	public Interaction(ItemStack stack, EntityPlayer player, EntityLivingBase target, EnumHand hand) {
+
+	Interaction(ItemStack stack, EntityPlayer player, EntityLivingBase target, EnumHand hand) {
 	    this.stack = stack;
 	    this.player = player;
 	    this.target = target;

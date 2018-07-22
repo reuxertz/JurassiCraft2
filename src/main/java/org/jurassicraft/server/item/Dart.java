@@ -19,7 +19,6 @@ public class Dart extends Item {
     public Dart(BiConsumer<DinosaurEntity, ItemStack> consumer, int dartColor) {
 	    this.consumer = consumer;
 	    this.dartColor = dartColor;
-        this.setCreativeTab(TabHandler.ITEMS);
     }
 
     public int getDartColor(ItemStack stack) {

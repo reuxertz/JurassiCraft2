@@ -9,13 +9,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jurassicraft.server.tab.TabHandler;
 
 public class EmptySyringeItem extends Item {
-    public EmptySyringeItem() {
-        super();
-        this.setCreativeTab(TabHandler.ITEMS);
-    }
 
     @Override
     public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {

@@ -7,19 +7,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jurassicraft.server.api.GrindableItem;
-import org.jurassicraft.server.block.tree.TreeType;
 import org.jurassicraft.server.plant.Plant;
 import org.jurassicraft.server.plant.PlantHandler;
-import org.jurassicraft.server.tab.TabHandler;
 
 import java.util.List;
 import java.util.Random;
 
 public class PlantFossilItem extends Item implements GrindableItem {
-    public PlantFossilItem() {
-        super();
-        this.setCreativeTab(TabHandler.PLANTS);
-    }
 
     @Override
     public boolean isGrindable(ItemStack stack) {

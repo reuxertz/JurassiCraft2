@@ -13,7 +13,7 @@ import org.jurassicraft.server.tab.TabHandler;
 import org.jurassicraft.server.util.LangHelper;
 
 public class PlantDNAItem extends Item implements PlantProvider {
-    public PlantDNAItem() {
+    PlantDNAItem() {
         super();
         this.setCreativeTab(TabHandler.PLANTS);
         this.setHasSubtypes(true);

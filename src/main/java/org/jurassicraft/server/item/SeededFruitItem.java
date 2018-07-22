@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 public class SeededFruitItem extends ItemFood {
     private Item seed;
 
-    public SeededFruitItem(Item seed, int amount, float saturation) {
+    SeededFruitItem(Item seed, int amount, float saturation) {
         super(amount, saturation, false);
         this.seed = seed;
     }

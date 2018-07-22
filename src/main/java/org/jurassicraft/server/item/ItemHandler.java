@@ -1,39 +1,40 @@
 package org.jurassicraft.server.item;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
 import com.google.common.collect.Maps;
+import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
+import net.minecraft.item.*;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.oredict.OreDictionary;
 import org.jurassicraft.client.sound.SoundHandler;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.NestFossilBlock;
 import org.jurassicraft.server.block.tree.TreeType;
 import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.entity.item.AttractionSignEntity;
-import org.jurassicraft.server.item.block.AncientDoorItem;
-import org.jurassicraft.server.item.vehicles.HelicopterItem;
-import org.jurassicraft.server.item.vehicles.HelicopterModuleItem;
 import org.jurassicraft.server.tab.TabHandler;
 import org.jurassicraft.server.util.RegistryHandler;
 
-import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.init.MobEffects;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemFood;
-import net.minecraft.item.ItemSeedFood;
-import net.minecraft.item.ItemSeeds;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.PotionEffect;
-import net.minecraftforge.oredict.OreDictionary;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class ItemHandler {
-    public static final Map<TreeType, AncientDoorItem> ANCIENT_DOORS = new HashMap<>();
+
+    private static CreativeTabs itemTab = TabHandler.ITEMS;
+    private static CreativeTabs foodTab = TabHandler.FOODS;
+    private static CreativeTabs dnaTab = TabHandler.DNA;
+    private static CreativeTabs decoTab = TabHandler.DECORATIONS;
+    private static CreativeTabs fossilTab = TabHandler.FOSSILS;
+    private static CreativeTabs plantTab = TabHandler.PLANTS;
+
+    public static final Map<TreeType, ItemDoor> ANCIENT_DOORS = new HashMap<>();
 
     public static final PlasterAndBandageItem PLASTER_AND_BANDAGE = new PlasterAndBandageItem();
     public static final DinosaurSpawnEggItem SPAWN_EGG = new DinosaurSpawnEggItem();
@@ -51,24 +52,24 @@ public class ItemHandler {
     public static final Map<AttractionSignEntity.AttractionSignType, AttractionSignItem> ATTRACTION_SIGN = Maps.newHashMap();
 
     public static final Map<AmberItem.AmberStorageType, AmberItem> AMBER = Maps.newHashMap();
-    public static final BasicItem PETRI_DISH = new BasicItem(TabHandler.ITEMS);
-    public static final BasicItem PETRI_DISH_AGAR = new BasicItem(TabHandler.ITEMS);
-    public static final BasicItem EMPTY_TEST_TUBE = new BasicItem(TabHandler.ITEMS);
+    public static final Item PETRI_DISH = new Item();
+    public static final Item PETRI_DISH_AGAR = new Item();
+    public static final Item EMPTY_TEST_TUBE = new Item();
 
     public static final SyringeItem SYRINGE = new SyringeItem();
     public static final EmptySyringeItem EMPTY_SYRINGE = new EmptySyringeItem();
 
     public static final StorageDiscItem STORAGE_DISC = new StorageDiscItem();
-    public static final BasicItem DNA_NUCLEOTIDES = new BasicItem(TabHandler.ITEMS);
+    public static final Item DNA_NUCLEOTIDES = new Item();
 
     public static final PlantDNAItem PLANT_DNA = new PlantDNAItem();
 
-    public static final BasicItem SEA_LAMPREY = new BasicItem(TabHandler.ITEMS);
+    public static final Item SEA_LAMPREY = new Item();
 
-    public static final BasicItem IRON_BLADES = new BasicItem(TabHandler.ITEMS);
-    public static final BasicItem IRON_ROD = new BasicItem(TabHandler.ITEMS);
-    public static final BasicItem DISC_DRIVE = new BasicItem(TabHandler.ITEMS);
-    public static final BasicItem LASER = new BasicItem(TabHandler.ITEMS);
+    public static final Item IRON_BLADES = new Item();
+    public static final Item IRON_ROD = new Item();
+    public static final Item DISC_DRIVE = new Item();
+    public static final Item LASER = new Item();
 
     public static final Item GROWTH_SERUM = new EntityRightClickItem(interaction -> {
 	if (interaction.getTarget() instanceof DinosaurEntity) {
@@ -121,43 +122,41 @@ public class ItemHandler {
         return false;
     });
 
-    public static final BasicItem PLANT_CELLS = new BasicItem(TabHandler.ITEMS);
+    public static final Item PLANT_CELLS = new Item();
     public static final PlantCallusItem PLANT_CALLUS = new PlantCallusItem();
-    public static final BasicItem PLANT_CELLS_PETRI_DISH = new BasicItem(TabHandler.ITEMS);
-    public static final HelicopterItem HELICOPTER = new HelicopterItem();
-    public static final HelicopterModuleItem MINIGUN_MODULE = new HelicopterModuleItem("minigun");
+    public static final Item PLANT_CELLS_PETRI_DISH = new Item();
 
-    public static final BasicItem TRACKER = new BasicItem(TabHandler.ITEMS);
+    public static final Item TRACKER = new Item();
 
-    public static final AncientRecordItem JURASSICRAFT_THEME_DISC = new AncientRecordItem("jurassicraft_theme", SoundHandler.JURASSICRAFT_THEME);
-    public static final AncientRecordItem TROODONS_AND_RAPTORS_DISC = new AncientRecordItem("troodons_and_raptors", SoundHandler.TROODONS_AND_RAPTORS);
-    public static final AncientRecordItem DONT_MOVE_A_MUSCLE_DISC = new AncientRecordItem("dont_move_a_muscle", SoundHandler.DONT_MOVE_A_MUSCLE);
+    public static final ItemRecord JURASSICRAFT_THEME_DISC = new AncientRecordItem("jurassicraft_theme", SoundHandler.JURASSICRAFT_THEME);
+    public static final ItemRecord TROODONS_AND_RAPTORS_DISC = new AncientRecordItem("troodons_and_raptors", SoundHandler.TROODONS_AND_RAPTORS);
+    public static final ItemRecord DONT_MOVE_A_MUSCLE_DISC = new AncientRecordItem("dont_move_a_muscle", SoundHandler.DONT_MOVE_A_MUSCLE);
 
     public static final DisplayBlockItem DISPLAY_BLOCK = new DisplayBlockItem();
 
-    public static final BasicItem AMBER_KEYCHAIN = new BasicItem(TabHandler.DECORATIONS);
-    public static final BasicItem AMBER_CANE = new BasicItem(TabHandler.DECORATIONS);
-    public static final BasicItem MR_DNA_KEYCHAIN = new BasicItem(TabHandler.DECORATIONS);
+    public static final Item AMBER_KEYCHAIN = new Item();
+    public static final Item AMBER_CANE = new Item();
+    public static final Item MR_DNA_KEYCHAIN = new Item();
 
-    public static final BasicItem BASIC_CIRCUIT = new BasicItem(TabHandler.ITEMS);
-    public static final BasicItem ADVANCED_CIRCUIT = new BasicItem(TabHandler.ITEMS);
+    public static final Item BASIC_CIRCUIT = new Item();
+    public static final Item ADVANCED_CIRCUIT = new Item();
 
-    public static final BasicItem IRON_NUGGET = new BasicItem(TabHandler.ITEMS);
+    public static final Item IRON_NUGGET = new Item();
 
-    public static final Item AJUGINUCULA_SMITHII_SEEDS = new ItemSeeds(BlockHandler.AJUGINUCULA_SMITHII, Blocks.FARMLAND).setUnlocalizedName("ajuginucula_smithii_seeds").setCreativeTab(TabHandler.PLANTS);
-    public static final Item AJUGINUCULA_SMITHII_LEAVES = new ItemFood(1, 0.5F, false).setUnlocalizedName("ajuginucula_smithii_leaves").setCreativeTab(TabHandler.PLANTS);
-    public static final BasicItem AJUGINUCULA_SMITHII_OIL = new BasicItem(TabHandler.PLANTS);
+    public static final Item AJUGINUCULA_SMITHII_SEEDS = new ItemSeeds(BlockHandler.AJUGINUCULA_SMITHII, Blocks.FARMLAND).setUnlocalizedName("ajuginucula_smithii_seeds");
+    public static final Item AJUGINUCULA_SMITHII_LEAVES = new ItemFood(1, 0.5F, false).setUnlocalizedName("ajuginucula_smithii_leaves");
+    public static final Item AJUGINUCULA_SMITHII_OIL = new Item();
 
-    public static final Item WILD_ONION = new ItemSeedFood(3, 0.3F, BlockHandler.WILD_ONION, Blocks.FARMLAND).setUnlocalizedName("wild_onion").setCreativeTab(TabHandler.PLANTS);
-    public static final Item WILD_POTATO_SEEDS = new ItemSeeds(BlockHandler.WILD_POTATO_PLANT, Blocks.FARMLAND).setCreativeTab(TabHandler.PLANTS);
-    public static final Item RHAMNUS_SEEDS = new ItemSeeds(BlockHandler.RHAMNUS_SALICIFOLIUS_PLANT, Blocks.FARMLAND).setCreativeTab(TabHandler.PLANTS);
+    public static final Item WILD_ONION = new ItemSeedFood(3, 0.3F, BlockHandler.WILD_ONION, Blocks.FARMLAND).setUnlocalizedName("wild_onion");
+    public static final ItemSeeds WILD_POTATO_SEEDS = new ItemSeeds(BlockHandler.WILD_POTATO_PLANT, Blocks.FARMLAND);
+    public static final ItemSeeds RHAMNUS_SEEDS = new ItemSeeds(BlockHandler.RHAMNUS_SALICIFOLIUS_PLANT, Blocks.FARMLAND);
     public static final Item WILD_POTATO = new ItemFood(1, 0.1F, false).setCreativeTab(TabHandler.FOODS);
     public static final Item WILD_POTATO_COOKED = new ItemFood(6, 0.6F, false).setCreativeTab(TabHandler.FOODS);
-    public static final Item RHAMNUS_BERRIES = new RhamnusBerriesItem(3,0.3F).setCreativeTab(TabHandler.FOODS);
-    public static final Item WEST_INDIAN_LILAC_BERRIES = new WestIndianLilacBerriesItem().setCreativeTab(TabHandler.FOODS);
+    public static final RhamnusBerriesItem RHAMNUS_BERRIES = new RhamnusBerriesItem(5, 0.6F, false);
+    public static final Item WEST_INDIAN_LILAC_BERRIES = new WestIndianLilacBerriesItem(1, 0.1F, false);
 
-    public static final GracilariaItem GRACILARIA = (GracilariaItem) new GracilariaItem(BlockHandler.GRACILARIA).setCreativeTab(TabHandler.PLANTS);
-    public static final BasicItem LIQUID_AGAR = new BasicItem(TabHandler.PLANTS);
+    public static final GracilariaItem GRACILARIA = (GracilariaItem) new GracilariaItem(BlockHandler.GRACILARIA);
+    public static final Item LIQUID_AGAR = new Item();
 
     public static final DinoScannerItem DINO_SCANNER = new DinoScannerItem();
 
@@ -169,28 +168,28 @@ public class ItemHandler {
 
     public static final Map<NestFossilBlock.Variant, FossilizedEggItem> FOSSILIZED_EGG = Maps.newHashMap();
 
-    public static final BasicItem GYPSUM_POWDER = new BasicItem(TabHandler.ITEMS);
+    public static final Item GYPSUM_POWDER = new Item();
 
-    public static final BasicItem COMPUTER_SCREEN = new BasicItem(TabHandler.ITEMS);
-    public static final BasicItem KEYBOARD = new BasicItem(TabHandler.ITEMS);
+    public static final Item COMPUTER_SCREEN = new Item();
+    public static final Item KEYBOARD = new Item();
 
-    public static final BasicItem DNA_ANALYZER = new BasicItem(TabHandler.ITEMS);
+    public static final Item DNA_ANALYZER = new Item();
 
-    public static final BasicFoodItem CHILEAN_SEA_BASS = new BasicFoodItem(10, 1.0F, false, TabHandler.FOODS);
-    public static final BasicFoodItem FUN_FRIES = new BasicFoodItem(4, 2.0F, false, TabHandler.FOODS);
-    public static final BasicFoodItem OILED_POTATO_STRIPS = new BasicFoodItem(1, 0.0F, false, TabHandler.FOODS);
+    public static final ItemFood CHILEAN_SEA_BASS = new ItemFood(10, 1.0F, false);
+    public static final ItemFood FUN_FRIES = new ItemFood(4, 2.0F, false);
+    public static final ItemFood OILED_POTATO_STRIPS = new ItemFood(1, 0.0F, false);
 
     public static final FieldGuideItem FIELD_GUIDE = new FieldGuideItem();
 
-    public static final BasicItem LUNCH_BOX = new BasicItem(TabHandler.ITEMS);
-    public static final BasicItem STAMP_SET = new BasicItem(TabHandler.ITEMS);
+    public static final Item LUNCH_BOX = new Item();
+    public static final Item STAMP_SET = new Item();
 
-    public static final BasicItem CAR_CHASSIS = new BasicItem(TabHandler.ITEMS);
-    public static final BasicItem CAR_ENGINE_SYSTEM = new BasicItem(TabHandler.ITEMS);
-    public static final BasicItem CAR_SEATS = new BasicItem(TabHandler.ITEMS);
-    public static final BasicItem CAR_TIRE = new BasicItem(TabHandler.ITEMS);
-    public static final BasicItem CAR_WINDSCREEN = new BasicItem(TabHandler.ITEMS);
-    public static final BasicItem UNFINISHED_CAR = new BasicItem(TabHandler.ITEMS);
+    public static final Item CAR_CHASSIS = new Item();
+    public static final Item CAR_ENGINE_SYSTEM = new Item();
+    public static final Item CAR_SEATS = new Item();
+    public static final Item CAR_TIRE = new Item();
+    public static final Item CAR_WINDSCREEN = new Item();
+    public static final Item UNFINISHED_CAR = new Item();
 
     public static final Map<JournalItem.JournalType, JournalItem> INGEN_JOURNAL = Maps.newHashMap();
 
@@ -200,7 +199,7 @@ public class ItemHandler {
     public static final MuralItem MURAL = new MuralItem();
 
     public static final SaplingSeedItem PHOENIX_SEEDS = (SaplingSeedItem) new SaplingSeedItem(BlockHandler.ANCIENT_SAPLINGS.get(TreeType.PHOENIX));
-    public static final SeededFruitItem PHOENIX_FRUIT = (SeededFruitItem) new SeededFruitItem(PHOENIX_SEEDS, 4, 0.4F).setCreativeTab(TabHandler.FOODS);
+    public static final SeededFruitItem PHOENIX_FRUIT = (SeededFruitItem) new SeededFruitItem(PHOENIX_SEEDS, 4, 0.4F);
 
     public static final BugItem CRICKETS = new BugItem(stack -> {
         Item item = stack.getItem();
@@ -271,8 +270,8 @@ public class ItemHandler {
     public static final SwarmItem PLANKTON = new SwarmItem(BlockHandler.PLANKTON_SWARM::getDefaultState);
     public static final SwarmItem KRILL = new SwarmItem(BlockHandler.KRILL_SWARM::getDefaultState);
 
-    public static final BasicFoodItem GOAT_RAW = new BasicFoodItem(3, 0.3F, true, TabHandler.FOODS);
-    public static final BasicFoodItem GOAT_COOKED = new BasicFoodItem(6, 1.0F, true, TabHandler.FOODS);
+    public static final ItemFood GOAT_RAW = new ItemFood(3, 0.3F, true);
+    public static final ItemFood GOAT_COOKED = new ItemFood(6, 1.0F, true);
     
     public static final DartGun DART_GUN = new DartGun();
     public static final Dart DART_TRANQUILIZER = new Dart((entity, stack) -> entity.tranquilize(2000), 0xFFFFFF);
@@ -281,7 +280,7 @@ public class ItemHandler {
     public static final Dart DART_TIPPED_POTION = new PotionDart();
     public static final Dart TRACKING_DART = new Dart((entity, stack) -> entity.setHasTracker(true));
 
-    public static final TrackingTablet TRACKING_TABLET = new TrackingTablet();
+    static final TrackingTablet TRACKING_TABLET = new TrackingTablet();
 
     static {
         for(AttractionSignEntity.AttractionSignType type : AttractionSignEntity.AttractionSignType.values()) {
@@ -301,140 +300,125 @@ public class ItemHandler {
     public static void init() {
 
         for (NestFossilBlock.Variant variant : NestFossilBlock.Variant.values()) {
-            registerItem(FOSSILIZED_EGG.get(variant), "Fossilized Egg " + variant.getName());
+            registerItem(FOSSILIZED_EGG.get(variant), "Fossilized Egg " + variant.getName(), fossilTab);
         }
 
-        registerItem(FOSSIL, "Fossil");
-        registerItem(FRESH_FOSSIL, "Fresh Fossil");
+        //Fossils
+        registerItem(FOSSIL, "Fossil", fossilTab);
+        registerItem(FRESH_FOSSIL, "Fresh Fossil", fossilTab);
 
-        registerItem(SPAWN_EGG, "Dino Spawn Egg");
-        registerItem(FIELD_GUIDE, "Field Guide");
-        for (AmberItem.AmberStorageType type : AmberItem.AmberStorageType.values()) {
-            registerItem(AMBER.get(type), "Amber " + type.getName());
-        }
-        registerItem(SEA_LAMPREY, "Sea Lamprey");
-        registerItem(PLASTER_AND_BANDAGE, "Plaster And Bandage");
-        registerItem(EMPTY_TEST_TUBE, "Empty Test Tube");
-        registerItem(EMPTY_SYRINGE, "Empty Syringe");
-        registerItem(GROWTH_SERUM, "Growth Serum");
-        registerItem(BREEDING_WAND, "Breeding Wand");
-        registerItem(BIRTHING_WAND, "Birthing_Wand");
-        registerItem(PREGNANCY_TEST, "Pregnancy Test");
-        registerItem(STORAGE_DISC, "Storage Disc");
-        registerItem(DISC_DRIVE, "Disc Reader");
-        registerItem(LASER, "Laser");
-        registerItem(DNA_NUCLEOTIDES, "DNA Base Material");
-        registerItem(PETRI_DISH, "Petri Dish");
-        registerItem(PETRI_DISH_AGAR, "Petri Dish Agar");
-        registerItem(PLANT_CELLS_PETRI_DISH, "Plant Cells Petri Dish");
-        registerItem(PADDOCK_SIGN, "Paddock Sign");
+        //Decorations
+        registerItem(PADDOCK_SIGN, "Paddock Sign", decoTab);
+        registerItem(MURAL, "Mural", decoTab);
+        registerItem(AMBER_CANE, "Amber Cane", decoTab);
+        registerItem(AMBER_KEYCHAIN, "Amber Keychain", decoTab);
+        registerItem(MR_DNA_KEYCHAIN, "Mr DNA Keychain", decoTab);
+        registerItem(DISPLAY_BLOCK, "Display Block Item", decoTab);
         for (AttractionSignEntity.AttractionSignType type : AttractionSignEntity.AttractionSignType.values()) {
-            registerItem(ATTRACTION_SIGN.get(type), "Attraction Sign " + type.name());
+            registerItem(ATTRACTION_SIGN.get(type), "Attraction Sign " + type.name(), decoTab);
         }
-        registerItem(MURAL, "Mural");
-        registerItem(DNA, "DNA");
-        registerItem(SOFT_TISSUE, "Soft Tissue");
-        registerItem(SYRINGE, "Syringe");
-        registerItem(EGG, "Dino Egg");
-        registerItem(HATCHED_EGG, "Hatched Egg");
-        registerItem(PLANT_SOFT_TISSUE, "Plant Soft Tissue");
-        registerItem(PLANT_DNA, "Plant DNA");
-        registerItem(IRON_BLADES, "Iron Blades");
-        registerItem(IRON_ROD, "Iron Rod");
-        registerItem(PLANT_CELLS, "Plant Cells");
-        registerItem(PLANT_CALLUS, "Plant Callus");
-        registerItem(TRACKER, "Tracker");
-        registerItem(BASIC_CIRCUIT, "Basic Circuit");
-        registerItem(ADVANCED_CIRCUIT, "Advanced Circuit");
-        registerItem(IRON_NUGGET, "Iron Nugget");
-        registerItem(COMPUTER_SCREEN, "Computer Screen");
-        registerItem(KEYBOARD, "Keyboard");
-        registerItem(DNA_ANALYZER, "DNA Analyzer");
 
-        registerItem(DINOSAUR_MEAT, "Dinosaur Meat");
-        registerItem(DINOSAUR_STEAK, "Dinosaur Steak");
+        //Food
+        registerItem(DINOSAUR_MEAT, "Dinosaur Meat", foodTab);
+        registerItem(DINOSAUR_STEAK, "Dinosaur Steak", foodTab);
+        registerItem(WILD_POTATO_COOKED, "Wild Potato Cooked", foodTab);
+        registerItem(RHAMNUS_BERRIES, "Rhamnus Salicifolius Berries", foodTab);
+        registerItem(CHILEAN_SEA_BASS, "Chilean Sea Bass", foodTab);
+        registerItem(PHOENIX_FRUIT, "Phoenix Fruit", foodTab);
+        registerItem(GOAT_RAW, "Goat Raw", foodTab);
+        registerItem(GOAT_COOKED, "Goat Cooked", foodTab);
+        registerItem(FUN_FRIES, "Fun Fries", foodTab);
+        registerItem(OILED_POTATO_STRIPS, "Oiled Potato Strips", foodTab);
+        registerItem(WEST_INDIAN_LILAC_BERRIES, "West Indian Lilac Berries", foodTab);
 
-        registerItem(PLANT_FOSSIL, "Plant Fossil");
-        registerItem(TWIG_FOSSIL, "Twig Fossil");
+        //DNA
+        registerItem(PLANT_SOFT_TISSUE, "Plant Soft Tissue", null);
 
-//        registerItem(HELICOPTER, "Helicopter Spawner");
-//        registerItem(MINIGUN_MODULE, "Helicopter Minigun");
+        registerItem(DNA, "DNA", dnaTab);
+        registerItem(SOFT_TISSUE, "Soft Tissue", dnaTab);
+        registerItem(SYRINGE, "Syringe", dnaTab);
+        registerItem(EGG, "Dino Egg", dnaTab);
+        registerItem(HATCHED_EGG, "Hatched Egg", dnaTab);
 
-        registerItem(AMBER_CANE, "Amber Cane");
-        registerItem(AMBER_KEYCHAIN, "Amber Keychain");
-        registerItem(MR_DNA_KEYCHAIN, "Mr DNA Keychain");
+        //Plants
+        registerItem(PLANT_CALLUS, "Plant Callus", plantTab);
+        registerItem(PLANT_DNA, "Plant DNA", plantTab);
+        registerItem(PLANT_FOSSIL, "Plant Fossil", plantTab);
+        registerItem(TWIG_FOSSIL, "Twig Fossil", plantTab);
+        registerItem(AJUGINUCULA_SMITHII_SEEDS, "Ajuginucula Smithii Seeds", plantTab);
+        registerItem(AJUGINUCULA_SMITHII_LEAVES, "Ajuginucula Smithii Leaves", plantTab);
+        registerItem(AJUGINUCULA_SMITHII_OIL, "Ajuginucula Smithii Oil", plantTab);
+        registerItem(WILD_ONION, "Wild Onion", plantTab);
+        registerItem(WILD_POTATO_SEEDS, "Wild Potato Seeds", plantTab);
+        registerItem(WILD_POTATO, "Wild Potato", plantTab);
+        registerItem(RHAMNUS_SEEDS, "Rhamnus Salicifolius Seeds", plantTab);
+        registerItem(GRACILARIA, "Gracilaria", plantTab);
+        registerItem(LIQUID_AGAR, "Liquid Agar", plantTab);
+        registerItem(PHOENIX_SEEDS, "Phoenix Seeds", plantTab);
 
-        registerItem(DISPLAY_BLOCK, "Display Block Item");
-
-        registerItem(DINO_SCANNER, "Dino Scanner");
-
-        registerItem(GYPSUM_POWDER, "Gypsum Powder");
-
-        registerItem(AJUGINUCULA_SMITHII_SEEDS, "Ajuginucula Smithii Seeds");
-        registerItem(AJUGINUCULA_SMITHII_LEAVES, "Ajuginucula Smithii Leaves");
-        registerItem(AJUGINUCULA_SMITHII_OIL, "Ajuginucula Smithii Oil");
-
-        registerItem(WILD_ONION, "Wild Onion");
-        registerItem(WILD_POTATO_SEEDS, "Wild Potato Seeds");
-        registerItem(WILD_POTATO, "Wild Potato");
-        registerItem(WILD_POTATO_COOKED, "Wild Potato Cooked");
-
-        registerItem(RHAMNUS_SEEDS, "Rhamnus Salicifolius Seeds");
-        registerItem(RHAMNUS_BERRIES, "Rhamnus Salicifolius Berries");
-
-        registerItem(GRACILARIA, "Gracilaria");
-        registerItem(LIQUID_AGAR, "Liquid Agar");
-
-        registerItem(CHILEAN_SEA_BASS, "Chilean Sea Bass");
-        registerItem(PHOENIX_FRUIT, "Phoenix Fruit");
-        registerItem(PHOENIX_SEEDS, "Phoenix Seeds");
-
-        registerItem(FINE_NET, "Fine Net");
-        registerItem(PLANKTON, "Plankton");
-        registerItem(KRILL, "Krill");
-
-        registerItem(CRICKETS, "Crickets");
-        registerItem(COCKROACHES, "Cockroaches");
-        registerItem(MEALWORM_BEETLES, "Mealworm Beetles");
-
-        registerItem(CAR_CHASSIS, "Car Chassis");
-        registerItem(CAR_ENGINE_SYSTEM, "Car Engine System");
-        registerItem(CAR_SEATS, "Car Seats");
-        registerItem(CAR_TIRE, "Car Tire");
-        registerItem(CAR_WINDSCREEN, "Car Windscreen");
-        registerItem(UNFINISHED_CAR, "Unfinished Car");
-        registerItem(JEEP_WRANGLER, "Jeep Wrangler");
-        registerItem(FORD_EXPLORER, "Ford Explorer");
-
-        registerItem(JURASSICRAFT_THEME_DISC, "Disc JurassiCraft Theme");
-        registerItem(TROODONS_AND_RAPTORS_DISC, "Disc Troodons And Raptors");
-        registerItem(DONT_MOVE_A_MUSCLE_DISC, "Disc Don't Move A Muscle");
-
-        registerItem(GOAT_RAW, "Goat Raw");
-        registerItem(GOAT_COOKED, "Goat Cooked");
-
-        registerItem(FUN_FRIES, "Fun Fries");
-        registerItem(OILED_POTATO_STRIPS, "Oiled Potato Strips");
-
-        registerItem(WEST_INDIAN_LILAC_BERRIES, "West Indian Lilac Berries");
-
-        registerItem(LUNCH_BOX, "Lunch Box");
-        registerItem(STAMP_SET, "Stamp Set");
-
+        //General Items
+        registerItem(SPAWN_EGG, "Dino Spawn Egg", itemTab);
+        registerItem(FIELD_GUIDE, "Field Guide", itemTab);
+        registerItem(SEA_LAMPREY, "Sea Lamprey", itemTab);
+        registerItem(PLASTER_AND_BANDAGE, "Plaster And Bandage", itemTab);
+        registerItem(EMPTY_TEST_TUBE, "Empty Test Tube", itemTab);
+        registerItem(EMPTY_SYRINGE, "Empty Syringe", itemTab);
+        registerItem(GROWTH_SERUM, "Growth Serum", itemTab);
+        registerItem(BREEDING_WAND, "Breeding Wand", itemTab);
+        registerItem(BIRTHING_WAND, "Birthing_Wand", itemTab);
+        registerItem(PREGNANCY_TEST, "Pregnancy Test", itemTab);
+        registerItem(STORAGE_DISC, "Storage Disc", itemTab);
+        registerItem(DISC_DRIVE, "Disc Reader", itemTab);
+        registerItem(LASER, "Laser", itemTab);
+        registerItem(DNA_NUCLEOTIDES, "DNA Base Material", itemTab);
+        registerItem(PETRI_DISH, "Petri Dish", itemTab);
+        registerItem(PETRI_DISH_AGAR, "Petri Dish Agar", itemTab);
+        registerItem(PLANT_CELLS_PETRI_DISH, "Plant Cells Petri Dish", itemTab);
+        registerItem(IRON_BLADES, "Iron Blades", itemTab);
+        registerItem(IRON_ROD, "Iron Rod", itemTab);
+        registerItem(PLANT_CELLS, "Plant Cells", itemTab);
+        registerItem(TRACKER, "Tracker", itemTab);
+        registerItem(BASIC_CIRCUIT, "Basic Circuit", itemTab);
+        registerItem(ADVANCED_CIRCUIT, "Advanced Circuit", itemTab);
+        registerItem(IRON_NUGGET, "Iron Nugget", itemTab);
+        registerItem(COMPUTER_SCREEN, "Computer Screen", itemTab);
+        registerItem(KEYBOARD, "Keyboard", itemTab);
+        registerItem(DNA_ANALYZER, "DNA Analyzer", itemTab);
+        registerItem(DINO_SCANNER, "Dino Scanner", itemTab);
+        registerItem(GYPSUM_POWDER, "Gypsum Powder", itemTab);
+        registerItem(FINE_NET, "Fine Net", itemTab);
+        registerItem(PLANKTON, "Plankton", itemTab);
+        registerItem(KRILL, "Krill", itemTab);
+        registerItem(CRICKETS, "Crickets", itemTab);
+        registerItem(COCKROACHES, "Cockroaches", itemTab);
+        registerItem(MEALWORM_BEETLES, "Mealworm Beetles", itemTab);
+        registerItem(CAR_CHASSIS, "Car Chassis", itemTab);
+        registerItem(CAR_ENGINE_SYSTEM, "Car Engine System", itemTab);
+        registerItem(CAR_SEATS, "Car Seats", itemTab);
+        registerItem(CAR_TIRE, "Car Tire", itemTab);
+        registerItem(CAR_WINDSCREEN, "Car Windscreen", itemTab);
+        registerItem(UNFINISHED_CAR, "Unfinished Car", itemTab);
+        registerItem(JEEP_WRANGLER, "Jeep Wrangler", itemTab);
+        registerItem(FORD_EXPLORER, "Ford Explorer", itemTab);
+        registerItem(JURASSICRAFT_THEME_DISC, "Disc JurassiCraft Theme", itemTab);
+        registerItem(TROODONS_AND_RAPTORS_DISC, "Disc Troodons And Raptors", itemTab);
+        registerItem(DONT_MOVE_A_MUSCLE_DISC, "Disc Don't Move A Muscle", itemTab);
+        registerItem(LUNCH_BOX, "Lunch Box", itemTab);
+        registerItem(STAMP_SET, "Stamp Set", itemTab);
+        registerItem(DART_GUN, "Dart Gun", itemTab);
+        registerItem(DART_TRANQUILIZER, "Dart Tranquilizer", itemTab);
+        registerItem(DART_POISON_CYCASIN, "Dart Poison Cycasin", itemTab);
+        registerItem(DART_POISON_EXECUTIONER_CONCOCTION, "Dart Poison Executioner Concoction", itemTab);
+        registerItem(DART_TIPPED_POTION, "Dart Tipped Potion", itemTab);
+        registerItem(TRACKING_DART, "Tracking Dart", itemTab);
+        registerItem(TRACKING_TABLET, "Tracking Tablet", itemTab);
         for (JournalItem.JournalType journalType : JournalItem.JournalType.values()) {
-            registerItem(INGEN_JOURNAL.get(journalType), "InGen Journal " + journalType.name());
+            registerItem(INGEN_JOURNAL.get(journalType), "InGen Journal " + journalType.name(), itemTab);
 
         }
-
-        registerItem(DART_GUN, "Dart Gun");
-        registerItem(DART_TRANQUILIZER, "Dart Tranquilizer");
-        registerItem(DART_POISON_CYCASIN, "Dart Poison Cycasin");
-        registerItem(DART_POISON_EXECUTIONER_CONCOCTION, "Dart Poison Executioner Concoction");
-        registerItem(DART_TIPPED_POTION, "Dart Tipped Potion");
-        registerItem(TRACKING_DART, "Tracking Dart");
-
-        registerItem(TRACKING_TABLET, "Tracking Tablet");
-
+        for (AmberItem.AmberStorageType type : AmberItem.AmberStorageType.values()) {
+            registerItem(AMBER.get(type), "Amber " + type.getName(), itemTab);
+        }
         for (TreeType type : TreeType.values()) {
             registerTreeType(type);
         }
@@ -445,16 +429,18 @@ public class ItemHandler {
         OreDictionary.registerOre("nuggetIron", IRON_NUGGET);
     }
 
-    public static void registerTreeType(TreeType type) {
+
+    private static void registerTreeType(TreeType type) {
         String typeName = type.name();
-        AncientDoorItem door = new AncientDoorItem(BlockHandler.ANCIENT_DOORS.get(type));
+        ItemDoor door = new ItemDoor(BlockHandler.ANCIENT_DOORS.get(type));
         ANCIENT_DOORS.put(type, door);
-        registerItem(door, typeName + " Door Item");
+        registerItem(door, typeName + " Door Item", plantTab);
     }
 
-    public static void registerItem(Item item, String name) {
+    private static void registerItem(Item item, String name, CreativeTabs creativeTab) {
         String formattedName = name.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_").replaceAll("'", "");
         item.setUnlocalizedName(formattedName);
         RegistryHandler.registerItem(item, formattedName);
+        item.setCreativeTab(creativeTab);
     }
 }

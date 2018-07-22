@@ -1,13 +1,5 @@
 package org.jurassicraft.server.item;
 
-import net.minecraft.util.*;
-import org.jurassicraft.server.api.PlantProvider;
-import org.jurassicraft.server.block.plant.DoublePlantBlock;
-import org.jurassicraft.server.block.plant.JCBlockCropsBase;
-import org.jurassicraft.server.plant.Plant;
-import org.jurassicraft.server.tab.TabHandler;
-import org.jurassicraft.server.util.LangHelper;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.creativetab.CreativeTabs;
@@ -15,13 +7,18 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jurassicraft.server.api.PlantProvider;
+import org.jurassicraft.server.block.plant.DoublePlantBlock;
+import org.jurassicraft.server.block.plant.JCBlockCropsBase;
+import org.jurassicraft.server.plant.Plant;
+import org.jurassicraft.server.util.LangHelper;
 
 public class PlantCallusItem extends Item implements PlantProvider {
-    public PlantCallusItem() {
+    PlantCallusItem() {
         super();
-        this.setCreativeTab(TabHandler.PLANTS);
         this.setHasSubtypes(true);
     }
 
