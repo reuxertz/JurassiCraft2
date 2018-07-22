@@ -1195,8 +1195,6 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
                 this.carcassHealth = Math.max(1, (int) Math.sqrt(this.width * this.height) * 2);
                 this.ticksExisted = 0;
                 this.inventory.dropItems(this.world, this.rand);
-            }else{
-                this.inventory.dropItems(this.world, this.rand);
             }
         }
     }
