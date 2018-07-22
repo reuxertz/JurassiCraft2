@@ -22,6 +22,7 @@ import org.jurassicraft.client.model.animation.PoseHandler;
 import org.jurassicraft.server.api.Animatable;
 import org.jurassicraft.server.block.entity.FeederBlockEntity;
 import org.jurassicraft.server.block.machine.FeederBlock;
+import org.jurassicraft.server.conf.JurassiCraftConfig;
 import org.jurassicraft.server.damage.DinosaurDamageSource;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.ai.AdvancedSwimEntityAI;
@@ -1182,14 +1183,9 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
 
     public void setCarcass(boolean carcass) {
 
-        boolean carcassAllowed;
-
-        Configuration config = new Configuration(new File("config/jurassicraft.cfg"));
-        config.load();
-
-        carcassAllowed = config.get("entities", "Can Carcasses Spawn", true).getBoolean();
-
         this.isCarcass = carcass;
+
+        boolean carcassAllowed = JurassiCraftConfig.ENTITIES.allowCarcass;
         if (!this.world.isRemote) {
             this.dataManager.set(WATCHER_IS_CARCASS, this.isCarcass);
         }
