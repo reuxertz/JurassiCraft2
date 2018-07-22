@@ -4,11 +4,23 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.block.BlockHandler;
+import org.jurassicraft.server.entity.Dinosaur;
+import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.item.AmberItem;
+import org.jurassicraft.server.item.FossilItem;
 import org.jurassicraft.server.item.ItemHandler;
+import org.jurassicraft.server.registries.JurassicraftRegisteries;
+
+import java.util.Collection;
 
 public class TabHandler {
+
+    public static final JurassiCraftDNATab DNA = new JurassiCraftDNATab("jurassicraft.dna");
+
     public static final CreativeTabs ITEMS = new CreativeTabs("jurassicraft.items") {
         @Override
         public ItemStack getTabIconItem() {
@@ -30,8 +42,25 @@ public class TabHandler {
         }
     };
 
-    public static final JurassiCraftFossilTab FOSSILS = new JurassiCraftFossilTab("jurassicraft.fossils");
-    public static final JurassiCraftDNATab DNA = new JurassiCraftDNATab("jurassicraft.dna");
-    public static final JurassiCraftFoodTab FOODS = new JurassiCraftFoodTab("jurassicraft.foods");
-    public static final JurassiCraftDecorationsTab DECORATIONS = new JurassiCraftDecorationsTab("jurassicraft.decorations");
+    public static final CreativeTabs FOSSILS = new CreativeTabs("jurassicraft.fossils") {
+        @Override
+        public ItemStack getTabIconItem() {
+            return ItemHandler.FOSSIL.createNewStack(new FossilItem.FossilInfomation(EntityHandler.VELOCIRAPTOR, "skull"));
+        }
+    };
+
+    public static final CreativeTabs FOODS = new CreativeTabs("jurassicraft.FOODS") {
+        @Override
+        public ItemStack getTabIconItem() {
+            return new ItemStack(ItemHandler.DINOSAUR_MEAT);
+        }
+    };
+
+    public static final CreativeTabs DECORATIONS = new CreativeTabs("jurassicraft.fossils") {
+        @Override
+        public ItemStack getTabIconItem() {
+                return new ItemStack(ItemHandler.DISPLAY_BLOCK);
+        }
+
+    };
 }
