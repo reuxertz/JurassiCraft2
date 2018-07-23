@@ -1280,7 +1280,6 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
 	@Override
 	public boolean canBeLeashedTo(EntityPlayer player) {
-		System.out.println(this.dinosaur.shadowSize);
 		return !this.getLeashed() && (this.width < 1.5) && canBeLeashedToUntamed(this);
 	}
 
