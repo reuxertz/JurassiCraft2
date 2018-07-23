@@ -5,6 +5,7 @@
   "head_cube_name": "Head",
   "dinosaur_animator_class": "org.jurassicraft.client.model.animation.entity.TriceratopsAnimator",
   "shadow_size": 0.65,
+  "size_type": "medium",
   "spawn_egg": {
     "male": [
       "0x404138",
