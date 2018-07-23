@@ -55,4 +55,9 @@ public class JsonDinosaur extends Dinosaur {
 
 		this.animation = properties.animation;
 	}
+
+    @Override
+    public void setScaleAdult(float scaleAdult) {
+        super.setScaleAdult(scaleAdult);
+    }
 }

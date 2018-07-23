@@ -5,7 +5,7 @@
   "head_cube_name": "Head1",
   "dinosaur_animator_class": "org.jurassicraft.client.model.animation.entity.MussaurusAnimator",
   "shadow_size": 0.8,
-  "size_type": "small",
+  "possibletoleashuntamed": true,
   "spawn_egg": {
     "male": [
       "0x6f9845",

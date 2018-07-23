@@ -61,6 +61,7 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
 	public int maximumAge;
 	public String headCubeName;
 	public float shadowSize;
+	public boolean possibleToLeashUntamed;
 	public MovementType movementType = MovementType.NEAR_SURFACE;
 	public BirthType birthType = BirthType.EGG_LAYING;
 	public boolean isImprintable;

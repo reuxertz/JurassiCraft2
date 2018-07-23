@@ -94,6 +94,7 @@ public class DinosaurJsonHandler {
 					dino.animatorClassName != null ? dino.animatorClassName : "", //TODO: remove this line when all dinosaur animators are turned into json
 					dino.animatorClassName != null ? "" : dino.getRegistryName().toString(),
 					dino.shadowSize,
+					dino.possibleToLeashUntamed,
 					new SpawnEggInfo(dino.primaryEggColorMale, dino.secondaryEggColorMale),
 					new SpawnEggInfo(dino.primaryEggColorFemale, dino.secondaryEggColorFemale),
 					new DinosaurStatistics(

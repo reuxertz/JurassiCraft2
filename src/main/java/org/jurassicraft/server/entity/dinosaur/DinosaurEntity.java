@@ -49,6 +49,7 @@ import org.jurassicraft.client.model.animation.PoseHandler;
 import org.jurassicraft.server.api.Animatable;
 import org.jurassicraft.server.block.entity.FeederBlockEntity;
 import org.jurassicraft.server.block.machine.FeederBlock;
+import org.jurassicraft.server.conf.JurassiCraftConfig;
 import org.jurassicraft.server.damage.DinosaurDamageSource;
 import org.jurassicraft.server.dna.DNA;
 import org.jurassicraft.server.dna.GeneType;
@@ -1282,7 +1283,18 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
 	@Override
 	public boolean canBeLeashedTo(EntityPlayer player) {
-		return !this.getLeashed() && (this.width < 1.5);
+		System.out.println(this.dinosaur.possibleToLeashUntamed);
+		return !this.getLeashed() && (this.width < 1.5) && canBeLeashedToUntamed(this);
+	}
+
+	public boolean canBeLeashedToUntamed(DinosaurEntity dinosaur){
+		Dinosaur thisdino = this.dinosaur;
+		boolean untamedconfigvalue = JurassiCraftConfig.ENTITIES.canBeLeashedUntamed;
+		if(thisdino.possibleToLeashUntamed && untamedconfigvalue){
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 	public int getDNAQuality() {
