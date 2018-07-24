@@ -5,7 +5,7 @@
   "head_cube_name": "Head",
   "model_location": "jurassicraft:jurassicraft/models/velociraptor",
   "shadow_size": 1.5,
-  "possibletoleashuntamed": false,
+  "possible_to_leash_untamed": false,
   "spawn_egg": {
     "male": [
       "0xa06238",

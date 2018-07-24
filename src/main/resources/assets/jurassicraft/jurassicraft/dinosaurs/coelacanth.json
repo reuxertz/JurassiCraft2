@@ -5,7 +5,7 @@
   "head_cube_name": "Head",
   "dinosaur_animator_class": "org.jurassicraft.client.model.animation.entity.CoelacanthAnimator",
   "shadow_size": 0.0,
-  "possibletoleashuntamed": false,
+  "possible_to_leash_untamed": false,
   "spawn_egg": {
     "male": [
       "0x707b94",

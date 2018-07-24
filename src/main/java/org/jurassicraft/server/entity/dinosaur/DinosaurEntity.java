@@ -1284,9 +1284,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 	}
 
 	public boolean canBeLeashedToUntamed(DinosaurEntity dinosaur){
-		Dinosaur thisdino = this.dinosaur;
-		boolean untamedconfigvalue = JurassiCraftConfig.ENTITIES.canBeLeashedUntamed;
-		return this.dinosaur.possibleToLeashUntamed && untamedconfigvalue;
+		return this.dinosaur.possibleToLeashUntamed && JurassiCraftConfig.ENTITIES.canBeLeashedUntamed;
 	}
 
 	public int getDNAQuality() {

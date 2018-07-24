@@ -97,7 +97,7 @@ public class DinosaurProperties {
 					JsonUtils.isString(json, "dinosaur_animator_class") ? JsonUtils.getString(json, "dinosaur_animator_class") : null,
 					JsonUtils.isString(json,"model_location") ? JsonUtils.getString(json, "model_location") : null,
 					JsonUtils.getFloat(json, "shadow_size"),
-					JsonUtils.getBoolean(json, "possibletoleashuntamed"),
+					JsonUtils.getBoolean(json, "possible_to_leash_untamed"),
 					context.deserialize(JsonUtils.getJsonArray(spawnEggInfo, "male"), SpawnEggInfo.class),
 					context.deserialize(JsonUtils.getJsonArray(spawnEggInfo, "female"), SpawnEggInfo.class),
 					context.deserialize(JsonUtils.getJsonObject(json, "statistics"), DinosaurStatistics.class),
