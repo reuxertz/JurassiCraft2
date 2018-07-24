@@ -27,10 +27,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.Path;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -49,6 +46,7 @@ import org.jurassicraft.client.model.animation.PoseHandler;
 import org.jurassicraft.server.api.Animatable;
 import org.jurassicraft.server.block.entity.FeederBlockEntity;
 import org.jurassicraft.server.block.machine.FeederBlock;
+import org.jurassicraft.server.conf.JurassiCraftConfig;
 import org.jurassicraft.server.damage.DinosaurDamageSource;
 import org.jurassicraft.server.dna.DNA;
 import org.jurassicraft.server.dna.GeneType;
@@ -1282,7 +1280,11 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
 	@Override
 	public boolean canBeLeashedTo(EntityPlayer player) {
-		return !this.getLeashed() && (this.width < 1.5);
+		return !this.getLeashed() && (this.width < 1.5) && canBeLeashedToUntamed(this);
+	}
+
+	public boolean canBeLeashedToUntamed(DinosaurEntity dinosaur){
+		return this.dinosaur.possibleToLeashUntamed && JurassiCraftConfig.ENTITIES.canBeLeashedUntamed;
 	}
 
 	public int getDNAQuality() {

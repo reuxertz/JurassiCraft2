@@ -16,6 +16,7 @@ public class DinosaurProperties {
 	public String dinosaurAnimatorClassName;
 	public String dinosaurModelLocation;
 	public float shadowSize;
+	public boolean possibleToLeashUntamed;
 
 	public SpawnEggInfo maleSpawnEgg;
 	public SpawnEggInfo femaleSpawnEgg;
@@ -31,7 +32,7 @@ public class DinosaurProperties {
 	public String[][] skeletonRecipe;
 
 	public DinosaurProperties(String name, TimePeriod timePeriod, String headCubeName, String dinosaurAnimatorClassName,
-							  String dinosaurModelLocation, float shadowSize, SpawnEggInfo maleSpawnEgg,
+							  String dinosaurModelLocation, float shadowSize, boolean possibleToLeashUntamed, SpawnEggInfo maleSpawnEgg,
 							  SpawnEggInfo femaleSpawnEgg, DinosaurStatistics statistics, DinosaurTraits traits,
 							  DinosaurSpawningInfo spawningInfo, DinosaurBreeding breeding, String[] bones, String[][] skeletonRecipe,
 							  DinosaurAnimation animation) {
@@ -41,6 +42,7 @@ public class DinosaurProperties {
 		this.dinosaurAnimatorClassName = dinosaurAnimatorClassName;
 		this.dinosaurModelLocation = dinosaurModelLocation;
 		this.shadowSize = shadowSize;
+		this.possibleToLeashUntamed = possibleToLeashUntamed;
 		this.maleSpawnEgg = maleSpawnEgg;
 		this.femaleSpawnEgg = femaleSpawnEgg;
 		this.statistics = statistics;
@@ -95,6 +97,7 @@ public class DinosaurProperties {
 					JsonUtils.isString(json, "dinosaur_animator_class") ? JsonUtils.getString(json, "dinosaur_animator_class") : null,
 					JsonUtils.isString(json,"model_location") ? JsonUtils.getString(json, "model_location") : null,
 					JsonUtils.getFloat(json, "shadow_size"),
+					JsonUtils.getBoolean(json, "possible_to_leash_untamed"),
 					context.deserialize(JsonUtils.getJsonArray(spawnEggInfo, "male"), SpawnEggInfo.class),
 					context.deserialize(JsonUtils.getJsonArray(spawnEggInfo, "female"), SpawnEggInfo.class),
 					context.deserialize(JsonUtils.getJsonObject(json, "statistics"), DinosaurStatistics.class),

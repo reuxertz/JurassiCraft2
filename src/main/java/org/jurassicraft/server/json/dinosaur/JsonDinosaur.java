@@ -10,6 +10,7 @@ public class JsonDinosaur extends Dinosaur {
 		this.timePeriod = properties.timePeriod;
 		this.headCubeName = properties.headCubeName;
 		this.animatorClassName = properties.dinosaurAnimatorClassName;
+		this.possibleToLeashUntamed = properties.possibleToLeashUntamed;
 
 		SpawnEggInfo male = properties.maleSpawnEgg;
 		this.primaryEggColorMale = male.primary;
@@ -55,4 +56,9 @@ public class JsonDinosaur extends Dinosaur {
 
 		this.animation = properties.animation;
 	}
+
+    @Override
+    public void setScaleAdult(float scaleAdult) {
+        super.setScaleAdult(scaleAdult);
+    }
 }

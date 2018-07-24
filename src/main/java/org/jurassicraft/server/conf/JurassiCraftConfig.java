@@ -33,6 +33,9 @@ public class JurassiCraftConfig { //TODO: move all structures to same parent pac
 
         @Config.Name("Only Hunt when Hungry")
         public boolean huntWhenHungry = false;
+
+        @Config.Name("Can small untamed dinosaurs be leashed")
+        public boolean canBeLeashedUntamed;
     }
 
     public static class MineralGeneration {

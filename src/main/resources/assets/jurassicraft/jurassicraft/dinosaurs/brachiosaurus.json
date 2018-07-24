@@ -5,6 +5,7 @@
   "head_cube_name": "head",
   "dinosaur_animator_class": "org.jurassicraft.client.model.animation.entity.BrachiosaurusAnimator",
   "shadow_size": 1.5,
+  "possible_to_leash_untamed": false,
   "spawn_egg": {
     "male": [
       "0x87987f",
