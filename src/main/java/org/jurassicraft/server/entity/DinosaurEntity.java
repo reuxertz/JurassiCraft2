@@ -1192,13 +1192,11 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
             this.dataManager.set(WATCHER_IS_CARCASS, this.isCarcass);
         }
         if (carcass && carcassAllowed) {
-            System.out.println("yeet1");
             this.setAnimation(EntityAnimation.DYING.get());
             this.carcassHealth = Math.max(1, (int) Math.sqrt(this.width * this.height) * 2);
             this.ticksExisted = 0;
             this.inventory.dropItems(this.world, this.rand);
         }else{
-            System.out.println("Yeet2");
             this.setAnimation(EntityAnimation.DYING.get());
             this.carcassHealth = 0;
             this.inventory.dropItems(this.world, this.rand);
