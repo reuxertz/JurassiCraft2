@@ -1,0 +1,2 @@
+-Added Config Option to disable spawning of Carcass
+-Fixed a Cultivator issue in the lang file
