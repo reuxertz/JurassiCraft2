@@ -11,8 +11,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
-import net.minecraft.entity.ai.attributes.IAttribute;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -48,8 +46,6 @@ import org.jurassicraft.server.block.entity.FeederBlockEntity;
 import org.jurassicraft.server.block.machine.FeederBlock;
 import org.jurassicraft.server.conf.JurassiCraftConfig;
 import org.jurassicraft.server.damage.DinosaurDamageSource;
-import org.jurassicraft.server.dna.DNA;
-import org.jurassicraft.server.dna.GeneType;
 import org.jurassicraft.server.entity.ai.*;
 import org.jurassicraft.server.entity.ai.animations.CallAnimationAI;
 import org.jurassicraft.server.entity.ai.animations.HeadCockAnimationAI;
@@ -63,6 +59,7 @@ import org.jurassicraft.server.entity.ai.navigation.DinosaurJumpHelper;
 import org.jurassicraft.server.entity.ai.navigation.DinosaurMoveHelper;
 import org.jurassicraft.server.entity.ai.navigation.DinosaurPathNavigate;
 import org.jurassicraft.server.entity.ai.util.OnionTraverser;
+import org.jurassicraft.server.entity.ai_new.AIController;
 import org.jurassicraft.server.entity.item.DinosaurEggEntity;
 import org.jurassicraft.server.food.FoodHelper;
 import org.jurassicraft.server.food.FoodType;
@@ -149,10 +146,12 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
     private UUID inMouthEntity; //The entity of whose mouth this is inside
 	private UUID entityInMouth; //The entity inside this entities mouth
 
+    private AIController aiController;
+
 	public DinosaurEntity(World world) {
 		super(world);
 
-		this.setNoAI(true);
+		aiController = new AIController(this);
 
 		this.metabolism = new MetabolismContainer(this);
 		this.inventory = new InventoryDinosaur(this);
@@ -358,11 +357,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 			entity = entity.getRidingEntity();
 		}
 
-		float damage = (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue() * (this.getDNA().getValueFloat(GeneType.ATTACK) + 1);
-
-		if (entity instanceof DinosaurEntity) {
-			damage *= ((DinosaurEntity) entity).getDNA().getValueFloat(GeneType.DEFENSE) + 1;
-		}
+		float damage = (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
 
 		if (entity.attackEntityFrom(new DinosaurDamageSource("mob", this), damage)) {
 			if (entity instanceof DinosaurEntity && ((DinosaurEntity) entity).isCarcass()) {
@@ -590,20 +585,9 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 			attributes.apply(this);
 		}
 
-		applyDnaChanges(SharedMonsterAttributes.MAX_HEALTH, GeneType.HEALTH, 3);
-		applyDnaChanges(SharedMonsterAttributes.MOVEMENT_SPEED, GeneType.SPEED, 2);
-		applyDnaChanges(SharedMonsterAttributes.ATTACK_DAMAGE, GeneType.STRENGTH, 4);
-
 		if (prevHealth != newHealth) {
 			this.heal((float) (newHealth - prevHealth));
 		}
-	}
-
-	private void applyDnaChanges(IAttribute attribute, GeneType type, int totalAddition) {
-		IAttributeInstance instance = this.getEntityAttribute(attribute);
-		double baseValue = instance.getBaseValue();
-		baseValue += baseValue * totalAddition * this.getDNA().getValueFloat(type);
-		instance.setBaseValue(baseValue);
 	}
 
 	private void updateBounds() {
@@ -736,7 +720,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 					if (!this.isMale()) {
 						int minClutch = this.dinosaur.minClutch;
 						int maxClutch = this.dinosaur.maxClutch;
-						for (int i = 0; i < (this.rand.nextInt(maxClutch - minClutch) + minClutch) + this.getDNA().getValueFloat(GeneType.CHILD_YEILD); i++) {
+						for (int i = 0; i < (this.rand.nextInt(maxClutch - minClutch) + minClutch); i++) {
 							boolean isMale = this.rand.nextBoolean();
 							DinosaurEntity child = this.dinosaur.createEntity(this.world);
 							child.setAge(0);
@@ -1398,10 +1382,10 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
 	public int getAgePercentage() {
 		int age = this.getDinosaurAge();
-		if ((this.getDinosaur().maximumAge * (int) (((this.getDNA().getValueFloat(GeneType.LIFESPAN) + 1) / 2) + 0.5)) == 0) {
+		if (this.getDinosaur().maximumAge == 0) {
 //			System.out.println(this.getDNA().getValueFloat(GeneType.LIFESPAN));
 		}
-		return (int) (age != 0 ? age * 100 / (this.getDinosaur().maximumAge * ((this.getDNA().getValueFloat(GeneType.LIFESPAN) + 1) / 2) + 0.5) : 0);
+		return (int) (age != 0 ? age * 100 / (this.getDinosaur().maximumAge) : 0);
 	}
 
 	@Override
@@ -1637,10 +1621,6 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
 	public void writeStatsToLog() {
 		LOGGER.info(this);
-	}
-
-	public DNA getDNA() {
-		return new DNA(this.genetics, this::setGenetics);
 	}
 
 	@Override

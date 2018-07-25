@@ -9,7 +9,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.server.api.DinosaurProvider;
-import org.jurassicraft.server.genetics.GeneticsHelper;
 
 public class DNAContainerItem extends Item implements DinosaurProvider {
 
@@ -44,7 +43,7 @@ public class DNAContainerItem extends Item implements DinosaurProvider {
     public String getGeneticCode(EntityPlayer player, ItemStack stack) {
         NBTTagCompound nbt = stack.getTagCompound();
 
-        String genetics = GeneticsHelper.randomGenetics(player.world.rand);
+        String genetics = "ACGT";
 
         if (nbt == null) {
             nbt = new NBTTagCompound();
