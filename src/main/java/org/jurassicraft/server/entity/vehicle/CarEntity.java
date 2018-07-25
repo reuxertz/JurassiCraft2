@@ -30,12 +30,14 @@ import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.client.proxy.ClientProxy;
 import org.jurassicraft.client.render.entity.TyretrackRenderer;
 import org.jurassicraft.client.sound.EntitySound;
+import org.jurassicraft.server.conf.JurassiCraftConfig;
 import org.jurassicraft.server.damage.DamageSources;
 import org.jurassicraft.server.entity.ai.util.InterpValue;
 import org.jurassicraft.server.entity.vehicle.util.CarWheel;
 import org.jurassicraft.server.entity.vehicle.util.WheelParticleData;
 import org.jurassicraft.server.message.CarEntityPlayRecord;
 import org.jurassicraft.server.message.UpdateVehicleControlMessage;
+import org.jurassicraft.server.util.RandomHelper;
 import org.lwjgl.input.Keyboard;
 import org.omg.CORBA.DoubleHolder;
 
@@ -43,6 +45,7 @@ import javax.annotation.Nullable;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector4d;
 import java.util.List;
+import java.util.Random;
 import java.util.function.Predicate;
 
 public abstract class CarEntity extends Entity implements MultiSeatedEntity {
@@ -362,12 +365,14 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
         for(BlockPos pos : BlockPos.getAllInBoxMutable(new BlockPos(Math.floor(aabb.minX), Math.floor(aabb.minY), Math.floor(aabb.minZ)), new BlockPos(Math.ceil(aabb.maxX), Math.ceil(aabb.maxY), Math.ceil(aabb.maxZ)))) {
             IBlockState state = world.getBlockState(pos);
             if(state.getMaterial() == Material.VINE) {
-                if(world.isRemote) {
-                    world.playEvent(2001, pos, Block.getStateId(state));
-                } else {
-                    state.getBlock().dropBlockAsItem(world, pos, state, 0);
+                if (((double)RandomHelper.RND.nextInt(100) / 100.0) <= JurassiCraftConfig.VEHICLES.carBreakGrassPercent) {
+                    if (world.isRemote) {
+                        world.playEvent(2001, pos, Block.getStateId(state));
+                    } else {
+                        state.getBlock().dropBlockAsItem(world, pos, state, 0);
+                    }
+                    world.setBlockToAir(pos);
                 }
-                world.setBlockToAir(pos);
             }
         }
         
