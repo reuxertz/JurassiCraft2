@@ -162,6 +162,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 		this.jumpHelper = new DinosaurJumpHelper(this);
 
 		this.navigator = new DinosaurPathNavigate(this, this.world);
+		((DinosaurPathNavigate) this.navigator).setCanSwim(true);
 		this.lookHelper = new DinosaurLookHelper(this);
 		this.legSolver = this.world == null || !this.world.isRemote ? null : this.createLegSolver();
 
