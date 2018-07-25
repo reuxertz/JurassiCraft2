@@ -6,7 +6,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.entity.item.AttractionSignEntity;
 import org.jurassicraft.server.entity.item.DinosaurEggEntity;
 import org.jurassicraft.server.entity.item.MuralEntity;

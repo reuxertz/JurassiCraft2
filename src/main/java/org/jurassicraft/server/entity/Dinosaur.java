@@ -15,7 +15,6 @@ import org.jurassicraft.client.model.animation.PoseHandler;
 import org.jurassicraft.server.api.GrowthStageGenderContainer;
 import org.jurassicraft.server.api.Hybrid;
 import org.jurassicraft.server.entity.ai.util.MovementType;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.json.dinosaur.DinosaurJsonHandler;
 import org.jurassicraft.server.json.dinosaur.entity.EntityDinosaurJsonHandler;
 import org.jurassicraft.server.json.dinosaur.entity.objects.EntityProperties;

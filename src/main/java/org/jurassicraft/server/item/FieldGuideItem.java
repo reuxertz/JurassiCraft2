@@ -7,7 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
+import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.message.OpenFieldGuideGuiMessage;
 
 public class FieldGuideItem extends Item {

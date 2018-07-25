@@ -10,6 +10,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import org.jurassicraft.client.model.animation.EntityAnimation;
 import org.jurassicraft.client.sound.SoundHandler;
+import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.entity.GoatEntity;
 import org.jurassicraft.server.entity.LegSolverBiped;

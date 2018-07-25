@@ -18,7 +18,7 @@ import org.jurassicraft.server.block.entity.FossilGrinderBlockEntity;
 import org.jurassicraft.server.block.entity.IncubatorBlockEntity;
 import org.jurassicraft.server.container.*;
 import org.jurassicraft.server.datafixers.JurassiCraftDataFixers;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
+import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.DinosaurSerializers;
 import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.entity.GoatEntity;

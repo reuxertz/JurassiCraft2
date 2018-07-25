@@ -5,7 +5,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
+import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.ai.Mutex;
 import org.jurassicraft.server.food.FoodHelper;
 import org.jurassicraft.server.util.GameRuleHandler;

@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
+import org.jurassicraft.server.entity.DinosaurEntity;
 
 import java.util.Random;
 

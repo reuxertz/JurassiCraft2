@@ -4,7 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import org.jurassicraft.server.entity.Dinosaur;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
+import org.jurassicraft.server.entity.DinosaurEntity;
 
 import java.util.UUID;
 

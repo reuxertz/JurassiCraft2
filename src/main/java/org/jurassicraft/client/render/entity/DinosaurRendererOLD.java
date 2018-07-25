@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.client.model.AnimatableModel;
 import org.jurassicraft.client.render.entity.dinosaur.DinosaurRenderInfo;
 import org.jurassicraft.server.entity.Dinosaur;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
+import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.GrowthStage;
 
 import java.awt.*;

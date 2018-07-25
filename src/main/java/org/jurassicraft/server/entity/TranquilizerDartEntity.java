@@ -1,7 +1,6 @@
 package org.jurassicraft.server.entity;
 
 import org.jurassicraft.JurassiCraft;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.item.Dart;
 
 import io.netty.buffer.ByteBuf;

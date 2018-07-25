@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.JsonUtils;
 import org.jurassicraft.client.model.animation.entity.LegArticulator;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
+import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.LegSolverQuadruped;
 import org.jurassicraft.server.json.dinosaur.model.JsonAnimator;
 import org.jurassicraft.server.json.dinosaur.model.objects.JsonAnimationModule;

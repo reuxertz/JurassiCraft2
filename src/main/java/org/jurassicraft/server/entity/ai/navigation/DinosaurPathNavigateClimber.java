@@ -5,7 +5,7 @@ import net.minecraft.pathfinding.Path;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
+import org.jurassicraft.server.entity.DinosaurEntity;
 
 public class DinosaurPathNavigateClimber extends DinosaurPathNavigate {
     private BlockPos targetPosition;

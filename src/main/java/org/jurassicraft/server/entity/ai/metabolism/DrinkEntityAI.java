@@ -8,7 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jurassicraft.client.model.animation.EntityAnimation;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
+import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.MetabolismContainer;
 import org.jurassicraft.server.entity.ai.Mutex;
 import org.jurassicraft.server.entity.ai.util.AIUtils;

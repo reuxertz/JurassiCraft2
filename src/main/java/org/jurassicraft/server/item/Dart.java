@@ -2,11 +2,10 @@ package org.jurassicraft.server.item;
 
 import java.util.function.BiConsumer;
 
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
+import org.jurassicraft.server.entity.DinosaurEntity;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import org.jurassicraft.server.tab.TabHandler;
 
 public class Dart extends Item {
     private final BiConsumer<DinosaurEntity, ItemStack> consumer;

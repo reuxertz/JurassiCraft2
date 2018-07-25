@@ -5,6 +5,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import org.jurassicraft.client.model.animation.EntityAnimation;
 import org.jurassicraft.client.sound.SoundHandler;
+import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.ai.animations.PeckGroundAnimationAI;
 import org.jurassicraft.server.entity.ai.animations.RearingUpAnimationAI;
 

@@ -11,7 +11,7 @@ import net.minecraft.potion.PotionEffect;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.tree.TreeType;
 import org.jurassicraft.server.entity.Diet;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
+import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.plant.Plant;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;

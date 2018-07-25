@@ -8,7 +8,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jurassicraft.server.entity.ai.MoveUnderwaterEntityAI;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 
 public class SwimmingDinosaurEntity extends DinosaurEntity {
 

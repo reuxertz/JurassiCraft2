@@ -2,7 +2,7 @@ package org.jurassicraft.server.entity.ai;
 
 import net.minecraft.entity.ai.EntityAIBase;
 import org.jurassicraft.client.model.animation.EntityAnimation;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
+import org.jurassicraft.server.entity.DinosaurEntity;
 
 public class MateEntityAI extends EntityAIBase {
     protected DinosaurEntity dinosaur;

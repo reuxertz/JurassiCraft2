@@ -5,7 +5,7 @@ import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
+import org.jurassicraft.server.entity.DinosaurEntity;
 
 public class DinosaurPathNavigate extends PathNavigateGround {
     private DinosaurEntity dinosaur;

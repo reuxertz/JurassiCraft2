@@ -6,7 +6,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.world.World;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
+import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.SwimmingDinosaurEntity;
 import org.jurassicraft.server.entity.ai.LeapingMeleeEntityAI;
 import org.jurassicraft.server.entity.ai.RaptorLeapEntityAI;

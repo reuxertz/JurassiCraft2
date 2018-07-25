@@ -1,4 +1,4 @@
-package org.jurassicraft.server.entity.dinosaur;
+package org.jurassicraft.server.entity;
 
 import com.google.common.collect.Lists;
 import io.netty.buffer.ByteBuf;
@@ -50,7 +50,6 @@ import org.jurassicraft.server.conf.JurassiCraftConfig;
 import org.jurassicraft.server.damage.DinosaurDamageSource;
 import org.jurassicraft.server.dna.DNA;
 import org.jurassicraft.server.dna.GeneType;
-import org.jurassicraft.server.entity.*;
 import org.jurassicraft.server.entity.ai.*;
 import org.jurassicraft.server.entity.ai.animations.CallAnimationAI;
 import org.jurassicraft.server.entity.ai.animations.HeadCockAnimationAI;

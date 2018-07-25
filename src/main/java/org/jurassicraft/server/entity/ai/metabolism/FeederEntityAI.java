@@ -5,7 +5,7 @@ import net.minecraft.pathfinding.Path;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import org.jurassicraft.server.block.entity.FeederBlockEntity;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
+import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.ai.Mutex;
 import org.jurassicraft.server.util.GameRuleHandler;
 

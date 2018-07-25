@@ -1,6 +1,6 @@
 package org.jurassicraft.server.entity.ai.navigation;
 
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
+import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.ai.Mutex;
 import org.jurassicraft.server.entity.ai.util.AIUtils;
 import org.jurassicraft.server.entity.ai.util.MovementType;

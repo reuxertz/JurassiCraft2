@@ -1,6 +1,5 @@
 package org.jurassicraft.server.entity;
 
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 import org.jurassicraft.server.food.FoodType;
 
 import java.util.ArrayList;

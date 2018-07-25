@@ -21,7 +21,7 @@ import net.minecraft.world.World;
 import org.jurassicraft.client.sound.SoundHandler;
 import org.jurassicraft.server.block.entity.ElectricFenceWireBlockEntity;
 import org.jurassicraft.server.damage.DamageSources;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
+import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.tab.TabHandler;
 
 public class ElectricFenceWireBlock extends BlockContainer {

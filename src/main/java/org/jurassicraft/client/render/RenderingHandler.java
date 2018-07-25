@@ -40,7 +40,7 @@ import org.jurassicraft.server.block.tree.AncientLeavesBlock;
 import org.jurassicraft.server.block.tree.TreeType;
 import org.jurassicraft.server.entity.Dinosaur;
 import org.jurassicraft.server.entity.*;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
+import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.item.AttractionSignEntity;
 import org.jurassicraft.server.entity.item.DinosaurEggEntity;
 import org.jurassicraft.server.entity.item.MuralEntity;

@@ -3,7 +3,7 @@ package org.jurassicraft.server.entity.ai.navigation;
 import net.ilexiconn.llibrary.server.animation.Animation;
 import net.minecraft.entity.ai.EntityJumpHelper;
 import org.jurassicraft.client.model.animation.EntityAnimation;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
+import org.jurassicraft.server.entity.DinosaurEntity;
 
 public class DinosaurJumpHelper extends EntityJumpHelper {
     private DinosaurEntity entity;

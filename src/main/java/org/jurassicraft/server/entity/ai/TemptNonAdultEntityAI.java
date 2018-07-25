@@ -2,7 +2,7 @@ package org.jurassicraft.server.entity.ai;
 
 import com.google.common.collect.Sets;
 import net.minecraft.entity.ai.EntityAITempt;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
+import org.jurassicraft.server.entity.DinosaurEntity;
 
 public class TemptNonAdultEntityAI extends EntityAITempt {
     private DinosaurEntity dinosaur;

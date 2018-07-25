@@ -7,7 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.entity.Dinosaur;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
+import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.food.FoodNutrients;
 import org.jurassicraft.server.api.DinosaurProvider;
 import org.jurassicraft.server.item.ItemHandler;

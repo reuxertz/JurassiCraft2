@@ -9,7 +9,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 
 import java.util.Random;
 

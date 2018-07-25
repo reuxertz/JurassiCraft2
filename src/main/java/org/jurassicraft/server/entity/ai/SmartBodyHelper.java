@@ -3,7 +3,7 @@ package org.jurassicraft.server.entity.ai;
 import net.minecraft.entity.EntityBodyHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.math.MathHelper;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
+import org.jurassicraft.server.entity.DinosaurEntity;
 
 /**
  * @author pau101

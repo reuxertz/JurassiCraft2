@@ -2,7 +2,6 @@ package org.jurassicraft.server.entity;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
 
 import java.util.Random;
 

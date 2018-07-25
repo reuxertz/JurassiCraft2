@@ -7,7 +7,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.client.model.AnimatableModel;
 import org.jurassicraft.client.model.animation.EntityAnimation;
 import org.jurassicraft.client.model.animation.EntityAnimator;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
+import org.jurassicraft.server.entity.DinosaurEntity;
 
 @SideOnly(Side.CLIENT)
 public class MicroraptorAnimator extends EntityAnimator<DinosaurEntity> {

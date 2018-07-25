@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.ilexiconn.llibrary.client.model.tabula.TabulaModel;
 import net.minecraft.entity.Entity;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
+import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.json.dinosaur.model.JsonAnimator;
 import org.jurassicraft.server.json.dinosaur.model.objects.JsonAnimationModule;
 import org.jurassicraft.server.json.dinosaur.model.objects.AnimationInfoBase;

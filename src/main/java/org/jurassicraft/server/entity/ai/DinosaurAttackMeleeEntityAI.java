@@ -2,7 +2,7 @@ package org.jurassicraft.server.entity.ai;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
-import org.jurassicraft.server.entity.dinosaur.DinosaurEntity;
+import org.jurassicraft.server.entity.DinosaurEntity;
 
 public class DinosaurAttackMeleeEntityAI extends EntityAIAttackMelee {
     protected DinosaurEntity dinosaur;
