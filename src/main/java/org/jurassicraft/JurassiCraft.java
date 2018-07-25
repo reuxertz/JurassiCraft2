@@ -11,8 +11,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import org.apache.logging.log4j.Logger;
+import org.jurassicraft.server.command.CommandSetNBT;
 import org.jurassicraft.server.command.ForceAnimationCommand;
-import org.jurassicraft.server.command.SpawnStructureCommand;
 import org.jurassicraft.server.message.*;
 import org.jurassicraft.server.proxy.ServerProxy;
 
@@ -20,7 +20,7 @@ import org.jurassicraft.server.proxy.ServerProxy;
 public class JurassiCraft {
     public static final String MODID = "jurassicraft";
     public static final String NAME = "JurassiCraft";
-    public static final String VERSION = "2.1.10";
+    public static final String VERSION = "2.1.11";
 
     public static final String LLIBRARY_VERSION = "1.7.9";
     @SidedProxy(serverSide = "org.jurassicraft.server.proxy.ServerProxy", clientSide = "org.jurassicraft.client.proxy.ClientProxy")
@@ -31,7 +31,7 @@ public class JurassiCraft {
 
     public static long timerTicks;
 
-    @NetworkWrapper({ PlacePaddockSignMessage.class, ChangeTemperatureMessage.class, HelicopterEngineMessage.class, HelicopterDirectionMessage.class, HelicopterModulesMessage.class, SwitchHybridizerCombinatorMode.class, SetOrderMessage.class, OpenFieldGuideGuiMessage.class, UpdateVehicleControlMessage.class, MicroraptorDismountMessage.class, FordExplorerChangeStateMessage.class, FordExplorerUpdatePositionStateMessage.class, DNASequenceTransferClicked.class, CultivatorSyncNutrients.class, CarEntityPlayRecord.class, AttemptMoveToSeatMessage.class})
+    @NetworkWrapper({ PlacePaddockSignMessage.class, ChangeTemperatureMessage.class, HelicopterEngineMessage.class, HelicopterDirectionMessage.class, HelicopterModulesMessage.class, SwitchHybridizerCombinatorMode.class, SetOrderMessage.class, OpenFieldGuideGuiMessage.class, UpdateVehicleControlMessage.class, MicroraptorDismountMessage.class, FordExplorerChangeStateMessage.class, FordExplorerUpdatePositionStateMessage.class, DNASequenceTransferClicked.class, CultivatorSyncNutrients.class, CarEntityPlayRecord.class, AttemptMoveToSeatMessage.class, SyncTrackingTabletMap.class, StopMapSyncMessage.class})
     public static SimpleNetworkWrapper NETWORK_WRAPPER;
 
     private static Logger logger;
@@ -55,7 +55,7 @@ public class JurassiCraft {
     @Mod.EventHandler
     public void onServerStarting(FMLServerStartingEvent event) {
         event.registerServerCommand(new ForceAnimationCommand());
-        event.registerServerCommand(new SpawnStructureCommand());
+        event.registerServerCommand(new CommandSetNBT());
     }
 
     public static Logger getLogger() {
