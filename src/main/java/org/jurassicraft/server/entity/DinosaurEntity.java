@@ -1187,8 +1187,6 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         this.isCarcass = carcass;
 
         boolean carcassAllowed = JurassiCraftConfig.ENTITIES.allowCarcass;
-        System.out.println(carcassAllowed);
-        System.out.println(carcass);
         if (!this.world.isRemote) {
             this.dataManager.set(WATCHER_IS_CARCASS, this.isCarcass);
         }

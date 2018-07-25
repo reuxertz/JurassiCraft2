@@ -1,2 +1,2 @@
--Added Config Option to disable spawning of Carcass
--Fixed a Cultivator issue in the lang file
+-Fixed Config Option to disable spawning of Carcass(You may need to delete and regenerate config for this option)
+-Fixed Dinosaurs not correctly swimming in water
