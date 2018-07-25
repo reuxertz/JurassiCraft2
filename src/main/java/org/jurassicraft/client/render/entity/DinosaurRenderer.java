@@ -32,7 +32,7 @@ public class DinosaurRenderer extends RenderLiving<DinosaurEntity> {
         Dinosaur dinosaur = entity.getDinosaur();
         DinosaurRenderInfo renderInfo = RenderingHandler.renderInfos.get(dinosaur);
 
-        float scale = (float) entity.interpolate(dinosaur.scaleInfant, dinosaur.scaleAdult) * scaleModifier * (entity.getDNA().getValueFloat(GeneType.SIZE) + 1.5f) / 1.5f;
+        float scale = (float) entity.interpolate(dinosaur.scaleInfant, dinosaur.scaleAdult) * scaleModifier;
 
         this.shadowSize = scale * renderInfo.getShadowSize();
 
