@@ -22,7 +22,7 @@ public class DisplayBlockRenderer extends TileEntitySpecialRenderer<DisplayBlock
 
         DinosaurEntity entity = tileEntity.getEntity();
         if (entity != null) {
-            this.mc.getRenderManager().renderEntity(entity, 0, 0, 0, 0, 0, false);
+            this.mc.getRenderManager().renderEntity(entity, 0, 0, 0, 0, 0, true);
         }
 
         GlStateManager.popMatrix();

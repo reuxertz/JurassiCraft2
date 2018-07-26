@@ -10,6 +10,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.client.model.animation.EntityAnimation;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.EntityHandler;
@@ -136,6 +137,7 @@ public class DisplayBlockEntity extends TileEntity {
     private void initializeEntity(DinosaurEntity entity) {
         entity.setupDisplay(this.isMale);
         entity.setSkeleton(this.isSkeleton);
+        entity.setAnimation(EntityAnimation.IDLE.get());
     }
 
     private interface SerializedData {
