@@ -91,7 +91,7 @@ public class JurassiCraftConfig { //TODO: move all structures to same parent pac
         public boolean helicopterExplosion;
 
         @Config.Name("Enable Tour Rail Blocks")
-        public boolean tourRailBlockEnabled;
+        public boolean tourRailBlockEnabled = true;
     }
     @SubscribeEvent
     public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
