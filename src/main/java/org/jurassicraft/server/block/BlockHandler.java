@@ -17,6 +17,7 @@ import org.jurassicraft.server.block.fence.FenceType;
 import org.jurassicraft.server.block.machine.*;
 import org.jurassicraft.server.block.plant.*;
 import org.jurassicraft.server.block.tree.*;
+import org.jurassicraft.server.conf.JurassiCraftConfig;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.item.ItemHandler;
@@ -125,6 +126,7 @@ public class BlockHandler
 
     public static final SwarmBlock PLANKTON_SWARM = new SwarmBlock(() -> ItemHandler.PLANKTON);
     public static final SwarmBlock KRILL_SWARM = new SwarmBlock(() -> ItemHandler.KRILL);
+
     public static final TourRailBlock TOUR_RAIL = new TourRailBlock(TourRailBlock.SpeedType.NONE);
     public static final TourRailBlock TOUR_RAIL_SLOW = new TourRailBlock(TourRailBlock.SpeedType.SLOW);
     public static final TourRailBlock TOUR_RAIL_MEDIUM = new TourRailBlock(TourRailBlock.SpeedType.MEDIUM);
@@ -228,11 +230,12 @@ public class BlockHandler
 
         registerBlock(PLANKTON_SWARM, "Plankton Swarm");
         registerBlock(KRILL_SWARM, "Krill Swarm");
-        registerBlock(TourRailBlockEntity.class, TOUR_RAIL, "Tour Rail");
-        registerBlock(TOUR_RAIL_SLOW, "Tour Rail Slow");
-        registerBlock(TOUR_RAIL_MEDIUM, "Tour Rail Medium");
-        registerBlock(TOUR_RAIL_FAST, "Tour Rail Fast");
-
+        if(JurassiCraftConfig.VEHICLES.tourRailBlockEnabled) {
+            registerBlock(TourRailBlockEntity.class, TOUR_RAIL, "Tour Rail");
+            registerBlock(TOUR_RAIL_SLOW, "Tour Rail Slow");
+            registerBlock(TOUR_RAIL_MEDIUM, "Tour Rail Medium");
+            registerBlock(TOUR_RAIL_FAST, "Tour Rail Fast");
+        }
         registerBlock(SKELETON_ASSEMBLY, "Skeleton Assembly");
 //        registerBlock(JP_MAIN_GATE_BLOCK, "Jurassic Park Gate");
 
