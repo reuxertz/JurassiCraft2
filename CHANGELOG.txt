@@ -1,2 +1,2 @@
--Fixed Config Option to disable spawning of Carcass(You may need to delete and regenerate config for this option)
--Fixed Dinosaurs not correctly swimming in water
++Added a Config Option to allow Tour Rail blocks to be disabled
+*Fixed Action Figures not displaying the correct pose
