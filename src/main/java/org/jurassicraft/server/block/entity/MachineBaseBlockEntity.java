@@ -338,7 +338,7 @@ public abstract  class MachineBaseBlockEntity extends TileEntityLockable impleme
 
     @Override
     public int getFieldCount() {
-        return this.getProcessCount();
+        return this.getProcessCount() * 2;
     }
 
     @Override
