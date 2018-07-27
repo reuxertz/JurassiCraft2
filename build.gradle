@@ -99,15 +99,10 @@ tasks.withType(JavaCompile) {
 javadoc {
   failOnError = false
 }
-<<<<<<< HEAD
 
-plugins {
-    id 'io.franzbecker.gradle-lombok' version '1.14'
-}
 
-apply plugin: "net.minecraftforge.gradle.forge"
-=======
->>>>>>> f2647e31b... Changed to new build.gradle
+
+
 
 test {
   useJUnitPlatform()
@@ -256,10 +251,6 @@ dependencies {
 	runtime "mcp.mobius.waila:Hwyla:${hwyla_version}"
 }
 
-lombok {
-    version = "1.18.0"
-    sha256 = ""
-}
 
 processResources {
   inputs.property 'version', project.short_version
