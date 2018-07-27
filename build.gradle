@@ -251,10 +251,6 @@ dependencies {
 	runtime "mcp.mobius.waila:Hwyla:${hwyla_version}"
 }
 
-lombok {
-    version = "1.18.0"
-    sha256 = ""
-}
 
 processResources {
   inputs.property 'version', project.short_version
