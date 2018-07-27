@@ -178,8 +178,9 @@ public abstract  class MachineBaseBlockEntity extends TileEntityLockable impleme
 
     @Override
     public void update() {
+    	
         NonNullList<ItemStack> slots = this.getSlots();
-
+     
         for (int process = 0; process < this.getProcessCount(); process++) {
             boolean flag = this.isProcessing(process);
             boolean dirty = false;
@@ -207,8 +208,12 @@ public abstract  class MachineBaseBlockEntity extends TileEntityLockable impleme
                         }
                     }
                     this.totalProcessTime[process] = total;
+                    if (!this.world.isRemote)
+                    {
                     this.processItem(process);
                     this.onSlotUpdate();
+                    }
+                  
                 }
 
                 dirty = true;
@@ -231,6 +236,7 @@ public abstract  class MachineBaseBlockEntity extends TileEntityLockable impleme
             }
         }
     }
+    	
 
     @Override
     public boolean isUsableByPlayer(EntityPlayer player) {
@@ -332,7 +338,7 @@ public abstract  class MachineBaseBlockEntity extends TileEntityLockable impleme
 
     @Override
     public int getFieldCount() {
-        return this.getProcessCount() * 2;
+        return this.getProcessCount();
     }
 
     @Override
