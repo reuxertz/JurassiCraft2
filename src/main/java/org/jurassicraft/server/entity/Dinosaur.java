@@ -5,20 +5,23 @@ import net.ilexiconn.llibrary.client.model.tabula.container.TabulaCubeContainer;
 import net.ilexiconn.llibrary.client.model.tabula.container.TabulaModelContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.client.model.animation.EntityAnimation;
 import org.jurassicraft.client.model.animation.PoseHandler;
 import org.jurassicraft.server.api.GrowthStageGenderContainer;
 import org.jurassicraft.server.api.Hybrid;
 import org.jurassicraft.server.entity.ai.util.MovementType;
 import org.jurassicraft.server.json.dinosaur.DinosaurJsonHandler;
 import org.jurassicraft.server.json.dinosaur.entity.EntityDinosaurJsonHandler;
+import org.jurassicraft.server.json.dinosaur.entity.objects.EntityJsonSounds;
 import org.jurassicraft.server.json.dinosaur.entity.objects.EntityProperties;
-import org.jurassicraft.server.json.dinosaur.objects.DinosaurAnimation;
+import org.jurassicraft.server.json.dinosaur.objects.*;
 import org.jurassicraft.server.period.TimePeriod;
 import org.jurassicraft.server.tabula.TabulaModelHelper;
 
@@ -97,9 +100,17 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
 	public int jumpHeight;
 	public String[][] recipe;
 	public String jawCubeName = "Lower Teeth Front"; //TODO: make json based
-	public EntityProperties properties; //@
+	public DinosaurProperties properties; //@
 	public boolean init;
 	public DinosaurAnimation animation;
+	public SpawnEggInfo maleSpawnEgg, femaleSpawnEgg;
+	public DinosaurStatistics statistics;
+	public DinosaurTraits traits;
+	public DinosaurSpawningInfo spawningInfo;
+	public DinosaurBreeding breeding;
+    public EntityJsonSounds sounds;
+    public Map<EntityAnimation, SoundEvent> soundMap;
+    public SoundEvent soundEvent;
 
 	public static Matrix4d getParentRotationMatrix(TabulaModelContainer model, TabulaCubeContainer cube, boolean includeParents, boolean ignoreSelf, float rot) {
 		List<TabulaCubeContainer> parentCubes = new ArrayList<>();
@@ -232,13 +243,16 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
 		}
 		this.init = true;
 
-		try {
-			this.properties = DinosaurJsonHandler.GSON.fromJson(new InputStreamReader(Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(this.getRegistryName().getResourceDomain(), "jurassicraft/entities/" + this.getRegistryName().getResourcePath() + ".json")).getInputStream()), EntityProperties.class);
-			;
-		} catch (IOException e) {
-			JurassiCraft.getLogger().error("Unable to load dinosaur behaviours for " + this.getRegistryName(), e);
-			this.properties = new EntityProperties("dinosaur", null, Lists.newArrayList(), null);
-		}
+
+        this.setBabyEyeHeight(100f);
+        JurassiCraft.getLogger().debug(this.babyEyeHeight);
+        this.statistics = new DinosaurStatistics(new AdultBabyValue(this.babySpeed, this.adultSpeed), new AdultBabyValue(this.babyHealth, this.adultHealth), new AdultBabyValue(this.babyStrength, this.adultStrength), new AdultBabyValue(this.babySizeX, this.adultSizeX), new AdultBabyValue(this.babySizeY, this.adultSizeY), new AdultBabyValue(this.babyEyeHeight, this.adultEyeHeight), new AdultBabyValue(this.scaleInfant, this.scaleAdult), this.jumpHeight, this.attackSpeed, this.storage);
+        this.traits = new DinosaurTraits(this.homeType, this.dinosaurBehaviourType, this.diet, this.sleepTime, this.isImprintable, this.defendOwner, this.maximumAge, this.maxHerdSize, this.attackBias, this.canClimb, this.flockSpeed);
+        this.maleSpawnEgg = new SpawnEggInfo(this.primaryEggColorMale, this.secondaryEggColorMale);
+        this.femaleSpawnEgg = new SpawnEggInfo(this.primaryEggColorFemale, this.secondaryEggColorFemale);
+        this.breeding = new DinosaurBreeding(this.birthType, this.minClutch, this.maxClutch, this.breedCooldown, this.breedAroundOffspring, this.defendOffspring);
+        this.sounds = new EntityJsonSounds(soundMap, soundEvent);
+        this.properties = new DinosaurProperties(this.name, this.timePeriod, this.headCubeName, this.animatorClassName, "models/entities/" + this.name.toLowerCase(), this.shadowSize, this.possibleToLeashUntamed, this.maleSpawnEgg, this.femaleSpawnEgg, this.statistics, this.traits, this.spawningInfo, this.breeding, this.sounds, this.bones, this.recipe, this.animation);
 
 		String formattedName = this.getRegistryName().getResourcePath();
 		String domain = this.getRegistryName().getResourceDomain();
@@ -291,7 +305,7 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
 	}
 
 	public DinosaurEntity createEntity(World world) {
-		return EntityDinosaurJsonHandler.TYPE_MAP.getOrDefault(this.properties.type, DinosaurEntity::new).apply(world).setDinosaur(this);
+		return EntityDinosaurJsonHandler.TYPE_MAP.getOrDefault("dinosaur", DinosaurEntity::new).apply(world).setDinosaur(this);
 	}
 
 	public void setDinosaurBehaviourType(DinosaurBehaviourType type) {

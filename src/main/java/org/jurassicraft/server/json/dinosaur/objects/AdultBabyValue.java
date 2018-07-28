@@ -41,4 +41,20 @@ public class AdultBabyValue {
         adultCons.accept((float)this.adult);
     }
 
+    public double get(String bOrA){
+        if(bOrA == "baby"){
+            return this.baby;
+        }else{
+            return this.adult;
+        }
+    }
+
+    public void set(String bOrA, double toSet){
+        if(bOrA == "baby"){
+            this.baby = toSet;
+        }else{
+            this.adult = toSet;
+        }
+    }
+
 }

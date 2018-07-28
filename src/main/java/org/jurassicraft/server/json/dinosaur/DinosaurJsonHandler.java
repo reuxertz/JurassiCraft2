@@ -131,6 +131,7 @@ public class DinosaurJsonHandler {
 							dino.breedAroundOffspring,
 							dino.defendOffspring
 					),
+					dino.sounds,
 					dino.bones,
 					dino.recipe,
 					dino.animation
