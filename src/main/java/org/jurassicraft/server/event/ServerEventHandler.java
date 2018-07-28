@@ -18,6 +18,9 @@ import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraft.world.storage.loot.LootTable;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.event.LootTableLoadEvent;
+import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -30,6 +33,7 @@ import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.block.FossilizedTrackwayBlock;
 import org.jurassicraft.server.block.plant.DoublePlantBlock;
 import org.jurassicraft.server.conf.JurassiCraftConfig;
+import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.item.TrackingTablet;
 import org.jurassicraft.server.util.GameRuleHandler;
@@ -206,6 +210,14 @@ public class ServerEventHandler {
                     info.putInStack(itemstack);
                 }
             }
+        }
+    }
+    @SubscribeEvent
+    public void CheckSpawnEvent(LivingDeathEvent event){
+        if(event.getEntity() instanceof DinosaurEntity){
+            System.out.println(((DinosaurEntity) event.getEntity()).dinosaur.babyEyeHeight);
+            ((DinosaurEntity) event.getEntity()).dinosaur.setBabyEyeHeight(100f);
+            System.out.println(((DinosaurEntity) event.getEntity()).dinosaur.babyEyeHeight);
         }
     }
 }

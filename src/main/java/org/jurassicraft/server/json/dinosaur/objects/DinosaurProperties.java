@@ -1,11 +1,25 @@
 package org.jurassicraft.server.json.dinosaur.objects;
 
 import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.Sound;
 import net.minecraft.util.JsonUtils;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import org.jurassicraft.client.model.animation.EntityAnimation;
+import org.jurassicraft.server.json.JsonUtil;
+import org.jurassicraft.server.json.dinosaur.DinosaurJsonHandler;
+import org.jurassicraft.server.json.dinosaur.entity.objects.EntityJsonSounds;
 import org.jurassicraft.server.period.TimePeriod;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.Locale;
+import java.util.Map;
 
 public class DinosaurProperties {
 
@@ -25,6 +39,7 @@ public class DinosaurProperties {
 	public DinosaurTraits traits;
 	public DinosaurSpawningInfo spawningInfo;
 	public DinosaurBreeding breeding;
+	public EntityJsonSounds sounds;
 
 	public DinosaurAnimation animation;
 
@@ -34,7 +49,7 @@ public class DinosaurProperties {
 	public DinosaurProperties(String name, TimePeriod timePeriod, String headCubeName, String dinosaurAnimatorClassName,
 							  String dinosaurModelLocation, float shadowSize, boolean possibleToLeashUntamed, SpawnEggInfo maleSpawnEgg,
 							  SpawnEggInfo femaleSpawnEgg, DinosaurStatistics statistics, DinosaurTraits traits,
-							  DinosaurSpawningInfo spawningInfo, DinosaurBreeding breeding, String[] bones, String[][] skeletonRecipe,
+							  DinosaurSpawningInfo spawningInfo, DinosaurBreeding breeding, EntityJsonSounds sounds, String[] bones, String[][] skeletonRecipe,
 							  DinosaurAnimation animation) {
 		this.name = name;
 		this.timePeriod = timePeriod;
@@ -49,6 +64,7 @@ public class DinosaurProperties {
 		this.traits = traits;
 		this.spawningInfo = spawningInfo;
 		this.breeding = breeding;
+		this.sounds = sounds;
 		this.bones = bones;
 		this.skeletonRecipe = skeletonRecipe;
 		this.animation = animation;
@@ -59,7 +75,12 @@ public class DinosaurProperties {
 
 	public static class JsonHandler implements JsonDeserializer<DinosaurProperties>, JsonSerializer<DinosaurProperties> {
 
-		@Override
+
+        SoundEvent soundEvent;
+        Map<EntityAnimation, SoundEvent> soundMap;
+
+
+        @Override
 		@SuppressWarnings("unchecked")
 		public DinosaurProperties deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			if (!element.isJsonObject()) {
@@ -90,25 +111,32 @@ public class DinosaurProperties {
 				skeleton_recipe[index++] = childList;
 			}
 
-			return new DinosaurProperties(
-					JsonUtils.getString(json, "name"),
-					TimePeriod.valueOf(JsonUtils.getString(json, "time_period").toUpperCase(Locale.ENGLISH)),
-					JsonUtils.getString(json, "head_cube_name"),
-					JsonUtils.isString(json, "dinosaur_animator_class") ? JsonUtils.getString(json, "dinosaur_animator_class") : null,
-					JsonUtils.isString(json,"model_location") ? JsonUtils.getString(json, "model_location") : null,
-					JsonUtils.getFloat(json, "shadow_size"),
-					JsonUtils.getBoolean(json, "possible_to_leash_untamed"),
-					context.deserialize(JsonUtils.getJsonArray(spawnEggInfo, "male"), SpawnEggInfo.class),
-					context.deserialize(JsonUtils.getJsonArray(spawnEggInfo, "female"), SpawnEggInfo.class),
-					context.deserialize(JsonUtils.getJsonObject(json, "statistics"), DinosaurStatistics.class),
-					context.deserialize(JsonUtils.getJsonObject(json, "traits"), DinosaurTraits.class),
-					context.deserialize(JsonUtils.getJsonObject(json, "spawning"), DinosaurSpawningInfo.class),
-					context.deserialize(JsonUtils.getJsonObject(json, "breeding"), DinosaurBreeding.class),
-					createStringList(JsonUtils.getJsonArray(json, "bones")),
-					skeleton_recipe,
-					DinosaurAnimation.parse(JsonUtils.getJsonObject(json, "animation"))
-			);
-		}
+            EntityJsonSounds sounds = new EntityJsonSounds(soundMap, soundEvent);
+
+            try {
+                return new DinosaurProperties(
+                        JsonUtils.getString(json, "name"),
+                        TimePeriod.valueOf(JsonUtils.getString(json, "time_period").toUpperCase(Locale.ENGLISH)),
+                        JsonUtils.getString(json, "head_cube_name"),
+                        JsonUtils.isString(json, "dinosaur_animator_class") ? JsonUtils.getString(json, "dinosaur_animator_class") : null,
+                        JsonUtils.isString(json,"model_location") ? JsonUtils.getString(json, "model_location") : null,
+                        JsonUtils.getFloat(json, "shadow_size"),
+                        JsonUtils.getBoolean(json, "possible_to_leash_untamed"),
+                        context.deserialize(JsonUtils.getJsonArray(spawnEggInfo, "male"), SpawnEggInfo.class),
+                        context.deserialize(JsonUtils.getJsonArray(spawnEggInfo, "female"), SpawnEggInfo.class),
+                        context.deserialize(JsonUtils.getJsonObject(json, "statistics"), DinosaurStatistics.class),
+                        context.deserialize(JsonUtils.getJsonObject(json, "traits"), DinosaurTraits.class),
+                        context.deserialize(JsonUtils.getJsonObject(json, "spawning"), DinosaurSpawningInfo.class),
+                        sounds
+                        context.deserialize(JsonUtils.getJsonObject(json, "breeding"), DinosaurBreeding.class),
+
+                        skeleton_recipe,
+                        DinosaurAnimation.parse(JsonUtils.getJsonObject(json, "animation"))
+                );
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
 
 		@Override
 		public JsonElement serialize(DinosaurProperties src, Type typeOfSrc, JsonSerializationContext context) {
@@ -130,6 +158,7 @@ public class DinosaurProperties {
 			json.add("traits", context.serialize(src.traits));
 			json.add("spawning", context.serialize(src.spawningInfo));
 			json.add("breeding", context.serialize(src.breeding));
+
 
 			JsonArray bones = new JsonArray();
 			for (String bone : src.bones) {

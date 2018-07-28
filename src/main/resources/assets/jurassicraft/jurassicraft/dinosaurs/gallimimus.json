@@ -3,6 +3,7 @@
   "entity": "org.jurassicraft.server.entity.dinosaur.GallimimusEntity",
   "time_period": "cretaceous",
   "head_cube_name": "Head Base",
+  "sounds": "jurassicraft:sounds.json",
   "dinosaur_animator_class": "org.jurassicraft.client.model.animation.entity.GallimimusAnimator",
   "shadow_size": 0.65,
   "possible_to_leash_untamed": true,

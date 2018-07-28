@@ -1,6 +1,7 @@
 package org.jurassicraft.server.json.dinosaur;
 
 import org.jurassicraft.server.entity.Dinosaur;
+import org.jurassicraft.server.json.dinosaur.entity.objects.EntityJsonSounds;
 import org.jurassicraft.server.json.dinosaur.objects.*;
 
 public class JsonDinosaur extends Dinosaur {
@@ -27,7 +28,7 @@ public class JsonDinosaur extends Dinosaur {
 		statistics.strength.apply(this::setBabyStrength, this::setAdultStrength);
 		statistics.sizeX.apply(this::setBabySizeX, this::setAdultSizeX);
 		statistics.sizeY.apply(this::setBabySizeY, this::setAdultSizeY);
-		statistics.eyeHeight.apply(this::setBabyEyeHeight, this::setAdultEyeHeight);
+		statistics.eyeHeight.apply(this::setAdultEyeHeight, this::setAdultEyeHeight);
 		statistics.scale.apply(this::setScaleInfant, this::setScaleAdult);
 
 		this.jumpHeight = statistics.jumpHeight;
@@ -50,6 +51,8 @@ public class JsonDinosaur extends Dinosaur {
 
 		DinosaurBreeding breeding = properties.breeding;
 		this.setBreeding(breeding.birthType, breeding.minClutch, breeding.maxClutch, breeding.breedingCooldown, breeding.breedNearOffsprring, breeding.defendOffspring);
+
+		EntityJsonSounds sounds = properties.sounds;
 
 		this.bones = properties.bones;
 		this.recipe = properties.skeletonRecipe;

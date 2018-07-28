@@ -71,6 +71,6 @@ public final class LegArticulator {
     private static float getScale(DinosaurEntity entity) {
         float scaleModifier = entity.getAttributes().getScaleModifier();
         Dinosaur dino = entity.getDinosaur();
-        return (float) entity.interpolate(dino.scaleInfant, dino.scaleAdult) * scaleModifier;
+        return (float) entity.interpolate(dino.properties.statistics.scale) * scaleModifier;
     }
 }
