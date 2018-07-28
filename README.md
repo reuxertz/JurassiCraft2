@@ -12,7 +12,8 @@ Reuxertz
 AnarchCassius   
 Collin     
 NeusFear     
-SanAndreasP
+SanAndreasP     
+Shrek5InTheatres2019
 
 ### Modelers / Texturers
 CarrotJet   
