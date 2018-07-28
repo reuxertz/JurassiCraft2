@@ -2,6 +2,7 @@ package org.jurassicraft.server.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -16,9 +17,7 @@ public abstract class MachineContainer extends Container {
         this.inventory = inventory;
         this.fields = new int[inventory.getFieldCount()];
     }
-
-    //TODO Crashing
-    /*
+    
     @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
@@ -37,7 +36,7 @@ public abstract class MachineContainer extends Container {
             this.fields[fieldIndex] = this.inventory.getField(fieldIndex);
         }
     }
-    */
+    
 
     @Override
     @SideOnly(Side.CLIENT)

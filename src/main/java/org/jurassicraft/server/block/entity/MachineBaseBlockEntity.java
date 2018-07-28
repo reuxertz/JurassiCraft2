@@ -20,7 +20,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
-
 import javax.annotation.Nullable;
 
 public abstract  class MachineBaseBlockEntity extends TileEntityLockable implements ITickable, ISidedInventory {
@@ -178,8 +177,9 @@ public abstract  class MachineBaseBlockEntity extends TileEntityLockable impleme
 
     @Override
     public void update() {
+    	
         NonNullList<ItemStack> slots = this.getSlots();
-
+        if(!world.isRemote) {
         for (int process = 0; process < this.getProcessCount(); process++) {
             boolean flag = this.isProcessing(process);
             boolean dirty = false;
@@ -207,8 +207,12 @@ public abstract  class MachineBaseBlockEntity extends TileEntityLockable impleme
                         }
                     }
                     this.totalProcessTime[process] = total;
+                    if (!this.world.isRemote)
+                    {
                     this.processItem(process);
                     this.onSlotUpdate();
+                    }
+                  
                 }
 
                 dirty = true;
@@ -230,7 +234,9 @@ public abstract  class MachineBaseBlockEntity extends TileEntityLockable impleme
                 this.markDirty();
             }
         }
+        }
     }
+    	
 
     @Override
     public boolean isUsableByPlayer(EntityPlayer player) {

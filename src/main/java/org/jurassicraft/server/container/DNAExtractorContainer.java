@@ -6,6 +6,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.tileentity.TileEntity;
 import org.jurassicraft.server.block.entity.DNAExtractorBlockEntity;
+import org.jurassicraft.server.container.slot.CustomSlot;
 import org.jurassicraft.server.container.slot.DNAExtractionSlot;
 import org.jurassicraft.server.container.slot.StorageSlot;
 
@@ -17,10 +18,10 @@ public class DNAExtractorContainer extends MachineContainer {
         this.extractor = (DNAExtractorBlockEntity) tileEntity;
         this.addSlotToContainer(new StorageSlot(this.extractor, 1, 55, 47, false));
         this.addSlotToContainer(new DNAExtractionSlot(this.extractor, 0, 55, 26));
-        this.addSlotToContainer(new StorageSlot(this.extractor, 2, 108, 28, true));
-        this.addSlotToContainer(new StorageSlot(this.extractor, 3, 126, 28, true));
-        this.addSlotToContainer(new StorageSlot(this.extractor, 4, 108, 46, true));
-        this.addSlotToContainer(new StorageSlot(this.extractor, 5, 126, 46, true));
+        this.addSlotToContainer(new CustomSlot(this.extractor, 2, 108, 28, stack -> false));
+        this.addSlotToContainer(new CustomSlot(this.extractor, 3, 126, 28, stack -> false));
+        this.addSlotToContainer(new CustomSlot(this.extractor, 4, 108, 46, stack -> false));
+        this.addSlotToContainer(new CustomSlot(this.extractor, 5, 126, 46, stack -> false));
 
         int i;
 

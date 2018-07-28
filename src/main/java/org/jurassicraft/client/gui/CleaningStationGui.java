@@ -4,6 +4,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -18,7 +19,7 @@ public class CleaningStationGui extends GuiContainer {
     private IInventory inventory;
 
     public CleaningStationGui(InventoryPlayer playerInv, IInventory inventory) {
-        super(new CleaningStationContainer(playerInv, inventory));
+        super(new CleaningStationContainer(playerInv, (TileEntity) inventory));
         this.playerInventory = playerInv;
         this.inventory = inventory;
     }

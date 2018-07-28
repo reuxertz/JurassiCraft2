@@ -5,24 +5,28 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
+import net.minecraft.tileentity.TileEntity;
+
+import org.jurassicraft.server.block.entity.CleaningStationBlockEntity;
 import org.jurassicraft.server.container.slot.CleanableItemSlot;
+import org.jurassicraft.server.container.slot.CustomSlot;
 import org.jurassicraft.server.container.slot.FossilSlot;
 import org.jurassicraft.server.container.slot.WaterBucketSlot;
 
 public class CleaningStationContainer extends MachineContainer {
-    private final IInventory tileCleaningStation;
+    private final CleaningStationBlockEntity tileCleaningStation;
 
-    public CleaningStationContainer(InventoryPlayer invPlayer, IInventory cleaningStation) {
-        super(cleaningStation);
-        this.tileCleaningStation = cleaningStation;
-        this.addSlotToContainer(new CleanableItemSlot(cleaningStation, 0, 56, 17));
-        this.addSlotToContainer(new WaterBucketSlot(cleaningStation, 1, 56, 53));
+    public CleaningStationContainer(InventoryPlayer invPlayer, TileEntity tileEntity) {
+        super((IInventory) tileEntity);
+        this.tileCleaningStation = (CleaningStationBlockEntity) tileEntity;
+        this.addSlotToContainer(new CleanableItemSlot(tileCleaningStation, 0, 56, 17));
+        this.addSlotToContainer(new WaterBucketSlot(tileCleaningStation, 1, 56, 53));
 
         int i;
 
         for (i = 0; i < 3; i++) {
             for (int j = 0; j < 2; j++) {
-                this.addSlotToContainer(new FossilSlot(cleaningStation, i + (j * 3) + 2, i * 18 + 93 + 15, j * 18 + 26));
+                this.addSlotToContainer(new CustomSlot(tileCleaningStation, i + (j * 3) + 2, i * 18 + 93 + 15, j * 18 + 26, stack -> false));
             }
         }
 
@@ -36,9 +40,9 @@ public class CleaningStationContainer extends MachineContainer {
             this.addSlotToContainer(new Slot(invPlayer, i, 8 + i * 18, 142));
         }
     }
-
-    @Override
-    public void addListener(IContainerListener listener) {
+    
+    public void addListener(IContainerListener listener)
+    {
         super.addListener(listener);
         listener.sendAllWindowProperties(this, this.tileCleaningStation);
     }

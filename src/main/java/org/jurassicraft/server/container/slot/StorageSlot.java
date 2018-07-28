@@ -28,4 +28,9 @@ public class StorageSlot extends Slot {
             return stack.getItem() == ItemHandler.STORAGE_DISC && (stack.getTagCompound() == null || !stack.getTagCompound().hasKey("DNAQuality"));
         }
     }
+    
+    @Override
+    public int getSlotStackLimit() {
+    	return stackLimit;
+    }
 }

@@ -183,13 +183,14 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
     public void update() {
         boolean isCleaning = this.isCleaning();
         boolean dirty = false;
-
+        
+        if(!world.isRemote) {
         if (this.isCleaning() && this.canClean()) {
             --this.cleaningStationWaterTime;
             dirty = true;
         }
+     
 
-        if (!this.world.isRemote) {
             if (!this.isCleaning() && (this.slots.get(1).isEmpty() || this.slots.get(0).isEmpty())) {
                 if (!this.isCleaning() && this.cleanTime > 0) {
                     this.cleanTime = MathHelper.clamp(this.cleanTime - 2, 0, this.totalCleanTime);
@@ -230,15 +231,15 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
             if (isCleaning != this.isCleaning()) {
                 dirty = true;
             }
-        }
-
+        
+    
         if (this.cleaningStationWaterTime == 0) {
             this.cleanTime = 0;
         }
-
-        if (dirty) {
+        
+        }
+        if (dirty && !world.isRemote) {
             this.markDirty();
-            this.world.notifyBlockUpdate(this.pos, this.world.getBlockState(this.pos), this.world.getBlockState(this.pos), 3);
         }
     }
 
@@ -391,6 +392,11 @@ public class CleaningStationBlockEntity extends TileEntityLockable implements IT
     @Override
     public SPacketUpdateTileEntity getUpdatePacket() {
         return new SPacketUpdateTileEntity(this.pos, 0, this.writeToNBT(new NBTTagCompound()));
+    }
+    
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        return this.writeToNBT(new NBTTagCompound());
     }
 
     @Override

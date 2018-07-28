@@ -21,7 +21,7 @@ public class EmbryoCalcificationMachineContainer extends MachineContainer {
         this.addSlotToContainer(new SyringeSlot(this.calcificationMachine, 0, 34, 14));
         this.addSlotToContainer(new CustomSlot(this.calcificationMachine, 1, 34, 50, stack -> stack.getItem() == Items.EGG));
 
-        this.addSlotToContainer(new Slot(this.calcificationMachine, 2, 97, 32));
+        this.addSlotToContainer(new CustomSlot(this.calcificationMachine, 2, 97, 32, stack -> false));
 
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {

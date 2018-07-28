@@ -6,6 +6,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.tileentity.TileEntity;
 import org.jurassicraft.server.block.entity.DNACombinatorHybridizerBlockEntity;
+import org.jurassicraft.server.container.slot.CustomSlot;
 import org.jurassicraft.server.container.slot.StorageSlot;
 
 public class DNACombinatorHybridizerContainer extends MachineContainer {
@@ -32,11 +33,11 @@ public class DNACombinatorHybridizerContainer extends MachineContainer {
             this.addSlotToContainer(new StorageSlot(this.dnaHybridizer, 5, 110, 17, true));
             this.addSlotToContainer(new StorageSlot(this.dnaHybridizer, 6, 130, 17, true));
             this.addSlotToContainer(new StorageSlot(this.dnaHybridizer, 7, 150, 17, true));
-            this.addSlotToContainer(new StorageSlot(this.dnaHybridizer, 10, 80, 56, true));
+            this.addSlotToContainer(new CustomSlot(this.dnaHybridizer, 10, 80, 56, stack -> false));
         } else {
             this.addSlotToContainer(new StorageSlot(this.dnaHybridizer, 8, 55, 13, true));
             this.addSlotToContainer(new StorageSlot(this.dnaHybridizer, 9, 105, 13, true));
-            this.addSlotToContainer(new StorageSlot(this.dnaHybridizer, 11, 81, 60, true));
+            this.addSlotToContainer(new CustomSlot(this.dnaHybridizer, 11, 81, 60, stack -> false));
         }
 
         int i;
