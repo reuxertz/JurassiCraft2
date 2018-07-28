@@ -11,7 +11,8 @@ Cody
 Reuxertz    
 AnarchCassius   
 Collin  
-NeusFear
+NeusFear\
+Shrek5InTheatres2019
 
 ### Modelers / Texturers
 CarrotJet   
