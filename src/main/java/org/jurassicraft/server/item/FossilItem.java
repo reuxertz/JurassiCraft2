@@ -19,7 +19,6 @@ import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.plant.PlantHandler;
 import org.jurassicraft.server.tab.TabHandler;
-import org.jurassicraft.server.util.LangHelper;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,6 +30,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.server.util.LangUtils;
 
 public class FossilItem extends Item implements GrindableItem {
     public static Map<String, List<Dinosaur>> fossilDinosaurs = new HashMap<>();
@@ -69,7 +69,7 @@ public class FossilItem extends Item implements GrindableItem {
         Dinosaur dinosaur = this.getDinosaur(stack);
 
         if (dinosaur != null) {
-            return new LangHelper(this.getUnlocalizedName() + ".name").withProperty("dino", "entity.jurassicraft." + dinosaur.getName().replace(" ", "_").toLowerCase(Locale.ENGLISH) + ".name").build();
+            return LangUtils.translate(this.getUnlocalizedName() + ".name").replace("{dino}", LangUtils.getDinoName(dinosaur));
         }
 
         return super.getItemStackDisplayName(stack);
@@ -114,8 +114,9 @@ public class FossilItem extends Item implements GrindableItem {
                 colour = TextFormatting.RED;
             }
 
-            lore.add(colour + new LangHelper("lore.dna_quality.name").withProperty("quality", quality + "").build());
-            lore.add(TextFormatting.BLUE + new LangHelper("lore.genetic_code.name").withProperty("code", nbt.getString("Genetics")).build());
+
+            lore.add(colour + LangUtils.translate(LangUtils.LORE.get("dna_quality")).replace("{quality}", LangUtils.getFormattedQuality(quality)));
+            lore.add(TextFormatting.BLUE + LangUtils.translate(LangUtils.LORE.get("genetic_code")).replace("{code}", LangUtils.getFormattedGenetics(nbt.getString("Genetics"))));
         }
     }
 

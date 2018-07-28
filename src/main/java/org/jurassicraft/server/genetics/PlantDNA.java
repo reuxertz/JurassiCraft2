@@ -3,11 +3,9 @@ package org.jurassicraft.server.genetics;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
-import org.jurassicraft.server.plant.PlantHandler;
-import org.jurassicraft.server.util.LangHelper;
+import org.jurassicraft.server.util.LangUtils;
 
 import java.util.List;
-import java.util.Locale;
 
 public class PlantDNA {
     private int plant;
@@ -41,7 +39,7 @@ public class PlantDNA {
     }
 
     public void addInformation(ItemStack stack, List<String> tooltip) {
-        tooltip.add(TextFormatting.DARK_AQUA + new LangHelper("lore.plant.name").withProperty("plant", "plants." + PlantHandler.getPlantById(this.plant).getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_") + ".name").build());
+        tooltip.add(TextFormatting.DARK_AQUA + LangUtils.translate(LangUtils.LORE.get("plant")).replace("{plant}", LangUtils.getPlantName(this.plant)));
 
         TextFormatting formatting;
 
@@ -57,7 +55,7 @@ public class PlantDNA {
             formatting = TextFormatting.RED;
         }
 
-        tooltip.add(formatting + new LangHelper("lore.dna_quality.name").withProperty("quality", (this.quality == -1 ? TextFormatting.OBFUSCATED.toString() : "") + this.quality + "").build());
+        tooltip.add(formatting + LangUtils.translate(LangUtils.LORE.get("dna_quality")).replace("{quality}", LangUtils.getFormattedQuality(this.quality)));
     }
 
     public int getMetadata() {

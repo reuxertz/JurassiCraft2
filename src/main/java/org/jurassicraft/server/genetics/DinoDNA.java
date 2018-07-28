@@ -5,10 +5,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.EntityHandler;
-import org.jurassicraft.server.util.LangHelper;
+import org.jurassicraft.server.util.LangUtils;
 
 import java.util.List;
-import java.util.Locale;
 
 public class/* Bingo! */ DinoDNA {
     private int quality;
@@ -26,7 +25,7 @@ public class/* Bingo! */ DinoDNA {
     }
 
     public static DinoDNA readFromNBT(NBTTagCompound nbt) {
-        return new DinoDNA(EntityHandler.getDinosaurById(nbt.getInteger("Dinosaur")), nbt.getInteger("DNAQuality"), nbt.getString("Genetics"));
+        return nbt == null ? null : new DinoDNA(EntityHandler.getDinosaurById(nbt.getInteger("Dinosaur")), nbt.getInteger("DNAQuality"), nbt.getString("Genetics"));
     }
 
     public void writeToNBT(NBTTagCompound nbt) {
@@ -45,7 +44,7 @@ public class/* Bingo! */ DinoDNA {
     }
 
     public void addInformation(ItemStack stack, List<String> tooltip) {
-        tooltip.add(TextFormatting.DARK_AQUA + new LangHelper("lore.dinosaur.name").withProperty("dino", "entity.jurassicraft." + this.dinosaur.getName().toLowerCase(Locale.ENGLISH) + ".name").build());
+        tooltip.add(TextFormatting.DARK_AQUA + LangUtils.translate(LangUtils.LORE.get("dinosaur")).replace("{dino}", LangUtils.getDinoName(this.dinosaur)));
 
         TextFormatting colour;
 
@@ -60,8 +59,8 @@ public class/* Bingo! */ DinoDNA {
         } else {
             colour = TextFormatting.RED;
         }
-        tooltip.add(colour + new LangHelper("lore.dna_quality.name").withProperty("quality", (this.quality == -1 ? TextFormatting.OBFUSCATED.toString() : "") + this.quality + "").build());
-        tooltip.add(TextFormatting.BLUE + new LangHelper("lore.genetic_code.name").withProperty("code", this.genetics.isEmpty() ? TextFormatting.OBFUSCATED.toString() + "aaa" : this.genetics).build());
+        tooltip.add(colour + LangUtils.translate(LangUtils.LORE.get("dna_quality")).replace("{quality}", LangUtils.getFormattedQuality(this.quality)));
+        tooltip.add(TextFormatting.BLUE + LangUtils.translate(LangUtils.LORE.get("genetic_code")).replace("{code}", LangUtils.getFormattedGenetics(this.genetics)));
     }
 
     public Dinosaur getDinosaur() {

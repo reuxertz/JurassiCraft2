@@ -4,7 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import org.jurassicraft.server.block.FossilizedTrackwayBlock;
-import org.jurassicraft.server.util.LangHelper;
+import org.jurassicraft.server.util.LangUtils;
 
 public class FossilizedTrackwayItemBlock extends ItemBlock {
     public FossilizedTrackwayItemBlock(Block block) {
@@ -16,7 +16,7 @@ public class FossilizedTrackwayItemBlock extends ItemBlock {
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
         FossilizedTrackwayBlock.TrackwayType type = this.getType(stack);
-        return new LangHelper("tile.fossilized_trackway.name").withProperty("variant", "trackway." + type.getName() + ".name").build();
+        return this.block.getLocalizedName().replace("{variant}", LangUtils.translate("trackway." + type.getName() + ".name"));
     }
 
     private FossilizedTrackwayBlock.TrackwayType getType(ItemStack stack) {

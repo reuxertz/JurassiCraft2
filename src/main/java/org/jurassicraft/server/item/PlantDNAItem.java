@@ -1,28 +1,22 @@
 package org.jurassicraft.server.item;
 
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.server.plant.Plant;
+import org.jurassicraft.server.plant.PlantHandler;
+import org.jurassicraft.server.tab.TabHandler;
+import org.jurassicraft.server.util.LangUtils;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.world.World;
-import org.jurassicraft.server.plant.Plant;
-import org.jurassicraft.server.plant.PlantHandler;
-import org.jurassicraft.server.tab.TabHandler;
-import org.jurassicraft.server.util.LangHelper;
-
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PlantDNAItem extends Item {
     public PlantDNAItem() {
@@ -35,7 +29,7 @@ public class PlantDNAItem extends Item {
     public String getItemStackDisplayName(ItemStack stack) {
         String plantName = this.getPlant(stack).getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
 
-        return new LangHelper("item.plant_dna.name").withProperty("plant", "plants." + plantName + ".name").build();
+        return LangUtils.translate(this.getUnlocalizedName() + ".name").replace("{plant}", LangUtils.translate(LangUtils.PLANTS.get(plantName)));
     }
 
     public Plant getPlant(ItemStack stack) {
@@ -68,25 +62,26 @@ public class PlantDNAItem extends Item {
         }
     }
 
-    public int getDNAQuality(EntityPlayer player, ItemStack stack) {
-        int quality = player.capabilities.isCreativeMode ? 100 : 0;
-
-        NBTTagCompound nbt = stack.getTagCompound();
-
-        if (nbt == null) {
-            nbt = new NBTTagCompound();
-        }
-
-        if (nbt.hasKey("DNAQuality")) {
-            quality = nbt.getInteger("DNAQuality");
-        } else {
-            nbt.setInteger("DNAQuality", quality);
-        }
-
-        stack.setTagCompound(nbt);
-
-        return quality;
-    }
+    //INFO: use DNAContainerItem.getDNAQuality()
+//    public int getDNAQuality(EntityPlayer player, ItemStack stack) {
+//        int quality = player.capabilities.isCreativeMode ? 100 : 0;
+//
+//        NBTTagCompound nbt = stack.getTagCompound();
+//
+//        if (nbt == null) {
+//            nbt = new NBTTagCompound();
+//        }
+//
+//        if (nbt.hasKey("DNAQuality")) {
+//            quality = nbt.getInteger("DNAQuality");
+//        } else {
+//            nbt.setInteger("DNAQuality", quality);
+//        }
+//
+//        stack.setTagCompound(nbt);
+//
+//        return quality;
+//    }
 
 //    @Override
 //    public void addInformation(ItemStack stack, World worldIn, List<String> lore, ITooltipFlag flagIn) {

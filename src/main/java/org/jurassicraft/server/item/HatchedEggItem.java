@@ -12,9 +12,7 @@ import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.EntityHandler;
-import org.jurassicraft.server.util.LangHelper;
-
-import java.util.Locale;
+import org.jurassicraft.server.util.LangUtils;
 
 public class HatchedEggItem extends DNAContainerItem {
     public HatchedEggItem() {
@@ -26,10 +24,8 @@ public class HatchedEggItem extends DNAContainerItem {
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
         Dinosaur dinosaur = this.getDinosaur(stack);
-        String dinoName = dinosaur.getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
 
-        return new LangHelper(dinosaur.givesDirectBirth() ? "item.gestated.name" :"item.hatched_egg.name")
-                .withProperty("dino", "entity.jurassicraft." + dinoName + ".name").build();
+        return LangUtils.translate(dinosaur.givesDirectBirth() ? "item.gestated.name" :"item.hatched_egg.name").replace("{dino}", LangUtils.getDinoName(dinosaur));
     }
 
     public Dinosaur getDinosaur(ItemStack stack) {

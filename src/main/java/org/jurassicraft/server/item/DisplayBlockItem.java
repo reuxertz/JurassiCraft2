@@ -1,23 +1,9 @@
 package org.jurassicraft.server.item;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-
-import net.minecraft.client.util.ITooltipFlag;
-import org.jurassicraft.client.render.RenderingHandler;
-import org.jurassicraft.server.block.BlockHandler;
-import org.jurassicraft.server.block.entity.DisplayBlockEntity;
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.EntityHandler;
-import org.jurassicraft.server.tab.TabHandler;
-import org.jurassicraft.server.util.LangHelper;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -33,6 +19,19 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.client.render.RenderingHandler;
+import org.jurassicraft.server.block.BlockHandler;
+import org.jurassicraft.server.block.entity.DisplayBlockEntity;
+import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.tab.TabHandler;
+import org.jurassicraft.server.util.LangUtils;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
 
 public class DisplayBlockItem extends Item {
     public DisplayBlockItem() {
@@ -87,11 +86,11 @@ public class DisplayBlockItem extends Item {
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        String dinoName = this.getDinosaur(stack).getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
+        String dinoName = LangUtils.getDinoName(this.getDinosaur(stack));
         if (!this.isSkeleton(stack)) {
-            return new LangHelper("item.action_figure.name").withProperty("dino", "entity.jurassicraft." + dinoName + ".name").build();
+            return LangUtils.translate("item.action_figure.name").replace("{dino}", dinoName);
         }
-        return new LangHelper("item.skeleton." + (this.getVariant(stack) == 1 ? "fossil" : "fresh") + ".name").withProperty("dino", "entity.jurassicraft." + dinoName + ".name").build();
+        return LangUtils.translate("item.skeleton." + (this.getVariant(stack) == 1 ? "fossil" : "fresh") + ".name").replace("{dino}", dinoName);
     }
 
     public Dinosaur getDinosaur(ItemStack stack) {
@@ -158,19 +157,7 @@ public class DisplayBlockItem extends Item {
         if (!this.isSkeleton(stack)) {
             int mode = this.changeMode(stack);
             if (world.isRemote) {
-                String modeString = "";
-                switch (mode) {
-                    case 0:
-                        modeString = "random";
-                        break;
-                    case 1:
-                        modeString = "male";
-                        break;
-                    case 2:
-                        modeString = "female";
-                        break;
-                }
-                player.sendMessage(new TextComponentString(new LangHelper("actionfigure.genderchange.name").withProperty("mode", I18n.format("gender." + modeString + ".name")).build()));
+                player.sendMessage(new TextComponentString(LangUtils.translate(LangUtils.GENDER_CHANGE.get("actionfigure")).replace("{mode}", LangUtils.getGenderMode(mode))));
             }
             return new ActionResult<>(EnumActionResult.SUCCESS, stack);
         }

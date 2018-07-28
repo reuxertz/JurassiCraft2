@@ -16,6 +16,8 @@ import org.jurassicraft.server.api.SubBlocksBlock;
 import org.jurassicraft.server.block.BlockHandler;
 import org.jurassicraft.server.item.block.AncientSlabItemBlock;
 
+import java.util.Locale;
+
 public abstract class AncientSlabBlock extends BlockSlab implements SubBlocksBlock {
     private TreeType type;
 
@@ -34,6 +36,7 @@ public abstract class AncientSlabBlock extends BlockSlab implements SubBlocksBlo
         this.setResistance((block.getExplosionResistance(null) * 5.0F) / 3.0F);
         this.setSoundType(SoundType.WOOD);
         this.setHarvestLevel(block.getHarvestTool(state), block.getHarvestLevel(state));
+        this.setUnlocalizedName(type.name().toLowerCase(Locale.ENGLISH) + "_slab");
 
         this.setDefaultState(state);
     }

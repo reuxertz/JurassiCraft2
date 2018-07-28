@@ -1,20 +1,17 @@
 package org.jurassicraft.server.plugin.jei.category.skeletonassembly;
 
-import java.util.List;
-
-import mezz.jei.api.recipe.IRecipeCategory;
-import org.jurassicraft.JurassiCraft;
-
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeCategory;
-import mezz.jei.api.recipe.IRecipeWrapper;
+import mezz.jei.api.recipe.IRecipeCategory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.translation.I18n;
+import org.jurassicraft.JurassiCraft;
+import org.jurassicraft.server.block.BlockHandler;
+
+import java.util.List;
 
 public class SkeletonAssemblyRecipeCategory implements IRecipeCategory<SkeletonAssemblyRecipeWrapper> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(JurassiCraft.MODID, "textures/gui/skeleton_assembler.png");
@@ -24,7 +21,7 @@ public class SkeletonAssemblyRecipeCategory implements IRecipeCategory<SkeletonA
 
     public SkeletonAssemblyRecipeCategory(IGuiHelper guiHelper) {
         this.background = guiHelper.createDrawable(TEXTURE, 15, 15, 146, 90);
-        this.title = I18n.translateToLocal("tile.skeleton_assembly.name");
+        this.title = BlockHandler.SKELETON_ASSEMBLY.getLocalizedName();
     }
 
     @Override

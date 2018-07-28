@@ -1,14 +1,13 @@
 package org.jurassicraft.server.item;
 
-import org.jurassicraft.server.tab.TabHandler;
-import org.jurassicraft.server.util.LangHelper;
-
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.server.tab.TabHandler;
+import org.jurassicraft.server.util.LangUtils;
 
 public class AmberItem extends Item {
     public AmberItem() {
@@ -19,7 +18,7 @@ public class AmberItem extends Item {
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        return new LangHelper("item.amber.name").withProperty("stored", "amber." + (stack.getItemDamage() == 0 ? "mosquito" : "aphid") + ".name").build();
+        return LangUtils.translate(this.getUnlocalizedName() + ".name").replace("{stored}", LangUtils.translate("amber." + (stack.getItemDamage() == 0 ? "mosquito" : "aphid") + ".name"));
     }
 
     @Override

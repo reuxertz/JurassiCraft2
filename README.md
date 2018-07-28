@@ -10,8 +10,9 @@ Cody
 ### Developers
 Reuxertz    
 AnarchCassius   
-Collin  
-NeusFear
+Collin     
+NeusFear     
+SanAndreasP
 
 ### Modelers / Texturers
 CarrotJet   
