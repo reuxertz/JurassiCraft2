@@ -6,6 +6,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.tileentity.TileEntity;
 import org.jurassicraft.server.block.entity.DNASequencerBlockEntity;
+import org.jurassicraft.server.container.slot.CustomSlot;
 import org.jurassicraft.server.container.slot.SequencableItemSlot;
 import org.jurassicraft.server.container.slot.StorageSlot;
 
@@ -24,9 +25,9 @@ public class DNASequencerContainer extends MachineContainer {
         this.addSlotToContainer(new SequencableItemSlot(this.dnaSequencer, 4, 44, 56));
         this.addSlotToContainer(new StorageSlot(this.dnaSequencer, 5, 66, 56, false, 1));
 
-        this.addSlotToContainer(new StorageSlot(this.dnaSequencer, 6, 113, 16, true, 1));
-        this.addSlotToContainer(new StorageSlot(this.dnaSequencer, 7, 113, 36, true, 1));
-        this.addSlotToContainer(new StorageSlot(this.dnaSequencer, 8, 113, 56, true, 1));
+        this.addSlotToContainer(new CustomSlot(this.dnaSequencer, 6, 113, 16, stack -> false, 1));
+        this.addSlotToContainer(new CustomSlot(this.dnaSequencer, 7, 113, 36, stack -> false, 1));
+        this.addSlotToContainer(new CustomSlot(this.dnaSequencer, 8, 113, 56, stack -> false, 1));
 
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {

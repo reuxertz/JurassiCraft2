@@ -7,6 +7,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.tileentity.TileEntity;
 import org.jurassicraft.server.block.entity.CultivatorBlockEntity;
 import org.jurassicraft.server.container.slot.CultivatorSyringeSlot;
+import org.jurassicraft.server.container.slot.CustomSlot;
 import org.jurassicraft.server.container.slot.NutrientSlot;
 import org.jurassicraft.server.container.slot.OutputSlot;
 import org.jurassicraft.server.container.slot.WaterBucketSlot;
@@ -20,7 +21,7 @@ public class CultivateContainer extends MachineContainer {
         this.addSlotToContainer(new CultivatorSyringeSlot(this.cultivator, 0, 122, 44));
         this.addSlotToContainer(new NutrientSlot(this.cultivator, 1, 208, 20));
         this.addSlotToContainer(new WaterBucketSlot(this.cultivator, 2, 12, 20));
-        this.addSlotToContainer(new OutputSlot(this.cultivator, 3, 12, 68));
+        this.addSlotToContainer(new CustomSlot(this.cultivator, 3, 12, 68, stack -> false));
 
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {

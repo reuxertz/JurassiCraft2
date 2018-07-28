@@ -1,2 +1,6 @@
-+Added a Config Option to allow Tour Rail blocks to be disabled
-*Fixed Action Figures not displaying the correct pose
+*Fixed desyncing process bars for all machines
+*Fixed desyncing items when taken out of the output slots
+*Fixed client-side dublication bug with cleaning station
+*Fixed output slots accepting items from the player which isn't possible anymore
+*Fixed the feeders's default input slot -> Now upper left corner
+*Fixed a problem with herds losing their leader which crashed the game

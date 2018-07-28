@@ -26,7 +26,7 @@ public class EmbryonicMachineContainer extends MachineContainer {
 
         for (i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
-                this.addSlotToContainer(new Slot(this.embryonicMachine, i + (j * 2) + 3, i * 18 + 119, j * 18 + 26));
+                this.addSlotToContainer(new CustomSlot(this.embryonicMachine, i + (j * 2) + 3, i * 18 + 119, j * 18 + 26, stack -> false));
             }
         }
 
