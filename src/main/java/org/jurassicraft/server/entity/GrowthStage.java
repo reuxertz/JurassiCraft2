@@ -1,6 +1,6 @@
 package org.jurassicraft.server.entity;
 
-import org.jurassicraft.server.util.LangHelper;
+import org.jurassicraft.server.util.LangUtils;
 
 public enum GrowthStage {
         ADULT, INFANT, JUVENILE, /*FLUORESCENT*/ADOLESCENT, SKELETON;
@@ -9,6 +9,6 @@ public enum GrowthStage {
     public static final GrowthStage[] VALUES = GrowthStage.values();
 
     public String getLocalization() {
-        return new LangHelper("growth_stage." + this.name().toLowerCase() + ".name").build();
+        return LangUtils.translate("growth_stage." + this.name().toLowerCase() + ".name");
     }
 }

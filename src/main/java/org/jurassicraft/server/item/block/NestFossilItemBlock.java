@@ -4,7 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import org.jurassicraft.server.block.NestFossilBlock;
-import org.jurassicraft.server.util.LangHelper;
+import org.jurassicraft.server.util.LangUtils;
 
 public class NestFossilItemBlock extends ItemBlock {
     private boolean encased;
@@ -18,7 +18,7 @@ public class NestFossilItemBlock extends ItemBlock {
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        return new LangHelper(this.encased ? "tile.encased_nest_fossil.name" : "tile.nest_fossil.name").build();
+        return LangUtils.translate(this.encased ? "tile.encased_nest_fossil.name" : "tile.nest_fossil.name");
     }
 
     private NestFossilBlock.Variant getVariant(ItemStack stack) {

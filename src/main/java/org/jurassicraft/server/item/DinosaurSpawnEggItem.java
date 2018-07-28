@@ -1,20 +1,9 @@
 package org.jurassicraft.server.item;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-
-import net.minecraft.client.util.ITooltipFlag;
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.DinosaurEntity;
-import org.jurassicraft.server.entity.EntityHandler;
-import org.jurassicraft.server.tab.TabHandler;
-import org.jurassicraft.server.util.LangHelper;
-
 import net.minecraft.block.BlockFence;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -38,6 +27,15 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.DinosaurEntity;
+import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.tab.TabHandler;
+import org.jurassicraft.server.util.LangUtils;
+
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 public class DinosaurSpawnEggItem extends Item {
     public DinosaurSpawnEggItem() {
@@ -87,15 +85,7 @@ public class DinosaurSpawnEggItem extends Item {
     	if(player.isSneaking()) {
             int mode = this.changeMode(stack);
             if (world.isRemote) {
-                String modeString = "";
-                if (mode == 0) {
-                    modeString = "random";
-                } else if (mode == 1) {
-                    modeString = "male";
-                } else if (mode == 2) {
-                    modeString = "female";
-                }
-                player.sendMessage(new TextComponentString(new LangHelper("spawnegg.genderchange.name").withProperty("mode", I18n.format("gender." + modeString + ".name")).build()));
+                player.sendMessage(new TextComponentString(LangUtils.translate(LangUtils.GENDER_CHANGE.get("spawnegg")).replace("{mode}", LangUtils.getGenderMode(mode))));
             }
         }
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);
@@ -103,9 +93,7 @@ public class DinosaurSpawnEggItem extends Item {
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        Dinosaur dinosaur = this.getDinosaur(stack);
-
-        return new LangHelper("item.dino_spawn_egg.name").withProperty("dino", "entity.jurassicraft." + dinosaur.getName().replace(" ", "_").toLowerCase(Locale.ENGLISH) + ".name").build();
+        return LangUtils.translate(this.getUnlocalizedName() + ".name").replace("{dino}", LangUtils.getDinoName(this.getDinosaur(stack)));
     }
 
     public Dinosaur getDinosaur(ItemStack stack) {

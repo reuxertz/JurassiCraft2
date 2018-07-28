@@ -1,22 +1,6 @@
 package org.jurassicraft.server.item;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
-
 import com.google.common.collect.Lists;
-import org.apache.commons.lang3.tuple.Pair;
-import org.jurassicraft.server.api.SequencableItem;
-import org.jurassicraft.server.genetics.PlantDNA;
-import org.jurassicraft.server.plant.Plant;
-import org.jurassicraft.server.plant.PlantHandler;
-import org.jurassicraft.server.tab.TabHandler;
-import org.jurassicraft.server.util.LangHelper;
-
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -24,6 +8,20 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.Pair;
+import org.jurassicraft.server.api.SequencableItem;
+import org.jurassicraft.server.genetics.PlantDNA;
+import org.jurassicraft.server.plant.Plant;
+import org.jurassicraft.server.plant.PlantHandler;
+import org.jurassicraft.server.tab.TabHandler;
+import org.jurassicraft.server.util.LangUtils;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 public class PlantSoftTissueItem extends Item implements SequencableItem {
     public PlantSoftTissueItem() {
@@ -35,9 +33,8 @@ public class PlantSoftTissueItem extends Item implements SequencableItem {
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
         getItemSubtypes(this);
-        String plantName = this.getPlant(stack).getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_");
 
-        return new LangHelper("item.plant_soft_tissue.name").withProperty("plant", "plants." + plantName + ".name").build();
+        return LangUtils.translate(this.getUnlocalizedName() + ".name").replace("{plant}", LangUtils.getPlantName(this.getPlant(stack)));
     }
 
     public Plant getPlant(ItemStack stack) {

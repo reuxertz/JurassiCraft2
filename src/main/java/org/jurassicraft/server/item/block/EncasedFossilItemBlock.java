@@ -5,7 +5,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import org.jurassicraft.server.block.EncasedFossilBlock;
 import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.util.LangHelper;
+import org.jurassicraft.server.util.LangUtils;
 
 import java.util.Locale;
 
@@ -19,7 +19,7 @@ public class EncasedFossilItemBlock extends ItemBlock {
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
         Dinosaur dinosaur = ((EncasedFossilBlock) this.block).getDinosaur(stack.getMetadata());
-        return new LangHelper("tile.encased_fossil.name").withProperty("dinosaur", dinosaur.getLocalizationName()).build();
+        return LangUtils.translate("tile.encased_fossil.name").replace("{dinosaur}", LangUtils.getDinoName(dinosaur));
     }
 
     @Override

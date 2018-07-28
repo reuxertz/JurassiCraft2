@@ -16,7 +16,8 @@ Reuxertz
 AnarchCassius   
 Collin  
 Wyn Price     
-NeusFear
+NeusFear     
+SanAndreasP
 
 ### Modelers / Texturers
 CarrotJet   

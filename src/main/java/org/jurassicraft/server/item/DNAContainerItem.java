@@ -1,25 +1,17 @@
 package org.jurassicraft.server.item;
 
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import org.jurassicraft.server.genetics.GeneticsHelper;
-import org.jurassicraft.server.util.LangHelper;
-
-import javax.annotation.Nullable;
-import java.util.List;
 
 public class DNAContainerItem extends Item {
     public int getContainerId(ItemStack stack) {
         return 0;
     }
 
-    public int getDNAQuality(EntityPlayer player, ItemStack stack) {
+    public static int getDNAQuality(EntityPlayer player, ItemStack stack) {
         int quality = player.capabilities.isCreativeMode ? 100 : 0;
 
         NBTTagCompound nbt = stack.getTagCompound();
@@ -39,7 +31,7 @@ public class DNAContainerItem extends Item {
         return quality;
     }
 
-    public String getGeneticCode(EntityPlayer player, ItemStack stack) {
+    public static String getGeneticCode(EntityPlayer player, ItemStack stack) {
         NBTTagCompound nbt = stack.getTagCompound();
 
         String genetics = GeneticsHelper.randomGenetics(player.world.rand);
