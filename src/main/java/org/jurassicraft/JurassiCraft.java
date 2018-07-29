@@ -22,7 +22,7 @@ public class JurassiCraft {
     public static final String NAME = "JurassiCraft";
     public static final String VERSION = "2.1.13 ";
 
-    public static final String LLIBRARY_VERSION = "1.7.9";
+    public static final String LLIBRARY_VERSION = "1.7.14";
     @SidedProxy(serverSide = "org.jurassicraft.server.proxy.ServerProxy", clientSide = "org.jurassicraft.client.proxy.ClientProxy")
     public static ServerProxy PROXY;
 
