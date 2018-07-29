@@ -1356,8 +1356,10 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
 	@Nullable
 	public SoundEvent getSoundForAnimation(Animation animation) {
-		EntityJsonSounds sounds = this.dinosaur.properties.sounds;
-		return sounds == null ? null : sounds.soundMap.get(EntityAnimation.getAnimation(animation));
+		
+		Map<EntityAnimation, SoundEvent> sounds = this.dinosaur.properties.getSoundMap();
+		return sounds == null ? null : sounds.get(EntityAnimation.getAnimation(animation));
+	
 	}
 
 	public SoundEvent getBreathingSound() {

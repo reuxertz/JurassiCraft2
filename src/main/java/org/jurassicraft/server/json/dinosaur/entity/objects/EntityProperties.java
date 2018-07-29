@@ -3,11 +3,16 @@ package org.jurassicraft.server.json.dinosaur.entity.objects;
 import com.google.common.collect.Lists;
 import com.google.gson.*;
 import net.minecraft.util.JsonUtils;
+import net.minecraft.util.SoundEvent;
+
+import org.jurassicraft.client.model.animation.EntityAnimation;
 import org.jurassicraft.server.json.JsonUtil;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EntityProperties {
 
@@ -27,6 +32,16 @@ public class EntityProperties {
         //this.ai = ai;
         this.attributes = attributes;
         this.sounds = sounds;
+       
+    }
+    
+    public Map<EntityAnimation, SoundEvent> getSoundMap() {
+    	
+    	if(sounds != null) 
+    	return sounds.soundMap;
+
+    	return null;
+    	
     }
 
     public static class Deserializer implements JsonDeserializer<EntityProperties> {
@@ -39,7 +54,7 @@ public class EntityProperties {
                     JsonUtils.hasField(json, "targets") ? context.deserialize(JsonUtils.getJsonObject(json, "targets"), AttackTargets.class) : null,
                     //JsonUtils.hasField(json, "ai") ?  context.deserialize(JsonUtils.getJsonObject(json, "ai"), EntityJsonAi.class) : null,
                     JsonUtils.hasField(json, "attributes") ? JsonUtil.deserializeArray(JsonUtils.getJsonArray(json, "attributes"), context, EntityJsonAttributes.class) : Lists.newArrayList(),
-                    JsonUtils.hasField(json, "sounds") ? context.deserialize(JsonUtils.getJsonObject(json, "sounds"), EntityJsonSounds.class) : null
+                    JsonUtils.hasField(json, "sounds") ? (EntityJsonSounds)context.deserialize(JsonUtils.getJsonObject(json, "sounds"), EntityJsonSounds.class) : null
             );
         }
     }
