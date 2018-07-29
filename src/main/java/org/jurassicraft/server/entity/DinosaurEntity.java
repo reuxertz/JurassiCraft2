@@ -1151,7 +1151,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
 	@Override
 	public float getEyeHeight() {
-		return (float) this.interpolate(this.dinosaur.eyeHeight, this.dinosaur.adultEyeHeight) * this.attributes.getScaleModifier();
+		return (float) this.interpolate(this.dinosaur.babyEyeHeight, this.dinosaur.adultEyeHeight) * this.attributes.getScaleModifier();
 	}
 
 	@Override
