@@ -1,11 +1,5 @@
 package org.jurassicraft.server.item;
 
-import java.util.Locale;
-
-import org.jurassicraft.server.entity.item.AttractionSignEntity;
-import org.jurassicraft.server.tab.TabHandler;
-import org.jurassicraft.server.util.LangHelper;
-
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -18,6 +12,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.server.entity.item.AttractionSignEntity;
+import org.jurassicraft.server.tab.TabHandler;
+import org.jurassicraft.server.util.LangUtils;
 
 public class AttractionSignItem extends Item {
     public AttractionSignItem() {
@@ -27,7 +24,7 @@ public class AttractionSignItem extends Item {
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        return new LangHelper("item.attraction_sign.name").withProperty("type", "attraction_sign." + (AttractionSignEntity.AttractionSignType.values()[stack.getItemDamage()].name().toLowerCase(Locale.ENGLISH)) + ".name").build();
+        return LangUtils.translate(this.getUnlocalizedName() + ".name").replace("{type}", LangUtils.getAttractionSignName(stack));
     }
 
     @Override

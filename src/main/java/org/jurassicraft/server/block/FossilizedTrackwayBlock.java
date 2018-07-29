@@ -34,6 +34,7 @@ public class FossilizedTrackwayBlock extends Block implements SubBlocksBlock {
         super(Material.ROCK);
         this.setHardness(1.5F);
         this.setCreativeTab(TabHandler.FOSSILS);
+        this.setUnlocalizedName("fossilized_trackway");
         this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, TrackwayType.BIPED_MEDIUM).withProperty(FACING, EnumFacing.NORTH));
     }
 

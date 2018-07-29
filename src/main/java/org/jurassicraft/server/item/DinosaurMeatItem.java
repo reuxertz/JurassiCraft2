@@ -1,28 +1,21 @@
 package org.jurassicraft.server.item;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-
-import net.minecraft.client.util.ITooltipFlag;
-import org.jurassicraft.server.dinosaur.Dinosaur;
-import org.jurassicraft.server.entity.EntityHandler;
-import org.jurassicraft.server.genetics.GeneticsHelper;
-import org.jurassicraft.server.tab.TabHandler;
-import org.jurassicraft.server.util.LangHelper;
-
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jurassicraft.server.dinosaur.Dinosaur;
+import org.jurassicraft.server.entity.EntityHandler;
+import org.jurassicraft.server.tab.TabHandler;
+import org.jurassicraft.server.util.LangUtils;
+
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 public class DinosaurMeatItem extends ItemFood {
     public DinosaurMeatItem() {
@@ -34,8 +27,7 @@ public class DinosaurMeatItem extends ItemFood {
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        Dinosaur dinosaur = this.getDinosaur(stack);
-        return new LangHelper("item.dinosaur_meat.name").withProperty("dino", "entity.jurassicraft." + dinosaur.getName().replace(" ", "_").toLowerCase(Locale.ENGLISH) + ".name").build();
+        return LangUtils.translate(this.getUnlocalizedName() + ".name").replace("{dino}", LangUtils.getDinoName(this.getDinosaur(stack)));
     }
 
     @Override
@@ -63,45 +55,47 @@ public class DinosaurMeatItem extends ItemFood {
         }
     }
 
-    public int getDNAQuality(EntityPlayer player, ItemStack stack) {
-        int quality = player.capabilities.isCreativeMode ? 100 : 0;
+    //INFO: use DNAContainerItem.getDNAQuality()
+//    public int getDNAQuality(EntityPlayer player, ItemStack stack) {
+//        int quality = player.capabilities.isCreativeMode ? 100 : 0;
+//
+//        NBTTagCompound nbt = stack.getTagCompound();
+//
+//        if (nbt == null) {
+//            nbt = new NBTTagCompound();
+//        }
+//
+//        if (nbt.hasKey("DNAQuality")) {
+//            quality = nbt.getInteger("DNAQuality");
+//        } else {
+//            nbt.setInteger("DNAQuality", quality);
+//        }
+//
+//        stack.setTagCompound(nbt);
+//
+//        return quality;
+//    }
 
-        NBTTagCompound nbt = stack.getTagCompound();
-
-        if (nbt == null) {
-            nbt = new NBTTagCompound();
-        }
-
-        if (nbt.hasKey("DNAQuality")) {
-            quality = nbt.getInteger("DNAQuality");
-        } else {
-            nbt.setInteger("DNAQuality", quality);
-        }
-
-        stack.setTagCompound(nbt);
-
-        return quality;
-    }
-
-    public String getGeneticCode(EntityPlayer player, ItemStack stack) {
-        NBTTagCompound nbt = stack.getTagCompound();
-
-        String genetics = GeneticsHelper.randomGenetics(player.world.rand);
-
-        if (nbt == null) {
-            nbt = new NBTTagCompound();
-        }
-
-        if (nbt.hasKey("Genetics")) {
-            genetics = nbt.getString("Genetics");
-        } else {
-            nbt.setString("Genetics", genetics);
-        }
-
-        stack.setTagCompound(nbt);
-
-        return genetics;
-    }
+    //INFO: use DNAContainerItem.getGeneticCode()
+//    public String getGeneticCode(EntityPlayer player, ItemStack stack) {
+//        NBTTagCompound nbt = stack.getTagCompound();
+//
+//        String genetics = GeneticsHelper.randomGenetics(player.world.rand);
+//
+//        if (nbt == null) {
+//            nbt = new NBTTagCompound();
+//        }
+//
+//        if (nbt.hasKey("Genetics")) {
+//            genetics = nbt.getString("Genetics");
+//        } else {
+//            nbt.setString("Genetics", genetics);
+//        }
+//
+//        stack.setTagCompound(nbt);
+//
+//        return genetics;
+//    }
 
 //    @Override
 //    public void addInformation(ItemStack stack, World world, List<String> lore, ITooltipFlag tooltipFlag) {

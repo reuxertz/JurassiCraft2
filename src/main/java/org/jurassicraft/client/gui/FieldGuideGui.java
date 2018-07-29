@@ -6,7 +6,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
@@ -17,7 +21,7 @@ import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.DinosaurStatus;
-import org.jurassicraft.server.util.LangHelper;
+import org.jurassicraft.server.util.LangUtils;
 import org.lwjgl.opengl.GL11;
 
 import java.math.RoundingMode;
@@ -91,22 +95,22 @@ public class FieldGuideGui extends GuiScreen {
 
         Dinosaur dinosaur = this.entity.getDinosaur();
 
-        this.drawScaledString(new LangHelper("entity.jurassicraft." + dinosaur.getName().toLowerCase(Locale.ENGLISH) + ".name").build().toUpperCase(Locale.ENGLISH), x + 15, y + 10, 1.3F, 0);
+        this.drawScaledString(LangUtils.getDinoName(dinosaur).toUpperCase(Locale.ENGLISH), x + 15, y + 10, 1.3F, 0);
 
         if (this.page == 0) {
-            this.drawScaledString(this.entity.getGrowthStage().getLocalization().toUpperCase(Locale.ENGLISH) + " // " + new LangHelper("gender." + (this.entity.isMale() ? "male" : "female") + ".name").build().toUpperCase(Locale.ENGLISH), x + 16, y + 24, 1.0F, 0);
+            this.drawScaledString(this.entity.getGrowthStage().getLocalization().toUpperCase(Locale.ENGLISH) + " // " + LangUtils.getGenderMode(entity.isMale() ? 1 : 2).toUpperCase(Locale.ENGLISH), x + 16, y + 24, 1.0F, 0);
 
             int statisticsX = x + (SIZE_X / 2) + 15;
 
             DecimalFormat decimalFormat = new DecimalFormat("#.#");
             decimalFormat.setRoundingMode(RoundingMode.HALF_UP);
 
-            this.drawScaledString(new LangHelper("gui.dinosaur_statistics.name").build(), statisticsX, y + 10, 1.0F, 0);
+            this.drawScaledString(LangUtils.translate(LangUtils.GUI.get("dinosaur_statistics")), statisticsX, y + 10, 1.0F, 0);
             int statisticTextX = x + (SIZE_X / 2 + SIZE_X / 4);
-            this.drawCenteredScaledString(new LangHelper("gui.health.name").build(), statisticTextX, y + 35, 1.0F, 0);
-            this.drawCenteredScaledString(new LangHelper("gui.hunger.name").build(), statisticTextX, y + 65, 1.0F, 0);
-            this.drawCenteredScaledString(new LangHelper("gui.thirst.name").build(), statisticTextX, y + 95, 1.0F, 0);
-            this.drawCenteredScaledString(new LangHelper("gui.age.name").build(), statisticTextX, y + 125, 1.0F, 0);
+            this.drawCenteredScaledString(LangUtils.translate(LangUtils.GUI.get("health")), statisticTextX, y + 35, 1.0F, 0);
+            this.drawCenteredScaledString(LangUtils.translate(LangUtils.GUI.get("hunger")), statisticTextX, y + 65, 1.0F, 0);
+            this.drawCenteredScaledString(LangUtils.translate(LangUtils.GUI.get("thirst")), statisticTextX, y + 95, 1.0F, 0);
+            this.drawCenteredScaledString(LangUtils.translate(LangUtils.GUI.get("age.name")), statisticTextX, y + 125, 1.0F, 0);
 
             this.mc.getTextureManager().bindTexture(WIDGETS_TEXTURE);
 
@@ -115,7 +119,7 @@ public class FieldGuideGui extends GuiScreen {
             this.drawBar(statisticsX, y + 105, this.fieldGuideInfo.thirst, this.entity.getMetabolism().getMaxWater(), 0x0000FF);
             this.drawBar(statisticsX, y + 135, this.entity.getDinosaurAge(), dinosaur.getMaximumAge(), 0x00FF00);
 
-            this.drawCenteredScaledString(new LangHelper("gui.days_old.name").withProperty("value", String.valueOf(this.entity.getDaysExisted())).build(), statisticTextX, y + 155, 1.0F, 0);
+            this.drawCenteredScaledString(LangUtils.translate(LangUtils.GUI.get("days_old.name")).replace("{value}", String.valueOf(this.entity.getDaysExisted())), statisticTextX, y + 155, 1.0F, 0);
 
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -156,7 +160,7 @@ public class FieldGuideGui extends GuiScreen {
                 int renderY = statusY + y + (SIZE_Y - 40);
 
                 if (mouseX >= renderX && mouseY >= renderY && mouseX <= renderX + size && mouseY <= renderY + size) {
-                    this.drawHoveringText(new LangHelper("status." + status.name().toLowerCase(Locale.ENGLISH) + ".name").build(), mouseX, mouseY);
+                    this.drawHoveringText(LangUtils.getStatusName(status), mouseX, mouseY);
                 }
 
                 statusX += 18;
@@ -169,7 +173,7 @@ public class FieldGuideGui extends GuiScreen {
 
             GlStateManager.disableLighting();
         } else {
-            String text = new LangHelper("info." + dinosaur.getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_") + ".name").build();
+            String text = LangUtils.getDinoInfo(dinosaur);
             List<String> lines = new ArrayList<>();
 
             int wrapX = 0;

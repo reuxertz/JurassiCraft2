@@ -32,7 +32,7 @@ public class CultivatorBlock extends BlockContainer implements SubBlocksBlock {
 
     public CultivatorBlock(String position) {
         super(Material.IRON);
-        this.setUnlocalizedName("cultivator_" + position);
+        this.setUnlocalizedName("cultivate");
         this.setDefaultState(this.blockState.getBaseState().withProperty(COLOR, EnumDyeColor.WHITE));
         this.setHardness(2.0F);
         this.setResistance(5.0F);

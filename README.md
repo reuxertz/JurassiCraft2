@@ -10,8 +10,9 @@ Cody
 ### Developers
 Reuxertz    
 AnarchCassius   
-Collin  
-NeusFear\
+Collin     
+NeusFear     
+SanAndreasP     
 Shrek5InTheatres2019
 
 ### Modelers / Texturers

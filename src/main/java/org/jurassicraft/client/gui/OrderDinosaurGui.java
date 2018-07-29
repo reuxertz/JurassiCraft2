@@ -6,7 +6,7 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jurassicraft.server.entity.DinosaurEntity;
-import org.jurassicraft.server.util.LangHelper;
+import org.jurassicraft.server.util.LangUtils;
 
 import java.util.Locale;
 
@@ -38,7 +38,7 @@ public class OrderDinosaurGui extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
-        this.drawCenteredString(this.mc.fontRenderer, new LangHelper("gui.select_order.name").build(), this.width / 2, this.height / 16, 0xFFFFFF);
+        this.drawCenteredString(this.mc.fontRenderer, LangUtils.translate(LangUtils.GUI.get("select_order")), this.width / 2, this.height / 16, 0xFFFFFF);
     }
 
     @Override

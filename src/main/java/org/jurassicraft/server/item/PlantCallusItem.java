@@ -1,17 +1,5 @@
 package org.jurassicraft.server.item;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-
-import org.jurassicraft.server.block.plant.DoublePlantBlock;
-import org.jurassicraft.server.block.plant.JCBlockCropsBase;
-import org.jurassicraft.server.plant.Plant;
-import org.jurassicraft.server.plant.PlantHandler;
-import org.jurassicraft.server.tab.TabHandler;
-import org.jurassicraft.server.util.LangHelper;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.creativetab.CreativeTabs;
@@ -25,6 +13,16 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jurassicraft.server.block.plant.DoublePlantBlock;
+import org.jurassicraft.server.block.plant.JCBlockCropsBase;
+import org.jurassicraft.server.plant.Plant;
+import org.jurassicraft.server.plant.PlantHandler;
+import org.jurassicraft.server.tab.TabHandler;
+import org.jurassicraft.server.util.LangUtils;
+
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 public class PlantCallusItem extends Item {
     public PlantCallusItem() {
@@ -35,7 +33,7 @@ public class PlantCallusItem extends Item {
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        return new LangHelper("item.plant_callus.name").withProperty("plant", "plants." + PlantHandler.getPlantById(stack.getItemDamage()).getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_") + ".name").build();
+        return LangUtils.translate(this.getUnlocalizedName() + ".name").replace("{plant}", LangUtils.getPlantName(stack.getItemDamage()));
     }
 
     @Override
