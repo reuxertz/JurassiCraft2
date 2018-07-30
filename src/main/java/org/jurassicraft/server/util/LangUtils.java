@@ -23,7 +23,7 @@ public final class LangUtils
     public static final TranslateKey SET_ORDER = new TranslateKey("message.set_order.name");
     public static final TranslateKey GENDER_CHANGE = new TranslateKey("%s.genderchange.name");
     public static final TranslateKey GUI = new TranslateKey("gui.%s.name");
-
+    public static final TranslateKey STATUS = new TranslateKey("status.%s.name");
     public static final TranslateKey ENTITY_NAME   = new TranslateKey("entity.%s.name");
     public static final TranslateKey ENTITY_DESC   = new TranslateKey("entity.%s.desc");
     public static final TranslateKey CONTAINER_INV = new TranslateKey("container.inventory");
@@ -106,10 +106,6 @@ public final class LangUtils
 
     public static String getPlantName(Plant plant) {
         return translate("plants." + (plant == null ? "null" : plant.getName().toLowerCase(Locale.ENGLISH).replaceAll(" ", "_")) + ".name");
-    }
-
-    public static String getStatusName(DinosaurStatus status) {
-        return "status." + status.name().toLowerCase(Locale.ENGLISH) + ".name";
     }
 
     public static final class TranslateKey
