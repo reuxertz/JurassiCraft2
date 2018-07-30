@@ -103,6 +103,7 @@ import org.jurassicraft.server.food.FoodHelper;
 import org.jurassicraft.server.food.FoodType;
 import org.jurassicraft.server.genetics.GeneticsHelper;
 import org.jurassicraft.server.item.ItemHandler;
+import org.jurassicraft.server.message.BiPacketOrder;
 import org.jurassicraft.server.message.SetOrderMessage;
 import org.jurassicraft.server.util.GameRuleHandler;
 import org.jurassicraft.server.util.LangUtils;
@@ -114,6 +115,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
@@ -1219,7 +1221,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         } else {
             if (stack.isEmpty() && hand == EnumHand.MAIN_HAND && this.world.isRemote) {
                 if (this.isOwner(player)) {
-                    JurassiCraft.PROXY.openOrderGui(this);
+                	JurassiCraft.NETWORK_WRAPPER.sendToServer(new BiPacketOrder(this));
                 } else {
                     player.sendMessage(new TextComponentTranslation("message.not_owned.name"));
                 }
@@ -1741,16 +1743,22 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
     public Order getOrder() {
         return this.order;
     }
+    
+    public void setFieldOrder(Order order) {
+    	
+        this.order = order;
+    	this.dataManager.set(WATCHER_ORDER, order);
+    	
+    }
 
     public void setOrder(Order order) {
-        this.order = order;
 
         if (this.world.isRemote) {
             if (this.owner != null) {
                 EntityPlayer player = this.world.getPlayerEntityByUUID(this.owner);
 
                 if (player != null) {
-                    player.sendMessage(new TextComponentString(LangUtils.translate(LangUtils.SET_ORDER).replace("{order}", LangUtils.getOrderName(order))));
+                    player.sendMessage(new TextComponentString(LangUtils.translate(LangUtils.SET_ORDER).replace("{order}", LangUtils.translate(LangUtils.ORDER_VALUE.get(order.name().toLowerCase(Locale.ENGLISH))))));
                 }
             }
 

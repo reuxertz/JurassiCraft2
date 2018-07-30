@@ -211,7 +211,7 @@ public class ServerProxy implements IGuiHandler {
     public void openSelectDino(BlockPos pos, EnumFacing facing, EnumHand hand) {
     }
 
-    public void openOrderGui(DinosaurEntity entity) {
+    public void openOrder(DinosaurEntity entity) {
     }
 
     public void openFieldGuide(DinosaurEntity entity, DinosaurEntity.FieldGuideInfo fieldGuideInfo) {
