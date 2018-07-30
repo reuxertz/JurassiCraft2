@@ -3,7 +3,6 @@
   "entity": "org.jurassicraft.server.entity.dinosaur.MussaurusEntity",
   "time_period": "triassic",
   "head_cube_name": "Head1",
-  "sounds": "jurassicraft:sounds.json",
   "dinosaur_animator_class": "org.jurassicraft.client.model.animation.entity.MussaurusAnimator",
   "shadow_size": 0.8,
   "possible_to_leash_untamed": true,
@@ -125,5 +124,29 @@
         "backRange": 1.0
       }
     }
+  },
+  "sounds": {
+    "animation": [
+      {
+        "animation": "speak",
+        "sound": "jurassicraft:mussaurus_living"
+      },
+      {
+        "animation": "dying",
+        "sound": "jurassicraft:mussaurus_death"
+      },
+      {
+        "animation": "injured",
+        "sound": "jurassicraft:mussaurus_hurt"
+      },
+      {
+        "animation": "calling",
+        "sound": "jurassicraft:mussaurus_mate_call"
+      },
+      {
+        "animation": "attacking",
+        "sound": "jurassicraft:mussaurus_attack"
+      }
+    ]
   }
 }

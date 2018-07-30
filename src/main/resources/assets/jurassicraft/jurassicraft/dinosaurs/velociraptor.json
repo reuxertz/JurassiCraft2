@@ -3,8 +3,7 @@
   "entity": "org.jurassicraft.server.entity.dinosaur.VelociraptorEntity",
   "time_period": "cretaceous",
   "head_cube_name": "Head",
-  "sounds": "jurassicraft:sounds.json",
-  "model_location": "jurassicraft:jurassicraft/models/velociraptor",
+  "dinosaur_animator_class": "org.jurassicraft.client.model.animation.entity.VelociraptorAnimator",
   "shadow_size": 1.5,
   "possible_to_leash_untamed": false,
   "spawn_egg": {
@@ -135,5 +134,30 @@
         "range": 0.5
       }
     }
+  },
+  "sounds": {
+    "animation": [
+      {
+        "animation": "speak",
+        "sound": "jurassicraft:velociraptor_living"
+      },
+      {
+        "animation": "dying",
+        "sound": "jurassicraft:velociraptor_death"
+      },
+      {
+        "animation": "injured",
+        "sound": "jurassicraft:velociraptor_hurt"
+      },
+      {
+        "animation": "calling",
+        "sound": "jurassicraft:velociraptor_call"
+      },
+      {
+        "animation": "attacking",
+        "sound": "jurassicraft:velociraptor_attack"
+      }
+    ],
+    "breathing": "jurassicraft:velociraptor_breathing"
   }
 }

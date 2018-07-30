@@ -33,16 +33,7 @@ public class EntityProperties {
         this.attributes = attributes;
         this.sounds = sounds;
        
-    }
-    
-    public Map<EntityAnimation, SoundEvent> getSoundMap() {
-    	
-    	if(sounds != null) 
-    	return sounds.soundMap;
-
-    	return null;
-    	
-    }
+    } 
 
     public static class Deserializer implements JsonDeserializer<EntityProperties> {
 

@@ -1158,11 +1158,12 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 			this.dataManager.set(WATCHER_AGE, this.dinosaurAge);
 		}
 	}
-
+	
+	
 	@Override
 	public float getEyeHeight() {
 
-		return (float) this.interpolate(this.dinosaur.babyEyeHeight, this.dinosaur.adultEyeHeight) * this.attributes.getScaleModifier();
+		return (float) this.interpolate(new AdultBabyValue(this.dinosaur.babyEyeHeight, this.dinosaur.adultEyeHeight)) * this.attributes.getScaleModifier();
 
 	}
 
@@ -1368,7 +1369,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
 	@Nullable
 	public SoundEvent getSoundForAnimation(Animation animation) {
-		Map<EntityAnimation, SoundEvent> sounds = this.dinosaur.properties.getSoundMap();
+		Map<EntityAnimation, SoundEvent> sounds = this.dinosaur.sounds;
 		return sounds == null ? null : sounds.get(EntityAnimation.getAnimation(animation));
 	
 	}

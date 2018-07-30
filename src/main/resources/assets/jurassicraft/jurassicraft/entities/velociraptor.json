@@ -32,30 +32,5 @@
       "name": "follow_range",
       "base_value": 35
     }
-  ],
-  "sounds": {
-    "animation": [
-      {
-        "animation": "speak",
-        "sound": "jurassicraft:velociraptor_living"
-      },
-      {
-        "animation": "dying",
-        "sound": "jurassicraft:velociraptor_death"
-      },
-      {
-        "animation": "injured",
-        "sound": "jurassicraft:velociraptor_hurt"
-      },
-      {
-        "animation": "calling",
-        "sound": "jurassicraft:velociraptor_call"
-      },
-      {
-        "animation": "attacking",
-        "sound": "jurassicraft:velociraptor_attack"
-      }
-    ],
-    "breathing": "jurassicraft:velociraptor_breathing"
-  }
+  ]
 }

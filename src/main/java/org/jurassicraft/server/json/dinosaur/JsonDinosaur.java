@@ -1,8 +1,13 @@
 package org.jurassicraft.server.json.dinosaur;
 
+import java.util.Map;
+
+import org.jurassicraft.client.model.animation.EntityAnimation;
 import org.jurassicraft.server.entity.Dinosaur;
 import org.jurassicraft.server.json.dinosaur.entity.objects.EntityJsonSounds;
 import org.jurassicraft.server.json.dinosaur.objects.*;
+
+import net.minecraft.util.SoundEvent;
 
 public class JsonDinosaur extends Dinosaur {
 
@@ -52,12 +57,12 @@ public class JsonDinosaur extends Dinosaur {
 		DinosaurBreeding breeding = properties.breeding;
 		this.setBreeding(breeding.birthType, breeding.minClutch, breeding.maxClutch, breeding.breedingCooldown, breeding.breedNearOffsprring, breeding.defendOffspring);
 
-		EntityJsonSounds sounds = properties.sounds;
-
 		this.bones = properties.bones;
 		this.recipe = properties.skeletonRecipe;
 
 		this.animation = properties.animation;
+				
+		this.sounds = properties.sounds.getSoundMap();
 	}
 
     @Override

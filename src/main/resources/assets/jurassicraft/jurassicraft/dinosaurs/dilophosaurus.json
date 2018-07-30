@@ -3,7 +3,6 @@
   "entity": "org.jurassicraft.server.entity.dinosaur.DilophosaurusEntity",
   "time_period": "jurassic",
   "head_cube_name": "Head",
-  "sounds": "jurassicraft:sounds.json",
   "dinosaur_animator_class": "org.jurassicraft.client.model.animation.entity.DilophosaurusAnimator",
   "shadow_size": 0.65,
   "possible_to_leash_untamed": false,
@@ -129,5 +128,21 @@
         "range": 1.0
       }
     }
+  },
+  "sounds": {
+    "animation": [
+      {
+        "animation": "speak",
+        "sound": "jurassicraft:dilophosaurus_living"
+      },
+      {
+        "animation": "dying",
+        "sound": "jurassicraft:dilophosaurus_death"
+      },
+      {
+        "animation": "injured",
+        "sound": "jurassicraft:dilophosaurus_hurt"
+      }
+    ]
   }
 }
