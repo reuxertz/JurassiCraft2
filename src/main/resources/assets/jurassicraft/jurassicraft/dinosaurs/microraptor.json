@@ -3,7 +3,6 @@
   "entity": "org.jurassicraft.server.entity.dinosaur.MicroraptorEntity",
   "time_period": "cretaceous",
   "head_cube_name": "Head",
-  "sounds": "jurassicraft:sounds.json",
   "dinosaur_animator_class": "org.jurassicraft.client.model.animation.entity.MicroraptorAnimator",
   "shadow_size": 0.45,
   "possible_to_leash_untamed": true,
@@ -136,5 +135,25 @@
         "range": 0.5
       }
     }
+  },
+  "sounds": {
+    "animation": [
+      {
+        "animation": "speak",
+        "sound": "jurassicraft:microraptor_living"
+      },
+      {
+        "animation": "dying",
+        "sound": "jurassicraft:microraptor_death"
+      },
+      {
+        "animation": "injured",
+        "sound": "jurassicraft:microraptor_hurt"
+      },
+      {
+        "animation": "attacking",
+        "sound": "jurassicraft:microraptor_attack"
+      }
+    ]
   }
 }

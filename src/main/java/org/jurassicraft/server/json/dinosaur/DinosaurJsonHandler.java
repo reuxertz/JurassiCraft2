@@ -1,6 +1,8 @@
 package org.jurassicraft.server.json.dinosaur;
 
 import com.google.gson.*;
+
+import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -16,6 +18,7 @@ import org.jurassicraft.server.json.dinosaur.model.objects.JsonAnimationType;
 import org.jurassicraft.server.json.dinosaur.objects.*;
 
 import java.lang.reflect.Type;
+import java.util.HashMap;
 
 @Mod.EventBusSubscriber(modid = JurassiCraft.MODID)
 @SuppressWarnings("unused")
@@ -131,7 +134,7 @@ public class DinosaurJsonHandler {
 							dino.breedAroundOffspring,
 							dino.defendOffspring
 					),
-					dino.sounds,
+					new EntityJsonSounds(dino.soundMap, dino.soundEvent),
 					dino.bones,
 					dino.recipe,
 					dino.animation

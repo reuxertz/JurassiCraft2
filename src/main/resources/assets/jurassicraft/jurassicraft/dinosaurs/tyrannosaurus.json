@@ -3,7 +3,6 @@
   "entity": "org.jurassicraft.server.entity.dinosaur.TyrannosaurusEntity",
   "time_period": "cretaceous",
   "head_cube_name": "Head",
-  "sounds": "jurassicraft:sounds.json",
   "dinosaur_animator_class": "org.jurassicraft.client.model.animation.entity.TyrannosaurusAnimator",
   "shadow_size": 0.65,
   "possible_to_leash_untamed": false,
@@ -138,5 +137,26 @@
         "range": 1.0
       }
     }
+  },
+  "sounds": {
+    "animation": [
+      {
+        "animation": "speak",
+        "sound": "jurassicraft:tyrannosaurus_living"
+      },
+      {
+        "animation": "dying",
+        "sound": "jurassicraft:tyrannosaurus_death"
+      },
+      {
+        "animation": "injured",
+        "sound": "jurassicraft:tyrannosaurus_hurt"
+      },
+      {
+        "animation": "calling",
+        "sound": "jurassicraft:tyrannosaurus_call"
+      }
+    ],
+    "breathing": "jurassicraft:tyrannosaurus_breathing"
   }
 }

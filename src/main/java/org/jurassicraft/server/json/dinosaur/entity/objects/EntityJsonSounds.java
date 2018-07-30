@@ -8,6 +8,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.jurassicraft.client.model.animation.EntityAnimation;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -16,10 +17,16 @@ public class EntityJsonSounds {
     public Map<EntityAnimation, SoundEvent> soundMap;
     public @Nullable SoundEvent breathingSound;
 
-    public EntityJsonSounds(Map soundMap, SoundEvent event) {
+    public EntityJsonSounds(@Nonnull Map soundMap, SoundEvent event) {
         super();
         this.soundMap = soundMap;
         this.breathingSound = event;
+    }
+    
+    public Map<EntityAnimation, SoundEvent> getSoundMap() {
+
+    	return soundMap;
+
     }
 
     public static class Deserializer implements JsonDeserializer<EntityJsonSounds> {

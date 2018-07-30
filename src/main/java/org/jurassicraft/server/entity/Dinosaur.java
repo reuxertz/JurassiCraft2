@@ -108,9 +108,9 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
 	public DinosaurTraits traits;
 	public DinosaurSpawningInfo spawningInfo;
 	public DinosaurBreeding breeding;
-    public EntityJsonSounds sounds;
     public Map<EntityAnimation, SoundEvent> soundMap;
     public SoundEvent soundEvent;
+    public Map<EntityAnimation, SoundEvent> sounds;
 
 	public static Matrix4d getParentRotationMatrix(TabulaModelContainer model, TabulaCubeContainer cube, boolean includeParents, boolean ignoreSelf, float rot) {
 		List<TabulaCubeContainer> parentCubes = new ArrayList<>();
@@ -251,9 +251,7 @@ public class Dinosaur extends IForgeRegistryEntry.Impl<Dinosaur> implements Comp
         this.maleSpawnEgg = new SpawnEggInfo(this.primaryEggColorMale, this.secondaryEggColorMale);
         this.femaleSpawnEgg = new SpawnEggInfo(this.primaryEggColorFemale, this.secondaryEggColorFemale);
         this.breeding = new DinosaurBreeding(this.birthType, this.minClutch, this.maxClutch, this.breedCooldown, this.breedAroundOffspring, this.defendOffspring);
-        this.sounds = new EntityJsonSounds(soundMap, soundEvent);
-        this.properties = new DinosaurProperties(this.name, this.timePeriod, this.headCubeName, this.animatorClassName, "models/entities/" + this.name.toLowerCase(), this.shadowSize, this.possibleToLeashUntamed, this.maleSpawnEgg, this.femaleSpawnEgg, this.statistics, this.traits, this.spawningInfo, this.breeding, this.sounds, this.bones, this.recipe, this.animation);
-
+        this.properties = new DinosaurProperties(this.name, this.timePeriod, this.headCubeName, this.animatorClassName, "models/entities/" + this.name.toLowerCase(), this.shadowSize, this.possibleToLeashUntamed, this.maleSpawnEgg, this.femaleSpawnEgg, this.statistics, this.traits, this.spawningInfo, this.breeding, new EntityJsonSounds(soundMap, soundEvent), this.bones, this.recipe, this.animation);
 		String formattedName = this.getRegistryName().getResourcePath();
 		String domain = this.getRegistryName().getResourceDomain();
 

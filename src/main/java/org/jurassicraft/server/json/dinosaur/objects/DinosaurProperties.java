@@ -75,11 +75,6 @@ public class DinosaurProperties {
 
 	public static class JsonHandler implements JsonDeserializer<DinosaurProperties>, JsonSerializer<DinosaurProperties> {
 
-
-        SoundEvent soundEvent;
-        Map<EntityAnimation, SoundEvent> soundMap;
-
-
         @Override
 		@SuppressWarnings("unchecked")
 		public DinosaurProperties deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
@@ -111,9 +106,7 @@ public class DinosaurProperties {
 				skeleton_recipe[index++] = childList;
 			}
 
-            EntityJsonSounds sounds = new EntityJsonSounds(soundMap, soundEvent);
 
-            try {
                 return new DinosaurProperties(
                         JsonUtils.getString(json, "name"),
                         TimePeriod.valueOf(JsonUtils.getString(json, "time_period").toUpperCase(Locale.ENGLISH)),
@@ -126,16 +119,12 @@ public class DinosaurProperties {
                         context.deserialize(JsonUtils.getJsonArray(spawnEggInfo, "female"), SpawnEggInfo.class),
                         context.deserialize(JsonUtils.getJsonObject(json, "statistics"), DinosaurStatistics.class),
                         context.deserialize(JsonUtils.getJsonObject(json, "traits"), DinosaurTraits.class),
-                        context.deserialize(JsonUtils.getJsonObject(json, "spawning"), DinosaurSpawningInfo.class),
-                        sounds
-                        context.deserialize(JsonUtils.getJsonObject(json, "breeding"), DinosaurBreeding.class),
-
-                        skeleton_recipe,
+                        context.deserialize(JsonUtils.getJsonObject(json, "spawning"), DinosaurSpawningInfo.class), 
+    			        context.deserialize(JsonUtils.getJsonObject(json, "breeding"), DinosaurBreeding.class), context.deserialize(JsonUtils.getJsonObject(json, "sounds"), EntityJsonSounds.class), createStringList(JsonUtils.getJsonArray(json, "bones")), 
+    			        skeleton_recipe,
                         DinosaurAnimation.parse(JsonUtils.getJsonObject(json, "animation"))
                 );
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+          
         }
 
 		@Override
