@@ -68,6 +68,7 @@ import org.jurassicraft.server.item.FossilItem;
 import org.jurassicraft.server.item.ItemHandler;
 import org.jurassicraft.server.json.dinosaur.entity.objects.EntityJsonAttributes;
 import org.jurassicraft.server.json.dinosaur.entity.objects.EntityJsonSounds;
+import org.jurassicraft.server.json.dinosaur.objects.AdultBabyValue;
 import org.jurassicraft.server.message.SetOrderMessage;
 import org.jurassicraft.server.registries.JurassicraftRegisteries;
 import org.jurassicraft.server.util.GameRuleHandler;
@@ -573,17 +574,26 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
 	public void updateAttributes() {
 		double prevHealth = this.getMaxHealth();
-		double newHealth = Math.max(1.0F, this.interpolate(this.dinosaur.babyHealth, this.dinosaur.adultHealth)) * this.attributes.getHealthModifier();
-		double speed = this.interpolate(this.dinosaur.babySpeed, this.dinosaur.adultSpeed) * this.attributes.getSpeedModifier();
+		double newHealth = Math.max(1.0F, this.interpolate(this.dinosaur.properties.statistics.health) * this.attributes.getHealthModifier());
+		double speed = this.interpolate(this.dinosaur.properties.statistics.speed) * this.attributes.getSpeedModifier();
 		double strength = this.getAttackDamage() * this.attributes.getDamageModifier();
 
 		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(newHealth);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(speed);
 		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(strength);
 
-		for (EntityJsonAttributes attributes : this.dinosaur.properties.attributes) {
-			attributes.apply(this);
-		}
+		GrowthStage growthStage = this.getGrowthStage();
+
+		if(growthStage == GrowthStage.INFANT){
+		    this.dinosaur.properties.statistics.health.set("baby", newHealth);
+            this.dinosaur.properties.statistics.speed.set("baby", newHealth);
+            this.dinosaur.properties.statistics.strength.set("baby", newHealth);
+        }else{
+            this.dinosaur.properties.statistics.health.set("adult", newHealth);
+            this.dinosaur.properties.statistics.speed.set("adult", newHealth);
+            this.dinosaur.properties.statistics.strength.set("adult", newHealth);
+        }
+
 
 		if (prevHealth != newHealth) {
 			this.heal((float) (newHealth - prevHealth));
@@ -592,8 +602,8 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
 	private void updateBounds() {
 		float scale = this.attributes.getScaleModifier();
-		float width = MathHelper.clamp((float) this.interpolate(this.dinosaur.babySizeX, this.dinosaur.adultSizeX) * scale, 0.3F, 4.0F);
-		float height = MathHelper.clamp((float) this.interpolate(this.dinosaur.babySizeY, this.dinosaur.adultSizeY) * scale, 0.3F, 4.0F);
+		float width = MathHelper.clamp((float) this.interpolate(this.dinosaur.properties.statistics.sizeX) * scale, 0.3F, 4.0F);
+		float height = MathHelper.clamp((float) this.interpolate(this.dinosaur.properties.statistics.sizeY) * scale, 0.3F, 4.0F);
 
 		this.stepHeight = Math.max(1.0F, (float) (Math.ceil(height / 2.0F) / 2.0F));
 
@@ -604,13 +614,13 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 		}
 	}
 
-	public double interpolate(double baby, double adult) {
+	public double interpolate(AdultBabyValue adultBabyValue) {
 		int dinosaurAge = this.dinosaurAge;
 		int maxAge = this.dinosaur.maximumAge;
 		if (dinosaurAge > maxAge) {
 			dinosaurAge = maxAge;
 		}
-		return (adult - baby) / maxAge * dinosaurAge + baby;
+		return (adultBabyValue.get("adult") - adultBabyValue.get("baby")) / maxAge * dinosaurAge + adultBabyValue.get("baby");
 	}
 
 	@Override
@@ -632,12 +642,12 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
 	@Override
 	public float getSoundPitch() {
-		return (float) this.interpolate(2.5F, 1.0F) + ((this.rand.nextFloat() - 0.5F) * 0.125F);
+		return (float) this.interpolate(new AdultBabyValue(.5F, 1.0F)) + ((this.rand.nextFloat() - 0.5F) * 0.125F);
 	}
 
 	@Override
 	public float getSoundVolume() {
-		return (this.isCarcass() || this.isSleeping) ? 0.0F : (2.0F * ((float) this.interpolate(0.2F, 1.0F)));
+		return (this.isCarcass() || this.isSleeping) ? 0.0F : (2.0F * ((float) this.interpolate(new AdultBabyValue(.2F, 1.0F))));
 	}
 
 	public String getGenetics() {
@@ -1074,7 +1084,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
 		if (this.legSolver != null) {
 			double msc = this.dinosaur.scaleInfant / this.dinosaur.scaleAdult;
-			this.legSolver.update(this, (float) this.interpolate(msc, 1.0) * this.getAttributes().getScaleModifier());
+			this.legSolver.update(this, (float) this.interpolate(new AdultBabyValue(msc, 1.0)) * this.getAttributes().getScaleModifier());
 		}
 
 		this.prevAge = this.dinosaurAge;
@@ -1151,7 +1161,9 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
 	@Override
 	public float getEyeHeight() {
+
 		return (float) this.interpolate(this.dinosaur.babyEyeHeight, this.dinosaur.adultEyeHeight) * this.attributes.getScaleModifier();
+
 	}
 
 	@Override
@@ -1356,7 +1368,6 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
 	@Nullable
 	public SoundEvent getSoundForAnimation(Animation animation) {
-		
 		Map<EntityAnimation, SoundEvent> sounds = this.dinosaur.properties.getSoundMap();
 		return sounds == null ? null : sounds.get(EntityAnimation.getAnimation(animation));
 	
@@ -1366,8 +1377,8 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 		return null;
 	}
 
-	public double getAttackDamage() {
-		return this.interpolate(this.dinosaur.babyStrength, this.dinosaur.adultStrength);
+	public double getAttackDamage()  {
+		return this.interpolate(this.dinosaur.properties.statistics.strength);
 	}
 
 	public boolean isMale() {
@@ -1674,7 +1685,7 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 	}
 
 	public Vec3d getHeadPos() {
-		double scale = this.interpolate(this.dinosaur.scaleInfant, this.dinosaur.scaleAdult);
+		double scale = this.interpolate(this.dinosaur.properties.statistics.scale);
 
 		double[] headPos = this.dinosaur.getHeadPosition(this.getGrowthStage(), ((360 - this.rotationYawHead)) % 360 - 180);
 

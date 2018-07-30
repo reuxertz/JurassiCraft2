@@ -8,6 +8,7 @@ import org.jurassicraft.client.sound.SoundHandler;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.LegSolver;
 import org.jurassicraft.server.entity.LegSolverQuadruped;
+import org.jurassicraft.server.json.dinosaur.objects.AdultBabyValue;
 
 @Deprecated
 public class BrachiosaurusEntity extends DinosaurEntity {
@@ -29,7 +30,7 @@ public class BrachiosaurusEntity extends DinosaurEntity {
         super.onUpdate();
         if (this.onGround && !this.isInWater()) {
             if (this.moveForward > 0 && (this.posX - this.prevPosX > 0 || this.posZ - this.prevPosZ > 0) && this.stepCount <= 0) {
-                this.playSound(SoundHandler.STOMP, (float) this.interpolate(0.1F, 1.0F), this.getSoundPitch());
+                this.playSound(SoundHandler.STOMP, (float) this.interpolate(new AdultBabyValue( .1F, 1.0F)), this.getSoundPitch());
                 this.stepCount = 65;
             }
             this.stepCount -= this.moveForward * 9.5;
