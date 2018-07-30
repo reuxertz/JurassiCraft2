@@ -181,7 +181,7 @@
       "jurassicraft:dinosaurs/tyrannosaurus/tyrannosaurus_hurt_2"
     ]
   },
-  "tyrannosaurus_roar": {
+  "tyrannosaurus_call": {
     "category": "hostile",
     "sounds": [
       "jurassicraft:dinosaurs/tyrannosaurus/tyrannosaurus_roar_1",

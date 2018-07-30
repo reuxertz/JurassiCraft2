@@ -18,6 +18,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import org.jurassicraft.JurassiCraft;
@@ -55,6 +56,7 @@ public class RegistryHandler
     {
         sound.setRegistryName(name);
         sounds.add(sound);
+        ForgeRegistries.SOUND_EVENTS.register(sound);
     }
 
     public static void registerBlockWithItem(Block block, String registryname) {
@@ -100,12 +102,6 @@ public class RegistryHandler
         for(IForgeRegistryEntry e : otherItems) {
             if(e instanceof Enchantment) call(event, e);
         }
-    }
-
-    @SubscribeEvent
-    public static void registerSounds(final RegistryEvent.Register<SoundEvent> event)
-    {
-        event.getRegistry().registerAll(sounds.toArray(new SoundEvent[sounds.size()]));
     }
 
     private <K extends IForgeRegistryEntry<K>, T> void call(RegistryEvent.Register<K> event, T value) {

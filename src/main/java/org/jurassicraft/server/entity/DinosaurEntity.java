@@ -1161,7 +1161,9 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
 	@Override
 	public float getEyeHeight() {
-		return (float) this.interpolate(this.dinosaur.properties.statistics.eyeHeight) * this.attributes.getScaleModifier();
+
+		return (float) this.interpolate(this.dinosaur.babyEyeHeight, this.dinosaur.adultEyeHeight) * this.attributes.getScaleModifier();
+
 	}
 
 	@Override
@@ -1366,9 +1368,9 @@ public class DinosaurEntity extends EntityCreature implements IEntityAdditionalS
 
 	@Nullable
 	public SoundEvent getSoundForAnimation(Animation animation) {
-		EntityJsonSounds sounds = this.dinosaur.properties.sounds;
-		System.out.println(sounds.soundMap);
-		return sounds.soundMap == null ? sounds.soundMap.get(EntityAnimation.getAnimation(animation)) : null;
+		Map<EntityAnimation, SoundEvent> sounds = this.dinosaur.properties.getSoundMap();
+		return sounds == null ? null : sounds.get(EntityAnimation.getAnimation(animation));
+	
 	}
 
 	public SoundEvent getBreathingSound() {

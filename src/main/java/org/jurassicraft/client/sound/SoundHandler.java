@@ -48,7 +48,7 @@ public class SoundHandler {
     public static final SoundEvent TYRANNOSAURUS_BREATHING = create("tyrannosaurus_breathing");
     public static final SoundEvent TYRANNOSAURUS_DEATH = create("tyrannosaurus_death");
     public static final SoundEvent TYRANNOSAURUS_HURT = create("tyrannosaurus_hurt");
-    public static final SoundEvent TYRANNOSAURUS_ROAR = create("tyrannosaurus_roar");
+    public static final SoundEvent TYRANNOSAURUS_CALL = create("tyrannosaurus_call");
     public static final SoundEvent TYRANNOSAURUS_LIVING = create("tyrannosaurus_living");
 
     public static final SoundEvent VELOCIRAPTOR_LIVING = create("velociraptor_living");

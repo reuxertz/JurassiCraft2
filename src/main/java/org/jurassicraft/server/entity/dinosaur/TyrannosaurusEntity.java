@@ -39,9 +39,9 @@ public class TyrannosaurusEntity extends DinosaurEntity {
             case SPEAK:
                 return SoundHandler.TYRANNOSAURUS_LIVING;
             case CALLING:
-                return SoundHandler.TYRANNOSAURUS_ROAR;
+                return SoundHandler.TYRANNOSAURUS_CALL;
             case ROARING:
-                return SoundHandler.TYRANNOSAURUS_ROAR;
+                return SoundHandler.TYRANNOSAURUS_CALL;
             case DYING:
                 return SoundHandler.TYRANNOSAURUS_DEATH;
             case INJURED:
