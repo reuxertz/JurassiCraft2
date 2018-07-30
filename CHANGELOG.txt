@@ -1,2 +1,3 @@
 *Fixed some issues with the new lang utils
 +The dinosaur order gui displays the current order now
+*Krill to no longer have a collision box for entitites to stand on it
