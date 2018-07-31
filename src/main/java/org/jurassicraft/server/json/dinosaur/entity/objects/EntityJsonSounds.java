@@ -17,7 +17,7 @@ public class EntityJsonSounds {
     public Map<EntityAnimation, SoundEvent> soundMap;
     public @Nullable SoundEvent breathingSound;
 
-    public EntityJsonSounds(@Nonnull Map soundMap, SoundEvent event) {
+    public EntityJsonSounds(Map soundMap, SoundEvent event) {
         super();
         this.soundMap = soundMap;
         this.breathingSound = event;
