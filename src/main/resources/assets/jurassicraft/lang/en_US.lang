@@ -189,6 +189,7 @@ item.dino_scanner.name=Debug Dinosaur Scanner
 item.basic_circuit.name=Basic Circuit
 item.advanced_circuit.name=Advanced Circuit
 item.iron_nugget.name=Iron Nugget
+item.diamond_nugget.name=Diamond Nugget
 item.gypsum_powder.name=Gypsum Powder
 item.plant_soft_tissue.name={plant} Soft Tissue
 item.plant_fossil.name=Plant Fossil
