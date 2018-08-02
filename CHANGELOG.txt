@@ -1,1 +1,3 @@
 +Added BungeeCord/Waterfall support
+*fixed tour rail config value
+*small fix for dinosaur attack AI
