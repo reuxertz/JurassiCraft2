@@ -56,6 +56,7 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
     private static final int RIGHT    = 0b0010;
     private static final int FORWARD  = 0b0100;
     private static final int BACKWARD = 0b1000;
+    private static final int UP       = 0b0011;
 
     protected final Seat[] seats = createSeats();
     protected final WheelData wheeldata = createWheels();
@@ -66,11 +67,11 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
 
     protected float rotationDelta;
 
-    private int interpProgress;
+    public int interpProgress;
     double interpTargetX;
-    private double interpTargetY;
-    private double interpTargetZ;
-    private double interpTargetYaw;
+    public double interpTargetY;
+    public double interpTargetZ;
+    public double interpTargetYaw;
 
     private static final double INTERP_AMOUNT = 0.15D; //TODO config ?
     
@@ -390,7 +391,7 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
         this.motionY *= resist;
         this.motionZ *= resist;
         this.rotationDelta *= resist;
-        this.motionY -= 0.15F;
+
     }
 
     protected void handleControl() {

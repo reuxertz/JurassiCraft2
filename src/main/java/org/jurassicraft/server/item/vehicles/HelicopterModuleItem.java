@@ -1,17 +1,15 @@
 package org.jurassicraft.server.item.vehicles;
 
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import org.jurassicraft.server.entity.vehicle.modules.HelicopterModule;
 import org.jurassicraft.server.tab.TabHandler;
 
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-
+/*
 public class HelicopterModuleItem extends Item {
     private final Class<? extends HelicopterModule> module;
     private final String moduleID;
@@ -35,4 +33,4 @@ public class HelicopterModuleItem extends Item {
     public String getModuleID() {
         return this.moduleID;
     }
-}
+}*/

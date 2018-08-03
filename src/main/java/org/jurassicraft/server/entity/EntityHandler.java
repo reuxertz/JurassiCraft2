@@ -10,7 +10,6 @@ import java.util.Map;
 import org.jurassicraft.JurassiCraft;
 import org.jurassicraft.server.api.Hybrid;
 import org.jurassicraft.server.conf.JurassiCraftConfig;
-import org.jurassicraft.server.dinosaur.AlligatorGarDinosaur;
 import org.jurassicraft.server.dinosaur.BrachiosaurusDinosaur;
 import org.jurassicraft.server.dinosaur.CoelacanthDinosaur;
 import org.jurassicraft.server.dinosaur.DilophosaurusDinosaur;
@@ -27,7 +26,7 @@ import org.jurassicraft.server.entity.item.DinosaurEggEntity;
 import org.jurassicraft.server.entity.item.MuralEntity;
 import org.jurassicraft.server.entity.item.PaddockSignEntity;
 import org.jurassicraft.server.entity.vehicle.FordExplorerEntity;
-import org.jurassicraft.server.entity.vehicle.HelicopterBaseEntity;
+import org.jurassicraft.server.entity.vehicle.HelicopterEntity;
 import org.jurassicraft.server.entity.vehicle.JeepWranglerEntity;
 import org.jurassicraft.server.period.TimePeriod;
 
@@ -116,7 +115,7 @@ public class EntityHandler {
 //        EntityRegistry.addSpawn(GoatEntity.class, 15, 1, 3, EnumCreatureType.CREATURE, biomeHills.toArray(new Biome[biomeForest.size()]));
 
         registerEntity(DinosaurEggEntity.class, "Dinosaur Egg");
-        registerEntity(HelicopterBaseEntity.class, "Helicopter base");
+        registerEntity(HelicopterEntity.class, "Helicopter base");
     }
 
     private static void initDinosaurs() {

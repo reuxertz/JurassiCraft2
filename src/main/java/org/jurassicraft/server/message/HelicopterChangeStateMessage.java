@@ -1,5 +1,6 @@
 package org.jurassicraft.server.message;
 
+import org.jurassicraft.server.entity.vehicle.CarEntity;
 import org.jurassicraft.server.entity.vehicle.FordExplorerEntity;
 
 import io.netty.buffer.ByteBuf;
@@ -8,53 +9,49 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import org.jurassicraft.server.entity.vehicle.HelicopterEntity;
 
-public class FordExplorerUpdatePositionStateMessage extends AbstractMessage<FordExplorerUpdatePositionStateMessage>
+public class HelicopterChangeStateMessage extends AbstractMessage<HelicopterChangeStateMessage>
 {
     private int entityId;
-    
-    private long position;
 
-    public FordExplorerUpdatePositionStateMessage()
+    private boolean onRails;
+
+    public HelicopterChangeStateMessage()
     {}
 
-    public FordExplorerUpdatePositionStateMessage(FordExplorerEntity entity, BlockPos railPos)
+    public HelicopterChangeStateMessage(HelicopterEntity entity)
     {
         this.entityId = entity.getEntityId();
-        this.position = railPos.toLong();
     }
 
     @Override
-    public void onClientReceived(Minecraft minecraft, FordExplorerUpdatePositionStateMessage message, EntityPlayer player, MessageContext context)
+    public void onClientReceived(Minecraft minecraft, HelicopterChangeStateMessage message, EntityPlayer player, MessageContext context)
     {
-	Entity entity = player.world.getEntityByID(message.entityId);
+        Entity entity = player.world.getEntityByID(message.entityId);
         if (entity instanceof FordExplorerEntity)
         {
             FordExplorerEntity car = (FordExplorerEntity) entity;
-            BlockPos prevRails = car.railTracks;
-            car.railTracks = BlockPos.fromLong(message.position);
-            car.prevPos = prevRails;
+            car.onRails = message.onRails;
         }
     }
 
     @Override
-    public void onServerReceived(MinecraftServer server, FordExplorerUpdatePositionStateMessage message, EntityPlayer player, MessageContext context)
+    public void onServerReceived(MinecraftServer server, HelicopterChangeStateMessage message, EntityPlayer player, MessageContext context)
     {}
 
     @Override
     public void fromBytes(ByteBuf buf)
     {
         this.entityId = buf.readInt();
-        this.position = buf.readLong();
+        this.onRails = buf.readBoolean();
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
         buf.writeInt(this.entityId);
-        buf.writeLong(this.position);
+        buf.writeBoolean(this.onRails);
     }
 }

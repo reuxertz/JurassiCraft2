@@ -13,8 +13,8 @@ import org.jurassicraft.server.dinosaur.Dinosaur;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.item.block.AncientDoorItem;
-import org.jurassicraft.server.item.vehicles.HelicopterItem;
-import org.jurassicraft.server.item.vehicles.HelicopterModuleItem;
+//import org.jurassicraft.server.item.vehicles.HelicopterItem;
+//import org.jurassicraft.server.item.vehicles.HelicopterModuleItem;
 import org.jurassicraft.server.tab.TabHandler;
 import org.jurassicraft.server.util.RegistryHandler;
 
@@ -125,8 +125,8 @@ public class ItemHandler {
     public static final BasicItem PLANT_CELLS = new BasicItem(TabHandler.ITEMS);
     public static final PlantCallusItem PLANT_CALLUS = new PlantCallusItem();
     public static final BasicItem PLANT_CELLS_PETRI_DISH = new BasicItem(TabHandler.ITEMS);
-    public static final HelicopterItem HELICOPTER = new HelicopterItem();
-    public static final HelicopterModuleItem MINIGUN_MODULE = new HelicopterModuleItem("minigun");
+    //public static final HelicopterItem HELICOPTER = new HelicopterItem();
+    //public static final HelicopterModuleItem MINIGUN_MODULE = new HelicopterModuleItem("minigun");
 
     public static final BasicItem TRACKER = new BasicItem(TabHandler.ITEMS);
 
