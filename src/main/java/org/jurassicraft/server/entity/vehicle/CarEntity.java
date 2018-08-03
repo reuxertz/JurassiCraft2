@@ -56,7 +56,6 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
     private static final int RIGHT    = 0b0010;
     private static final int FORWARD  = 0b0100;
     private static final int BACKWARD = 0b1000;
-    private static final int UP       = 0b0011;
 
     protected final Seat[] seats = createSeats();
     protected final WheelData wheeldata = createWheels();
@@ -391,6 +390,8 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
         this.motionY *= resist;
         this.motionZ *= resist;
         this.rotationDelta *= resist;
+        if(!this.hasNoGravity())
+            this.motionY -= 0.15F;
 
     }
 

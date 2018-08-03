@@ -41,7 +41,6 @@ public class HelicopterEntity extends CarEntity {
         this.setEntityBoundingBox(new AxisAlignedBB( 0, 0, 0, w, h, d));
 
 
-
     }
 
     @Override
@@ -98,13 +97,14 @@ public class HelicopterEntity extends CarEntity {
         } else if (backward()) {
             lastDirBackwards = true;
         }
-
+        this.setNoGravity(true);
         if (this.seats[0].getOccupant() != null) {
             if (KeyBindingHandler.HELICOPTER_UP.isKeyDown()) {
                 this.motionY += 0.2f;
                 if (this.motionY <= -5f) {
                     this.motionY = -5f;
                 }
+
             } else if (KeyBindingHandler.HELICOPTER_DOWN.isKeyDown()) {
                 this.motionY -= 0.3f;
                 if (this.motionY <= -5f) {
