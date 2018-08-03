@@ -9,10 +9,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jurassicraft.server.entity.vehicle.HelicopterEntity;
 import org.jurassicraft.server.tab.TabHandler;
 
 import java.util.List;
-/*
+
 public class HelicopterItem extends Item {
     public HelicopterItem() {
         this.setCreativeTab(TabHandler.ITEMS);
@@ -28,11 +29,11 @@ public class HelicopterItem extends Item {
     @Override
     public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
-            HelicopterBaseEntity helicopter = new HelicopterBaseEntity(world);
+            HelicopterEntity helicopter = new HelicopterEntity(world);
             helicopter.setPosition(pos.getX() + hitX, pos.getY() + hitY, pos.getZ() + hitZ);
-//            world.spawnEntity(helicopter); //Uncomment for testing
+            world.spawnEntity(helicopter); //Uncomment for testing
         }
 
         return EnumActionResult.SUCCESS;
     }
-}*/
+}

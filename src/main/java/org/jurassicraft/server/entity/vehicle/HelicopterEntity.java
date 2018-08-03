@@ -44,7 +44,7 @@ public class HelicopterEntity extends CarEntity {
 
     @Override
     public void dropItems() {
-        this.dropItem(ItemHandler.FORD_EXPLORER, 1);
+        this.dropItem(ItemHandler.HELICOPTER, 1);
     }
 
     @Override
