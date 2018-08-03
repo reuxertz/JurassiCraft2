@@ -7,6 +7,7 @@ import net.minecraft.world.World;
 public class JeepWranglerEntity extends CarEntity {
     public JeepWranglerEntity(World world) {
         super(world);
+        this.speedModifier = 0f;
     }
 
     @Override

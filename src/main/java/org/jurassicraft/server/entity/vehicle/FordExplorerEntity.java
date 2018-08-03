@@ -49,6 +49,7 @@ public class FordExplorerEntity extends CarEntity {
     
     public FordExplorerEntity(World world) {
     	super(world);
+    	this.speedModifier = 0f;
 	}
 
     @Override

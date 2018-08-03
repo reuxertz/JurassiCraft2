@@ -71,7 +71,7 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
     public double interpTargetY;
     public double interpTargetZ;
     public double interpTargetYaw;
-
+    public float speedModifier = 0f;
     private static final double INTERP_AMOUNT = 0.15D; //TODO config ?
     
     public final InterpValue backValue = new InterpValue(this, INTERP_AMOUNT);
@@ -422,7 +422,7 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
     protected void applyMovement() {
 	    Speed speed = this.getSpeed();
         
-        float moveAmount = 0.0F;
+	    float moveAmount = 0.0f;
         if ((this.left() || this.right()) && !(this.forward() || this.backward())) {
             moveAmount += 0.05F;
         }
@@ -431,7 +431,7 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
         } else if (this.backward()) {
             moveAmount -= 0.05F;
         }
-        moveAmount *= speed.modifier;
+        moveAmount *= (speed.modifier + this.speedModifier);
         if(this.isInWater()) {
             moveAmount *= 0.1f;
         }

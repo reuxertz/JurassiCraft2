@@ -1,0 +1,18 @@
+1) When Broken, Turns into a Ford Explorer-TO BE DONE
+2) Needs Animations (can probably resuse Wyns)-TO BE DONE
+3) Needs destroy thing like the jeep (gets cracked as you hit it)-TO BE DONE
+4) Needs to fall to the ground once driver exists-DONE
+5) Seat needs to be in correct Position-TO BE DONE
+6) Should tilt forward when going forward-TO BE DONE
+7) Needs 5 Seats, 1 Driver, 2 hanging feet out the side doors, 2 on the back "crates" or wheel wells?-TO BE DONE
+8) It's slow as fuck-DONE
+9) Should destroy leaves on contact-TO BE DONE
+10) When driving on the ground, it should fall to the ground not hover if it falls 1 block-TO BE DONE
+11) Car + Helicopter should not destroy all grass, should have a configurable percent of grass it destroys, base 5%? maybe-TO BE DONE
+12) Tire tracks are hella fucked up, should probably be thinner? and have 3 not 2?-TO BE DONE
+13) Add "steam" particles (ones that come out of fire) come out of the exhaust-TO BE DONE
+14) Hitbox is sorta off (can it rotate with helicopter?)-TO BE DONE
+15) Should tilt when "strafing" to the sides-TO BE DONE
+16) Should be damaged when hitting the ground once player leaves (but not destroy)-TO BE DONE
+17) Wheels should spin when on the ground-TO BE DONE
+18) When the helicopter is off the ground, then the wheels should fold ("animate") up into the wheel wells-TO BE DONE

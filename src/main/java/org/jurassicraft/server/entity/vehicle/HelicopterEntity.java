@@ -39,8 +39,7 @@ public class HelicopterEntity extends CarEntity {
         double h = 3.1f; // height in blocks
         double d = 8f; // depth in blocks
         this.setEntityBoundingBox(new AxisAlignedBB( 0, 0, 0, w, h, d));
-
-
+        this.speedModifier = 1.5f;
     }
 
     @Override
@@ -99,6 +98,7 @@ public class HelicopterEntity extends CarEntity {
         }
         this.setNoGravity(true);
         if (this.seats[0].getOccupant() != null) {
+            this.setNoGravity(true);
             if (KeyBindingHandler.HELICOPTER_UP.isKeyDown()) {
                 this.motionY += 0.2f;
                 if (this.motionY <= -5f) {
@@ -118,7 +118,9 @@ public class HelicopterEntity extends CarEntity {
                 this.enginePower -= 1.5f;
             }
         }
-
+        if(this.seats[0].getOccupant() == null){
+            this.setNoGravity(false);
+        }
 
     }
 
