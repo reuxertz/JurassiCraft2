@@ -315,8 +315,7 @@ public class ItemHandler {
         registerItem(PLASTER_AND_BANDAGE, "Plaster And Bandage");
         registerItem(EMPTY_TEST_TUBE, "Empty Test Tube");
         registerItem(EMPTY_SYRINGE, "Empty Syringe");
-        if(!JurassiCraftConfig.ENTITIES.disableGrowthSerumRecipe)
-            registerItem(GROWTH_SERUM, "Growth Serum");
+        registerItem(GROWTH_SERUM, "Growth Serum");
 
         registerItem(BREEDING_WAND, "Breeding Wand");
         registerItem(BIRTHING_WAND, "Birthing_Wand");
