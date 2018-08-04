@@ -266,6 +266,7 @@ public enum RenderingHandler {
 
         registerItemRenderer(TRACKER);
         registerItemRenderer(PLANT_CELLS_PETRI_DISH);
+        registerItemRenderer(HELICOPTER);
         registerItemRenderer(PLANT_CELLS);
         registerItemRenderer(GROWTH_SERUM);
         registerItemRenderer(BREEDING_WAND);

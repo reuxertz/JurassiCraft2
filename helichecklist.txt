@@ -1,4 +1,4 @@
-1) When Broken, Turns into a Ford Explorer-TO BE DONE
+1) When Broken, Turns into a Ford Explorer-DONE
 2) Needs Animations (can probably resuse Wyns)-TO BE DONE
 3) Needs destroy thing like the jeep (gets cracked as you hit it)-TO BE DONE
 4) Needs to fall to the ground once driver exists-DONE
