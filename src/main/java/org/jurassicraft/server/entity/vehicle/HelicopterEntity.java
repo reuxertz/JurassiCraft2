@@ -160,7 +160,7 @@ public class HelicopterEntity extends CarEntity {
 
     @Override
     protected boolean shouldTyresRender() {
-        return super.shouldTyresRender();
+        return false;
     }
 /*
     @Override
