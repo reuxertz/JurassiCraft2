@@ -30,6 +30,7 @@ public class HelicopterEntity extends CarEntity {
     private float enginePower;
     private final InterpValue rotationYawInterp = new InterpValue(this, 4f);
     private static final float SPEEDMODIFIER = 2.5f;
+    private static boolean isFlying;
 
     /* =================================== CAR START ===========================================*/
 
@@ -40,6 +41,7 @@ public class HelicopterEntity extends CarEntity {
         double d = 8f; // depth in blocks
         this.setEntityBoundingBox(new AxisAlignedBB( 0, 0, 0, w, h, d));
         this.speedModifier = 1.5f;
+        this.isFlying = false;
     }
 
     @Override
@@ -96,26 +98,28 @@ public class HelicopterEntity extends CarEntity {
         } else if (backward()) {
             lastDirBackwards = true;
         }
-        this.setNoGravity(true);
+
         if (this.seats[0].getOccupant() != null) {
-            this.setNoGravity(true);
             if (KeyBindingHandler.HELICOPTER_UP.isKeyDown()) {
                 this.motionY += 0.2f;
                 if (this.motionY <= -5f) {
                     this.motionY = -5f;
                 }
-
+                this.isFlying = true;
+                this.setNoGravity(true);
             } else if (KeyBindingHandler.HELICOPTER_DOWN.isKeyDown()) {
                 this.motionY -= 0.3f;
                 if (this.motionY <= -5f) {
                     this.motionY = -5f;
                 }
-            } else {
-                if (this.enginePower < this.REQUIRED_POWER) {
-                    if (this.isAirBorne)
-                        this.enginePower = this.REQUIRED_POWER - 0.1f;
+
+                if(this.onGround == true) {
+                    this.isFlying = false;
                 }
-                this.enginePower -= 1.5f;
+            } else {
+                if(!this.isFlying){
+                    this.setNoGravity(false);
+                }
             }
         }
         if(this.seats[0].getOccupant() == null){

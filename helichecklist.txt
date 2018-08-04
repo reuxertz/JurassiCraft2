@@ -7,7 +7,7 @@
 7) Needs 5 Seats, 1 Driver, 2 hanging feet out the side doors, 2 on the back "crates" or wheel wells?-TO BE DONE
 8) It's slow as fuck-DONE
 9) Should destroy leaves on contact-TO BE DONE
-10) When driving on the ground, it should fall to the ground not hover if it falls 1 block-TO BE DONE
+10) When driving on the ground, it should fall to the ground not hover if it falls 1 block-DONE
 11) Car + Helicopter should not destroy all grass, should have a configurable percent of grass it destroys, base 5%? maybe-TO BE DONE
 12) Tire tracks are hella fucked up, should probably be thinner? and have 3 not 2?-TO BE DONE
 13) Add "steam" particles (ones that come out of fire) come out of the exhaust-TO BE DONE
