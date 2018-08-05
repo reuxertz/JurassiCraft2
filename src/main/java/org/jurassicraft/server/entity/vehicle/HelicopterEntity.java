@@ -122,6 +122,11 @@ public class HelicopterEntity extends CarEntity {
                 }
             }
         }
+        if(!this.isFlying){
+            this.speedModifier = -0.75f;
+        }else{
+            this.speedModifier = 1.5f;
+        }
         if(this.seats[0].getOccupant() == null){
             this.setNoGravity(false);
         }
