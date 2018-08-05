@@ -37,7 +37,7 @@ public class HelicopterEntity extends CarEntity {
     public HelicopterEntity(World worldIn) {
         super(worldIn);
         double w = 3f; // width in blocks
-        double h = 3.1f; // height in blocks
+        double h = 3.5f; // height in blocks
         double d = 8f; // depth in blocks
         this.setEntityBoundingBox(new AxisAlignedBB( 0, 0, 0, w, h, d));
         this.speedModifier = 1.5f;
@@ -51,10 +51,10 @@ public class HelicopterEntity extends CarEntity {
 
     @Override
     protected Seat[] createSeats() {
-        Seat frontLeft = new Seat(0.563F, 0.45F, 0.4F, 0.5F, 0.25F);
+        Seat middle = new Seat(0F, -0.362F, 1.2F, 0.5F, 0.25F);
         Seat frontRight = new Seat(-0.563F, 0.45F, 0.4F, 0.5F, 0.25F);
         Seat backLeft = new Seat( 0.563F, 0.45F, -1F, 0.5F, 0.25F);
-        return new Seat[] { frontLeft, frontRight, backLeft};
+        return new Seat[] { middle, frontRight, backLeft};
     }
 
     @Override
