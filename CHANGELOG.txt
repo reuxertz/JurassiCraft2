@@ -2,3 +2,4 @@
 *fixed tour rail config value
 *small fix for dinosaur attack AI
 *temporary fix for growth serum
+*Fixed cultivator's upper part to not drop a bugged item
