@@ -9,6 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemRecord;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -359,7 +360,7 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
         if(shouldStopUpdates()) {
             return;
         }
-        AxisAlignedBB aabb = this.getEntityBoundingBox().shrink(0.9f);
+        AxisAlignedBB aabb = this.getEntityBoundingBox();
         for(BlockPos pos : BlockPos.getAllInBoxMutable(new BlockPos(Math.floor(aabb.minX), Math.floor(aabb.minY), Math.floor(aabb.minZ)), new BlockPos(Math.ceil(aabb.maxX), Math.ceil(aabb.maxY), Math.ceil(aabb.maxZ)))) {
             IBlockState state = world.getBlockState(pos);
             if(state.getMaterial() == Material.VINE) {
@@ -369,7 +370,10 @@ public abstract class CarEntity extends Entity implements MultiSeatedEntity {
                     state.getBlock().dropBlockAsItem(world, pos, state, 0);
                 }
                 world.setBlockToAir(pos);
+            }else if(state.getMaterial() == Material.LEAVES){
+                world.setBlockToAir(pos);
             }
+
         }
         
         this.prevWheelRotateAmount = this.wheelRotateAmount;

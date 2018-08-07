@@ -40,6 +40,7 @@ public class HelicopterEntity extends CarEntity {
         double h = 3.5f; // height in blocks
         double d = 8f; // depth in blocks
         this.setEntityBoundingBox(new AxisAlignedBB( 0, 0, 0, w, h, d));
+        this.setSize(4f, 3.5f);
         this.speedModifier = 1.5f;
         this.isFlying = false;
     }
@@ -54,7 +55,7 @@ public class HelicopterEntity extends CarEntity {
         Seat middle = new Seat(0F, -0.362F, 1.2F, 0.5F, 0.25F);
         Seat frontLeft = new Seat(-0.55F, -0.34F, 0.1F, 0.5F, 0.25F);
         Seat frontRight = new Seat(0.55F, -0.34F, 0.1F, 0.5F, 0.25F);
-        Seat backLeft = new Seat( 0.563F, 0.45F, -1F, 0.5F, 0.25F);
+        Seat backLeft = new Seat( 0.4F, 0.25F, -1F, 0.5F, 0.25F);
         return new Seat[] { middle, frontLeft, frontRight, backLeft};
     }
 
