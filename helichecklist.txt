@@ -16,3 +16,4 @@
 16) Should be damaged when hitting the ground once player leaves (but not destroy)-TO BE DONE
 17) Wheels should spin when on the ground-TO BE DONE
 18) When the helicopter is off the ground, then the wheels should fold ("animate") up into the wheel wells-TO BE DONE
+19) Give the helicopter the correct hitbox size-TO BE DONE
