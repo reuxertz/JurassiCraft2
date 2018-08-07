@@ -98,6 +98,7 @@ import org.jurassicraft.server.entity.ai.navigation.DinosaurJumpHelper;
 import org.jurassicraft.server.entity.ai.navigation.DinosaurMoveHelper;
 import org.jurassicraft.server.entity.ai.navigation.DinosaurPathNavigate;
 import org.jurassicraft.server.entity.ai.util.OnionTraverser;
+import org.jurassicraft.server.entity.ai_new.AIController;
 import org.jurassicraft.server.entity.item.DinosaurEggEntity;
 import org.jurassicraft.server.food.FoodHelper;
 import org.jurassicraft.server.food.FoodType;
@@ -196,8 +197,13 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
 
     private boolean isSkeleton;
 
+    private AIController aiController;
+
     public DinosaurEntity(World world) {
         super(world);
+
+        aiController = new AIController(this);
+
         this.moveHelper = new DinosaurMoveHelper(this);
         this.jumpHelper = new DinosaurJumpHelper(this);
 
@@ -224,48 +230,47 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
 
         this.animationTasks = new EntityAITasks(world.profiler);
 
-        if (!this.dinosaur.isMarineCreature()) {
-            this.tasks.addTask(0, new AdvancedSwimEntityAI(this));
+//        if (!this.dinosaur.isMarineCreature()) {
+//            this.tasks.addTask(0, new AdvancedSwimEntityAI(this));
 //            this.setPathPriority(PathNodeType.WATER, 0.0F);
-        }
+//        }
 
-        this.tasks.addTask(0, new EscapeWireEntityAI(this));
-        
-        this.tasks.addTask(0, new DinosaurWanderAvoidWater(this, 0.8D));
-        
-        if (this.dinosaur.getDiet().canEat(this, FoodType.PLANT)) {
-            this.tasks.addTask(1, new GrazeEntityAI(this));
-        }
-
-        if (this.dinosaur.getDiet().canEat(this, FoodType.MEAT)) {
-            this.tasks.addTask(1, new TargetCarcassEntityAI(this));
-        }
-        
-
-        this.tasks.addTask(1, new RespondToAttackEntityAI(this));
-
-        this.tasks.addTask(1, new TemptNonAdultEntityAI(this, 0.6));
-
-        this.tasks.addTask(1, new EntityAIPanic(this, 1.25D));
-
-        if (this.dinosaur.shouldDefendOwner()) {
-            this.tasks.addTask(2, new DefendOwnerEntityAI(this));
-            this.tasks.addTask(2, new AssistOwnerEntityAI(this));
-        }
-
-        if (this.dinosaur.shouldFlee()) {
-            this.tasks.addTask(2, new FleeEntityAI(this));
-        }
-
-        this.tasks.addTask(2, new ProtectInfantEntityAI<>(this));
-
-        this.tasks.addTask(3, new DinosaurWanderEntityAI(this, 0.8F, 10));
-        this.tasks.addTask(3, new FollowOwnerEntityAI(this));
-
-        this.tasks.addTask(3, this.getAttackAI());
-
-        this.tasks.addTask(4, new EntityAILookIdle(this));
-        this.tasks.addTask(4, new EntityAIWatchClosest(this, EntityLivingBase.class, 6.0F));
+//        this.tasks.addTask(0, new EscapeWireEntityAI(this));
+//
+//        this.tasks.addTask(0, new DinosaurWanderAvoidWater(this, 0.8D));
+//
+//        if (this.dinosaur.getDiet().canEat(this, FoodType.PLANT)) {
+//            this.tasks.addTask(1, new GrazeEntityAI(this));
+//        }
+//
+//        if (this.dinosaur.getDiet().canEat(this, FoodType.MEAT)) {
+//            this.tasks.addTask(1, new TargetCarcassEntityAI(this));
+//        }
+//
+//        this.tasks.addTask(1, new RespondToAttackEntityAI(this));
+//
+//        this.tasks.addTask(1, new TemptNonAdultEntityAI(this, 0.6));
+//
+//        this.tasks.addTask(1, new EntityAIPanic(this, 1.25D));
+//
+//        if (this.dinosaur.shouldDefendOwner()) {
+//            this.tasks.addTask(2, new DefendOwnerEntityAI(this));
+//            this.tasks.addTask(2, new AssistOwnerEntityAI(this));
+//        }
+//
+//        if (this.dinosaur.shouldFlee()) {
+//            this.tasks.addTask(2, new FleeEntityAI(this));
+//        }
+//
+//        this.tasks.addTask(2, new ProtectInfantEntityAI<>(this));
+//
+//        this.tasks.addTask(3, new DinosaurWanderEntityAI(this, 0.8F, 10));
+//        this.tasks.addTask(3, new FollowOwnerEntityAI(this));
+//
+//        this.tasks.addTask(3, this.getAttackAI());
+//
+//        this.tasks.addTask(4, new EntityAILookIdle(this));
+//        this.tasks.addTask(4, new EntityAIWatchClosest(this, EntityLivingBase.class, 6.0F));
 
         this.animationTasks.addTask(0, new SleepEntityAI(this));
 
