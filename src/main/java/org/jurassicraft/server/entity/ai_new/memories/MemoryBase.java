@@ -53,7 +53,6 @@ public abstract class MemoryBase {
     }
 
     protected String uniqueKey;
-    protected TickCounter tickCounter;
     protected double value;
 
     public double getValue()
@@ -68,12 +67,10 @@ public abstract class MemoryBase {
 
     public MemoryBase(MemoryBase memoryBase)
     {
-        this.tickCounter = new TickCounter(RandomHelper.RND, true);
         this.value = memoryBase.value;
     }
     public MemoryBase(double value)
     {
-        this.tickCounter = new TickCounter(RandomHelper.RND, true);
         this.value = value;
     }
 

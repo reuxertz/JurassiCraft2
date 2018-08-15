@@ -9,6 +9,7 @@ import net.minecraft.util.math.Vec3d;
 import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.ai.Mutex;
 import org.jurassicraft.server.entity.ai_new.AIController;
+import org.jurassicraft.server.entity.ai_new.helpers.MovementHelper;
 
 public class AIInstinctMove extends AIInstinctBase {
 
@@ -26,6 +27,20 @@ public class AIInstinctMove extends AIInstinctBase {
         this.position = position;
     }
 
+    public boolean isAtPosition()
+    {
+        EntityCreature entity = aiController.getEntity();
+
+        if (entity == null || position == null)
+        {
+            return true;
+        }
+
+        boolean result = MovementHelper.isAtPosition(entity.posX, entity.posY, entity.posZ, position.x, position.y, position.z, .3);
+        result = result || entity.getNavigator().noPath();
+        return result;
+    }
+
     public AIInstinctMove(AIController aiController, double speedIn)
     {
         super(aiController);
@@ -39,7 +54,7 @@ public class AIInstinctMove extends AIInstinctBase {
         if (this.entity.getNavigator().noPath())
         {
             //TODO change me from not random to random
-            if (!randomMove) {
+            if (randomMove) {
                 Vec3d vec = getWanderPosition();
 
                 if (vec == null)
@@ -49,6 +64,9 @@ public class AIInstinctMove extends AIInstinctBase {
                 this.position = new Vec3d(vec.x, vec.y, vec.z);
                 return true;
             }
+
+            if (position != null)
+                return true;
         }
 
         return false;
@@ -68,5 +86,13 @@ public class AIInstinctMove extends AIInstinctBase {
     public void startExecuting()
     {
         this.entity.getNavigator().tryMoveToXYZ(this.position.x, this.position.y, this.position.z, this.speed);
+    }
+
+    @Override
+    public void resetTask()
+    {
+        randomMove = false;
+        position = null;
+
     }
 }

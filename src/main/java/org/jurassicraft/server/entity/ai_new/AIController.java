@@ -18,6 +18,8 @@ public class AIController extends EntityAIBase {
     protected List<AIBehaviourBase> behaviours = new ArrayList<>();
     protected Map<String, MemoryBase> shortTermMemoryList = new HashMap<>();
 
+    protected AIAction action;
+
     protected AIInstinctMove instinctMove;
     protected AIInstinctObserve instinctObserve;
 
@@ -60,48 +62,66 @@ public class AIController extends EntityAIBase {
         this.entity = entity;
 
         this.entity.tasks.addTask(0, this);
-        this.entity.tasks.addTask(1, new AIInstinctObserve(this));
-        this.entity.tasks.addTask(2, new AIInstinctMove(this, 0.8F));
+        this.entity.tasks.addTask(1, this.instinctObserve = new AIInstinctObserve(this));
+        this.entity.tasks.addTask(2, this.instinctMove = new AIInstinctMove(this, 0.8F));
     }
 
     @Override
     public void updateTask()
     {
         age++;
-
         decayMemories();
 
-//        if (action != null && !action.isFinished())
-//            return;
-//
-//        if (action != null && action.isFinished())
-//            action = null;
+        if (action != null)
+        {
+            AIAction.ActionState result = action.update();
 
-//        if (action != null && !action.isStarted())
-//            action.behaviour.startExecution(this);
-//
-//        if (action != null && action.isStarted() && !action.isFinished())
-//            action.behaviour.(this);
+            if (result == AIAction.ActionState.Reset) {
+                resetTask();
+            }
 
+            return;
+        }
 
         List<AIAction> potentialActions = new ArrayList<>();
+        List<Double> potentialActionValues = new ArrayList<>();
+        List<String> keys = new ArrayList<>(shortTermMemoryList.keySet());
         for (int behaviourIndex = 0; behaviourIndex < behaviours.size(); behaviourIndex++) {
-            List<String> keys = new ArrayList<>(shortTermMemoryList.keySet());
             for (int keyIndex = 0; keyIndex < keys.size(); keyIndex++) {
                 MemoryBase memory = shortTermMemoryList.get(keys.get(keyIndex));
                 AIBehaviourBase behaviour = behaviours.get(behaviourIndex);
 
-                AIAction action = behaviour.constructAction(memory);
+                AIAction action = new AIAction(this, memory, behaviour);
 
-                if (action == null)
+                if (action.getValue() <= 0)
                     continue;
 
                 potentialActions.add(action);
+                potentialActionValues.add(action.getValue());
             }
         }
 
 //        if (potentialActions.size() > 0)
-//            setAction(potentialActions.get(0));
+//            action = potentialActions.get(0);
+
+        if (potentialActions.size() == 0)
+            return;
+
+        double highestValue = Double.MIN_VALUE;
+        int highestIndex = -1;
+        for (int i = 0; i < potentialActionValues.size(); i++)
+        {
+            double value = potentialActionValues.get(i);
+            if (value > highestValue)
+            {
+                highestValue = value;
+                highestIndex = i;
+                continue;
+            }
+        }
+
+        AIAction action = potentialActions.get(highestIndex);
+        this.action = action;
 
         return;
     }
@@ -109,5 +129,13 @@ public class AIController extends EntityAIBase {
     @Override
     public boolean shouldExecute() {
         return true;
+    }
+
+    @Override
+    public void resetTask()
+    {
+        action = null;
+        instinctMove.resetTask();
+        instinctObserve.resetTask();
     }
 }
