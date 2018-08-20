@@ -110,23 +110,28 @@ public class MovementHelper {
 
     public static double getDistance(double x1, double y1, double z1, double x2, double y2, double z2)
     {
-        double distanceSum = 0.0;
+        double distance = 0.0;
 
         double xDif = Math.abs(x1 - x2);
         double yDif = Math.abs(y1 - y2);
         double zDif = Math.abs(z1 - z2);
 
-        distanceSum += xDif;
-        distanceSum += yDif;
-        distanceSum += zDif;
+        distance += xDif * xDif;
+        distance += yDif * yDif;
+        distance += zDif * zDif;
 
-        return distanceSum;
+        distance = Math.sqrt(distance);
+
+        return distance;
     }
 
     public static boolean isAtPosition(double x1, double y1, double z1, double x2, double y2, double z2, double threshold) {
 
         double distanceSum = getDistance(x1, y1, z1, x2, y2, z2);
-        boolean result = distanceSum < threshold;
+        boolean result = distanceSum < threshold + 1;
+
+        if (result == true)
+            System.out.println("position reached");
 
         return result;
     }

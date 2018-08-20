@@ -16,7 +16,7 @@ public class AIInstinctMove extends AIInstinctBase {
     private double speed;
 
     protected boolean randomMove;
-    protected Vec3d position;
+    private Vec3d position;
 
     public void setRandomMove(boolean random)
     {
@@ -29,15 +29,14 @@ public class AIInstinctMove extends AIInstinctBase {
 
     public boolean isAtPosition()
     {
-        EntityCreature entity = aiController.getEntity();
+        EntityCreature entity = aiController.entity;
 
         if (entity == null || position == null)
         {
-            return true;
+            return false;
         }
 
-        boolean result = MovementHelper.isAtPosition(entity.posX, entity.posY, entity.posZ, position.x, position.y, position.z, .3);
-        result = result || entity.getNavigator().noPath();
+        boolean result = MovementHelper.isAtPosition(entity.posX, entity.posY, entity.posZ, position.x, position.y, position.z, 1);
         return result;
     }
 
@@ -62,7 +61,6 @@ public class AIInstinctMove extends AIInstinctBase {
 
                 this.randomMove = false;
                 this.position = new Vec3d(vec.x, vec.y, vec.z);
-                return true;
             }
 
             if (position != null)
@@ -86,13 +84,5 @@ public class AIInstinctMove extends AIInstinctBase {
     public void startExecuting()
     {
         this.entity.getNavigator().tryMoveToXYZ(this.position.x, this.position.y, this.position.z, this.speed);
-    }
-
-    @Override
-    public void resetTask()
-    {
-        randomMove = false;
-        position = null;
-
     }
 }

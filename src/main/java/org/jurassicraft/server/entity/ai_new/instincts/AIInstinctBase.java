@@ -13,6 +13,6 @@ public abstract class AIInstinctBase extends EntityAIBase {
     public AIInstinctBase(AIController aiController)
     {
         this.aiController = aiController;
-        this.entity = aiController.getEntity();
+        this.entity = aiController.entity;
     }
 }

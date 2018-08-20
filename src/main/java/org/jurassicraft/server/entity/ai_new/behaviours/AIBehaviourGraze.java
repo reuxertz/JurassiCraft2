@@ -1,11 +1,13 @@
 package org.jurassicraft.server.entity.ai_new.behaviours;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import org.jurassicraft.server.entity.ai_new.AIAction;
+import org.jurassicraft.server.entity.ai_new.helpers.MovementHelper;
 import org.jurassicraft.server.entity.ai_new.memories.MemoryBlock;
 
 public class AIBehaviourGraze extends AIBehaviourBase {
@@ -29,28 +31,27 @@ public class AIBehaviourGraze extends AIBehaviourBase {
             return -1.0;
 
         BlockPos blockPos = ((MemoryBlock)action.memory).blockPos;
-        Block block = action.aiController.getEntity().world.getBlockState(blockPos).getBlock();
-
-        if (!(action.memory instanceof MemoryBlock))
-            return -1.0;
+        Block block = action.aiController.entity.world.getBlockState(blockPos).getBlock();
 
         if (isGrazeable(block))
-            return 1.0;
+            return 2.0;
 
-        return 0;
+        return -1.0;
     }
 
     @Override
     public AIAction.ActionState start(AIAction action)
     {
         BlockPos blockPos = ((MemoryBlock)action.memory).blockPos;
-        Block block = action.aiController.getEntity().world.getBlockState(blockPos).getBlock();
+        Block block = action.aiController.entity.world.getBlockState(blockPos).getBlock();
 
         if (!isGrazeable(block))
             return AIAction.ActionState.Reset;
 
         Vec3d position = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-        action.aiController.getInstinctMove().setMove(position);
+
+
+        action.aiController.instinctMove.setMove(position);
 
         action.setStarted(true);
 
@@ -60,7 +61,17 @@ public class AIBehaviourGraze extends AIBehaviourBase {
     @Override
     public AIAction.ActionState update(AIAction action)
     {
-        if (action.aiController.getInstinctMove().isAtPosition())
+        boolean isAtPosition = action.aiController.instinctMove.isAtPosition();
+        boolean noPath = action.aiController.entity.getNavigator().noPath();
+
+        if (isAtPosition) {
+
+            BlockPos blockPos = ((MemoryBlock)action.memory).blockPos;
+            IBlockState blockstate = action.aiController.entity.world.getBlockState(blockPos);
+            action.aiController.entity.world.setBlockState(blockPos, Blocks.DIRT.getDefaultState(), 3);
+        }
+
+        if (isAtPosition || noPath)
             action.setFinished(true);
 
         return AIAction.ActionState.Continue;
@@ -69,6 +80,6 @@ public class AIBehaviourGraze extends AIBehaviourBase {
     @Override
     public AIAction.ActionState finish(AIAction action)
     {
-        return AIAction.ActionState.Continue;
+        return AIAction.ActionState.Reset;
     }
 }

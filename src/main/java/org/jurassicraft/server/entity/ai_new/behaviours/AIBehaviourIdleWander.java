@@ -13,14 +13,14 @@ public class AIBehaviourIdleWander extends AIBehaviourBase {
     @Override
     public double getValue(AIAction action)
     {
-        return 0.0;
+        return 1.0;
     }
 
     @Override
     public AIAction.ActionState start(AIAction action)
     {
-        Vec3d position = RandomPositionGenerator.getLandPos(action.aiController.getEntity(), 5, 5);
-        action.aiController.getInstinctMove().setMove(position);
+        Vec3d position = RandomPositionGenerator.getLandPos(action.aiController.entity, 1, 1);
+        action.aiController.instinctMove.setMove(position);
         action.setStarted(true);
 
         return AIAction.ActionState.Continue;
@@ -29,7 +29,10 @@ public class AIBehaviourIdleWander extends AIBehaviourBase {
     @Override
     public AIAction.ActionState update(AIAction action)
     {
-        if (action.aiController.getInstinctMove().isAtPosition())
+        boolean isAtPosition = action.aiController.instinctMove.isAtPosition();
+        boolean noPath = action.aiController.entity.getNavigator().noPath();
+
+        if (isAtPosition || noPath)
             action.setFinished(true);
 
         return AIAction.ActionState.Continue;
@@ -38,6 +41,6 @@ public class AIBehaviourIdleWander extends AIBehaviourBase {
     @Override
     public AIAction.ActionState finish(AIAction action)
     {
-        return AIAction.ActionState.Continue;
+        return AIAction.ActionState.Reset;
     }
 }

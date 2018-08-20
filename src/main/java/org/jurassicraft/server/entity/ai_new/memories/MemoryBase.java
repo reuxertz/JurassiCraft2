@@ -54,15 +54,23 @@ public abstract class MemoryBase {
 
     protected String uniqueKey;
     protected double value;
+    protected boolean isFaulty;
 
     public double getValue()
     {
+        if (isFaulty)
+            return -1.0;
+
         return value;
     }
-
     public String getUniqueKey()
     {
         return uniqueKey;
+    }
+
+    public void setFaulty(boolean isFaulty)
+    {
+        this. isFaulty = isFaulty;
     }
 
     public MemoryBase(MemoryBase memoryBase)

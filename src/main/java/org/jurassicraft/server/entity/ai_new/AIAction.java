@@ -60,18 +60,31 @@ public class AIAction {
     public ActionState _update()
     {
         if (!this.isStarted()) {
-            this.behaviour.start(this);
+            AIAction.ActionState result = this.behaviour.start(this);
+
+            if (result == ActionState.Reset)
+                return result;
+
             return ActionState.Continue;
         }
 
         if (this.isStarted() && !this.isFinished()) {
-            this.behaviour.update(this);
+            AIAction.ActionState result = this.behaviour.update(this);
+
+            if (result == ActionState.Reset)
+                return result;
+
+
             return ActionState.Continue;
         }
 
         if (this.isStarted() && this.isFinished()) {
-            this.behaviour.finish(this);
-            return ActionState.Reset;
+            AIAction.ActionState result = this.behaviour.finish(this);
+
+            if (result == ActionState.Reset)
+                return result;
+
+            return ActionState.Continue;
         }
 
         return ActionState.Reset;

@@ -12,7 +12,6 @@ import java.util.*;
 
 public class AIController extends EntityAIBase {
 
-    protected EntityCreature entity;
     protected long age = 0;
     protected int shortTermMemorySize = 10;
     protected List<AIBehaviourBase> behaviours = new ArrayList<>();
@@ -20,13 +19,9 @@ public class AIController extends EntityAIBase {
 
     protected AIAction action;
 
-    protected AIInstinctMove instinctMove;
-    protected AIInstinctObserve instinctObserve;
-
-    public AIInstinctMove getInstinctMove() { return instinctMove; }
-    public AIInstinctObserve getInstinctObserve() { return instinctObserve; }
-    public EntityCreature getEntity() { return entity; }
-
+    public EntityCreature entity;
+    public AIInstinctMove instinctMove;
+    public AIInstinctObserve instinctObserve;
 
     public void addMemory(MemoryBase memory)
     {
@@ -39,10 +34,25 @@ public class AIController extends EntityAIBase {
 
     public void decayMemories()
     {
+        //Remove faulty memories, and decay
         List<String> keys = new ArrayList<>(shortTermMemoryList.keySet());
-        for (int i = 0; i < keys.size(); i++)
-            shortTermMemoryList.get(keys.get(i)).decay();
+        for (int i = 0; i < keys.size(); i++) {
 
+            String key = keys.get(i);
+            MemoryBase memory = shortTermMemoryList.get(key);
+
+            if (memory.getValue() <= 0)
+            {
+                shortTermMemoryList.remove(key);
+                keys.remove(i);
+                continue;
+            }
+
+            memory.decay();
+        }
+
+        //Remove decayed memories
+        keys = new ArrayList<>(shortTermMemoryList.keySet());
         while (shortTermMemoryList.size() > shortTermMemorySize) {
             double lowestValue = Double.MAX_VALUE;
             String lowestKey = "";
@@ -74,11 +84,10 @@ public class AIController extends EntityAIBase {
 
         if (action != null)
         {
-            AIAction.ActionState result = action.update();
+            AIAction.ActionState actionResult = action.update();
 
-            if (result == AIAction.ActionState.Reset) {
+            if (actionResult == AIAction.ActionState.Reset)
                 resetTask();
-            }
 
             return;
         }

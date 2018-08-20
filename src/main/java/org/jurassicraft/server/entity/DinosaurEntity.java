@@ -189,7 +189,7 @@ public abstract class DinosaurEntity extends EntityCreature implements IEntityAd
         super(world);
 
         aiController = new AIController(this);
-        aiController.addBehaviour(new AIBehaviourIdleWander());
+        //aiController.addBehaviour(new AIBehaviourIdleWander());
         aiController.addBehaviour(new AIBehaviourGraze());
 
         this.moveHelper = new DinosaurMoveHelper(this);
