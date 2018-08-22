@@ -6,18 +6,24 @@ import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import org.jurassicraft.server.entity.ai_new.AIAction;
 import org.jurassicraft.server.entity.ai_new.helpers.MovementHelper;
 import org.jurassicraft.server.entity.ai_new.memories.MemoryBlock;
 
 public class AIBehaviourGraze extends AIBehaviourBase {
 
-    public boolean isGrazeable(Block block)
+    public boolean isGrazeable(World world, BlockPos blockPos)
     {
+        Block block = world.getBlockState(blockPos).getBlock();
+
         if (block == Blocks.GRASS)
-        {
             return true;
-        }
+
+//        Block blockDown = world.getBlockState(blockPos.down()).getBlock();
+//
+//        if (blockDown == Blocks.GRASS)
+//            return true;
 
         return false;
     }
@@ -31,9 +37,8 @@ public class AIBehaviourGraze extends AIBehaviourBase {
             return -1.0;
 
         BlockPos blockPos = ((MemoryBlock)action.memory).blockPos;
-        Block block = action.aiController.entity.world.getBlockState(blockPos).getBlock();
 
-        if (isGrazeable(block))
+        if (isGrazeable(action.aiController.entity.world, blockPos))
             return 2.0;
 
         return -1.0;
@@ -43,9 +48,8 @@ public class AIBehaviourGraze extends AIBehaviourBase {
     public AIAction.ActionState start(AIAction action)
     {
         BlockPos blockPos = ((MemoryBlock)action.memory).blockPos;
-        Block block = action.aiController.entity.world.getBlockState(blockPos).getBlock();
 
-        if (!isGrazeable(block))
+        if (!isGrazeable(action.aiController.entity.world, blockPos))
             return AIAction.ActionState.Reset;
 
         Vec3d position = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());

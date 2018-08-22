@@ -43,7 +43,7 @@ public class AIInstinctObserve extends AIInstinctBase {
     @Override
     public void updateTask()
     {
-        Vec3d pos = MovementHelper.getRandomPosition(this.entity, observationRange, observationRange, true);
+        Vec3d pos = MovementHelper.getRandomPosition(this.entity, observationRange, observationRange, false);
         IBlockState blockState = this.entity.world.getBlockState(new BlockPos(pos.x, pos.y, pos.z));
         MemoryBlock memoryBlock = new MemoryBlock(this.entity.world, new BlockPos((int)pos.x, (int)pos.y, (int)pos.z));
         aiController.addMemory(memoryBlock);

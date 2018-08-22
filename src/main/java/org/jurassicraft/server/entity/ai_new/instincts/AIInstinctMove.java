@@ -36,7 +36,7 @@ public class AIInstinctMove extends AIInstinctBase {
             return false;
         }
 
-        boolean result = MovementHelper.isAtPosition(entity.posX, entity.posY, entity.posZ, position.x, position.y, position.z, 1);
+        boolean result = MovementHelper.isAtPosition(entity.posX, entity.posY, entity.posZ, position.x, position.y, position.z, 1.5);
         return result;
     }
 
@@ -77,7 +77,8 @@ public class AIInstinctMove extends AIInstinctBase {
     @Override
     public boolean shouldContinueExecuting()
     {
-        return !this.entity.getNavigator().noPath() && !this.entity.isInWater();
+        boolean result = !this.entity.getNavigator().noPath();
+        return result;
     }
 
     @Override

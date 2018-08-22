@@ -33,6 +33,7 @@ import org.jurassicraft.server.entity.DinosaurEntity;
 import org.jurassicraft.server.entity.EntityHandler;
 import org.jurassicraft.server.entity.GoatEntity;
 import org.jurassicraft.server.entity.villager.VillagerHandler;
+import org.jurassicraft.server.event.EntityEventHandler;
 import org.jurassicraft.server.event.ServerEventHandler;
 import org.jurassicraft.server.food.FoodHelper;
 import org.jurassicraft.server.food.FoodNutrients;
@@ -100,6 +101,7 @@ public class ServerProxy implements IGuiHandler {
         NetworkRegistry.INSTANCE.registerGuiHandler(JurassiCraft.INSTANCE, this);
 
         ServerEventHandler eventHandler = new ServerEventHandler();
+        MinecraftForge.EVENT_BUS.register(new EntityEventHandler());
         MinecraftForge.EVENT_BUS.register(new RegistryHandler());
         MinecraftForge.EVENT_BUS.register(eventHandler);
     }
